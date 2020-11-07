@@ -1,0 +1,37 @@
+query Query {
+  video(id: "785768456") {
+    moments(momentRequestType: VIDEO_CHAPTER_MARKERS, types: GAME_CHANGE) {
+      pageInfo {
+        hasNextPage
+      }
+      edges {
+        node {
+          details {
+            ... on GameChangeMomentDetails {
+              game {
+                id
+                displayName
+                name
+              }
+            }
+          }
+          positionMilliseconds
+        }
+      }
+    }
+  }
+}
+
+
+https://api.twitch.tv/gql
+https://graphiql-online.com/graphiql
+
+Client-ID: kimne78kx3ncx6brgo4mv6wki5h1ko
+Authorization: OAuth e81576sbwtn373k4979ptdi2pood1g
+
+
+ffmpeg.exe -i video.mp4 -i video_chat.mp4 -filter_complex "nullsrc=size=1920x1080 [base];[0:v] scale=1600x900 [tmp0];[base][tmp0] overlay=shortest=1:x=0:y=90 [tmp1];[tmp1][1:v] overlay=shortest=1:x=1600:y=0 " output.mp4
+
+ffmpeg.exe -i video.mp4 -i video_chat.mp4 -filter_complex "scale=1600x900,pad=1920:1080:0:90:black [tmp1]; [tmp1][1:v] overlay=shortest=1:x=1600:y=0" output.mp4
+
+
