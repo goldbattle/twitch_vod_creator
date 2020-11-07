@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Xabe.FFmpeg.Downloader</name>
+    </assembly>
+    <members>
+        <member name="T:Xabe.FFmpeg.Downloader.FFmpegVersion">
+            <summary>
+            Enum to describe the versions of FFmpeg that can be automatically downloaded
+            </summary>
+        </member>
+        <member name="F:Xabe.FFmpeg.Downloader.FFmpegVersion.Official">
+            <summary>
+            The official release from ffbinaries
+            </summary>
+        </member>
+        <member name="F:Xabe.FFmpeg.Downloader.FFmpegVersion.Full">
+            <summary>
+            The Full Release from Zenaroe (Only Windows and macOS)
+            </summary>
+        </member>
+        <member name="F:Xabe.FFmpeg.Downloader.FFmpegVersion.Shared">
+            <summary>
+            The Shared Release from Zenaroe (Only Windows and macOS)
+            </summary>
+        </member>
+        <member name="M:Xabe.FFmpeg.Downloader.FFmpegDownloader.GetLatestVersion(Xabe.FFmpeg.Downloader.FFmpegVersion)">
+            <summary>
+                Download latest FFmpeg version for current operating system to FFmpeg.ExecutablePath. If it is not set download to ".".
+            <param id="version">Determine which version of FFmpeg should be downloaded</param>
+            </summary>
+        </member>
+        <member name="M:Xabe.FFmpeg.Downloader.FFmpegDownloader.GetLatestVersion(Xabe.FFmpeg.Downloader.FFmpegVersion,System.String)">
+            <summary>
+                Download latest FFmpeg version for current operating system to FFmpeg.ExecutablePath. If it is not set download to ".".
+            <param id="version">Determine which version of FFmpeg should be downloaded</param>
+            </summary>
+        </member>
+        <member name="T:Xabe.FFmpeg.Downloader.IFFmpegDownloader">
+            <summary>Downloads the Latest Version of FFmpeg</summary>
+        </member>
+        <member name="M:Xabe.FFmpeg.Downloader.IFFmpegDownloader.GetLatestVersion(System.String)">
+            <summary>
+                Do the download and install FFmpeg
+            </summary>
+            <param name="path">FFmpeg executables destination directory</param>
+        </member>
+        <member name="M:Xabe.FFmpeg.Downloader.SharedFFmpegDownloader.Extract(System.String,System.String)">
+            <summary>Extract only binary files from the zip archive</summary>
+        </member>
+    </members>
+</doc>
