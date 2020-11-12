@@ -7,21 +7,19 @@ import time
 import json
 import subprocess
 import utils
+import shutil
 
 # video file we wish to render
-video_file = "config/01_videos.yaml"
+video_file = "config/02_videos.yaml"
 
 # paths of the cli and data
 path_base = os.path.dirname(os.path.abspath(__file__))
-path_twitch_cli = path_base + "/Twitch Downloader/TwitchDownloaderCLI.exe"
-path_twitch_ffmpeg = path_base + "/Twitch Downloader/ffmpeg.exe"
+path_twitch_cli = path_base + "/thirdparty/Twitch Downloader/TwitchDownloaderCLI.exe"
+# path_twitch_ffmpeg = path_base + "/thirdparty/Twitch Downloader/ffmpeg.exe"
+path_twitch_ffmpeg = path_base + "/thirdparty/ffmpeg-N-99900-g89429cf2f2-win64-lgpl/ffmpeg.exe"
 path_root = path_base + "/../data/"
 path_render = path_base + "/../data_rendered/"
-
-
-# video_file = "config/01_videos_tmp.yaml"
-# path_root = "C:/Users/Patrick/Downloads/data_temp/"
-# path_render = "C:/Users/Patrick/Downloads/data_rendered/"
+path_temp = path_base + "/../data_temp/"
 
 # ================================================================
 # ================================================================
@@ -65,6 +63,12 @@ for video in data:
     with open(file_path_info) as f:
         video_info = json.load(f)
 
+    # delete the temp folder if it is there
+    if os.path.exists(path_temp) and os.path.isdir(path_temp):
+        shutil.rmtree(path_temp)
+    if not os.path.exists(path_temp):
+        os.makedirs(path_temp)
+
     # CHAT: check if the file exists, render if needed
     file_path_chat = path_root + video["video"] + "_chat.json"
     file_path_render = path_root + video["video"] + "_chat.mp4"
@@ -88,44 +92,93 @@ for video in data:
         if not os.path.exists(dir_path_composite):
             os.makedirs(dir_path_composite)
 
-        # render with chat
-        # https://superuser.com/a/1296511
-        # log levels: -hide_banner -loglevel quiet -stats
-        # hardware encoding: ffmpeg.exe -h encoder=h264_nvenc
-        # hardware encoding: -hwaccel_device 0 -hwaccel cuda -loglevel quiet
-        # hardware encoding: -c:v h264_nvenc -b:v 0 -cq 20
-        # cpu encoding: -vcodec libx264 -crf 18 -preset ultrafast -tune zerolatency
-        t0 = time.time()
-        if os.path.exists(file_path_render):
-            print("\t- rendering with chat overlay")
-            cmd = path_twitch_ffmpeg + ' -hwaccel cuda -hide_banner -loglevel quiet -stats ' \
-                  + ' -ss ' + video["t_start"] + ' -i ' + file_path_video + ' -to ' + video["t_end"] \
-                  + ' -ss ' + video["t_start"] + ' -i ' + file_path_render \
-                  + ' -filter_complex "scale=1600x900,pad=1920:1080:0:90:black [tmp1]; ' \
-                  + '[tmp1][1:v] overlay=shortest=0:x=1600:y=0:eof_action=endall" -shortest ' \
-                  + ' -c:v h264_nvenc -preset llhq -rc:v cbr -b:v 10M -vsync 0 -c:a copy ' \
+        # here we will render each
+        seg_start = video["t_start"].split(",")
+        seg_end = video["t_end"].split(",")
+        dur_segment_total = 0
+        t0_big = time.time()
+        for idx in range(len(seg_start)):
+
+            # export the segment to a temp folder
+            # if we only have a single segment, then no need!
+            tmp_output_file = path_temp + "temp_" + str(idx) + ".mp4"
+            if len(seg_start) == 1:
+                tmp_output_file = file_path_composite
+
+            # check if we should download any more
+            if utils.terminated_requested:
+                print('terminate requested, not rendering more segments..')
+                break
+
+            # render with chat
+            # https://superuser.com/a/1296511
+            # log levels: -hide_banner -loglevel quiet -stats
+            # hardware encoding: ffmpeg.exe -h encoder=h264_nvenc
+            # hardware encoding: -hwaccel_device 0 -hwaccel cuda -loglevel quiet
+            # hardware encoding: -c:v h264_nvenc -b:v 0 -cq 20
+            # cpu encoding: -vcodec libx264 -crf 18 -preset ultrafast -tune zerolatency
+            t0 = time.time()
+            if os.path.exists(file_path_render):
+                print("\t- rendering with chat overlay "+seg_start[idx]+" to "+seg_end[idx])
+                cmd = path_twitch_ffmpeg + ' -hwaccel cuda -hide_banner -loglevel quiet -stats ' \
+                      + ' -ss ' + seg_start[idx] + ' -i ' + file_path_video+ ' -to ' + seg_end[idx]  \
+                      + ' -ss ' + seg_start[idx] + ' -i ' + file_path_render \
+                      + ' -filter_complex "scale=1600x900,pad=1920:1080:0:90:black [tmp1];' \
+                      + ' [tmp1][1:v] overlay=shortest=0:x=1600:y=0:eof_action=endall" -shortest ' \
+                      + ' -c:v h264_nvenc ' \
+                      + ' -preset llhq -rc:v cbr -b:v 10M -avoid_negative_ts make_zero ' \
+                      + tmp_output_file
+                subprocess.Popen(cmd).wait()
+            else:
+                print("\t- rendering *without* chat overlay " + seg_start[idx] + " to " + seg_end[idx])
+                h1, m1, s1 = seg_start[idx].split(':')
+                h2, m2, s2 = seg_end[idx].split(':')
+                seg_length = format(int(h2) - int(h1), '02') \
+                             + ':' + format(int(m2) - int(m1), '02') \
+                             + ':' + format(int(s2) - int(s1), '02')
+                cmd = path_twitch_ffmpeg + ' -hwaccel cuda -hide_banner -loglevel quiet -stats' \
+                      + ' -ss ' + seg_start[idx] + ' -i ' + file_path_video + ' -t ' + seg_length \
+                      + ' -c:v h264_nvenc ' \
+                      + ' -preset llhq -rc:v cbr -b:v 10M -avoid_negative_ts make_zero ' \
+                      + tmp_output_file
+                subprocess.Popen(cmd).wait()
+
+            # end timing and compute debug stats
+            t1 = time.time()
+            h1, m1, s1 = seg_start[idx].split(':')
+            h2, m2, s2 = seg_end[idx].split(':')
+            dur_segment = (int(h2) - int(h1)) * 3600 + (int(m2) - int(m1)) * 60 + (int(s2) - int(s1))
+            dur_render = t1 - t0 + 1e-6
+            dur_segment_total += dur_segment
+            print("\t- time to render: " + str(dur_render))
+            print("\t- segment duration: " + str(dur_segment))
+            print("\t- realtime factor: " + str(dur_segment / dur_render))
+
+        # If we have multiple segments, then we need to combine them
+        # https://stackoverflow.com/a/36045659
+        if not utils.terminated_requested and len(seg_start) != 1:
+            # text file will all segments
+            text_file_temp_videos = path_temp + "videos.txt"
+            with open(text_file_temp_videos, 'a') as the_file:
+                for idx in range(len(seg_start)):
+                    tmp_output_file = path_temp + "temp_" + str(idx) + ".mp4"
+                    the_file.write('file \'' + tmp_output_file + '\'\n')
+            # now render
+            print("\t- combining all videos into a single segment!")
+            cmd = path_twitch_ffmpeg + ' -hide_banner -loglevel quiet -stats ' \
+                  + '-f concat -safe 0 ' \
+                  + ' -i ' + text_file_temp_videos \
+                  + ' -c copy -avoid_negative_ts make_zero ' \
                   + file_path_composite
             subprocess.Popen(cmd).wait()
 
-        else:
-            print("\t- rendering *without* chat overlay")
-            cmd = path_twitch_ffmpeg + ' -hwaccel auto -hide_banner -stats -threads 8 ' \
-                  + ' -ss ' + video["t_start"] + ' -i ' + file_path_video + ' -to ' + video["t_end"] \
-                  + ' -vcodec libx264 -crf 20 -preset veryfast ' \
-                  + '-ss ' + video["t_start"] + ' -to ' + video["t_end"] + ' ' \
-                  + file_path_composite
-            subprocess.Popen(cmd).wait()
-
-        # end timing and compute debug stats
-        t1 = time.time()
-        h1, m1, s1 = video["t_start"].split(':')
-        h2, m2, s2 = video["t_end"].split(':')
-        dur_segment = (int(h2) - int(h1)) * 3600 + (int(m2) - int(m1)) * 60 + (int(s2) - int(s1))
-        dur_render = t1 - t0 + 1e-6
-        print("\t- time to render: " + str(dur_render))
-        print("\t- segment duration: " + str(dur_segment))
-        print("\t- realtime factor: " + str(dur_segment / dur_render))
-        print("")
+            # end timing and compute debug stats
+            t1_big = time.time()
+            dur_render = t1_big - t0_big + 1e-6
+            print("\t- time to render: " + str(dur_render))
+            print("\t- segment durations: " + str(dur_segment_total))
+            print("\t- realtime factor: " + str(dur_segment_total / dur_render))
+            print("")
 
     # DESC: description file
     file_path_desc = path_render + video["video"] + "_" + clean_video_title + "_desc.txt"
@@ -144,4 +197,3 @@ for video in data:
         tmp = video["title"] + "\n" + tmp
         with open(file_path_desc, "w") as text_file:
             text_file.write(tmp)
-

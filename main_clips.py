@@ -28,8 +28,8 @@ min_view_counts = [5000, 4000, 4000, 1500, 2500, 6000, 2500]
 # ================================================================
 
 # paths of the cli and data
-path_twitch_cli = path_base + "/Twitch Downloader/TwitchDownloaderCLI.exe"
-path_twitch_ffmpeg = path_base + "/Twitch Downloader/ffmpeg.exe"
+path_twitch_cli = path_base + "/thirdparty/Twitch Downloader/TwitchDownloaderCLI.exe"
+path_twitch_ffmpeg = path_base + "/thirdparty/Twitch Downloader/ffmpeg.exe"
 path_root = path_base + "/../data_clips/"
 
 # ================================================================
