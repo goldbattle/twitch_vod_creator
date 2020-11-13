@@ -10,7 +10,7 @@ import utils
 import shutil
 
 # video file we wish to render
-video_file = "config/02_videos.yaml"
+video_file = "config/01_videos.yaml"
 
 # paths of the cli and data
 path_base = os.path.dirname(os.path.abspath(__file__))
