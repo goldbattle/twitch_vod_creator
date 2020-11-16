@@ -1,13 +1,10 @@
+This is a fan-made channel dedicated to upload uncut/unedited bits the livestream VODs. The goal is to act like a selective archive of specific playthroughs and content that are streamed on the channel. Please checkout the official youtube channel and twitch live streams to join the community.
 
 
-This is a fan-made channel dedicated to upload uncut/unedited bits the livestream VODs.
-The goal is to act like a selective archive of specific playthroughs and content that are streamed on the channel.
-Please checkout the official youtube channel and twitch live streams to join the community.
 
-
-Vod: $id
-Title: $title
-Game: $game
+Vod ID: $id
+Vod Title: $title
+Vod Game: $game
 Views: $views
 Recorded At: $recorded
 

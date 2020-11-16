@@ -1,7 +1,7 @@
 # !/usr/bin/env python3
 
 import yaml  # pip install PyYAML
-from youtube_video_upload import upload_from_options  # pip install youtube-video-upload
+from youtube_video_upload import upload_from_options, upload_video  # pip install youtube-video-upload
 
 import os
 import time
@@ -10,9 +10,9 @@ import subprocess
 import utils
 
 # video file we wish to render
-video_file = "config/03_videos.yaml"
-history_file = "config/03_uploads.yaml"
-config_file = "config/03_yt_config.yaml"
+video_file = "config/01_videos.yaml"
+history_file = "config/01_uploads.yaml"
+config_file = "config/01_yt_config.yaml"
 
 # load the yaml from file
 with open(config_file) as f:
@@ -57,6 +57,7 @@ for video in data:
 
     # nice debug print
     print("processing " + video["video"])
+    print("\t- " + video["title"])
 
     # check if the files are there
     clean_video_title = video["title"].lower().replace(' ', '_')
@@ -100,6 +101,7 @@ for video in data:
     print("\t- starting video upload...")
     try:
         t0 = time.time()
+        upload_video.MAX_RETRIES = 20
         new_options = upload_from_options(options)
         t1 = time.time()
         print("\t- done performing video upload!")
@@ -110,12 +112,15 @@ for video in data:
             'file': file_path_composite,
             'link': new_options
         }
+
+        # finally write the updated history file
+        if not os.path.exists(os.path.dirname(history_file)):
+            os.makedirs(os.path.dirname(history_file))
+        with open(history_file, 'w') as yaml_file:
+            yaml.dump(hist_uploads, yaml_file)
+
     except Exception as e:
         print("\t- ERROR unable to complete the upload!")
         print(e)
 
-# finally write the updated history file
-if not os.path.exists(os.path.dirname(history_file)):
-    os.makedirs(os.path.dirname(history_file))
-with open(history_file, 'w') as yaml_file:
-    yaml.dump(hist_uploads, yaml_file)
+

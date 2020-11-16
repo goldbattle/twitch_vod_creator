@@ -133,10 +133,13 @@ for video in data:
                 print("\t- rendering *without* chat overlay " + seg_start[idx] + " to " + seg_end[idx])
                 h1, m1, s1 = seg_start[idx].split(':')
                 h2, m2, s2 = seg_end[idx].split(':')
-                seg_length = format(int(h2) - int(h1), '02') \
-                             + ':' + format(int(m2) - int(m1), '02') \
-                             + ':' + format(int(s2) - int(s1), '02')
-                cmd = path_twitch_ffmpeg + ' -hwaccel cuda -hide_banner -loglevel quiet -stats' \
+                time1_s = 3600*int(h1) + 60*int(m1) + int(s1)
+                time2_s = 3600*int(h2) + 60*int(m2) + int(s2)
+                m, s = divmod(time2_s-time1_s, 60)
+                h, m = divmod(m, 60)
+                seg_length = format(h, '02') + ':' + format(m, '02') + ':' + format(s, '02')
+                print(seg_length)
+                cmd = path_twitch_ffmpeg + ' -hwaccel cuda -hide_banner -loglevel quiet -stats ' \
                       + ' -ss ' + seg_start[idx] + ' -i ' + file_path_video + ' -t ' + seg_length \
                       + ' -c:v h264_nvenc ' \
                       + ' -preset llhq -rc:v cbr -b:v 10M -avoid_negative_ts make_zero ' \
