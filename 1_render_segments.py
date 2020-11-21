@@ -197,6 +197,6 @@ for video in data:
         tmp = tmp.replace("$recorded", video_info["recorded_at"])
         tmp = tmp.replace("$file", video["video"] + ".mp4")
         tmp = tmp.replace("$url", video_info["url"])
-        tmp = video["title"] + "\n" + tmp
+        tmp = video["title"] + "\n\n" + tmp
         with open(file_path_desc, "w") as text_file:
             text_file.write(tmp)

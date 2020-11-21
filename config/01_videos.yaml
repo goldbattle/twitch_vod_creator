@@ -350,5 +350,28 @@
   t_start: "00:21:28"
   t_end: "03:57:55"
 
+# ===========================================
+# ===========================================
+
+- video: twitch/2020-11/802833208
+  title:  "Chance's Twitch Glitchcon Judge Segment - Nov 14, 2020"
+  t_start: "00:00:00,00:50:16,01:07:10,01:24:59"
+  t_end: "00:39:53,01:03:54,01:19:49,01:38:25"
+
+- video: sodapoppin/2020-11/804430123
+  title:  "Chance Shows His New Merch (part 2) - Nov 15, 2020"
+  t_start: "01:09:42"
+  t_end: "01:16:24"
+
+- video: sodapoppin/2020-11/804430123
+  title:  "PS5 Demon Souls First Playthrough - Part 1 - (sodapoppin) - Nov 15, 2020"
+  t_start: "00:12:27"
+  t_end: "10:02:20"
+
+- video: sodapoppin/2020-11/804430123
+  title:  "PS5 Demon Souls First Playthrough - Part 2 - (sodapoppin) - Nov 15, 2020"
+  t_start: "10:02:20"
+  t_end: "19:30:54"
+
 
 

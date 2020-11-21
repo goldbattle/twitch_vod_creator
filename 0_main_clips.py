@@ -78,6 +78,7 @@ for idx, user in enumerate(users):
                 print('terminate requested, not downloading any more..')
                 break
             # time.sleep(random.uniform(0.0, 0.5))
+            count_total_clips_checked = count_total_clips_checked + 1
 
             # don't download any videos below our viewcount threshold
             if video['view_count'] < min_view_counts[idx]:
@@ -86,7 +87,6 @@ for idx, user in enumerate(users):
 
             # nice debug print
             arr_clips.append(video)
-            count_total_clips_checked = count_total_clips_checked + 1
             print("processing " + video['url'])
 
             # VIDEO: check if the file exists

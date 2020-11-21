@@ -1,11 +1,8 @@
 # Import general libraries
-import re
-import os
-import codecs
-import requests
 import json
-import time
 import signal
+
+import requests
 
 # global variable which sets if we should terminate
 terminated_requested = False
