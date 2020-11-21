@@ -56,3 +56,5 @@ The script has been left here as a reference for others, but it seems manual upl
 * Ffmpeg rendering still seems to be a bit slow (1.9-2.1x speedup) which I have been unable to increase.
 This might be due to the limit of the read speed of my harddrive or tuning of the ffmpeg parameters (which for me do not max out my gpu and cpu).
 
+* Right now this has only been tested with Python 3.7 and on a Windows 10 machine using PyCharm.
+Probably all the path handling should be re-done to be more proper to allow for running on different OS platforms.
