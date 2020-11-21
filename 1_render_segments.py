@@ -10,7 +10,8 @@ import utils
 import shutil
 
 # video file we wish to render
-video_file = "config/01_videos.yaml"
+video_file = "config/01_videos.yaml"  # sodapoppin
+# video_file = "config/02_videos.yaml"  # sevadus
 
 # paths of the cli and data
 path_base = os.path.dirname(os.path.abspath(__file__))
@@ -119,9 +120,9 @@ for video in data:
             # cpu encoding: -vcodec libx264 -crf 18 -preset ultrafast -tune zerolatency
             t0 = time.time()
             if os.path.exists(file_path_render):
-                print("\t- rendering with chat overlay "+seg_start[idx]+" to "+seg_end[idx])
+                print("\t- rendering with chat overlay " + seg_start[idx] + " to " + seg_end[idx])
                 cmd = path_twitch_ffmpeg + ' -hwaccel cuda -hide_banner -loglevel quiet -stats ' \
-                      + ' -ss ' + seg_start[idx] + ' -i ' + file_path_video+ ' -to ' + seg_end[idx]  \
+                      + ' -ss ' + seg_start[idx] + ' -i ' + file_path_video + ' -to ' + seg_end[idx] \
                       + ' -ss ' + seg_start[idx] + ' -i ' + file_path_render \
                       + ' -filter_complex "scale=1600x900,pad=1920:1080:0:90:black [tmp1];' \
                       + ' [tmp1][1:v] overlay=shortest=0:x=1600:y=0:eof_action=endall" -shortest ' \
@@ -133,9 +134,9 @@ for video in data:
                 print("\t- rendering *without* chat overlay " + seg_start[idx] + " to " + seg_end[idx])
                 h1, m1, s1 = seg_start[idx].split(':')
                 h2, m2, s2 = seg_end[idx].split(':')
-                time1_s = 3600*int(h1) + 60*int(m1) + int(s1)
-                time2_s = 3600*int(h2) + 60*int(m2) + int(s2)
-                m, s = divmod(time2_s-time1_s, 60)
+                time1_s = 3600 * int(h1) + 60 * int(m1) + int(s1)
+                time2_s = 3600 * int(h2) + 60 * int(m2) + int(s2)
+                m, s = divmod(time2_s - time1_s, 60)
                 h, m = divmod(m, 60)
                 seg_length = format(h, '02') + ':' + format(m, '02') + ':' + format(s, '02')
                 print(seg_length)

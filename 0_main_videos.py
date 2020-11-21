@@ -129,7 +129,7 @@ for user in users:
         # VIDEO: check if the file exists
         file_path_info = path_data + export_folder + str(video['helix']['id']) + "_info.json"
         print("\t- saving video info: " + file_path_info)
-        if not utils.terminated_requested and  not os.path.exists(file_path_info):
+        if not utils.terminated_requested and not os.path.exists(file_path_info):
             with open(file_path_info, 'w') as file:
                 json.dump(video_data, file, indent=4)
 

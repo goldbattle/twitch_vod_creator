@@ -5,8 +5,6 @@ from youtube_video_upload import upload_from_options, upload_video  # pip instal
 
 import os
 import time
-import json
-import subprocess
 import utils
 
 # video file we wish to render
@@ -17,7 +15,7 @@ config_file = "config/01_yt_config.yaml"
 # load the yaml from file
 with open(config_file) as f:
     config = yaml.load(f, Loader=yaml.FullLoader)
-print("loaded config file: "+config_file)
+print("loaded config file: " + config_file)
 
 # paths of the cli and data
 path_base = os.path.dirname(os.path.abspath(__file__))
@@ -73,7 +71,7 @@ for video in data:
     video_id = video["video"].replace(' ', '_') + "_" + video["title"].lower().replace(' ', '_')
     if video_id in hist_uploads:
         print("\t- skipping video, has already been uploaded")
-        print("\t- link: "+hist_uploads[video_id]['link'])
+        print("\t- link: " + hist_uploads[video_id]['link'])
         continue
 
     # load the description file
@@ -105,7 +103,7 @@ for video in data:
         new_options = upload_from_options(options)
         t1 = time.time()
         print("\t- done performing video upload!")
-        print("\t- link: "+new_options)
+        print("\t- link: " + new_options)
         print("\t- upload time: " + str(t1 - t0 + 1e-6))
         hist_uploads[video_id] = {
             'title': video["title"],
@@ -122,5 +120,3 @@ for video in data:
     except Exception as e:
         print("\t- ERROR unable to complete the upload!")
         print(e)
-
-
