@@ -21,7 +21,7 @@ client_id = auth["client_id"]
 client_secret = auth["client_secret"]
 
 # parameters
-channels = ['sodapoppin', 'moonmoon', 'clintstevens', 'pokelawls', 'sevadus', 'nmplol', 'jerma985']
+channels = ['sodapoppin', 'moonmoon', 'clintstevens', 'pokelawls', 'sevadus', 'sevadusafk', 'nmplol']
 max_videos = 80
 
 # ================================================================
@@ -29,8 +29,7 @@ max_videos = 80
 
 # paths of the cli and data
 path_twitch_cli = path_base + "/thirdparty/Twitch Downloader/TwitchDownloaderCLI.exe"
-# path_twitch_ffmpeg = path_base + "/thirdparty/Twitch Downloader/ffmpeg.exe"
-path_twitch_ffmpeg = path_base + "/thirdparty/ffmpeg-N-99900-g89429cf2f2-win64-lgpl/ffmpeg.exe"
+path_twitch_ffmpeg = path_base + "/thirdparty/Twitch Downloader/ffmpeg.exe"
 path_root = path_base + "/../data/"
 
 # ================================================================
@@ -56,12 +55,12 @@ for user in users:
         break
 
     # check if the directory is created
-    path_data = path_root + "/" + user.name + "/"
+    path_data = path_root + "/" + user.name.lower() + "/"
     if not os.path.exists(path_data):
         os.makedirs(path_data)
 
     # get the videos for this specific user
-    print("getting videos for -> " + user.name + " (id " + str(user.id) + ")")
+    print("getting videos for -> " + user.name.lower() + " (id " + str(user.id) + ")")
     vid_iter = client_helix.get_videos(user_id=user.id, page_size=100)
     arr_archive = []
     arr_highlight = []

@@ -16,8 +16,7 @@ video_file = "config/01_videos.yaml"  # sodapoppin
 # paths of the cli and data
 path_base = os.path.dirname(os.path.abspath(__file__))
 path_twitch_cli = path_base + "/thirdparty/Twitch Downloader/TwitchDownloaderCLI.exe"
-# path_twitch_ffmpeg = path_base + "/thirdparty/Twitch Downloader/ffmpeg.exe"
-path_twitch_ffmpeg = path_base + "/thirdparty/ffmpeg-N-99900-g89429cf2f2-win64-lgpl/ffmpeg.exe"
+path_twitch_ffmpeg = path_base + "/thirdparty/Twitch Downloader/ffmpeg.exe"
 path_root = path_base + "/../data/"
 path_render = path_base + "/../data_rendered/"
 path_temp = path_base + "/../data_temp/"
@@ -116,18 +115,19 @@ for video in data:
             # log levels: -hide_banner -loglevel quiet -stats
             # hardware encoding: ffmpeg.exe -h encoder=h264_nvenc
             # hardware encoding: -hwaccel_device 0 -hwaccel cuda -loglevel quiet
-            # hardware encoding: -c:v h264_nvenc -b:v 0 -cq 20
-            # cpu encoding: -vcodec libx264 -crf 18 -preset ultrafast -tune zerolatency
+            # hardware encoding: -c:a aac -c:v h264_nvenc
+            # hardware encoding: 1) -preset llhq -rc:v cbr -b:v 10M -avoid_negative_ts make_zero
+            # hardware encoding: 2) -preset p6 -tune hq -b:v 8M -maxrate:v 10M -qmin 10 -qmax 23 -avoid_negative_ts make_zero
+            # cpu encoding: -c:a aac -vcodec libx264 -crf 20 -preset veryfast
             t0 = time.time()
             if os.path.exists(file_path_render):
                 print("\t- rendering with chat overlay " + seg_start[idx] + " to " + seg_end[idx])
-                cmd = path_twitch_ffmpeg + ' -hwaccel cuda -hide_banner -loglevel quiet -stats ' \
+                cmd = path_twitch_ffmpeg + ' -hide_banner -loglevel quiet -stats ' \
                       + ' -ss ' + seg_start[idx] + ' -i ' + file_path_video + ' -to ' + seg_end[idx] \
                       + ' -ss ' + seg_start[idx] + ' -i ' + file_path_render \
                       + ' -filter_complex "scale=1600x900,pad=1920:1080:0:90:black [tmp1];' \
                       + ' [tmp1][1:v] overlay=shortest=0:x=1600:y=0:eof_action=endall" -shortest ' \
-                      + ' -c:v h264_nvenc ' \
-                      + ' -preset llhq -rc:v cbr -b:v 10M -avoid_negative_ts make_zero ' \
+                      + ' -c:a aac -vcodec libx264 -crf 19 -preset fast -avoid_negative_ts make_zero ' \
                       + tmp_output_file
                 subprocess.Popen(cmd).wait()
             else:
@@ -140,10 +140,9 @@ for video in data:
                 h, m = divmod(m, 60)
                 seg_length = format(h, '02') + ':' + format(m, '02') + ':' + format(s, '02')
                 print(seg_length)
-                cmd = path_twitch_ffmpeg + ' -hwaccel cuda -hide_banner -loglevel quiet -stats ' \
+                cmd = path_twitch_ffmpeg + ' -hide_banner -loglevel quiet -stats ' \
                       + ' -ss ' + seg_start[idx] + ' -i ' + file_path_video + ' -t ' + seg_length \
-                      + ' -c:v h264_nvenc ' \
-                      + ' -preset llhq -rc:v cbr -b:v 10M -avoid_negative_ts make_zero ' \
+                      + ' -c:a aac -vcodec libx264 -crf 19 -preset fast -avoid_negative_ts make_zero ' \
                       + tmp_output_file
                 subprocess.Popen(cmd).wait()
 
