@@ -24,9 +24,9 @@ client_secret = auth["client_secret"]
 # parameters
 channel = 'sodapoppin'
 max_clips = 50
-date_start = '2018-01-01T00:00:00.00Z'
-date_end = '2018-12-31T00:00:00.00Z'
-min_views_required = 1000
+date_start = '2020-10-01T00:00:00.00Z'
+date_end = '2020-11-01T00:00:00.00Z'
+min_views_required = 500
 
 # ================================================================
 # ================================================================
@@ -199,7 +199,7 @@ for video in arr_clips:
                   + ' -filter_complex "scale=1600x900,pad=1920:1080:0:90:black [tmp1];' \
                   + ' [tmp1][1:v] overlay=shortest=0:x=1600:y=0:eof_action=endall" -shortest ' \
                   + ' -c:a aac -ar 48k -ac 2 -vcodec libx264 -crf 19 -preset fast ' \
-                  + ' -avoid_negative_ts make_zero -framerate 60 ' \
+                  + ' -video_track_timescale 90000 -avoid_negative_ts make_zero -framerate 60 ' \
                   + file_path_composite
             subprocess.Popen(cmd).wait()
         else:
@@ -207,7 +207,7 @@ for video in arr_clips:
             cmd = path_twitch_ffmpeg + ' -hide_banner -loglevel quiet -stats ' \
                   + ' -i ' + file_path \
                   + ' -c:a aac -ar 48k -ac 2 -vcodec libx264 -crf 19 -preset fast ' \
-                  + ' -avoid_negative_ts make_zero -framerate 60 ' \
+                  + ' -video_track_timescale 90000 -avoid_negative_ts make_zero -framerate 60 ' \
                   + file_path_composite
             subprocess.Popen(cmd).wait()
 
