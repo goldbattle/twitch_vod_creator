@@ -28,8 +28,8 @@ min_view_counts = [5000, 4000, 4000, 1500, 2500, 6000, 2500]
 # ================================================================
 
 # paths of the cli and data
-path_twitch_cli = path_base + "/thirdparty/Twitch Downloader/TwitchDownloaderCLI.exe"
-path_twitch_ffmpeg = path_base + "/thirdparty/Twitch Downloader/ffmpeg.exe"
+path_twitch_cli = path_base + "/thirdparty/Twitch Downloader 1.38/TwitchDownloaderCLI.exe"
+path_twitch_ffmpeg = path_base + "/thirdparty/Twitch Downloader 1.38/ffmpeg.exe"
 path_root = path_base + "/../data_clips/"
 
 # ================================================================
@@ -81,13 +81,16 @@ for idx, user in enumerate(users):
             count_total_clips_checked = count_total_clips_checked + 1
 
             # don't download any videos below our viewcount threshold
+            # NOTE: twitch api seems to return in largest view count to smallest
+            # NOTE: thus once we hit our viewcount limit just stop...
             if video['view_count'] < min_view_counts[idx]:
-                print("skipping " + video['url'] + " (only " + str(video['view_count']) + " views)")
-                continue
+                # print("skipping " + video['url'] + " (only " + str(video['view_count']) + " views)")
+                # continue
+                break
 
             # nice debug print
             arr_clips.append(video)
-            print("processing " + video['url'])
+            print("processing " + video['url'] + " (" + str(video['view_count']) + " views)")
 
             # VIDEO: check if the file exists
             file_path_info = path_data + str(video['id']) + "_info.json"

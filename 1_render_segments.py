@@ -181,7 +181,6 @@ for video in data:
             print("\t- time to render: " + str(dur_render))
             print("\t- segment durations: " + str(dur_segment_total))
             print("\t- realtime factor: " + str(dur_segment_total / dur_render))
-            print("")
 
     # DESC: description file
     file_path_desc = path_render + video["video"] + "_" + clean_video_title + "_desc.txt"
@@ -200,3 +199,7 @@ for video in data:
         tmp = video["title"] + "\n\n" + tmp
         with open(file_path_desc, "w") as text_file:
             text_file.write(tmp)
+
+    # nice split between each segment
+    print("")
+

@@ -21,7 +21,7 @@ client_id = auth["client_id"]
 client_secret = auth["client_secret"]
 
 # parameters
-channels = ['sodapoppin', 'moonmoon', 'clintstevens', 'pokelawls', 'sevadus', 'sevadusafk', 'nmplol']
+channels = ['sodapoppin', 'moonmoon', 'clintstevens', 'pokelawls', 'sevadus', 'happythoughts', 'nmplol']
 max_videos = 80
 
 # ================================================================
