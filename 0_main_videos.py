@@ -1,6 +1,6 @@
 # !/usr/bin/env python3
 
-# https://github.com/PetterKraabol/Twitch-Python
+# https://github.com/tsifrer/python-twitch-client
 # pip install git+https://github.com/BoraxTheClean/python-twitch-client.git@add-oauth-token-fetch
 import twitch
 
