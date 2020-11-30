@@ -16,8 +16,8 @@ video_file = "config/01_videos.yaml"  # sodapoppin
 
 # paths of the cli and data
 path_base = os.path.dirname(os.path.abspath(__file__))
-path_twitch_cli = path_base + "/thirdparty/Twitch Downloader/TwitchDownloaderCLI.exe"
-path_twitch_ffmpeg = path_base + "/thirdparty/Twitch Downloader/ffmpeg.exe"
+path_twitch_cli = path_base + "/thirdparty/Twitch Downloader 1.38/TwitchDownloaderCLI.exe"
+path_twitch_ffmpeg = path_base + "/thirdparty/Twitch Downloader 1.38/ffmpeg.exe"
 path_root = path_base + "/../data/"
 path_render = path_base + "/../data_rendered/"
 path_temp = path_base + "/../data_temp/"

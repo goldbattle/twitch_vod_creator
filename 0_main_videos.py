@@ -23,13 +23,14 @@ client_secret = auth["client_secret"]
 # parameters
 channels = ['sodapoppin', 'moonmoon', 'clintstevens', 'pokelawls', 'sevadus', 'happythoughts', 'nmplol']
 max_videos = 80
+render_chat = False
 
 # ================================================================
 # ================================================================
 
 # paths of the cli and data
-path_twitch_cli = path_base + "/thirdparty/Twitch Downloader/TwitchDownloaderCLI.exe"
-path_twitch_ffmpeg = path_base + "/thirdparty/Twitch Downloader/ffmpeg.exe"
+path_twitch_cli = path_base + "/thirdparty/Twitch Downloader 1.38/TwitchDownloaderCLI.exe"
+path_twitch_ffmpeg = path_base + "/thirdparty/Twitch Downloader 1.38/ffmpeg.exe"
 path_root = path_base + "/../data/"
 
 # ================================================================
@@ -153,7 +154,7 @@ for user in users:
         # RENDER: check if the file exists
         file_path_chat = path_data + export_folder + str(video['helix']['id']) + "_chat.json"
         file_path_render = path_data + export_folder + str(video['helix']['id']) + "_chat.mp4"
-        if os.path.exists(file_path_chat) and not os.path.exists(file_path_render):
+        if os.path.exists(file_path_chat) and not os.path.exists(file_path_render) and render_chat:
             print("\t- rendering chat: " + file_path_render)
             cmd = path_twitch_cli + ' -m ChatRender' \
                   + ' -i ' + file_path_chat + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
