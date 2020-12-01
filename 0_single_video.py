@@ -93,7 +93,7 @@ if not os.path.exists(path_data + export_folder):
 file_path_info = path_data + export_folder + str(video['helix']['id']) + "_info.json"
 print("saving video info: " + file_path_info)
 if not utils.terminated_requested and not os.path.exists(file_path_info):
-    with open(file_path_info, 'w') as file:
+    with open(file_path_info, 'w', encoding="utf-8") as file:
         json.dump(video_data, file, indent=4)
 
 # VIDEO: check if the file exists

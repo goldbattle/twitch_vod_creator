@@ -22,7 +22,7 @@ client_secret = auth["client_secret"]
 
 # parameters
 channels = ['xqcow', 'moonmoon', 'sodapoppin', 'clintstevens', 'pokelawls', 'forsen', 'nmplol']
-min_view_counts = [5000, 4000, 4000, 1500, 2500, 6000, 2500]
+min_view_counts = [5000, 3000, 3000, 1000, 2000, 6000, 2000]
 
 # ================================================================
 # ================================================================
@@ -92,9 +92,9 @@ for idx, user in enumerate(users):
             arr_clips.append(video)
             print("processing " + video['url'] + " (" + str(video['view_count']) + " views)")
 
-            # VIDEO: check if the file exists
+            # INFO: always save to file so our viewcount gets updated!
             file_path_info = path_data + str(video['id']) + "_info.json"
-            if not utils.terminated_requested and not os.path.exists(file_path_info):
+            if not utils.terminated_requested:
                 print("\t- saving clip info: " + file_path_info)
 
                 # load the game information if we don't have it
@@ -123,7 +123,7 @@ for idx, user in enumerate(users):
                     'view_count': video['view_count'],
                     'created_at': video['created_at'].strftime('%Y-%m-%d %H:%M:%SZ'),
                 }
-                with open(file_path_info, 'w') as file:
+                with open(file_path_info, 'w', encoding="utf-8") as file:
                     json.dump(data, file, indent=4)
 
             # VIDEO: check if the file exists
