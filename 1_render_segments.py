@@ -16,7 +16,7 @@ video_file = "config/01_videos.yaml"  # sodapoppin
 
 # paths of the cli and data
 path_base = os.path.dirname(os.path.abspath(__file__))
-path_twitch_cli = path_base + "/thirdparty/Twitch Downloader 1.38/TwitchDownloaderCLI.exe"
+path_twitch_cli = path_base + "/thirdparty/Twitch Downloader Embed Fix/TwitchDownloaderCLI.exe"
 path_twitch_ffmpeg = path_base + "/thirdparty/Twitch Downloader 1.38/ffmpeg.exe"
 path_root = path_base + "/../data/"
 path_render = path_base + "/../data_rendered/"
@@ -143,6 +143,7 @@ for video in data:
                 print(seg_length)
                 cmd = path_twitch_ffmpeg + ' -hide_banner -loglevel quiet -stats ' \
                       + ' -ss ' + seg_start[idx] + ' -i ' + file_path_video + ' -t ' + seg_length \
+                      + ' -vf scale=w=1920:h=1080 ' \
                       + ' -c:a aac -vcodec libx264 -crf 19 -preset fast -avoid_negative_ts make_zero ' \
                       + tmp_output_file
                 subprocess.Popen(cmd).wait()

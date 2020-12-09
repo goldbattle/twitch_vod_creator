@@ -22,18 +22,18 @@ client_id = auth["client_id"]
 client_secret = auth["client_secret"]
 
 # parameters
-channel = 'sodapoppin'
+channel = 'pokelawls'
 max_clips = 100
-date_start = '2017-01-01T00:00:00.00Z'
-date_end = '2017-12-31T00:00:00.00Z'
-min_views_required = 500
+date_start = '2019-01-01T00:00:00.00Z'
+date_end = '2019-12-31T00:00:00.00Z'
+min_views_required = 1000
 get_latest_from_twitch = False
 
 # ================================================================
 # ================================================================
 
 # paths of the cli and data
-path_twitch_cli = path_base + "/thirdparty/Twitch Downloader 1.38/TwitchDownloaderCLI.exe"
+path_twitch_cli = path_base + "/thirdparty/Twitch Downloader Embed Fix/TwitchDownloaderCLI.exe"
 path_twitch_ffmpeg = path_base + "/thirdparty/Twitch Downloader 1.38/ffmpeg.exe"
 path_twitch_ffprob = path_base + "/thirdparty/ffmpeg-N-99900-g89429cf2f2-win64-lgpl/ffprobe.exe"
 path_root = path_base + "/../data_clips/"
@@ -70,80 +70,84 @@ if get_latest_from_twitch:
     client_helix.get_oauth()
     # vid_iter = client_helix.get_clips(broadcaster_id=user.id, page_size=100, started_at=date_start, ended_at=date_end)
     vid_iter = client_helix.get_clips(broadcaster_id=user.id, page_size=100)
-    for video in vid_iter:
+    try:
+        for video in vid_iter:
 
-        # check if we should download any more
-        if utils.terminated_requested:
-            print('terminate requested, not looking at any more clips...')
-            break
+            # check if we should download any more
+            if utils.terminated_requested:
+                print('terminate requested, not looking at any more clips...')
+                break
 
-        # don't download any videos below our viewcount threshold
-        # NOTE: twitch api seems to return in largest view count to smallest
-        # NOTE: thus once we hit our viewcount limit just stop...
-        if video['view_count'] < min_views_required:
-            # print("skipping " + video['url'] + " (only " + str(video['view_count']) + " views)")
-            # continue
-            break
+            # don't download any videos below our viewcount threshold
+            # NOTE: twitch api seems to return in largest view count to smallest
+            # NOTE: thus once we hit our viewcount limit just stop...
+            if video['view_count'] < min_views_required:
+                # print("skipping " + video['url'] + " (only " + str(video['view_count']) + " views)")
+                # continue
+                break
 
-        # VIDEO: check if the file exists
-        file_path_info = path_data + str(video['id']) + "_info.json"
-        if not utils.terminated_requested:
-            print("\t- saving clip info: " + file_path_info)
+            # VIDEO: check if the file exists
+            file_path_info = path_data + str(video['id']) + "_info.json"
+            if not utils.terminated_requested:
+                print("\t- saving clip info: " + file_path_info)
 
-            # load the game information if we don't have it
-            # note sometimes game_id isn't defined (unlisted)
-            # in this case just report an empty game
-            if video['game_id'] not in gameid2name:
-                game = client_helix.get_games(game_ids=[video['game_id']])
-                if len(game) > 0 and video['game_id'] == game[0]['id']:
-                    gameid2name[game[0]['id']] = game[0]['name']
-                    game_title = gameid2name[video['game_id']]
+                # load the game information if we don't have it
+                # note sometimes game_id isn't defined (unlisted)
+                # in this case just report an empty game
+                if video['game_id'] not in gameid2name:
+                    game = client_helix.get_games(game_ids=[video['game_id']])
+                    if len(game) > 0 and video['game_id'] == game[0]['id']:
+                        gameid2name[game[0]['id']] = game[0]['name']
+                        game_title = gameid2name[video['game_id']]
+                    else:
+                        game_title = ""
                 else:
-                    game_title = ""
-            else:
-                game_title = gameid2name[video['game_id']]
+                    game_title = gameid2name[video['game_id']]
 
-            # finally write to file
-            data = {
-                'id': video['id'],
-                'video_id': video['video_id'],
-                'creator_id': video['creator_id'],
-                'creator_name': video['creator_name'],
-                'title': video['title'],
-                'game_id': video['game_id'],
-                'game': game_title,
-                'url': video['url'],
-                'view_count': video['view_count'],
-                'created_at': video['created_at'].strftime('%Y-%m-%d %H:%M:%SZ'),
-            }
-            with open(file_path_info, 'w', encoding="utf-8") as file:
-                json.dump(data, file, indent=4)
+                # finally write to file
+                data = {
+                    'id': video['id'],
+                    'video_id': video['video_id'],
+                    'creator_id': video['creator_id'],
+                    'creator_name': video['creator_name'],
+                    'title': video['title'],
+                    'game_id': video['game_id'],
+                    'game': game_title,
+                    'url': video['url'],
+                    'view_count': video['view_count'],
+                    'created_at': video['created_at'].strftime('%Y-%m-%d %H:%M:%SZ'),
+                }
+                with open(file_path_info, 'w', encoding="utf-8") as file:
+                    json.dump(data, file, indent=4)
 
-        # VIDEO: check if the file exists
-        file_path = path_data + str(video['id']) + ".mp4"
-        if not utils.terminated_requested and not os.path.exists(file_path):
-            print("\t- download clip: " + file_path)
-            cmd = path_twitch_cli + ' -m ClipDownload' \
-                  + ' --id ' + str(video['id']) + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
-                  + ' --quality 1080p60 -o ' + file_path
-            subprocess.Popen(cmd, stdout=subprocess.DEVNULL).wait()
+            # VIDEO: check if the file exists
+            file_path = path_data + str(video['id']) + ".mp4"
+            if not utils.terminated_requested and not os.path.exists(file_path):
+                print("\t- download clip: " + file_path)
+                cmd = path_twitch_cli + ' -m ClipDownload' \
+                      + ' --id ' + str(video['id']) + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
+                      + ' --quality 1080p60 -o ' + file_path
+                # subprocess.Popen(cmd).wait()
+                subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
 
-        # CHAT: check if the file exists
-        file_path_chat = path_data + str(video['id']) + "_chat.json"
-        if not utils.terminated_requested and not os.path.exists(file_path_chat):
-            print("\t- download chat: " + file_path_chat)
-            cmd = path_twitch_cli + ' -m ChatDownload' \
-                  + ' --id ' + str(video['id']) + ' --embed-emotes' \
-                  + ' -o ' + file_path_chat
-            subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
+            # CHAT: check if the file exists
+            file_path_chat = path_data + str(video['id']) + "_chat.json"
+            if not utils.terminated_requested and not os.path.exists(file_path_chat):
+                print("\t- download chat: " + file_path_chat)
+                cmd = path_twitch_cli + ' -m ChatDownload' \
+                      + ' --id ' + str(video['id']) + ' --embed-emotes' \
+                      + ' -o ' + file_path_chat
+                # subprocess.Popen(cmd).wait()
+                subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
 
-        # api returns clips in order of most watch to least watched
-        print("\t- clip " + video['url'] + " (" + str(video['view_count']) + " views)")
+            # api returns clips in order of most watch to least watched
+            print("\t- clip " + video['url'] + " (" + str(video['view_count']) + " views)")
 
+    except:
+        print("twitch api failure.... stopping querying....")
 
 # ================================================================
 # ================================================================
-
 
 # now we will re-load from disk to try to get any clips that have since been deleted
 # clips can be deleted due to DMCA or other VODs being removed..
@@ -199,8 +203,8 @@ for video in arr_clips:
               + ' -i ' + file_path_chat + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
               + ' -h 1080 -w 320 --framerate 60 --font-size 13' \
               + ' -o ' + file_path_render
-        subprocess.Popen(cmd, stdout=subprocess.DEVNULL).wait()
         # subprocess.Popen(cmd).wait()
+        subprocess.Popen(cmd, stdout=subprocess.DEVNULL).wait()
 
     # COMPOSITE: render the composite image
     file_path = path_data + str(video['id']) + ".mp4"
@@ -230,6 +234,7 @@ for video in arr_clips:
             print("\t- rendering *without* chat overlay ")
             cmd = path_twitch_ffmpeg + ' -hide_banner -loglevel quiet -stats ' \
                   + ' -i ' + file_path \
+                  + ' -vf scale=w=1920:h=1080 ' \
                   + ' -c:a aac -ar 48k -ac 2 -vcodec libx264 -crf 19 -preset fast ' \
                   + ' -video_track_timescale 90000 -avoid_negative_ts make_zero -fflags +genpts -framerate 60 ' \
                   + file_path_composite

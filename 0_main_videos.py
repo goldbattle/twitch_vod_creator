@@ -23,13 +23,13 @@ client_secret = auth["client_secret"]
 # parameters
 channels = ['sodapoppin', 'moonmoon', 'clintstevens', 'pokelawls', 'sevadus', 'happythoughts', 'nmplol']
 max_videos = 80
-render_chat = True
+render_chat = False
 
 # ================================================================
 # ================================================================
 
 # paths of the cli and data
-path_twitch_cli = path_base + "/thirdparty/Twitch Downloader 1.38/TwitchDownloaderCLI.exe"
+path_twitch_cli = path_base + "/thirdparty/Twitch Downloader Embed Fix/TwitchDownloaderCLI.exe"
 path_twitch_ffmpeg = path_base + "/thirdparty/Twitch Downloader 1.38/ffmpeg.exe"
 path_root = path_base + "/../data/"
 
