@@ -93,8 +93,9 @@ for idx, user in enumerate(users):
             print("processing " + video['url'] + " (" + str(video['view_count']) + " views)")
 
             # INFO: always save to file so our viewcount gets updated!
+            # INFO: we only update the viewcount, as when the VOD gets deleted most elements are lost
             file_path_info = path_data + str(video['id']) + "_info.json"
-            if not utils.terminated_requested:
+            if not utils.terminated_requested and not os.path.exists(file_path_info):
                 print("\t- saving clip info: " + file_path_info)
 
                 # load the game information if we don't have it
@@ -110,10 +111,14 @@ for idx, user in enumerate(users):
                 else:
                     game_title = gameid2name[video['game_id']]
 
+                # have to call the graphql api to get where the clip is in the VOD
+                clip_data = utils.get_clip_data(video['id'])
+
                 # finally write to file
                 data = {
                     'id': video['id'],
                     'video_id': video['video_id'],
+                    'video_offset': clip_data['offset'],
                     'creator_id': video['creator_id'],
                     'creator_name': video['creator_name'],
                     'title': video['title'],
@@ -121,10 +126,20 @@ for idx, user in enumerate(users):
                     'game': game_title,
                     'url': video['url'],
                     'view_count': video['view_count'],
+                    'duration': clip_data['duration'],
                     'created_at': video['created_at'].strftime('%Y-%m-%d %H:%M:%SZ'),
                 }
                 with open(file_path_info, 'w', encoding="utf-8") as file:
                     json.dump(data, file, indent=4)
+
+            elif not utils.terminated_requested:
+                print("\t- updating clip info: " + file_path_info)
+                with open(file_path_info) as f:
+                    video_info = json.load(f)
+                video_info["view_count"] = video['view_count']
+                with open(file_path_info, 'w', encoding="utf-8") as file:
+                    json.dump(video_info, file, indent=4)
+
 
             # VIDEO: check if the file exists
             file_path = path_data + str(video['id']) + ".mp4"

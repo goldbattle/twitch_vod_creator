@@ -13,11 +13,11 @@ Example channels with these video renders:
 
 ### Dependencies & Config
 
-Right now the twitch api requires oauth which the origin [python-twitch-client](https://github.com/tsifrer/python-twitch-client) library does not support.
-A fork of it has added oauth (which has been open as a PR), thus we will need to install that fork version.
+We leverage [python-twitch-client](https://github.com/tsifrer/python-twitch-client) library which recently added oauth support.
+You will need at least version 0.7.1 installed to have the correct api support functions.
 
 ```
-pip install git+https://github.com/BoraxTheClean/python-twitch-client.git@add-oauth-token-fetch
+pip install python-twitch-client
 pip install PyYAML
 pip install youtube-video-upload
 ```
@@ -58,3 +58,7 @@ This might be due to the limit of the read speed of my harddrive or tuning of th
 
 * Right now this has only been tested with Python 3.7 and on a Windows 10 machine using PyCharm.
 Probably all the path handling should be re-done to be more proper to allow for running on different OS platforms.
+
+* There is no detection of two clips being of the same segment of a VOD. This can cause a compilation to have multiple of the same clips in it.
+This can be addressed by checking the VOD time offset and seeing if any of the clips have overlapping time segments.
+  

@@ -82,3 +82,53 @@ def get_vod_graphql_info(vod_id):
         headers={"Client-ID": client_id}
     )
     return response.text
+
+
+def get_clip_data(clip_id):
+    # get response
+    try:
+        gql_response = get_clip_graphql_info(clip_id)
+        gql_obj = json.loads(gql_response)
+        return {
+            "vod_id": gql_obj["data"]["clip"]["video"]["id"],
+            "offset": gql_obj["data"]["clip"]["videoOffsetSeconds"],
+            "duration": gql_obj["data"]["clip"]["durationSeconds"],
+        }
+    except Exception as e:
+        # print(e)
+        return {
+            "vod_id": -1,
+            "offset": -1,
+            "duration": -1,
+        }
+
+def get_clip_graphql_info(clip_id):
+    # seems to just be a default client id
+    # https://dev.twitch.tv/docs/authentication
+    client_id = "kimne78kx3ncx6brgo4mv6wki5h1ko"
+    # auth = "xxxxxx"
+
+    # formulate the graphql query format
+    # https://graphiql-online.com/graphiql
+    # https://api.twitch.tv/gql
+    query = '''
+    query Query($clip_id: ID!) {
+        clip(slug: $clip_id) {
+            videoOffsetSeconds
+            viewCount
+            durationSeconds
+            video {
+                id
+            }
+        }
+      }
+    '''
+    variables = {'clip_id': clip_id}
+    url = 'https://api.twitch.tv/gql'
+    response = requests.post(
+        url,
+        json={'query': query, 'variables': variables},
+        # headers={"Client-ID": client_id, "Authorization": "OAuth "+auth}
+        headers={"Client-ID": client_id}
+    )
+    return response.text
