@@ -1,9 +1,6 @@
 # !/usr/bin/env python3
 
-# https://github.com/tsifrer/python-twitch-client
-# pip install git+https://github.com/BoraxTheClean/python-twitch-client.git@add-oauth-token-fetch
-import twitch
-
+import twitch  # pip install python-twitch-client
 import yaml  # pip install PyYAML
 
 import os
@@ -21,8 +18,8 @@ client_id = auth["client_id"]
 client_secret = auth["client_secret"]
 
 # parameters
-channels = ['sodapoppin', 'moonmoon', 'clintstevens', 'pokelawls', 'sevadus', 'happythoughts', 'nmplol']
-max_videos = 80
+channels = ['sodapoppin', 'moonmoon', 'clintstevens', 'pokelawls', 'sevadus', 'happythoughts', 'nmplol', 'georgehotz']
+max_videos = 20
 render_chat = False
 
 # ================================================================

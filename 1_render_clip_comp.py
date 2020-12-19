@@ -1,9 +1,6 @@
 # !/usr/bin/env python3
 
-# https://github.com/tsifrer/python-twitch-client
-# pip install git+https://github.com/BoraxTheClean/python-twitch-client.git@add-oauth-token-fetch
-import twitch
-
+import twitch  # pip install python-twitch-client
 import yaml  # pip install PyYAML
 
 import os
@@ -22,12 +19,12 @@ client_id = auth["client_id"]
 client_secret = auth["client_secret"]
 
 # parameters
-channel = 'pokelawls'
-max_clips = 100
-date_start = '2020-01-01T00:00:00.00Z'
-date_end = '2020-12-31T00:00:00.00Z'
+channel = 'sodapoppin'
+max_clips = 50
+date_start = '2020-11-01T00:00:00.00Z'
+date_end = '2020-11-30T00:00:00.00Z'
 min_views_required = 1000
-get_latest_from_twitch = False
+get_latest_from_twitch = True
 
 # ================================================================
 # ================================================================
@@ -68,8 +65,8 @@ if get_latest_from_twitch:
     print("getting clips for -> " + user.name + " (id " + str(user.id) + ")")
     client_helix = twitch.TwitchHelix(client_id=client_id, client_secret=client_secret)
     client_helix.get_oauth()
-    # vid_iter = client_helix.get_clips(broadcaster_id=user.id, page_size=100, started_at=date_start, ended_at=date_end)
-    vid_iter = client_helix.get_clips(broadcaster_id=user.id, page_size=100)
+    vid_iter = client_helix.get_clips(broadcaster_id=user.id, page_size=100, started_at=date_start, ended_at=date_end)
+    # vid_iter = client_helix.get_clips(broadcaster_id=user.id, page_size=100)
     try:
         for video in vid_iter:
 

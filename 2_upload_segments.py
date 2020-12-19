@@ -58,7 +58,7 @@ for video in data:
     print("\t- " + video["title"])
 
     # check if the files are there
-    clean_video_title = video["title"].lower().replace(' ', '_')
+    clean_video_title = utils.get_valid_filename(video["title"])
     file_path_composite = path_render + video["video"] + "_" + clean_video_title + ".mp4"
     file_path_desc = path_render + video["video"] + "_" + clean_video_title + "_desc.txt"
     if not os.path.exists(file_path_composite) or not os.path.exists(file_path_desc):

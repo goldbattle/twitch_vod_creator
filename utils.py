@@ -1,7 +1,7 @@
 # Import general libraries
 import json
 import signal
-
+import string
 import requests
 
 # global variable which sets if we should terminate
@@ -17,6 +17,11 @@ def signal_handler(sig, frame):
 def setup_signal_handle():
     signal.signal(signal.SIGINT, signal_handler)
 
+
+def get_valid_filename(filename):
+    valid_chars = "-_.() %s%s" % (string.ascii_letters, string.digits)
+    filename = filename.lower().replace(' ', '_')
+    return ''.join(c for c in filename if c in valid_chars)
 
 def get_vod_moments(void_id):
     # get response

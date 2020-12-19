@@ -10,9 +10,7 @@ import utils
 import shutil
 
 # video file we wish to render
-video_file = "config/01_videos.yaml"  # sodapoppin
-# video_file = "config/02_videos.yaml"  # sevadus
-# video_file = "config/03_videos.yaml"  # nmplol
+video_file = "config/soda_02_videos.yaml"
 
 # paths of the cli and data
 path_base = os.path.dirname(os.path.abspath(__file__))
@@ -83,7 +81,7 @@ for video in data:
         # subprocess.Popen(cmd).wait()
 
     # COMPOSITE: render the composite image
-    clean_video_title = video["title"].lower().replace(' ', '_')
+    clean_video_title = utils.get_valid_filename(video["title"])
     file_path_composite = path_render + video["video"] + "_" + clean_video_title + ".mp4"
     if not utils.terminated_requested and not os.path.exists(file_path_composite):
         print("\t- rendering composite: " + file_path_composite)
