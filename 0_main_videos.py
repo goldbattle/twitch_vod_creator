@@ -18,8 +18,11 @@ client_id = auth["client_id"]
 client_secret = auth["client_secret"]
 
 # parameters
-channels = ['sodapoppin', 'moonmoon', 'clintstevens', 'pokelawls', 'sevadus', 'happythoughts', 'nmplol', 'georgehotz']
-max_videos = 20
+channels = [
+    'sodapoppin', 'moonmoon', 'clintstevens', 'pokelawls', 'sevadus',
+    'happythoughts', 'nmplol', 'jerma985', 'devinnash', 'heydoubleu', 'forsen'
+]
+max_videos = 30
 render_chat = False
 
 # ================================================================
@@ -57,6 +60,10 @@ for user in users:
     if not os.path.exists(path_data):
         os.makedirs(path_data)
 
+    # get this stream object, it will have something if the stream is live
+    stream = client_helix.get_streams(user_ids=[user.id])
+    stream_is_live = (len(stream) == 1)
+
     # get the videos for this specific user
     print("getting videos for -> " + user.name.lower() + " (id " + str(user.id) + ")")
     vid_iter = client_helix.get_videos(user_id=user.id, page_size=100)
@@ -64,12 +71,14 @@ for user in users:
     arr_highlight = []
     arr_upload = []
     ct_added = [0, 0, 0]
+    seen_first_video = False
     for video in vid_iter:
-        # skip the video if no thumbnail
-        # this basically allows us to skip the current "live" stream
-        # which shows up in the VODs even though it isn't one yet...
-        if video['thumbnail_url'] == '':
+        # skip the first VOD is they are live
+        if not seen_first_video and stream_is_live:
+            print("skipping video " + video['id'] + " since stream is live...")
+            seen_first_video = True
             continue
+        seen_first_video = True
         # else lets process
         # "all", "upload", "archive", "highlight"
         if video['type'] == 'archive' and ct_added[0] < max_videos:

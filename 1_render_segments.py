@@ -68,22 +68,24 @@ for video in data:
     if not os.path.exists(path_temp):
         os.makedirs(path_temp)
 
-    # CHAT: check if the file exists, render if needed
-    file_path_chat = path_root + video["video"] + "_chat.json"
-    file_path_render = path_root + video["video"] + "_chat.mp4"
-    if not utils.terminated_requested and os.path.exists(file_path_chat) and not os.path.exists(file_path_render):
-        print("\t- rendering chat: " + file_path_chat)
-        cmd = path_twitch_cli + ' -m ChatRender' \
-              + ' -i ' + file_path_chat + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
-              + ' -h 1080 -w 320 --framerate 60 --font-size 13' \
-              + ' -o ' + file_path_render
-        subprocess.Popen(cmd, stdout=subprocess.DEVNULL).wait()
-        # subprocess.Popen(cmd).wait()
-
     # COMPOSITE: render the composite image
     clean_video_title = utils.get_valid_filename(video["title"])
     file_path_composite = path_render + video["video"] + "_" + clean_video_title + ".mp4"
     if not utils.terminated_requested and not os.path.exists(file_path_composite):
+
+        # check if the chat exists, render if needed
+        file_path_chat = path_root + video["video"] + "_chat.json"
+        file_path_render = path_root + video["video"] + "_chat.mp4"
+        if not utils.terminated_requested and os.path.exists(file_path_chat) and not os.path.exists(file_path_render):
+            print("\t- rendering chat: " + file_path_chat)
+            cmd = path_twitch_cli + ' -m ChatRender' \
+                  + ' -i ' + file_path_chat + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
+                  + ' -h 1080 -w 320 --framerate 60 --font-size 13' \
+                  + ' -o ' + file_path_render
+            subprocess.Popen(cmd, stdout=subprocess.DEVNULL).wait()
+            # subprocess.Popen(cmd).wait()
+
+        # now we can render the composite
         print("\t- rendering composite: " + file_path_composite)
 
         # make directory if needed
