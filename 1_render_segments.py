@@ -10,12 +10,12 @@ import utils
 import shutil
 
 # video file we wish to render
-video_file = "config/soda_02_videos.yaml"
+video_file = "config/soda_03_videos.yaml"
 
 # paths of the cli and data
 path_base = os.path.dirname(os.path.abspath(__file__))
-path_twitch_cli = path_base + "/thirdparty/Twitch Downloader Embed Fix/TwitchDownloaderCLI.exe"
-path_twitch_ffmpeg = path_base + "/thirdparty/Twitch Downloader 1.38/ffmpeg.exe"
+path_twitch_cli = path_base + "/thirdparty/Twitch Downloader 1.39.2/TwitchDownloaderCLI.exe"
+path_twitch_ffmpeg = path_base + "/thirdparty/Twitch Downloader 1.39.2/ffmpeg.exe"
 path_root = path_base + "/../data/"
 path_render = path_base + "/../data_rendered/"
 path_temp = path_base + "/../data_temp/"
@@ -82,8 +82,7 @@ for video in data:
                   + ' -i ' + file_path_chat + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
                   + ' -h 1080 -w 320 --framerate 60 --font-size 13' \
                   + ' -o ' + file_path_render
-            subprocess.Popen(cmd, stdout=subprocess.DEVNULL).wait()
-            # subprocess.Popen(cmd).wait()
+            subprocess.Popen(cmd).wait()
 
         # now we can render the composite
         print("\t- rendering composite: " + file_path_composite)
@@ -122,12 +121,22 @@ for video in data:
             # cpu encoding: -c:a aac -vcodec libx264 -crf 20 -preset veryfast
             t0 = time.time()
             if os.path.exists(file_path_render):
+                # print("\t- rendering with chat overlay " + seg_start[idx] + " to " + seg_end[idx])
+                # cmd = path_twitch_ffmpeg + ' -hide_banner -loglevel quiet -stats ' \
+                #       + ' -ss ' + seg_start[idx] + ' -i ' + file_path_video + ' -to ' + seg_end[idx] \
+                #       + ' -ss ' + seg_start[idx] + ' -i ' + file_path_render \
+                #       + ' -filter_complex "[0:v] scale=1646x926,pad=1920:926:0:90:black [tmp1];' \
+                #       + ' [1:v] scale=274x926 [tmp2];' \
+                #       + ' [tmp1][tmp2] overlay=shortest=0:x=1646:y=0:eof_action=endall" -shortest ' \
+                #       + ' -c:a aac -vcodec libx264 -crf 19 -preset fast -avoid_negative_ts make_zero ' \
+                #       + tmp_output_file
+                # subprocess.Popen(cmd).wait()
                 print("\t- rendering with chat overlay " + seg_start[idx] + " to " + seg_end[idx])
                 cmd = path_twitch_ffmpeg + ' -hide_banner -loglevel quiet -stats ' \
                       + ' -ss ' + seg_start[idx] + ' -i ' + file_path_video + ' -to ' + seg_end[idx] \
                       + ' -ss ' + seg_start[idx] + ' -i ' + file_path_render \
-                      + ' -filter_complex "scale=1600x900,pad=1920:1080:0:90:black [tmp1];' \
-                      + ' [tmp1][1:v] overlay=shortest=0:x=1600:y=0:eof_action=endall" -shortest ' \
+                      + ' -filter_complex "pad=2240:1080:0:90:black [tmp1];' \
+                      + ' [tmp1][1:v] overlay=shortest=0:x=1920:y=0:eof_action=endall" -shortest ' \
                       + ' -c:a aac -vcodec libx264 -crf 19 -preset fast -avoid_negative_ts make_zero ' \
                       + tmp_output_file
                 subprocess.Popen(cmd).wait()

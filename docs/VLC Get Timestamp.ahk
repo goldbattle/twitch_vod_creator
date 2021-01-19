@@ -12,7 +12,7 @@ F8::
         Send, ^t ; # open the "Go to Time" dialog
         if WinExist(GoToTimeDialogName) { ; # if the "Go to Time" dialog exists
             WinActivate ; # activate "Go to Time" dialog exists
-            ; MouseClick, left, 120, 48 ; # click on time field (change this for other screen resolutions)
+            MouseClick, left, 120, 48 ; # click on time field (change this for other screen resolutions)
             Send, ^a ; # select time field
             Send, ^c ; # copy to clipboard
             ClipWait ; # Wait for the clipboard to contain text.

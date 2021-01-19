@@ -16,6 +16,7 @@ if len(sys.argv) != 2:
     print("please pass at least a single vod id to download...")
     exit(-1)
 vod_id_to_download = int(sys.argv[1])
+render_chat = False
 
 # authentication information
 path_base = os.path.dirname(os.path.abspath(__file__))
@@ -29,8 +30,8 @@ client_secret = auth["client_secret"]
 # ================================================================
 
 # paths of the cli and data
-path_twitch_cli = path_base + "/thirdparty/Twitch Downloader Embed Fix/TwitchDownloaderCLI.exe"
-path_twitch_ffmpeg = path_base + "/thirdparty/Twitch Downloader 1.38/ffmpeg.exe"
+path_twitch_cli = path_base + "/thirdparty/Twitch Downloader 1.39.2/TwitchDownloaderCLI.exe"
+path_twitch_ffmpeg = path_base + "/thirdparty/Twitch Downloader 1.39.2/ffmpeg.exe"
 path_root = path_base + "/../data/"
 
 # ================================================================
@@ -99,7 +100,7 @@ print("download video: " + file_path)
 if not utils.terminated_requested and not os.path.exists(file_path):
     cmd = path_twitch_cli + ' -m VideoDownload' \
           + ' --id ' + str(video['helix']['id']) + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
-          + ' --quality 1080p60 -o ' + file_path
+          + ' --temp-path "' + path_root + '/TEMP/" --quality 1080p60 -o ' + file_path
     subprocess.Popen(cmd).wait()
 
 # CHAT: check if the file exists
@@ -112,16 +113,17 @@ if not utils.terminated_requested and not os.path.exists(file_path_chat):
     subprocess.Popen(cmd).wait()
 
 # RENDER: check if the file exists
-file_path_chat = path_data + export_folder + str(video['helix']['id']) + "_chat.json"
-file_path_render = path_data + export_folder + str(video['helix']['id']) + "_chat.mp4"
-if os.path.exists(file_path_chat) and not os.path.exists(file_path_render):
-    print("rendering chat: " + file_path_render)
-    cmd = path_twitch_cli + ' -m ChatRender' \
-          + ' -i ' + file_path_chat + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
-          + ' -h 1080 -w 320 --framerate 60 --font-size 13' \
-          + ' -o ' + file_path_render
-    subprocess.Popen(cmd, stdout=subprocess.DEVNULL).wait()
-    # subprocess.Popen(cmd).wait()
+if render_chat:
+    file_path_chat = path_data + export_folder + str(video['helix']['id']) + "_chat.json"
+    file_path_render = path_data + export_folder + str(video['helix']['id']) + "_chat.mp4"
+    if os.path.exists(file_path_chat) and not os.path.exists(file_path_render):
+        print("rendering chat: " + file_path_render)
+        cmd = path_twitch_cli + ' -m ChatRender' \
+              + ' -i ' + file_path_chat + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
+              + ' -h 1080 -w 320 --framerate 60 --font-size 13' \
+              + ' -o ' + file_path_render
+        # subprocess.Popen(cmd, stdout=subprocess.DEVNULL).wait()
+        subprocess.Popen(cmd).wait()
 
 
 

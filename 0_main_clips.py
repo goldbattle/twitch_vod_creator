@@ -19,14 +19,14 @@ client_secret = auth["client_secret"]
 
 # parameters
 channels = ['xqcow', 'moonmoon', 'sodapoppin', 'clintstevens', 'pokelawls', 'forsen', 'nmplol']
-min_view_counts = [5000, 3000, 3000, 1000, 2000, 6000, 2000]
+min_view_counts = [4000, 2000, 2000, 500, 1000, 5000, 2000]
 
 # ================================================================
 # ================================================================
 
 # paths of the cli and data
-path_twitch_cli = path_base + "/thirdparty/Twitch Downloader Embed Fix/TwitchDownloaderCLI.exe"
-path_twitch_ffmpeg = path_base + "/thirdparty/Twitch Downloader 1.38/ffmpeg.exe"
+path_twitch_cli = path_base + "/thirdparty/Twitch Downloader 1.39.2/TwitchDownloaderCLI.exe"
+path_twitch_ffmpeg = path_base + "/thirdparty/Twitch Downloader 1.39.2/ffmpeg.exe"
 path_root = path_base + "/../data_clips/"
 
 # ================================================================
@@ -144,7 +144,7 @@ for idx, user in enumerate(users):
             if not utils.terminated_requested and not os.path.exists(file_path):
                 cmd = path_twitch_cli + ' -m ClipDownload' \
                       + ' --id ' + str(video['id']) + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
-                      + ' --quality 1080p60 -o ' + file_path
+                      + ' --temp-path "' + path_root + '/TEMP/" --quality 1080p60 -o ' + file_path
                 subprocess.Popen(cmd, stdout=subprocess.DEVNULL).wait()
                 count_total_clips_downloaded = count_total_clips_downloaded + 1
 
