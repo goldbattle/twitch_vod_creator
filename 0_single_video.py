@@ -30,8 +30,8 @@ client_secret = auth["client_secret"]
 # ================================================================
 
 # paths of the cli and data
-path_twitch_cli = path_base + "/thirdparty/Twitch Downloader 1.39.2/TwitchDownloaderCLI.exe"
-path_twitch_ffmpeg = path_base + "/thirdparty/Twitch Downloader 1.39.2/ffmpeg.exe"
+path_twitch_cli = path_base + "/thirdparty/Twitch Downloader 1.39.3/TwitchDownloaderCLI.exe"
+path_twitch_ffmpeg = path_base + "/thirdparty/Twitch Downloader 1.39.3/ffmpeg.exe"
 path_root = path_base + "/../data/"
 
 # ================================================================
@@ -100,7 +100,8 @@ print("download video: " + file_path)
 if not utils.terminated_requested and not os.path.exists(file_path):
     cmd = path_twitch_cli + ' -m VideoDownload' \
           + ' --id ' + str(video['helix']['id']) + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
-          + ' --temp-path "' + path_root + '/TEMP/" --quality 1080p60 -o ' + file_path
+                  + ' --quality 1080p60 -o ' + file_path
+                  #+ ' --temp-path "' + path_root + '/TEMP/" --quality 1080p60 -o ' + file_path
     subprocess.Popen(cmd).wait()
 
 # CHAT: check if the file exists

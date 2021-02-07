@@ -20,9 +20,9 @@ client_secret = auth["client_secret"]
 
 # parameters
 channel = 'sodapoppin'
-max_clips = 100
-date_start = '2020-01-01T00:00:00.00Z'
-date_end = '2020-12-31T00:00:00.00Z'
+max_clips = 30
+date_start = '2021-01-01T00:00:00.00Z'
+date_end = '2021-01-31T00:00:00.00Z'
 min_views_required = 1000
 get_latest_from_twitch = True
 
@@ -30,8 +30,8 @@ get_latest_from_twitch = True
 # ================================================================
 
 # paths of the cli and data
-path_twitch_cli = path_base + "/thirdparty/Twitch Downloader 1.39.2/TwitchDownloaderCLI.exe"
-path_twitch_ffmpeg = path_base + "/thirdparty/Twitch Downloader 1.39.2/ffmpeg.exe"
+path_twitch_cli = path_base + "/thirdparty/Twitch Downloader 1.39.3/TwitchDownloaderCLI.exe"
+path_twitch_ffmpeg = path_base + "/thirdparty/Twitch Downloader 1.39.3/ffmpeg.exe"
 path_twitch_ffprob = path_base + "/thirdparty/ffmpeg-N-99900-g89429cf2f2-win64-lgpl/ffprobe.exe"
 path_root = path_base + "/../data_clips/"
 path_render = path_base + "/../data_rendered/"
@@ -174,11 +174,11 @@ for root, dirs, files in os.walk(path_data):
             video_info = json.load(f)
         file_path = path_data + str(video_info['id']) + ".mp4"
         if not os.path.exists(file_path):
-            print("WARNING: "+video_info['id']+" is missing its main video file!!!!")
+            print("WARNING: " + video_info['id'] + " is missing its main video file!!!!")
             continue
         filesize = os.path.getsize(file_path)
         if filesize < 1:
-            print("WARNING: "+video_info['id']+" clip is invalid!!!!")
+            print("WARNING: " + video_info['id'] + " clip is invalid!!!!")
             continue
         datetime_created = datetime.datetime.strptime(video_info['created_at'], "%Y-%m-%d %H:%M:%SZ")
         if datetime_created < datetime_start:
@@ -186,6 +186,59 @@ for root, dirs, files in os.walk(path_data):
         if datetime_created > datetime_end:
             continue
         arr_clips.append(video_info)
+
+# Now we will loop through all clips and remove any that occur at the same time instance.
+# We can check this by first checking if two clips come from the same vod, then
+arr_clips_no_common = []
+arr_clips.sort(key=lambda x: x['duration'] if "duration" in x else -1, reverse=True)
+for id1, video1 in enumerate(arr_clips):
+    # skip if we don't have offset information
+    if "video_id" not in video1 or video1['video_id'] == "":
+        arr_clips_no_common.append(id1)
+        continue
+    if "video_offset" not in video1 or video1['video_offset'] == -1:
+        arr_clips_no_common.append(id1)
+        continue
+    if "duration" not in video1 or video1['duration'] == -1:
+        arr_clips_no_common.append(id1)
+        continue
+    # see if there is one that occurs at this same time
+    id_common = []
+    for id2, video2 in enumerate(arr_clips):
+        # skip if we don't have offset information
+        if id1 == id2:
+            continue
+        if "video_id" not in video2 or video2['video_id'] == "":
+            continue
+        if "video_offset" not in video2 or video2['video_offset'] == -1:
+            continue
+        if "duration" not in video2 or video2['duration'] == -1:
+            continue
+        # skip if a different vod
+        if video1['video_id'] != video2['video_id']:
+            continue
+        # skip if no overlaps
+        start1 = video1['video_offset']
+        end1 = video1['video_offset'] + video1['duration']
+        start2 = video2['video_offset']
+        end2 = video2['video_offset'] + video2['duration']
+        if start1 < end2 and start2 < end1:
+            id_common.append(id2)
+    # if we have not detected a common feature add it
+    if len(id_common) == 0:
+        arr_clips_no_common.append(id1)
+        continue
+    # else if we have not appended at least one of the common
+    num_added = 0
+    for id3 in id_common:
+        if id3 in arr_clips_no_common:
+            num_added = num_added + 1
+    if num_added == 0:
+        #print("ADDING: " + video1['id'] + " has overlapping with " + str(len(id_common)) + " features")
+        #for id3 in id_common:
+        #    print(id3)
+        arr_clips_no_common.append(id1)
+        continue
 
 # sort the clip array first by view count, then by date
 print("sorting " + str(len(arr_clips)) + " clips by viewcount")
@@ -199,7 +252,6 @@ arr_clips.sort(key=lambda x: x['created_at'])
 if len(arr_clips) < max_clips:
     print("ERROR: unable to find enough requested clips....")
     print("ERROR: either decrease the min view count or number of requested clips..")
-    exit(-1)
 
 # ================================================================
 # ================================================================

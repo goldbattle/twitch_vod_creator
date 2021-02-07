@@ -14,8 +14,8 @@ video_file = "config/soda_03_videos.yaml"
 
 # paths of the cli and data
 path_base = os.path.dirname(os.path.abspath(__file__))
-path_twitch_cli = path_base + "/thirdparty/Twitch Downloader 1.39.2/TwitchDownloaderCLI.exe"
-path_twitch_ffmpeg = path_base + "/thirdparty/Twitch Downloader 1.39.2/ffmpeg.exe"
+path_twitch_cli = path_base + "/thirdparty/Twitch Downloader 1.39.3/TwitchDownloaderCLI.exe"
+path_twitch_ffmpeg = path_base + "/thirdparty/Twitch Downloader 1.39.3/ffmpeg.exe"
 path_root = path_base + "/../data/"
 path_render = path_base + "/../data_rendered/"
 path_temp = path_base + "/../data_temp/"
@@ -80,7 +80,7 @@ for video in data:
             print("\t- rendering chat: " + file_path_chat)
             cmd = path_twitch_cli + ' -m ChatRender' \
                   + ' -i ' + file_path_chat + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
-                  + ' -h 1080 -w 320 --framerate 60 --font-size 13' \
+                  + ' -h 926 -w 274 --update-rate 0.1 --framerate 60 --font-size 15' \
                   + ' -o ' + file_path_render
             subprocess.Popen(cmd).wait()
 
@@ -121,23 +121,14 @@ for video in data:
             # cpu encoding: -c:a aac -vcodec libx264 -crf 20 -preset veryfast
             t0 = time.time()
             if os.path.exists(file_path_render):
-                # print("\t- rendering with chat overlay " + seg_start[idx] + " to " + seg_end[idx])
-                # cmd = path_twitch_ffmpeg + ' -hide_banner -loglevel quiet -stats ' \
-                #       + ' -ss ' + seg_start[idx] + ' -i ' + file_path_video + ' -to ' + seg_end[idx] \
-                #       + ' -ss ' + seg_start[idx] + ' -i ' + file_path_render \
-                #       + ' -filter_complex "[0:v] scale=1646x926,pad=1920:926:0:90:black [tmp1];' \
-                #       + ' [1:v] scale=274x926 [tmp2];' \
-                #       + ' [tmp1][tmp2] overlay=shortest=0:x=1646:y=0:eof_action=endall" -shortest ' \
-                #       + ' -c:a aac -vcodec libx264 -crf 19 -preset fast -avoid_negative_ts make_zero ' \
-                #       + tmp_output_file
-                # subprocess.Popen(cmd).wait()
                 print("\t- rendering with chat overlay " + seg_start[idx] + " to " + seg_end[idx])
                 cmd = path_twitch_ffmpeg + ' -hide_banner -loglevel quiet -stats ' \
                       + ' -ss ' + seg_start[idx] + ' -i ' + file_path_video + ' -to ' + seg_end[idx] \
                       + ' -ss ' + seg_start[idx] + ' -i ' + file_path_render \
-                      + ' -filter_complex "pad=2240:1080:0:90:black [tmp1];' \
-                      + ' [tmp1][1:v] overlay=shortest=0:x=1920:y=0:eof_action=endall" -shortest ' \
-                      + ' -c:a aac -vcodec libx264 -crf 19 -preset fast -avoid_negative_ts make_zero ' \
+                      + ' -filter_complex "[0:v] scale=1646x926 [tmp1];' \
+                      + ' [tmp1][1:v]hstack=inputs=2:shortest=1[stack]" -shortest -map "[stack]" -map 0:a ' \
+                      + ' -vcodec libx264 -crf 18 -preset veryfast -avoid_negative_ts make_zero -framerate 60 ' \
+                      + ' -c:a aac ' \
                       + tmp_output_file
                 subprocess.Popen(cmd).wait()
             else:
@@ -149,7 +140,6 @@ for video in data:
                 m, s = divmod(time2_s - time1_s, 60)
                 h, m = divmod(m, 60)
                 seg_length = format(h, '02') + ':' + format(m, '02') + ':' + format(s, '02')
-                print(seg_length)
                 cmd = path_twitch_ffmpeg + ' -hide_banner -loglevel quiet -stats ' \
                       + ' -ss ' + seg_start[idx] + ' -i ' + file_path_video + ' -t ' + seg_length \
                       + ' -vf scale=w=1920:h=1080 ' \
@@ -208,7 +198,7 @@ for video in data:
         tmp = tmp.replace("$file", video["video"] + ".mp4")
         tmp = tmp.replace("$url", video_info["url"])
         tmp = video["title"] + "\n\n" + tmp
-        with open(file_path_desc, "w") as text_file:
+        with open(file_path_desc, "w", encoding="utf-8") as text_file:
             text_file.write(tmp)
 
     # nice split between each segment
