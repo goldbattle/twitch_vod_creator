@@ -8,6 +8,7 @@ import json
 import time
 import subprocess
 import utils
+import datetime
 
 # authentication information
 path_base = os.path.dirname(os.path.abspath(__file__))
@@ -19,14 +20,23 @@ client_secret = auth["client_secret"]
 
 # parameters
 channels = ['xqcow', 'moonmoon', 'sodapoppin', 'clintstevens', 'pokelawls', 'forsen', 'nmplol']
-min_view_counts = [4000, 2000, 2000, 500, 1000, 5000, 2000]
+min_view_counts = [5000, 2000, 2000, 500, 1000, 5000, 2000]
+
+# number of days to try to request
+num_days_to_query = 60
+date_start = (datetime.datetime.now()-datetime.timedelta(days=num_days_to_query)).strftime('%Y-%m-%dT%H:%M:%SZ')
+date_end = datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ')
+print("Start Day: "+date_start)
+print("End Day: "+date_end)
 
 # ================================================================
 # ================================================================
 
 # paths of the cli and data
-path_twitch_cli = path_base + "/thirdparty/Twitch Downloader 1.39.3/TwitchDownloaderCLI.exe"
-path_twitch_ffmpeg = path_base + "/thirdparty/Twitch Downloader 1.39.3/ffmpeg.exe"
+# path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.39.4/TwitchDownloaderCLI.exe"
+# path_twitch_ffmpeg = path_base + "/thirdparty/Twitch_Downloader_1.39.4/ffmpeg.exe"
+path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.39.4/TwitchDownloaderCLI"
+path_twitch_ffmpeg = path_base + "/thirdparty/ffmpeg-4.3.1-amd64-static/ffmpeg"
 path_root = path_base + "/../data_clips/"
 
 # ================================================================
@@ -35,9 +45,15 @@ path_root = path_base + "/../data_clips/"
 # setup control+c handler
 utils.setup_signal_handle()
 
-# convert the usernames to ids
+# convert the usernames to ids (sort so the are in the same order)
 client_v5 = twitch.TwitchClient(client_id)
-users = client_v5.users.translate_usernames_to_ids(channels)
+users_tmp = client_v5.users.translate_usernames_to_ids(channels)
+users = []
+for channel in channels:
+    for user in users_tmp:
+        if user.name.lower() == channel.lower():
+            users.append(user)
+            break
 
 # get the mapping between the current game ids and name
 gameid2name = {}
@@ -66,7 +82,9 @@ for idx, user in enumerate(users):
         print("getting clips for -> " + user.name + " (id " + str(user.id) + ")")
         client_helix = twitch.TwitchHelix(client_id=client_id, client_secret=client_secret)
         client_helix.get_oauth()
-        vid_iter = client_helix.get_clips(broadcaster_id=user.id, page_size=100)
+        vid_iter = client_helix.get_clips(broadcaster_id=user.id, page_size=100,
+                                          started_at=date_start, ended_at=date_end)
+        # vid_iter = client_helix.get_clips(broadcaster_id=user.id, page_size=100)
         arr_clips = []
         for video in vid_iter:
 
@@ -146,7 +164,7 @@ for idx, user in enumerate(users):
                       + ' --id ' + str(video['id']) + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
                       + ' --quality 1080p60 -o ' + file_path
                       #+ ' --temp-path "' + path_root + '/TEMP/" --quality 1080p60 -o ' + file_path
-                subprocess.Popen(cmd, stdout=subprocess.DEVNULL).wait()
+                subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
                 count_total_clips_downloaded = count_total_clips_downloaded + 1
 
             # CHAT: check if the file exists
@@ -156,7 +174,7 @@ for idx, user in enumerate(users):
                 cmd = path_twitch_cli + ' -m ChatDownload' \
                       + ' --id ' + str(video['id']) + ' --embed-emotes' \
                       + ' -o ' + file_path_chat
-                subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
+                subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
 
         # # loop through each and download
         # for video in arr_clips:
@@ -175,7 +193,7 @@ for idx, user in enumerate(users):
         #               + ' -i ' + file_path_chat + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
         #               + ' -h 1080 -w 320 --framerate 60 --font-size 13' \
         #               + ' -o ' + file_path_render
-        #         subprocess.Popen(cmd, stdout=subprocess.DEVNULL).wait()
+        #         subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL).wait()
 
     except Exception as e:
         print(e)

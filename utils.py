@@ -19,7 +19,7 @@ def setup_signal_handle():
 
 
 def get_valid_filename(filename):
-    valid_chars = "-_.() %s%s" % (string.ascii_letters, string.digits)
+    valid_chars = "-_%s%s" % (string.ascii_letters, string.digits)
     filename = filename.lower().replace(' ', '_')
     return ''.join(c for c in filename if c in valid_chars)
 

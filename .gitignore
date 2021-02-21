@@ -5,6 +5,9 @@ config/auth.yaml
 # jetbrains
 .idea
 
+# log folder
+logs
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

@@ -27,13 +27,26 @@ This should be fill out with a twitch app client information which can be genera
 For youtube uploads you will need to generate a oauth json file after you enable Youtube API V3 access in the Google developer console.
 Please take a look at the original [youtube-video-upload](https://github.com/remorses/youtube-video-upload) repository for those details if you want to try this.
 
+If you are running this on a linux machine, you will need the ffmpeg binary for your system.
+Try to download from the official website as your machine repositories will be too far out of date.
+From there, ensure you have Python 3.6 installed, and that you have correct paths to the TwitchDownload CLI and ffmpeg.
+See the commented out examples in the top of each script file.
+Additionally, one can use the `crontab_script_launcher.sh` script to run script automatically on a cronjob.
+
+```
+sudo crontab -e
+*/25 * * * * /path/to/repo/crontab_script_launcher.sh 0_main_videos.py
+*/15 * * * * /path/to/repo/crontab_script_launcher.sh 1_render_segments.py
+* */12 * * * /path/to/repo/crontab_script_launcher.sh 0_main_clips.py
+```
+
 
 ### Segment Config File Format
 
 The config file format is a yaml file which specifies unique videos which we wish to render of larger vod segments.
 A video is defined by the vod which it is cut from and the unique youtube video title which should remain unchanged.
 A user can cut multiple segments from a single vod into a video render, but cannot combine multi-vod segments into a single video currently.
-The timestamps are specified using `HH:MM:SS` (see ffmpeg docs [here](https://ffmpeg.org/ffmpeg-utils.html#time-duration-syntax)), and are comma seperated.
+The timestamps are specified using `HH:MM:SS` (see ffmpeg docs [here](https://ffmpeg.org/ffmpeg-utils.html#time-duration-syntax)), and are comma separated.
 
 ```
 - video: sodapoppin/2020-11/804430123
@@ -43,22 +56,16 @@ The timestamps are specified using `HH:MM:SS` (see ffmpeg docs [here](https://ff
 ```
 
 In this example a video of the 804430123 vod will be rendered with the title "Example Video".
-The first 10 minutes will be rendered, afterwhich the video will cut to the 1 hour mark, and render the next hour.
+The first 10 minutes will be rendered, after which the video will cut to the 1 hour mark, and render the next hour.
 Note that while here we can have as long as possible video, youtube has a max upload length of 12 hours.
 
 
 ### Known Issues
 
-* The youtube uploader does not seem to work for me.
+* The youtube uploader does not work for me.
 After uploading to youtube successfully, after trying to make the video public the video will be blocked due to "terms and conditions violations".
-The script has been left here as a reference for others, but it seems manual upload is still required.
+It seems that one now need to approve their account / credentials through the [Audit and Quota Extension Form](https://support.google.com/youtube/contact/yt_api_form?hl=en), if one wishes to make their videos public after upload.
 
-* Ffmpeg rendering still seems to be a bit slow (1.9-2.1x speedup) which I have been unable to increase.
+* Ffmpeg rendering still seems to be a bit slow (1.7-2.0x speedup) which I have been unable to increase.
 This might be due to the limit of the read speed of my harddrive or tuning of the ffmpeg parameters (which for me do not max out my gpu and cpu).
 
-* Right now this has only been tested with Python 3.7 and on a Windows 10 machine using PyCharm.
-Probably all the path handling should be re-done to be more proper to allow for running on different OS platforms.
-
-* There is no detection of two clips being of the same segment of a VOD. This can cause a compilation to have multiple of the same clips in it.
-This can be addressed by checking the VOD time offset and seeing if any of the clips have overlapping time segments.
-  

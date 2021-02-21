@@ -30,8 +30,10 @@ client_secret = auth["client_secret"]
 # ================================================================
 
 # paths of the cli and data
-path_twitch_cli = path_base + "/thirdparty/Twitch Downloader 1.39.3/TwitchDownloaderCLI.exe"
-path_twitch_ffmpeg = path_base + "/thirdparty/Twitch Downloader 1.39.3/ffmpeg.exe"
+# path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.39.4/TwitchDownloaderCLI.exe"
+# path_twitch_ffmpeg = path_base + "/thirdparty/Twitch_Downloader_1.39.4/ffmpeg.exe"
+path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.39.4/TwitchDownloaderCLI"
+path_twitch_ffmpeg = path_base + "/thirdparty/ffmpeg-4.3.1-amd64-static/ffmpeg"
 path_root = path_base + "/../data/"
 
 # ================================================================
@@ -102,7 +104,7 @@ if not utils.terminated_requested and not os.path.exists(file_path):
           + ' --id ' + str(video['helix']['id']) + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
                   + ' --quality 1080p60 -o ' + file_path
                   #+ ' --temp-path "' + path_root + '/TEMP/" --quality 1080p60 -o ' + file_path
-    subprocess.Popen(cmd).wait()
+    subprocess.Popen(cmd, shell=True).wait()
 
 # CHAT: check if the file exists
 file_path_chat = path_data + export_folder + str(video['helix']['id']) + "_chat.json"
@@ -111,7 +113,7 @@ if not utils.terminated_requested and not os.path.exists(file_path_chat):
     cmd = path_twitch_cli + ' -m ChatDownload' \
           + ' --id ' + str(video['helix']['id']) + ' --embed-emotes' \
           + ' -o ' + file_path_chat
-    subprocess.Popen(cmd).wait()
+    subprocess.Popen(cmd, shell=True).wait()
 
 # RENDER: check if the file exists
 if render_chat:
@@ -123,8 +125,8 @@ if render_chat:
               + ' -i ' + file_path_chat + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
               + ' -h 1080 -w 320 --framerate 60 --font-size 13' \
               + ' -o ' + file_path_render
-        # subprocess.Popen(cmd, stdout=subprocess.DEVNULL).wait()
-        subprocess.Popen(cmd).wait()
+        # subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL).wait()
+        subprocess.Popen(cmd, shell=True).wait()
 
 
 

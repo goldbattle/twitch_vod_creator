@@ -4,6 +4,7 @@ import twitch  # pip install python-twitch-client
 import yaml  # pip install PyYAML
 
 import os
+import re
 import json
 import time
 import subprocess
@@ -20,19 +21,23 @@ client_secret = auth["client_secret"]
 
 # parameters
 channel = 'sodapoppin'
-max_clips = 30
-date_start = '2021-01-01T00:00:00.00Z'
-date_end = '2021-01-31T00:00:00.00Z'
+max_clips = 52
+date_start = '2017-09-28T00:00:00.00Z'
+date_end = '2017-10-22T00:00:00.00Z'
 min_views_required = 1000
-get_latest_from_twitch = True
+get_latest_from_twitch = False
 
 # ================================================================
 # ================================================================
 
 # paths of the cli and data
-path_twitch_cli = path_base + "/thirdparty/Twitch Downloader 1.39.3/TwitchDownloaderCLI.exe"
-path_twitch_ffmpeg = path_base + "/thirdparty/Twitch Downloader 1.39.3/ffmpeg.exe"
-path_twitch_ffprob = path_base + "/thirdparty/ffmpeg-N-99900-g89429cf2f2-win64-lgpl/ffprobe.exe"
+# path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.39.4/TwitchDownloaderCLI.exe"
+# path_twitch_ffmpeg = path_base + "/thirdparty/Twitch_Downloader_1.39.4/ffmpeg.exe"
+# path_twitch_ffprob = path_base + "/thirdparty/ffmpeg-N-99900-g89429cf2f2-win64-lgpl/ffprobe.exe"
+path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.39.4/TwitchDownloaderCLI"
+path_twitch_ffmpeg = path_base + "/thirdparty/ffmpeg-4.3.1-amd64-static/ffmpeg"
+path_twitch_ffmpeg = path_base + "/thirdparty/ffmpeg-4.3.1-amd64-static/ffprobe"
+path_font = path_base.replace("\\", "/").replace(":", "\\\\:") + "/thirdparty/bebas_neue/BebasNeue-Regular.ttf"
 path_root = path_base + "/../data_clips/"
 path_render = path_base + "/../data_rendered/"
 
@@ -234,8 +239,8 @@ for id1, video1 in enumerate(arr_clips):
         if id3 in arr_clips_no_common:
             num_added = num_added + 1
     if num_added == 0:
-        #print("ADDING: " + video1['id'] + " has overlapping with " + str(len(id_common)) + " features")
-        #for id3 in id_common:
+        # print("ADDING: " + video1['id'] + " has overlapping with " + str(len(id_common)) + " features")
+        # for id3 in id_common:
         #    print(id3)
         arr_clips_no_common.append(id1)
         continue
@@ -252,6 +257,7 @@ arr_clips.sort(key=lambda x: x['created_at'])
 if len(arr_clips) < max_clips:
     print("ERROR: unable to find enough requested clips....")
     print("ERROR: either decrease the min view count or number of requested clips..")
+    exit(-1)
 
 # ================================================================
 # ================================================================
@@ -270,10 +276,9 @@ for video in arr_clips:
         print("\t- rendering chat: " + file_path_render)
         cmd = path_twitch_cli + ' -m ChatRender' \
               + ' -i ' + file_path_chat + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
-              + ' -h 1080 -w 320 --framerate 60 --font-size 13' \
+              + ' -h 1080 -w 320 --framerate 60 --font-size 15' \
               + ' -o ' + file_path_render
-        # subprocess.Popen(cmd).wait()
-        subprocess.Popen(cmd, stdout=subprocess.DEVNULL).wait()
+        subprocess.Popen(cmd).wait()
 
     # COMPOSITE: render the composite image
     file_path = path_data + str(video['id']) + ".mp4"
@@ -287,13 +292,21 @@ for video in arr_clips:
             os.makedirs(dir_path_composite)
 
         # render with chat
+        # text fading based on: http://ffmpeg.shanewhite.co/
         t0 = time.time()
+        title_clean = re.sub(r'http\S+', '', video["title"])
+        title_clean = re.sub(r'www\S+', '', title_clean)
+        title_clean = re.sub(r"[^a-zA-Z0-9'.?: ]", '', title_clean)
+        title_clean = title_clean.replace("'", "\u2019")
         if os.path.exists(file_path_render):
             print("\t- rendering *with* chat overlay")
             cmd = path_twitch_ffmpeg + ' -hide_banner -loglevel quiet -stats ' \
                   + ' -i ' + file_path \
                   + ' -i ' + file_path_render \
-                  + ' -filter_complex "scale=1600x900,pad=1920:1080:0:90:black [tmp1];' \
+                  + ' -filter_complex "scale=1600x900,pad=1920:1080:0:90:black [tmp0];' \
+                  + ' [tmp0]drawtext=text=\'' + title_clean \
+                  + '\':x=10:y=100:fontfile=' + path_font + ':fontsize=75:fontcolor=white:alpha=' \
+                  + '\'if(lt(t,0),0,if(lt(t,0),(t-0)/0,if(lt(t,4),1,if(lt(t,4.5),(0.5-(t-4))/0.5,0))))\'[tmp1]; ' \
                   + ' [tmp1][1:v] overlay=shortest=0:x=1600:y=0:eof_action=endall" -shortest ' \
                   + ' -c:a aac -ar 48k -ac 2 -vcodec libx264 -crf 19 -preset fast ' \
                   + ' -video_track_timescale 90000 -avoid_negative_ts make_zero -fflags +genpts -framerate 60 ' \
@@ -303,8 +316,11 @@ for video in arr_clips:
             print("\t- rendering *without* chat overlay ")
             cmd = path_twitch_ffmpeg + ' -hide_banner -loglevel quiet -stats ' \
                   + ' -i ' + file_path \
-                  + ' -vf scale=w=1920:h=1080 ' \
-                  + ' -c:a aac -ar 48k -ac 2 -vcodec libx264 -crf 19 -preset fast ' \
+                  + ' -vf "scale=w=1920:h=1080,' \
+                  + 'drawtext=text=\'' + title_clean \
+                  + '\':x=10:y=10:fontfile=' + path_font + ':fontsize=75:fontcolor=white' \
+                  + ':alpha=\'if(lt(t,0),0,if(lt(t,0),(t-0)/0,if(lt(t,4),1,if(lt(t,4.5),(0.5-(t-4))/0.5,0))))\' ' \
+                  + ' " -c:a aac -ar 48k -ac 2 -vcodec libx264 -crf 19 -preset fast ' \
                   + ' -video_track_timescale 90000 -avoid_negative_ts make_zero -fflags +genpts -framerate 60 ' \
                   + file_path_composite
             subprocess.Popen(cmd).wait()
@@ -313,6 +329,7 @@ for video in arr_clips:
         t1 = time.time()
         dur_render = t1 - t0 + 1e-6
         print("\t- time to render: " + str(dur_render))
+        print()
 
 # ================================================================
 # ================================================================
@@ -366,6 +383,7 @@ if not utils.terminated_requested and not os.path.exists(file_path_desc):
         file_path_info = path_data + str(video['id']) + "_info.json"
         tmp_output_file = path_data + str(video['id']) + "_rendered.mp4"
         if not os.path.exists(tmp_output_file):
+            print("\t- WARNING: skipping " + tmp_output_file)
             continue
         with open(file_path_info) as f:
             video_info = json.load(f)
@@ -378,7 +396,9 @@ if not utils.terminated_requested and not os.path.exists(file_path_desc):
             timestamp = format(m, '02') + ':' + format(s, '02')
 
         # append to the description
-        tmp = tmp + timestamp + " \"" + video_info["title"] \
+        title_clean = re.sub(r"[^a-zA-Z0-9'.?: ]", '', video_info["title"])
+        title_clean = title_clean.replace("\\\\", "\\\\\\\\").replace("'", "\u2019")
+        tmp = tmp + timestamp + " \"" + title_clean \
               + "\" clipped by " + video_info["creator_name"] + "\n"
         # tmp = tmp + "Clipped by: " + video_info["creator_name"] + "\n"
         # tmp = tmp + "Viewcount: " + str(video_info["view_count"]) + "\n"

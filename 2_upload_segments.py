@@ -8,9 +8,10 @@ import time
 import utils
 
 # video file we wish to render
-video_file = "config/01_videos.yaml"
-history_file = "config/01_uploads.yaml"
-config_file = "config/01_yt_config.yaml"
+path_base = os.path.dirname(os.path.abspath(__file__))
+video_file = path_base + "/config/soda_03_videos.yaml"
+history_file = path_base + "/config/soda_03_uploads.yaml"
+config_file = path_base + "/config/soda_03_yt_config.yaml"
 
 # load the yaml from file
 with open(config_file) as f:
@@ -18,7 +19,6 @@ with open(config_file) as f:
 print("loaded config file: " + config_file)
 
 # paths of the cli and data
-path_base = os.path.dirname(os.path.abspath(__file__))
 path_root = path_base + "/../data/"
 path_render = path_base + "/../data_rendered/"
 
@@ -76,7 +76,7 @@ for video in data:
 
     # load the description file
     with open(file_path_desc, "r") as myfile:
-        video_description = myfile.read()
+        video_description = ''.join(myfile.readlines()[2:])
 
     # upload options
     options = {

@@ -29,8 +29,10 @@ render_chat = False
 # ================================================================
 
 # paths of the cli and data
-path_twitch_cli = path_base + "/thirdparty/Twitch Downloader 1.39.3/TwitchDownloaderCLI.exe"
-path_twitch_ffmpeg = path_base + "/thirdparty/Twitch Downloader 1.39.3/ffmpeg.exe"
+# path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.39.4/TwitchDownloaderCLI.exe"
+# path_twitch_ffmpeg = path_base + "/thirdparty/Twitch_Downloader_1.39.4/ffmpeg.exe"
+path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.39.4/TwitchDownloaderCLI"
+path_twitch_ffmpeg = path_base + "/thirdparty/ffmpeg-4.3.1-amd64-static/ffmpeg"
 path_root = path_base + "/../data/"
 
 # ================================================================
@@ -39,9 +41,15 @@ path_root = path_base + "/../data/"
 # setup control+c handler
 utils.setup_signal_handle()
 
-# convert the usernames to ids
+# convert the usernames to ids (sort so the are in the same order)
 client_v5 = twitch.TwitchClient(client_id)
-users = client_v5.users.translate_usernames_to_ids(channels)
+users_tmp = client_v5.users.translate_usernames_to_ids(channels)
+users = []
+for channel in channels:
+    for user in users_tmp:
+        if user.name.lower() == channel.lower():
+            users.append(user)
+            break
 
 # now lets loop through each user and make sure we have downloaded
 # their most recent VODs and if we have not, we should download them!
@@ -147,7 +155,7 @@ for user in users:
                   + ' --id ' + str(video['helix']['id']) + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
                   + ' --quality 1080p60 -o ' + file_path
                   #+ ' --temp-path "' + path_root + '/TEMP/" --quality 1080p60 -o ' + file_path
-            subprocess.Popen(cmd).wait()
+            subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
 
         # CHAT: check if the file exists
         file_path_chat = path_data + export_folder + str(video['helix']['id']) + "_chat.json"
@@ -156,7 +164,7 @@ for user in users:
             cmd = path_twitch_cli + ' -m ChatDownload' \
                   + ' --id ' + str(video['helix']['id']) + ' --embed-emotes' \
                   + ' -o ' + file_path_chat
-            subprocess.Popen(cmd).wait()
+            subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
 
         # RENDER: check if the file exists
         file_path_chat = path_data + export_folder + str(video['helix']['id']) + "_chat.json"
@@ -167,5 +175,5 @@ for user in users:
                   + ' -i ' + file_path_chat + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
                   + ' -h 1080 -w 320 --framerate 60 --font-size 13' \
                   + ' -o ' + file_path_render
-            subprocess.Popen(cmd, stdout=subprocess.DEVNULL).wait()
-            # subprocess.Popen(cmd).wait()
+            subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
+            # subprocess.Popen(cmd, shell=True).wait()

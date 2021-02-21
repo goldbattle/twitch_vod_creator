@@ -10,12 +10,14 @@ import utils
 import shutil
 
 # video file we wish to render
-video_file = "config/soda_03_videos.yaml"
+path_base = os.path.dirname(os.path.abspath(__file__))
+video_file = path_base + "/config/soda_03_videos.yaml"
 
 # paths of the cli and data
-path_base = os.path.dirname(os.path.abspath(__file__))
-path_twitch_cli = path_base + "/thirdparty/Twitch Downloader 1.39.3/TwitchDownloaderCLI.exe"
-path_twitch_ffmpeg = path_base + "/thirdparty/Twitch Downloader 1.39.3/ffmpeg.exe"
+# path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.39.4/TwitchDownloaderCLI.exe"
+# path_twitch_ffmpeg = path_base + "/thirdparty/Twitch_Downloader_1.39.4/ffmpeg.exe"
+path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.39.4/TwitchDownloaderCLI"
+path_twitch_ffmpeg = path_base + "/thirdparty/ffmpeg-4.3.1-amd64-static/ffmpeg"
 path_root = path_base + "/../data/"
 path_render = path_base + "/../data_rendered/"
 path_temp = path_base + "/../data_temp/"
@@ -24,7 +26,7 @@ path_temp = path_base + "/../data_temp/"
 # ================================================================
 
 # load the template file for the description
-template_file = "config/template.txt"
+template_file = path_base + "/config/template.txt"
 with open(template_file, "r") as myfile:
     template = myfile.read()
 
@@ -71,18 +73,24 @@ for video in data:
     # COMPOSITE: render the composite image
     clean_video_title = utils.get_valid_filename(video["title"])
     file_path_composite = path_render + video["video"] + "_" + clean_video_title + ".mp4"
+    file_path_composite_tmp = path_render + video["video"] + "_" + clean_video_title + ".tmp.mp4"
     if not utils.terminated_requested and not os.path.exists(file_path_composite):
+
+        # see if user requested the render
+        should_render_chat = True
+        if "with_chat" in video:
+            should_render_chat = video["with_chat"]
 
         # check if the chat exists, render if needed
         file_path_chat = path_root + video["video"] + "_chat.json"
         file_path_render = path_root + video["video"] + "_chat.mp4"
-        if not utils.terminated_requested and os.path.exists(file_path_chat) and not os.path.exists(file_path_render):
+        if not utils.terminated_requested and should_render_chat and os.path.exists(file_path_chat) and not os.path.exists(file_path_render):
             print("\t- rendering chat: " + file_path_chat)
             cmd = path_twitch_cli + ' -m ChatRender' \
                   + ' -i ' + file_path_chat + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
                   + ' -h 926 -w 274 --update-rate 0.1 --framerate 60 --font-size 15' \
                   + ' -o ' + file_path_render
-            subprocess.Popen(cmd).wait()
+            subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
 
         # now we can render the composite
         print("\t- rendering composite: " + file_path_composite)
@@ -91,6 +99,11 @@ for video in data:
         dir_path_composite = os.path.dirname(os.path.abspath(file_path_composite))
         if not os.path.exists(dir_path_composite):
             os.makedirs(dir_path_composite)
+
+        # delete temp file if it is there
+        if os.path.exists(file_path_composite_tmp):
+            print("\t- deleting temp file: " + file_path_composite_tmp)
+            os.remove(file_path_composite_tmp)
 
         # here we will render each
         seg_start = video["t_start"].split(",")
@@ -103,7 +116,7 @@ for video in data:
             # if we only have a single segment, then no need!
             tmp_output_file = path_temp + "temp_" + str(idx) + ".mp4"
             if len(seg_start) == 1:
-                tmp_output_file = file_path_composite
+                tmp_output_file = file_path_composite_tmp
 
             # check if we should download any more
             if utils.terminated_requested:
@@ -120,9 +133,9 @@ for video in data:
             # hardware encoding: 2) -preset p6 -tune hq -b:v 8M -maxrate:v 10M -qmin 10 -qmax 23 -avoid_negative_ts make_zero
             # cpu encoding: -c:a aac -vcodec libx264 -crf 20 -preset veryfast
             t0 = time.time()
-            if os.path.exists(file_path_render):
+            if should_render_chat and os.path.exists(file_path_render):
                 print("\t- rendering with chat overlay " + seg_start[idx] + " to " + seg_end[idx])
-                cmd = path_twitch_ffmpeg + ' -hide_banner -loglevel quiet -stats ' \
+                cmd = path_twitch_ffmpeg + '  ' \
                       + ' -ss ' + seg_start[idx] + ' -i ' + file_path_video + ' -to ' + seg_end[idx] \
                       + ' -ss ' + seg_start[idx] + ' -i ' + file_path_render \
                       + ' -filter_complex "[0:v] scale=1646x926 [tmp1];' \
@@ -130,7 +143,8 @@ for video in data:
                       + ' -vcodec libx264 -crf 18 -preset veryfast -avoid_negative_ts make_zero -framerate 60 ' \
                       + ' -c:a aac ' \
                       + tmp_output_file
-                subprocess.Popen(cmd).wait()
+                print(cmd)
+                subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
             else:
                 print("\t- rendering *without* chat overlay " + seg_start[idx] + " to " + seg_end[idx])
                 h1, m1, s1 = seg_start[idx].split(':')
@@ -145,7 +159,8 @@ for video in data:
                       + ' -vf scale=w=1920:h=1080 ' \
                       + ' -c:a aac -vcodec libx264 -crf 19 -preset fast -avoid_negative_ts make_zero ' \
                       + tmp_output_file
-                subprocess.Popen(cmd).wait()
+                print(cmd)
+                subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
 
             # end timing and compute debug stats
             t1 = time.time()
@@ -166,15 +181,16 @@ for video in data:
             with open(text_file_temp_videos, 'a') as the_file:
                 for idx in range(len(seg_start)):
                     tmp_output_file = path_temp + "temp_" + str(idx) + ".mp4"
-                    the_file.write('file \'' + tmp_output_file + '\'\n')
+                    the_file.write('file \'' + os.path.abspath(tmp_output_file) + '\'\n')
             # now render
             print("\t- combining all videos into a single segment!")
             cmd = path_twitch_ffmpeg + ' -hide_banner -loglevel quiet -stats ' \
                   + '-f concat -safe 0 ' \
                   + ' -i ' + text_file_temp_videos \
                   + ' -c copy -avoid_negative_ts make_zero ' \
-                  + file_path_composite
-            subprocess.Popen(cmd).wait()
+                  + file_path_composite_tmp
+            print(cmd)
+            subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
 
             # end timing and compute debug stats
             t1_big = time.time()
@@ -182,6 +198,11 @@ for video in data:
             print("\t- time to render: " + str(dur_render))
             print("\t- segment durations: " + str(dur_segment_total))
             print("\t- realtime factor: " + str(dur_segment_total / dur_render))
+        
+        # finally copy temp file to new location
+        print("\t- renaming temp export file to final filename")
+        if not utils.terminated_requested and os.path.exists(file_path_composite_tmp):
+            os.rename(file_path_composite_tmp, file_path_composite)
 
     # DESC: description file
     file_path_desc = path_render + video["video"] + "_" + clean_video_title + "_desc.txt"
