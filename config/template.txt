@@ -3,9 +3,6 @@ This is a fan-made channel dedicated to upload uncut/unedited bits the livestrea
 
 
 Vod ID: $id
-Vod Title: $title
-Vod Game: $game
-Views: $views
 Recorded At: $recorded
 
 Start Time: $t_start

@@ -21,11 +21,11 @@ client_secret = auth["client_secret"]
 
 # parameters
 channel = 'sodapoppin'
-max_clips = 52
-date_start = '2017-09-28T00:00:00.00Z'
-date_end = '2017-10-22T00:00:00.00Z'
+max_clips = 30
+date_start = '2021-02-01T00:00:00.00Z'
+date_end = '2021-02-28T00:00:00.00Z'
 min_views_required = 1000
-get_latest_from_twitch = False
+get_latest_from_twitch = True
 
 # ================================================================
 # ================================================================
@@ -36,7 +36,7 @@ get_latest_from_twitch = False
 # path_twitch_ffprob = path_base + "/thirdparty/ffmpeg-N-99900-g89429cf2f2-win64-lgpl/ffprobe.exe"
 path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.39.4/TwitchDownloaderCLI"
 path_twitch_ffmpeg = path_base + "/thirdparty/ffmpeg-4.3.1-amd64-static/ffmpeg"
-path_twitch_ffmpeg = path_base + "/thirdparty/ffmpeg-4.3.1-amd64-static/ffprobe"
+path_twitch_ffprob = path_base + "/thirdparty/ffmpeg-4.3.1-amd64-static/ffprobe"
 path_font = path_base.replace("\\", "/").replace(":", "\\\\:") + "/thirdparty/bebas_neue/BebasNeue-Regular.ttf"
 path_root = path_base + "/../data_clips/"
 path_render = path_base + "/../data_rendered/"
@@ -144,7 +144,7 @@ if get_latest_from_twitch:
                       + ' --id ' + str(video['id']) + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
                       + ' --quality 1080p60 -o ' + file_path
                 # subprocess.Popen(cmd).wait()
-                subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
+                subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
 
             # CHAT: check if the file exists
             file_path_chat = path_data + str(video['id']) + "_chat.json"
@@ -154,7 +154,7 @@ if get_latest_from_twitch:
                       + ' --id ' + str(video['id']) + ' --embed-emotes' \
                       + ' -o ' + file_path_chat
                 # subprocess.Popen(cmd).wait()
-                subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
+                subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
 
             # api returns clips in order of most watch to least watched
             print("\t- clip " + video['url'] + " (" + str(video['view_count']) + " views)")
@@ -278,7 +278,7 @@ for video in arr_clips:
               + ' -i ' + file_path_chat + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
               + ' -h 1080 -w 320 --framerate 60 --font-size 15' \
               + ' -o ' + file_path_render
-        subprocess.Popen(cmd).wait()
+        subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
 
     # COMPOSITE: render the composite image
     file_path = path_data + str(video['id']) + ".mp4"
@@ -311,7 +311,7 @@ for video in arr_clips:
                   + ' -c:a aac -ar 48k -ac 2 -vcodec libx264 -crf 19 -preset fast ' \
                   + ' -video_track_timescale 90000 -avoid_negative_ts make_zero -fflags +genpts -framerate 60 ' \
                   + file_path_composite
-            subprocess.Popen(cmd).wait()
+            subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
         else:
             print("\t- rendering *without* chat overlay ")
             cmd = path_twitch_ffmpeg + ' -hide_banner -loglevel quiet -stats ' \
@@ -323,7 +323,7 @@ for video in arr_clips:
                   + ' " -c:a aac -ar 48k -ac 2 -vcodec libx264 -crf 19 -preset fast ' \
                   + ' -video_track_timescale 90000 -avoid_negative_ts make_zero -fflags +genpts -framerate 60 ' \
                   + file_path_composite
-            subprocess.Popen(cmd).wait()
+            subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
 
         # end timing
         t1 = time.time()
@@ -351,9 +351,9 @@ if not utils.terminated_requested and not os.path.exists(file_path_composite):
         for video in arr_clips:
             tmp_output_file = path_data + str(video['id']) + "_rendered.mp4"
             if os.path.exists(tmp_output_file):
-                the_file.write('file \'' + tmp_output_file + '\'\n')
+                the_file.write('file \'' + os.path.abspath(tmp_output_file) + '\'\n')
             else:
-                print("\t- WARNING: skipping " + tmp_output_file)
+                print("\t- WARNING: skipping " + os.path.abspath(tmp_output_file))
 
     # now render
     t0_big = time.time()
@@ -363,7 +363,7 @@ if not utils.terminated_requested and not os.path.exists(file_path_composite):
           + ' -i ' + text_file_temp_videos \
           + ' -c copy -avoid_negative_ts make_zero ' \
           + file_path_composite
-    subprocess.Popen(cmd).wait()
+    subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
     os.remove(text_file_temp_videos)
 
     # end timing and compute debug stats
@@ -410,7 +410,7 @@ if not utils.terminated_requested and not os.path.exists(file_path_desc):
         cmd = path_twitch_ffprob \
               + " -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 " \
               + tmp_output_file
-        pipe = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+        pipe = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
         vid_length = pipe.communicate()[0]
         num_second_into_video += float(vid_length)
 

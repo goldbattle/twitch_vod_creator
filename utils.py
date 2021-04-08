@@ -1,4 +1,5 @@
 # Import general libraries
+import sys
 import json
 import signal
 import string
@@ -31,15 +32,43 @@ def get_vod_moments(void_id):
         moments = []
         for moment in gql_obj["data"]["video"]["moments"]["edges"]:
             data = {
-                "id": moment["node"]["details"]["game"]["id"],
-                "name": moment["node"]["details"]["game"]["displayName"],
                 "duration": int(moment["node"]["durationMilliseconds"] / 1000.0),
                 "offset": int(moment["node"]["positionMilliseconds"] / 1000.0),
             }
+            if "details" in moment["node"] and "game" in moment["node"]["details"]:
+                data["id"] = moment["node"]["details"]["game"]["id"]
+                data["name"] = moment["node"]["details"]["game"]["displayName"]
+            else:
+                data["id"] = "-1"
+                data["name"] = "Unknown"
+            if "type" in moment["node"]:
+                data["type"] = moment["node"]["type"]
             moments.append(data)
         return moments
     except Exception as e:
-        # print(e)
+        return []
+
+def get_vod_moments_from_twitcharchive_string(data):
+    # get response
+    try:
+        gql_obj = json.loads(data)
+        moments = []
+        for moment in gql_obj:
+            data = {
+                "duration": int(moment["node"]["durationMilliseconds"] / 1000.0),
+                "offset": int(moment["node"]["positionMilliseconds"] / 1000.0),
+            }
+            if "details" in moment["node"] and "game" in moment["node"]["details"]:
+                data["id"] = moment["node"]["details"]["game"]["id"]
+                data["name"] = moment["node"]["details"]["game"]["displayName"]
+            else:
+                data["id"] = "-1"
+                data["name"] = "Unknown"
+            if "type" in moment["node"]:
+                data["type"] = moment["node"]["type"]
+            moments.append(data)
+        return moments
+    except Exception as e:
         return []
 
 
@@ -72,6 +101,7 @@ def get_vod_graphql_info(vod_id):
                 }
                 positionMilliseconds
                 durationMilliseconds
+                type
               }
             }
           }
@@ -100,7 +130,7 @@ def get_clip_data(clip_id):
             "duration": gql_obj["data"]["clip"]["durationSeconds"],
         }
     except Exception as e:
-        # print(e)
+        print(e)
         return {
             "vod_id": -1,
             "offset": -1,

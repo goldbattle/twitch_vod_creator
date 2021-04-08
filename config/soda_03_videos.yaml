@@ -599,21 +599,21 @@
 # ===========================================
 
 
-- video: sodapoppin/2021-02/920434187
-  title: "Chance Watches Stuck in America Music Video - (sodapoppin) - Feb 19, 2021"
-  t_start: "00:14:25"
-  t_end: "00:18:23"
+# - video: sodapoppin/2021-02/920434187
+#   title: "Chance Watches Stuck in America Music Video - (sodapoppin) - Feb 19, 2021"
+#   t_start: "00:14:25"
+#   t_end: "00:18:23"
 
-- video: sodapoppin/2021-02/920434187
-  title: "Chance Plays SSX Tricky - (sodapoppin) - Feb 19, 2021"
-  t_start: "00:18:23"
-  t_end: "03:24:42"
-  with_chat: false
+# - video: sodapoppin/2021-02/920434187
+#   title: "Chance Plays SSX Tricky - (sodapoppin) - Feb 19, 2021"
+#   t_start: "00:18:23"
+#   t_end: "03:24:42"
+#   with_chat: false
 
-- video: sodapoppin/2021-02/920434187
-  title: "Chance Watches BlizzCon - (sodapoppin) - Feb 19, 2021"
-  t_start: "03:24:42"
-  t_end: "05:35:52"
+# - video: sodapoppin/2021-02/920434187
+#   title: "Chance Watches BlizzCon - (sodapoppin) - Feb 19, 2021"
+#   t_start: "03:24:42"
+#   t_end: "05:35:52"
 
 
 
@@ -621,30 +621,937 @@
 # ===========================================
 
 
-- video: sodapoppin/2021-02/921941903
-  title: "Chance Reacts to BlizzCon Recap - (sodapoppin) - Feb 20, 2021"
-  t_start: "00:14:55"
-  t_end: "01:02:54"
+# - video: sodapoppin/2021-02/921941903
+#   title: "Chance Reacts to BlizzCon Recap - (sodapoppin) - Feb 20, 2021"
+#   t_start: "00:14:55"
+#   t_end: "01:02:54"
 
-- video: sodapoppin/2021-02/921941903
-  title: "Chance Plays SSX Tricky - (sodapoppin) - Feb 20, 2021"
-  t_start: "01:02:54"
-  t_end: "02:11:24"
-  with_chat: false
+# - video: sodapoppin/2021-02/921941903
+#   title: "Chance Plays SSX Tricky - (sodapoppin) - Feb 20, 2021"
+#   t_start: "01:02:54"
+#   t_end: "02:11:24"
+#   with_chat: false
 
-- video: sodapoppin/2021-02/921941903
-  title: "Little Nightmares II - Part 1 (sodapoppin) - Feb 20, 2021"
-  t_start: "02:11:24"
-  t_end: "02:22:40"
+# - video: sodapoppin/2021-02/921941903
+#   title: "Little Nightmares II - Part 1 (sodapoppin) - Feb 20, 2021"
+#   t_start: "02:11:24"
+#   t_end: "02:22:40"
 
-- video: sodapoppin/2021-02/922185989
-  title: "Little Nightmares II - Part 2 (sodapoppin) - Feb 20, 2021"
-  t_start: "00:01:00"
-  t_end: "04:30:35"
+# - video: sodapoppin/2021-02/922185989
+#   title: "Little Nightmares II - Part 2 (sodapoppin) - Feb 20, 2021"
+#   t_start: "00:01:00"
+#   t_end: "04:30:35"
 
-- video: sodapoppin/2021-02/922185989
-  title: "Kevin Whipaloo GTA RP NoPixel 3.0 - Part 14 (sodapoppin) - Feb 20, 2021"
-  t_start: "04:38:12"
-  t_end: "07:09:05"
+# - video: sodapoppin/2021-02/922185989
+#   title: "Kevin Whipaloo GTA RP NoPixel 3.0 - Part 14 (sodapoppin) - Feb 20, 2021"
+#   t_start: "04:38:12"
+#   t_end: "07:09:05"
+
+# ===========================================
+# ===========================================
+
+
+# - video: sodapoppin/2021-02/923723975
+#   title: "Tappy Nippers GTA RP NoPixel 3.0 - Part 15 (sodapoppin) - Feb 21, 2021"
+#   t_start: "00:00:00"
+#   t_end: "05:00:45"
+
+# - video: sodapoppin/2021-02/924585441
+#   title: "Tappy Nippers GTA RP NoPixel 3.0 - Part 16 (sodapoppin) - Feb 22, 2021"
+#   t_start: "00:00:00"
+#   t_end: "02:31:19"
+
+# - video: sodapoppin/2021-02/925043656
+#   title: "Kevin Whipaloo GTA RP NoPixel 3.0 - Part 17 (sodapoppin) - Feb 23, 2021"
+#   t_start: "00:02:58"
+#   t_end: "01:55:03"
+
+# - video: sodapoppin/2021-02/926060694
+#   title: "Kevin Whipaloo GTA RP NoPixel 3.0 - Part 18 (sodapoppin) - Feb 23, 2021"
+#   t_start: "00:00:00"
+#   t_end: "05:23:46"
+
+# - video: sodapoppin/2021-02/926060694
+#   title: "Tappy Nippers GTA RP NoPixel 3.0 - Part 19 (sodapoppin) - Feb 23, 2021"
+#   t_start: "05:23:46"
+#   t_end: "10:14:46"
+
+# - video: sodapoppin/2021-02/926011449
+#   title: "Chance Shows off New Desktop Background - (sodapoppin) - Feb 24, 2021"
+#   t_start: "00:13:25"
+#   t_end: "00:41:17"
+
+
+# ===========================================
+# ===========================================
+
+# - video: sodapoppin/2021-02/927169939
+#   title: "Kevin Whipaloo GTA RP NoPixel 3.0 - Part 20 (sodapoppin) - Feb 25, 2021"
+#   t_start: "00:21:54"
+#   t_end: "02:40:53"
+
+# - video: sodapoppin/2021-02/927169939
+#   title: "Fragmented Mind (indie horror)- (sodapoppin) - Feb 25, 2021"
+#   t_start: "02:58:44"
+#   t_end: "03:27:58"
+
+# - video: sodapoppin/2021-02/927169939
+#   title: "The World's Hardest Game - (sodapoppin) - Feb 25, 2021"
+#   t_start: "03:36:12"
+#   t_end: "04:28:30"
+
+# - video: sodapoppin/2021-02/927169939
+#   title: "Kevin Whipaloo GTA RP NoPixel 3.0 - Part 21 (sodapoppin) - Feb 25, 2021"
+#   t_start: "04:31:17"
+#   t_end: "11:45:56"
+
+# - video: sodapoppin/2021-02/928460888
+#   title: "Kevin Whipaloo GTA RP NoPixel 3.0 - Part 22 (sodapoppin) - Feb 26, 2021"
+#   t_start: "00:14:53"
+#   t_end: "05:57:07"
+
+# ===========================================
+# ===========================================
+
+# - video: sodapoppin/2021-02/931042270
+#   title: "Watching Game Trailers - Shitshow Saturday - Feb 27, 2021"
+#   t_start: "00:18:08"
+#   t_end: "01:21:27"
+
+# - video: sodapoppin/2021-02/931042270
+#   title: "Rustler - Shitshow Saturday - Feb 27, 2021"
+#   t_start: "01:25:11"
+#   t_end: "01:58:16"
+
+# - video: sodapoppin/2021-02/931042270
+#   title: "Hellish Quart - Shitshow Saturday - Feb 27, 2021"
+#   t_start: "02:03:23"
+#   t_end: "02:24:57"
+
+# - video: sodapoppin/2021-02/931042270
+#   title: "Tested on Humans: Escape Room - Shitshow Saturday - Feb 27, 2021"
+#   t_start: "02:29:28"
+#   t_end: "03:10:58"
+
+# - video: sodapoppin/2021-02/931042270
+#   title: "Stay out of the Halls - Shitshow Saturday - Feb 27, 2021"
+#   t_start: "03:16:22"
+#   t_end: "03:26:29"
+
+# - video: sodapoppin/2021-02/931042270
+#   title: "DEVOUR (multiplayer horror) - Shitshow Saturday - Feb 27, 2021"
+#   t_start: "03:31:02"
+#   t_end: "05:25:07"
+
+# - video: sodapoppin/2021-02/931042270
+#   title: "Megalophobia - Shitshow Saturday - Feb 27, 2021"
+#   t_start: "05:29:34"
+#   t_end: "06:10:18"
+
+# - video: sodapoppin/2021-02/931042270
+#   title: "Chance is Afraid of Iron in His Blood - Feb 27, 2021"
+#   t_start: "06:14:42"
+#   t_end: "06:16:32"
+
+# - video: sodapoppin/2021-02/931042270
+#   title: "HellSign - Shitshow Saturday - Feb 27, 2021"
+#   t_start: "06:16:32"
+#   t_end: "07:56:47"
+
+
+# ===========================================
+# ===========================================
+
+# - video: sodapoppin/2021-03/932498267
+#   title: "Kevin Whipaloo GTA RP NoPixel 3.0 - Part 23 (sodapoppin) - Feb 28, 2021"
+#   t_start: "00:09:39"
+#   t_end: "02:46:39"
+
+# - video: sodapoppin/2021-03/933498613
+#   title: "Merch Competition - (sodapoppin) - March 1, 2021"
+#   t_start: "00:15:52"
+#   t_end: "02:14:04"
+
+
+# ===========================================
+# ===========================================
+
+# - video: sodapoppin/2021-03/950562847
+#   title: "Watching Game Trailers - (sodapoppin) - March 15, 2021"
+#   t_start: "00:22:03"
+#   t_end: "01:46:17"
+
+# - video: sodapoppin/2021-03/950562847
+#   title: "Endless Place (indie horror) - (sodapoppin) - March 15, 2021"
+#   t_start: "00:41:00"
+#   t_end: "00:49:45"
+
+
+# - video: sodapoppin/2021-03/950562847
+#   title: "Chance Watches Misha vs Karpov - (sodapoppin) - March 15, 2021"
+#   t_start: "01:48:58,02:13:05"
+#   t_end: "01:56:01,02:14:44"
+
+# - video: sodapoppin/2021-03/950562847
+#   title: "Monster Jam Steel Titans 2 - (sodapoppin) - March 15, 2021"
+#   t_start: "01:55:57"
+#   t_end: "02:12:29"
+
+# - video: sodapoppin/2021-03/950562847
+#   title: "Loop Hero - (sodapoppin) - March 15, 2021"
+#   t_start: "02:15:29"
+#   t_end: "06:10:30"
+
+# - video: sodapoppin/2021-03/950562847
+#   title: "Cat Gets Medieval - (sodapoppin) - March 15, 2021"
+#   t_start: "06:15:10"
+#   t_end: "07:07:33"
+
+# - video: sodapoppin/2021-03/950562847
+#   title: "Everhood - Part 1 (sodapoppin) - March 15, 2021"
+#   t_start: "07:09:47"
+#   t_end: "07:47:35"
+
+# - video: sodapoppin/2021-03/950562847
+#   title: "Everhood - Part 2 (sodapoppin) - March 15, 2021"
+#   t_start: "07:47:35"
+#   t_end: "08:25:32"
+#   with_chat: false
+
+
+# ===========================================
+# ===========================================
+
+# - video: sodapoppin/2021-03/951973075
+#   title: "Watching Videos from Chat - (sodapoppin) - March 16, 2021"
+#   t_start: "00:06:37"
+#   t_end: "01:13:55"
+
+# - video: sodapoppin/2021-03/951973075
+#   title: "Chance Reacts NoPixel 3.0 Cinematic Trailer - (sodapoppin) - March 16, 2021"
+#   t_start: "00:18:36"
+#   t_end: "00:26:24"
+
+# - video: sodapoppin/2021-03/951973075
+#   title: "Everhood - Part 3 (sodapoppin) - March 16, 2021"
+#   t_start: "01:16:26"
+#   t_end: "06:46:54"
+#   with_chat: false
+
+
+# ===========================================
+# ===========================================
+
+
+# - video: sodapoppin/2021-03/953002070
+#   title: "Watching Joel Haver Videos - (sodapoppin) - March 17, 2021"
+#   t_start: "00:09:10"
+#   t_end: "00:42:58"
+
+# - video: sodapoppin/2021-03/953002070
+#   title: "Loop Hero - (sodapoppin) - March 17, 2021"
+#   t_start: "00:43:39"
+#   t_end: "07:22:35"
+
+# - video: sodapoppin/2021-03/953002070
+#   title: "Chance Reacts to Reactors Reacting to Twitch Streamers - (sodapoppin) - March 17, 2021"
+#   t_start: "01:12:20"
+#   t_end: "01:16:34"
+
+
+# - video: sodapoppin/2021-03/954332657
+#   title: "Dead by Daylight - (sodapoppin) - March 18, 2021"
+#   t_start: "00:27:42"
+#   t_end: "01:03:50"
+
+# - video: sodapoppin/2021-03/954332657
+#   title: "Getting a Haircut - (sodapoppin) - March 18, 2021"
+#   t_start: "01:04:46"
+#   t_end: "02:14:20"
+
+# - video: sodapoppin/2021-03/954332657
+#   title: "The Room 4 (interactive puzzle game) - (sodapoppin) - March 18, 2021"
+#   t_start: "02:17:26"
+#   t_end: "04:19:44"
+
+# - video: sodapoppin/2021-03/954332657
+#   title: "Loop Hero - (sodapoppin) - March 18, 2021"
+#   t_start: "04:20:00"
+#   t_end: "05:27:38"
+
+
+# ===========================================
+# ===========================================
+
+# - video: sodapoppin/2021-03/956212580
+#   title: "VRChat Golf - March 19, 2021"
+#   t_start: "00:00:00"
+#   t_end: "01:23:36"
+
+# ===========================================
+# ===========================================
+
+# - video: sodapoppin/2021-03/956972067
+#   title: "Breathedge - (sodapoppin) - March 20, 2021"
+#   t_start: "00:34:06"
+#   t_end: "02:23:54"
+
+# - video: sodapoppin/2021-03/956972067
+#   title: "Can't Drive This (with Happythoughts) - (sodapoppin) - March 20, 2021"
+#   t_start: "02:44:19"
+#   t_end: "03:45:02"
+
+# - video: sodapoppin/2021-03/956972067
+#   title: "Chance and Friends Play Labyrinthine (cooperative horror)- March 20, 2021"
+#   t_start: "03:49:52"
+#   t_end: "07:24:28"
+
+
+# ===========================================
+# ===========================================
+
+
+# - video: sodapoppin/2021-03/958333438
+#   title: "Chance Watches Poke's House Tour - (sodapoppin) - March 21, 2021"
+#   t_start: "00:23:11"
+#   t_end: "00:36:22"
+#   tags:
+#     - "pokelawls"
+#     - "house tour"
+
+# - video: sodapoppin/2021-03/958333438
+#   title: "The Long Drive with Pokelawls - (sodapoppin) - March 21, 2021"
+#   t_start: "00:37:27"
+#   t_end: "01:47:11"
+#   tags:
+#     - "long drive"
+#     - "update"
+#     - "multiplayer"
+
+# - video: sodapoppin/2021-03/958333438
+#   title: "For the King with Pokelawls, Roflgator, and Crumpet - (sodapoppin) - March 21, 2021"
+#   t_start: "01:49:15,04:36:34"
+#   t_end: "04:28:12,06:48:34"
+#   tags:
+#     - "for the king"
+#     - "pokelawls"
+#     - "roflgator"
+#     - "crumpet"
+
+# - video: sodapoppin/2021-03/958333438
+#   title: "Slapshot Rebound - (sodapoppin) - March 21, 2021"
+#   t_start: "04:28:50"
+#   t_end: "04:36:41"
+#   tags:
+#     - "slapshot rebound"
+#     - "pokelawls"
+#     - "roflgator"
+#     - "crumpet"
+#     - "multiplayer"
+
+# ===========================================
+# ===========================================
+
+# - video: sodapoppin/2021-03/960251077
+#   title: "Chance's Allergies - (sodapoppin) - March 23, 2021"
+#   t_start: "00:17:13"
+#   t_end: "00:26:47"
+#   tags:
+#     - "allergies"
+
+# - video: sodapoppin/2021-03/960251077
+#   title: "TBC Waiting Room - (sodapoppin) - March 23, 2021"
+#   t_start: "00:26:47"
+#   t_end: "03:05:41"
+#   tags:
+#     - "wow"
+#     - "tbc beta"
+#     - "the burning crusade"
+
+# - video: sodapoppin/2021-03/960251077
+#   title: "Chance Plays TBC Classic Beta - Part 1 (sodapoppin) - March 23, 2021"
+#   t_start: "03:05:41"
+#   t_end: "04:41:31"
+#   tags:
+#     - "wow"
+#     - "tbc beta"
+#     - "the burning crusade"
+#     - "beta access"
+
+# - video: sodapoppin/2021-03/960251077
+#   title: "TBC Beta with Happythoughts - Part 2 (sodapoppin) - March 23, 2021"
+#   t_start: "04:41:31"
+#   t_end: "06:38:58"
+#   tags:
+#     - "wow"
+#     - "tbc beta"
+#     - "the burning crusade"
+#     - "beta access"
+#     - "happythoughts"
+
+# - video: sodapoppin/2021-03/960251077
+#   title: "Chance Exercises with Happythoughts - (sodapoppin) - March 23, 2021"
+#   t_start: "06:14:00"
+#   t_end: "06:22:07"
+
+# - video: sodapoppin/2021-03/960251077
+#   title: "Chance Plays TBC Beta - Part 3 (sodapoppin) - March 23, 2021"
+#   t_start: "06:38:58"
+#   t_end: "13:02:00"
+#   tags:
+#     - "wow"
+#     - "tbc beta"
+#     - "the burning crusade"
+#     - "beta access"
+
+
+
+# ===========================================
+# ===========================================
+
+
+# - video: sodapoppin/2021-03/961495256
+#   title: "Chance Plays TBC Beta - Part 4 (sodapoppin) - March 24, 2021"
+#   t_start: "00:06:57"
+#   t_end: "09:50:17"
+#   tags:
+#     - "wow"
+#     - "tbc beta"
+#     - "the burning crusade"
+#     - "beta access"
+
+# - video: sodapoppin/2021-03/962775157
+#   title: "Risk of Rain 2 New Update - (sodapoppin) - March 25, 2021"
+#   t_start: "00:11:35"
+#   t_end: "05:01:52"
+#   tags:
+#     - "risk of rain 2"
+#     - "ror2"
+
+# ===========================================
+# ===========================================
+
+
+# - video: sodapoppin/2021-03/963951987
+#   title: "Chance Plays TBC Beta - Part 5 (sodapoppin) - March 26, 2021"
+#   t_start: "00:13:34"
+#   t_end: "09:13:39"
+#   tags:
+#     - "wow"
+#     - "tbc beta"
+#     - "the burning crusade"
+#     - "beta access"
+
+
+# ===========================================
+# ===========================================
+
+# - video: sodapoppin/2021-03/965486584
+#   title: "Risk of Rain 2 New Update - (sodapoppin) - March 27, 2021"
+#   t_start: "00:05:59"
+#   t_end: "01:37:38"
+#   tags:
+#     - "risk of rain 2"
+#     - "ror2"
+
+# - video: sodapoppin/2021-03/965486584
+#   title: "Chance Plays TBC Beta - Part 6 (sodapoppin) - March 27, 2021"
+#   t_start: "01:37:42"
+#   t_end: "04:39:22"
+#   tags:
+#     - "wow"
+#     - "tbc beta"
+#     - "the burning crusade"
+#     - "beta access"
+
+# - video: sodapoppin/2021-03/965486584
+#   title: "E-Girl Hot Tub Stream with Happythoughts - (sodapoppin) - March 27, 2021"
+#   description: "Action starts at 12:34"
+#   t_start: "04:45:48"
+#   t_end: "06:31:29"
+#   tags:
+#     - "hot tub"
+#     - "e-girl"
+#     - "vrchat"
+#     - "vtuber"
+
+
+# ===========================================
+# ===========================================
+
+
+# - video: sodapoppin/2021-03/966844641
+#   title: "Watching Game Indie Trailers - (sodapoppin) - March 28, 2021"
+#   t_start: "00:04:48"
+#   t_end: "02:59:08"
+#   tags:
+#     - "game trailers"
+#     - "react"
+
+# - video: sodapoppin/2021-03/966844641
+#   title: "Helltaker Puzzle Dating Simulator - (sodapoppin) - March 28, 2021"
+#   t_start: "03:00:22"
+#   t_end: "04:47:56"
+#   tags:
+#     - "helltaker"
+#     - "puzzle game"
+#     - "dating simulator"
+
+# - video: sodapoppin/2021-03/966844641
+#   title: "Who Wants to be a Millionaire - (sodapoppin) - March 28, 2021"
+#   t_start: "04:49:54"
+#   t_end: "05:19:26"
+#   tags:
+#     - "who wants to be a millionaire"
+#     - "millionaire"
+#     - "game show"
+
+# - video: sodapoppin/2021-03/966844641
+#   title: "Chance Tries Friday Night Funkin - (sodapoppin) - March 28, 2021"
+#   t_start: "05:20:50"
+#   t_end: "05:32:29"
+#   tags:
+#     - "friday night funkin"
+#     - "rhythm game"
+
+# - video: sodapoppin/2021-03/966844641
+#   title: "Rhythm Doctor - (sodapoppin) - March 28, 2021"
+#   t_start: "05:35:14"
+#   t_end: "06:07:04"
+#   tags:
+#     - "rhythm doctor"
+#     - "rhythm game"
+
+
+# ===========================================
+# ===========================================
+
+
+# - video: sodapoppin/2021-03/969237049
+#   title: "Chance Plays TBC Beta - Part 7 (sodapoppin) - March 30, 2021"
+#   t_start: "00:00:00"
+#   t_end: "10:39:24"
+#   tags:
+#     - "wow"
+#     - "tbc beta"
+#     - "the burning crusade"
+#     - "beta access"
+
+# - video: sodapoppin/2021-03/969237049
+#   title: "Chance Plays TBC Beta - Part 8 (sodapoppin) - March 30, 2021"
+#   t_start: "10:39:24"
+#   t_end: "14:45:24"
+#   tags:
+#     - "wow"
+#     - "tbc beta"
+#     - "the burning crusade"
+#     - "beta access"
+
+
+# ===========================================
+# ===========================================
+
+# - video: sodapoppin/2021-03/968275724
+#   title: "Can't Drive This with Roflgator - (sodapoppin) - March 29, 2021"
+#   description: "VOD was deleted so no chat :("
+#   t_start: "01:02:55"
+#   t_end: "02:02:45"
+#   tags:
+#     - "roflgator"
+#     - "cant drive this"
+#     - "2 player game"
+
+# - video: sodapoppin/2021-03/968275724
+#   title: "SCP: Mansion with Crumpet, Roflgator, Surefour, Cyr, WillNeff - (sodapoppin) - March 29, 2021"
+#   description: "VOD was deleted so no chat :("
+#   t_start: "02:15:37"
+#   t_end: "02:33:34"
+#   tags:
+#     - "SCP mansion"
+#     - "Crumpet"
+#     - "Roflgator"
+#     - "Surefour"
+#     - "Cyr"
+#     - "WillNeff"
+
+# - video: sodapoppin/2021-03/968275724
+#   title: "Fastest Dab - (sodapoppin) - March 29, 2021"
+#   description: "VOD was deleted so no chat :("
+#   t_start: "02:35:33,02:50:27"
+#   t_end: "02:42:4,02:55:28"
+#   tags:
+#     - "vr chat"
+#     - "Crumpet"
+#     - "Roflgator"
+#     - "Surefour"
+#     - "Cyr"
+#     - "WillNeff"
+
+
+# - video: sodapoppin/2021-03/968275724
+#   title: "Friday the 13th with Crumpet, Roflgator, Surefour, Cyr, WillNeff, Spaceboy - (sodapoppin) - March 29, 2021"
+#   description: "VOD was deleted so no chat :("
+#   t_start: "02:57:01"
+#   t_end: "03:42:13"
+#   tags:
+#     - "Friday the 13th"
+#     - "Crumpet"
+#     - "Roflgator"
+#     - "Surefour"
+#     - "Cyr"
+#     - "WillNeff"
+#     - "Spaceboy"
+
+# - video: sodapoppin/2021-03/968275724
+#   title: "Chance Plays Presence - (horror) - March 29, 2021"
+#   description: "VOD was deleted so no chat :("
+#   t_start: "03:46:24"
+#   t_end: "04:12:45"
+#   tags:
+#     - "Presence"
+#     - "horror game"
+#     - "indie"
+
+# - video: sodapoppin/2021-03/968275724
+#   title: "Chance Plays Strobophagla - (rave horror) - March 29, 2021"
+#   description: "VOD was deleted so no chat :("
+#   t_start: "04:15:17"
+#   t_end: "04:55:10"
+#   tags:
+#     - "Strobophagla"
+#     - "horror game"
+#     - "indie"
+#     - "rave"
+
+# - video: sodapoppin/2021-03/968275724
+#   title: "Iratus: Lord of the Dead - (sodapoppin) - March 29, 2021"
+#   description: "VOD was deleted so no chat :("
+#   t_start: "06:23:28"
+#   t_end: "07:40:49"
+#   tags:
+#     - "Iratus"
+
+# - video: sodapoppin/2021-03/968275724
+#   title: "Chance Plays TBC Beta - Part 6.5 (sodapoppin) - March 29, 2021"
+#   description: "VOD was deleted so no chat :("
+#   t_start: "07:41:03"
+#   t_end: "10:59:02"
+#   tags:
+#     - "wow"
+#     - "tbc beta"
+#     - "the burning crusade"
+#     - "beta access"
+
+
+
+# ===========================================
+# ===========================================
+
+
+# - video: sodapoppin/2021-03/955337929
+#   title: "Dead by Daylight - (sodapoppin) - March 19, 2021"
+#   description: "Late upload and no chat since VOD was deleted :("
+#   t_start: "00:40:54"
+#   t_end: "01:52:46"
+#   tags:
+#     - "dead by daylight"
+
+# - video: sodapoppin/2021-03/955337929
+#   title: "Chance on Kaceytron - (sodapoppin) - March 19, 2021"
+#   description: "Late upload and no chat since VOD was deleted :("
+#   t_start: "01:53:46"
+#   t_end: "02:02:29"
+#   tags:
+#     - "kaceytron"
+
+# - video: sodapoppin/2021-03/955337929
+#   title: "Chance Reacts to NaturalVision Evolved GTA V - (sodapoppin) - March 19, 2021"
+#   description: "Late upload and no chat since VOD was deleted :(\nOriginal Video: https://www.youtube.com/watch?v=-S24gQntcWg"
+#   t_start: "03:43:51"
+#   t_end: "03:48:06"
+#   tags:
+#     - "reacting"
+
+# - video: sodapoppin/2021-03/955337929
+#   title: "Phasmophobia Beta with Poke, Moxy, and Esfand - (sodapoppin) - March 19, 2021"
+#   description: "Late upload and no chat since VOD was deleted :("
+#   t_start: "05:37:02"
+#   t_end: "07:55:57"
+#   tags:
+#     - "phasmophobia"
+#     - "moxy"
+#     - "esfand"
+#     - "pokelawls"
+
+# - video: sodapoppin/2021-03/955337929
+#   title: "Robot Vacuum Simulator X with Poke and Moxy - (sodapoppin) - March 19, 2021"
+#   description: "Late upload and no chat since VOD was deleted :("
+#   t_start: "04:50:18"
+#   t_end: "05:36:09"
+#   tags:
+#     - "robot vacuum simulator"
+#     - "moxy"
+#     - "esfand"
+#     - "pokelawls"
+
+# - video: sodapoppin/2021-03/955337929
+#   title: "Gorilla Tag with Friends - (sodapoppin) - March 19, 2021"
+#   description: "Late upload and no chat since VOD was deleted :("
+#   t_start: "07:56:41"
+#   t_end: "08:36:34"
+#   tags:
+#     - "gorilla tag"
+#     - "moxy"
+#     - "esfand"
+#     - "pokelawls"
+
+
+# ===========================================
+# ===========================================
+
+
+# - video: sodapoppin/2021-03/970623285
+#   title: "New Killer All-Kill - Dead By Daylight (sodapoppin) - March 31, 2021"
+#   t_start: "00:16:24,00:32:15,07:19:28"
+#   t_end: "00:18:10,01:20:54,08:05:16"
+#   tags:
+#     - "dead by daylight"
+
+# - video: sodapoppin/2021-03/970623285
+#   title: "Chance Reacts Batman but he doesn't show up - March 31, 2021"
+#   description: "Original Video: https://www.youtube.com/watch?v=-q6pIZD4ljU"
+#   t_start: "00:23:18"
+#   t_end: "00:26:06"
+#   tags:
+#     - "reacting"
+#     - "react content"
+
+# - video: sodapoppin/2021-03/970623285
+#   title: "Chance Reacts to Twitch Meta - March 31, 2021"
+#   t_start: "00:26:06"
+#   t_end: "00:32:15"
+#   tags:
+#     - "reacting"
+#     - "react content"
+#     - "twitch"
+
+# - video: sodapoppin/2021-03/970623285
+#   title: "For The King with Roflgator and Crumpet - (sodapoppin) - March 31, 2021"
+#   t_start: "01:21:22"
+#   t_end: "03:24:19"
+#   tags:
+#     - "for the king"
+
+# - video: sodapoppin/2021-03/970623285
+#   title: "Overwatch - (sodapoppin) - March 31, 2021"
+#   t_start: "03:24:19"
+#   t_end: "06:13:03"
+#   tags:
+#     - "overwatch"
+
+# - video: sodapoppin/2021-03/970623285
+#   title: "Can't Drive This with Roflgator and Mutes - (sodapoppin) - March 31, 2021"
+#   t_start: "06:13:16"
+#   t_end: "07:17:46"
+#   tags:
+#     - "cant drive this"
+#     - "mutes"
+
+
+
+# ===========================================
+# ===========================================
+
+
+# - video: sodapoppin/2021-04/971588457
+#   title: "Merch Competition - (sodapoppin) - April 1, 2021"
+#   t_start: "00:14:19"
+#   t_end: "02:23:45"
+#   tags:
+#     - "Merch Competition"
+#     - "Shirt Competition"
+
+# - video: sodapoppin/2021-04/971588457
+#   title: "Watching Game Trailers - (sodapoppin) - April 1, 2021"
+#   t_start: "02:24:26"
+#   t_end: "02:35:27"
+
+# - video: sodapoppin/2021-04/971588457
+#   title: "Chance Watches LEMMiNO Extraordinary Until Proven Otherwise - April 1, 2021"
+#   description: "Original Video: https://www.youtube.com/watch?v=SpeSpA3e56A"
+#   t_start: "02:35:44"
+#   t_end: "03:05:40"
+#   tags:
+#     - "LEMMiNO"
+#     - "Extraordinary Until Proven Otherwise"
+#     - "reacting"
+
+# - video: sodapoppin/2021-04/971588457
+#   title: "Wanted Raccoon - (sodapoppin) - April 1, 2021"
+#   t_start: "03:06:12"
+#   t_end: "03:51:15"
+#   tags:
+#     - "Wanted Raccoon"
+
+# - video: sodapoppin/2021-04/971588457
+#   title: "Escape From The Hospital - (sodapoppin) - April 1, 2021"
+#   t_start: "03:54:34"
+#   t_end: "04:22:52"
+#   tags:
+#     - "Escape From The Hospital"
+
+# - video: sodapoppin/2021-04/971588457
+#   title: "Chance Reacts to LockPickingLawyer 18in Johnson - April 1, 2021"
+#   description: "Original Video: https://www.youtube.com/watch?v=m-tKnjFwleU"
+#   t_start: "04:24:20"
+#   t_end: "04:32:01"
+
+# - video: sodapoppin/2021-04/971588457
+#   title: "From The Darkness (reupload) - (sodapoppin) - April 1, 2021"
+#   t_start: "04:32:06"
+#   t_end: "05:42:01"
+#   tags:
+#     - "From The Darkness"
+#     - "indie horror"
+#     - "horror"
+
+# - video: sodapoppin/2021-04/971588457
+#   title: "Eggcelerate! - (sodapoppin) - April 1, 2021"
+#   t_start: "05:44:58"
+#   t_end: "06:28:59"
+#   tags:
+#     - "Eggcelerate!"
+
+
+
+# ===========================================
+# ===========================================
+
+
+# - video: sodapoppin/2021-04/972758176
+#   title: "Chance Googles Himself - (sodapoppin) - April 2, 2021"
+#   t_start: "00:08:33"
+#   t_end: "01:02:48"
+
+# - video: sodapoppin/2021-04/972758176
+#   title: "Chance on Zoomers - (sodapoppin) - April 2, 2021"
+#   t_start: "01:09:21"
+#   t_end: "01:14:13"
+
+# - video: sodapoppin/2021-04/972758176
+#   title: "Chance on Twitch Viewers - (sodapoppin) - April 2, 2021"
+#   t_start: "01:53:53"
+#   t_end: "02:19:35"
+
+# - video: sodapoppin/2021-04/972758176
+#   title: "The Typing of the Dead - (sodapoppin) - April 2, 2021"
+#   t_start: "02:42:50"
+#   t_end: "04:02:44"
+#   tags:
+#     - "The Typing of the Dead"
+#     - "The House of the Dead 2"
+
+# - video: sodapoppin/2021-04/972758176
+#   title: "Risk of Rain 2 - (sodapoppin) - April 2, 2021"
+#   t_start: "04:04:00"
+#   t_end: "04:53:05"
+#   tags:
+#     - "Risk of Rain 2"
+
+
+# ===========================================
+# ===========================================
+
+
+# - video: sodapoppin/2021-04/974327219
+#   title: "Drawy - Shitshow Saturday - April 3, 2021"
+#   t_start: "00:13:06"
+#   t_end: "01:07:08"
+#   tags:
+#     - "Drawy"
+#     - "Shitshow Saturday"
+#     - "multiplayer"
+
+# - video: sodapoppin/2021-04/974327219
+#   title: "Weed Shop 3 - Shitshow Saturday - April 3, 2021"
+#   t_start: "01:09:02"
+#   t_end: "01:34:34"
+#   tags:
+#     - "weed shop 3"
+#     - "Shitshow Saturday"
+
+# - video: sodapoppin/2021-04/974327219
+#   title: "Element TD 2 - Shitshow Saturday - April 3, 2021"
+#   t_start: "01:36:27"
+#   t_end: "05:09:56"
+#   tags:
+#     - "Element TD 2"
+#     - "tower defense"
+#     - "Shitshow Saturday"
+#     - "multiplayer"
+
+# - video: sodapoppin/2021-04/974327219
+#   title: "SnowRunner - Shitshow Saturday - April 3, 2021"
+#   t_start: "05:21:20"
+#   t_end: "06:19:12"
+#   tags:
+#     - "SnowRunner"
+#     - "Shitshow Saturday"
+
+# - video: sodapoppin/2021-04/974327219
+#   title: "Maze - Shitshow Saturday - April 3, 2021"
+#   t_start: "06:21:32"
+#   t_end: "06:44:50"
+#   tags:
+#     - "Maze"
+#     - "Shitshow Saturday"
+
+# - video: sodapoppin/2021-04/974327219
+#   title: "Chance Looks at Viewer's Merch Purchases - April 3, 2021"
+#   t_start: "06:44:50"
+#   t_end: "06:50:27"
+
+
+# ===========================================
+# ===========================================
+
+
+- video: sodapoppin/2021-04/976891878
+  title: "Element TD 2 - (sodapoppin) - April 5, 2021"
+  t_start: "00:15:54"
+  t_end: "06:51:16"
+  tags:
+    - "Element TD 2"
+    - "tower defense"
+
+- video: sodapoppin/2021-04/976891878
+  title: "Problem Here - Among Us Clone (sodapoppin) - April 5, 2021"
+  t_start: "06:53:26"
+  t_end: "08:17:45"
+  tags:
+    - "Problem Here"
+    - "Among Us"
+
+- video: sodapoppin/2021-04/976891878
+  title: "Friday the 13th with Friends - (sodapoppin) - April 5, 2021"
+  t_start: "08:50:55"
+  t_end: "10:11:43"
+  tags:
+    - "Friday the 13th"
+    - "Roflgator"
+    - "Crumpet"
+    - "Jakenbake"
+
+
+
+
+
+
+
+
+
+
+
+
 
 

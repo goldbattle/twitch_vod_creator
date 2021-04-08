@@ -104,7 +104,7 @@ if not utils.terminated_requested and not os.path.exists(file_path):
           + ' --id ' + str(video['helix']['id']) + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
                   + ' --quality 1080p60 -o ' + file_path
                   #+ ' --temp-path "' + path_root + '/TEMP/" --quality 1080p60 -o ' + file_path
-    subprocess.Popen(cmd, shell=True).wait()
+    subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
 
 # CHAT: check if the file exists
 file_path_chat = path_data + export_folder + str(video['helix']['id']) + "_chat.json"
@@ -113,7 +113,7 @@ if not utils.terminated_requested and not os.path.exists(file_path_chat):
     cmd = path_twitch_cli + ' -m ChatDownload' \
           + ' --id ' + str(video['helix']['id']) + ' --embed-emotes' \
           + ' -o ' + file_path_chat
-    subprocess.Popen(cmd, shell=True).wait()
+    subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
 
 # RENDER: check if the file exists
 if render_chat:
@@ -126,7 +126,7 @@ if render_chat:
               + ' -h 1080 -w 320 --framerate 60 --font-size 13' \
               + ' -o ' + file_path_render
         # subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL).wait()
-        subprocess.Popen(cmd, shell=True).wait()
+        subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
 
 
 

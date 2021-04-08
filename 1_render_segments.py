@@ -218,6 +218,8 @@ for video in data:
         tmp = tmp.replace("$recorded", video_info["recorded_at"])
         tmp = tmp.replace("$file", video["video"] + ".mp4")
         tmp = tmp.replace("$url", video_info["url"])
+        if "description" in video:
+            tmp = video["description"] + "\n\n" + tmp
         tmp = video["title"] + "\n\n" + tmp
         with open(file_path_desc, "w", encoding="utf-8") as text_file:
             text_file.write(tmp)

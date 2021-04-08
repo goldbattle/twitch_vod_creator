@@ -78,6 +78,11 @@ for video in data:
     with open(file_path_desc, "r") as myfile:
         video_description = ''.join(myfile.readlines()[2:])
 
+    # combine our tags
+    tags = config["tags"]
+    if "tags" in video:
+        tags.append(video["tags"])
+
     # upload options
     options = {
         'local_server': True,
@@ -88,7 +93,7 @@ for video in data:
                 'description': video_description,
                 'category': 'Entertainment',
                 'privacy': 'private',
-                'tags': config["tags"]
+                'tags': tags
             }
         ],
         'secrets_path': path_yt_secrets,
@@ -120,3 +125,4 @@ for video in data:
     except Exception as e:
         print("\t- ERROR unable to complete the upload!")
         print(e)
+        break

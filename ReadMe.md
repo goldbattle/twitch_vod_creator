@@ -20,6 +20,7 @@ You will need at least version 0.7.1 installed to have the correct api support f
 pip install python-twitch-client
 pip install PyYAML
 pip install youtube-video-upload
+pip install youtube_dl
 ```
 
 You will need to make a copy of *[config/auth_example.yaml](config/auth_example.yaml)* and rename it to `config/auth.yaml`.
