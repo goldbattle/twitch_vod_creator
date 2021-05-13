@@ -22,8 +22,8 @@ client_secret = auth["client_secret"]
 # parameters
 channel = 'sodapoppin'
 max_clips = 30
-date_start = '2021-02-01T00:00:00.00Z'
-date_end = '2021-02-28T00:00:00.00Z'
+date_start = '2021-04-01T00:00:00.00Z'
+date_end = '2021-04-30T00:00:00.00Z'
 min_views_required = 1000
 get_latest_from_twitch = True
 
@@ -132,7 +132,15 @@ if get_latest_from_twitch:
                 print("\t- updating clip info: " + file_path_info)
                 with open(file_path_info) as f:
                     video_info = json.load(f)
+                # update view count
                 video_info["view_count"] = video['view_count']
+                # update clip location if failed before
+                if video_info["video_offset"] == -1:
+                    clip_data = utils.get_clip_data(video['id'])
+                    if clip_data['offset'] != -1:
+                        video_info["video_offset"] = clip_data['offset']
+                        video_info["duration"] = clip_data['duration']
+                # finally write to file
                 with open(file_path_info, 'w', encoding="utf-8") as file:
                     json.dump(video_info, file, indent=4)
 
@@ -159,8 +167,10 @@ if get_latest_from_twitch:
             # api returns clips in order of most watch to least watched
             print("\t- clip " + video['url'] + " (" + str(video['view_count']) + " views)")
 
-    except:
+    except Exception as e:
         print("twitch api failure.... stopping querying....")
+        print(e)
+        exit(-1)
 
 # ================================================================
 # ================================================================

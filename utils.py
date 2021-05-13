@@ -46,6 +46,7 @@ def get_vod_moments(void_id):
             moments.append(data)
         return moments
     except Exception as e:
+        print(e)
         return []
 
 def get_vod_moments_from_twitcharchive_string(data):
@@ -69,6 +70,7 @@ def get_vod_moments_from_twitcharchive_string(data):
             moments.append(data)
         return moments
     except Exception as e:
+        print(e)
         return []
 
 
@@ -109,7 +111,7 @@ def get_vod_graphql_info(vod_id):
       }
     '''
     variables = {'videoId': vod_id}
-    url = 'https://api.twitch.tv/gql'
+    url = 'https://gql.twitch.tv/gql'
     response = requests.post(
         url,
         json={'query': query, 'variables': variables},
@@ -159,7 +161,7 @@ def get_clip_graphql_info(clip_id):
       }
     '''
     variables = {'clip_id': clip_id}
-    url = 'https://api.twitch.tv/gql'
+    url = 'https://gql.twitch.tv/gql'
     response = requests.post(
         url,
         json={'query': query, 'variables': variables},

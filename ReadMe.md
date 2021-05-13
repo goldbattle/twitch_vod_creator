@@ -9,6 +9,7 @@ Both the original vod and chat are then render into the same video which can be 
 Example channels with these video renders:
 * Sodapoppin Clips - https://www.youtube.com/channel/UCreuVIdBwFEhf1qFhzyJVKw
 * Sevadus Clips - https://www.youtube.com/channel/UCkWuSV5FukUzVLvFnhvPvKQ
+* Nmplol Clips - https://www.youtube.com/channel/UCf5sgK1NoQuac1P4P4olelg
 
 
 ### Dependencies & Config
@@ -52,8 +53,12 @@ The timestamps are specified using `HH:MM:SS` (see ffmpeg docs [here](https://ff
 ```
 - video: sodapoppin/2020-11/804430123
   title:  "Example Video"
+  description: "This will be in the top of the youtube description" // (optional)
   t_start: "00:00:00,01:00:00"
   t_end: "00:10:00,02:00:00"
+  tags: // (optional)
+    - "tag 1" // (optional)
+    - "tag 2" // (optional)
 ```
 
 In this example a video of the 804430123 vod will be rendered with the title "Example Video".

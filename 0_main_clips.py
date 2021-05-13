@@ -23,7 +23,7 @@ channels = ['xqcow', 'moonmoon', 'sodapoppin', 'clintstevens', 'pokelawls', 'for
 min_view_counts = [5000, 2000, 2000, 500, 1000, 5000, 2000]
 
 # number of days to try to request
-num_days_to_query = 60
+num_days_to_query = 120
 date_start = (datetime.datetime.now()-datetime.timedelta(days=num_days_to_query)).strftime('%Y-%m-%dT%H:%M:%SZ')
 date_end = datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ')
 print("Start Day: "+date_start)
@@ -151,7 +151,15 @@ for idx, user in enumerate(users):
                 print("\t- updating clip info: " + file_path_info)
                 with open(file_path_info) as f:
                     video_info = json.load(f)
+                # update view count
                 video_info["view_count"] = video['view_count']
+                # update clip location if failed before
+                if video_info["video_offset"] == -1:
+                    clip_data = utils.get_clip_data(video['id'])
+                    if clip_data['offset'] != -1:
+                        video_info["video_offset"] = clip_data['offset']
+                        video_info["duration"] = clip_data['duration']
+                # finally write to file
                 with open(file_path_info, 'w', encoding="utf-8") as file:
                     json.dump(video_info, file, indent=4)
 

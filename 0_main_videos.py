@@ -20,9 +20,10 @@ client_secret = auth["client_secret"]
 # parameters
 channels = [
     'sodapoppin', 'moonmoon', 'clintstevens', 'pokelawls', 'sevadus',
-    'happythoughts', 'nmplol', 'jerma985', 'devinnash', 'heydoubleu', 'forsen'
+    'happythoughts', 'nmplol', 'jerma985', 'devinnash', 'heydoubleu',
+    'forsen', 'randy'
 ]
-max_videos = 10
+max_videos = 20
 render_chat = False
 
 # ================================================================
@@ -146,6 +147,18 @@ for user in users:
         if not utils.terminated_requested and not os.path.exists(file_path_info):
             with open(file_path_info, 'w', encoding="utf-8") as file:
                 json.dump(video_data, file, indent=4)
+        elif not utils.terminated_requested:
+            print("\t- updating video info: " + file_path_info)
+            with open(file_path_info) as f:
+                video_info = json.load(f)
+            # update moments if failed before
+            if len(video_info["moments"]) == 0:
+                moments = utils.get_vod_moments(video['helix']['id'])
+                if len(moments) != 0:
+                    video_info["moments"] = moments
+            # finally write to file
+            with open(file_path_info, 'w', encoding="utf-8") as file:
+                json.dump(video_info, file, indent=4)
 
         # VIDEO: check if the file exists
         file_path = path_data + export_folder + str(video['helix']['id']) + ".mp4"
