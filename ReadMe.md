@@ -53,6 +53,7 @@ The timestamps are specified using `HH:MM:SS` (see ffmpeg docs [here](https://ff
 ```
 - video: sodapoppin/2020-11/804430123
   title:  "Example Video"
+  with_chat: false // (option to disable / enable chat)
   description: "This will be in the top of the youtube description" // (optional)
   t_start: "00:00:00,01:00:00"
   t_end: "00:10:00,02:00:00"
