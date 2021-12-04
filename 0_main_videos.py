@@ -8,6 +8,7 @@ import json
 import subprocess
 from datetime import datetime
 import utils
+import shutil
 
 # authentication information
 path_base = os.path.dirname(os.path.abspath(__file__))
@@ -19,12 +20,18 @@ client_secret = auth["client_secret"]
 
 # parameters
 channels = [
-    'sodapoppin', 'moonmoon', 'clintstevens', 'pokelawls', 'sevadus',
-    'happythoughts', 'nmplol', 'jerma985', 'devinnash', 'heydoubleu',
-    'forsen', 'randy'
+    'sodapoppin', 'nmplol',
+    'moonmoon', 'clintstevens', 'pokelawls', 'sevadus',
+    'jerma985', 'heydoubleu',
+    'roflgator', 'cyr'
 ]
 max_videos = 20
-render_chat = False
+render_chat = [
+    True, False,
+    False, False, False, False,
+    False, False,
+    False, False
+]
 
 # ================================================================
 # ================================================================
@@ -32,9 +39,11 @@ render_chat = False
 # paths of the cli and data
 # path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.39.4/TwitchDownloaderCLI.exe"
 # path_twitch_ffmpeg = path_base + "/thirdparty/Twitch_Downloader_1.39.4/ffmpeg.exe"
-path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.39.4/TwitchDownloaderCLI"
+path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.40.4/TwitchDownloaderCLI"
 path_twitch_ffmpeg = path_base + "/thirdparty/ffmpeg-4.3.1-amd64-static/ffmpeg"
 path_root = path_base + "/../data/"
+# path_temp = path_base + "/../data_temp/main_videos/"
+path_temp = "/tmp/tvc_main_videos/"
 
 # ================================================================
 # ================================================================
@@ -51,13 +60,19 @@ for channel in channels:
         if user.name.lower() == channel.lower():
             users.append(user)
             break
+if len(channels) != len(render_chat) or len(channels) != len(users):
+    print('number of channels and chat render settings do not match!!')
+    print('\tlen(channels) = %d' % len(channels))
+    print('\tlen(users) = %d' % len(users))
+    print('\tlen(render_chat) = %d' % len(render_chat))
+    exit(-1)
 
 # now lets loop through each user and make sure we have downloaded
 # their most recent VODs and if we have not, we should download them!
 client_helix = twitch.TwitchHelix(client_id=client_id, client_secret=client_secret)
 client_helix.get_oauth()
 
-for user in users:
+for idx, user in enumerate(users):
 
     # check if we should download any more
     if utils.terminated_requested:
@@ -68,6 +83,8 @@ for user in users:
     path_data = path_root + "/" + user.name.lower() + "/"
     if not os.path.exists(path_data):
         os.makedirs(path_data)
+    if not os.path.exists(path_temp):
+        os.makedirs(path_temp)
 
     # get this stream object, it will have something if the stream is live
     stream = client_helix.get_streams(user_ids=[user.id])
@@ -166,27 +183,46 @@ for user in users:
         if not utils.terminated_requested and not os.path.exists(file_path):
             cmd = path_twitch_cli + ' -m VideoDownload' \
                   + ' --id ' + str(video['helix']['id']) + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
-                  + ' --quality 1080p60 -o ' + file_path
-                  #+ ' --temp-path "' + path_root + '/TEMP/" --quality 1080p60 -o ' + file_path
+                  + ' --temp-path "' + path_temp + '" --quality 1080p60 -o ' + file_path
+                  #+ ' --quality 1080p60 -o ' + file_path
             subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
+            # subprocess.Popen(cmd, shell=True).wait()
 
         # CHAT: check if the file exists
         file_path_chat = path_data + export_folder + str(video['helix']['id']) + "_chat.json"
+        file_path_chat_tmp = path_temp + str(video['helix']['id']) + "_chat.json"
         print("\t- download chat: " + file_path_chat)
         if not utils.terminated_requested and not os.path.exists(file_path_chat):
             cmd = path_twitch_cli + ' -m ChatDownload' \
+                  + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
                   + ' --id ' + str(video['helix']['id']) + ' --embed-emotes' \
-                  + ' -o ' + file_path_chat
+                  + ' -o ' + file_path_chat_tmp
             subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
+            # subprocess.Popen(cmd, shell=True).wait()
+            shutil.move(file_path_chat_tmp, file_path_chat) 
 
         # RENDER: check if the file exists
         file_path_chat = path_data + export_folder + str(video['helix']['id']) + "_chat.json"
         file_path_render = path_data + export_folder + str(video['helix']['id']) + "_chat.mp4"
-        if os.path.exists(file_path_chat) and not os.path.exists(file_path_render) and render_chat:
+        file_path_render_tmp = path_temp + str(video['helix']['id']) + "_chat.mp4"
+        if os.path.exists(file_path_chat) and not os.path.exists(file_path_render) and render_chat[idx]:
             print("\t- rendering chat: " + file_path_render)
             cmd = path_twitch_cli + ' -m ChatRender' \
                   + ' -i ' + file_path_chat + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
-                  + ' -h 1080 -w 320 --framerate 60 --font-size 13' \
-                  + ' -o ' + file_path_render
+                  + ' -h 926 -w 274 --update-rate 0.1 --framerate 60 --font-size 15' \
+                  + ' --temp-path "' + path_temp + '" -o ' + file_path_render_tmp
             subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
             # subprocess.Popen(cmd, shell=True).wait()
+            shutil.move(file_path_render_tmp, file_path_render) 
+
+        # RENDER: also render downscaled video for quick scrubbing....
+        # file_path_render = path_data + export_folder + str(video['helix']['id']) + "_downscaled.mp4"
+        # file_path_render_tmp = path_temp + str(video['helix']['id']) + "_downscaled.mp4"
+        # if os.path.exists(file_path) and not os.path.exists(file_path_render) and render_chat[idx]:
+        #     print("\t- rendering downscaled: " + file_path_render)
+        #     cmd = path_twitch_ffmpeg + ' -i ' + file_path \
+        #           + ' -vf scale="480:270" -c:a copy ' + file_path_render_tmp
+        #     subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
+        #     # subprocess.Popen(cmd, shell=True).wait()
+        #     shutil.move(file_path_render_tmp, file_path_render) 
+

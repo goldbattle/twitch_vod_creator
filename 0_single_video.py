@@ -7,6 +7,7 @@ import os
 import sys
 import json
 import subprocess
+import shutil
 from datetime import datetime
 import utils
 
@@ -32,9 +33,11 @@ client_secret = auth["client_secret"]
 # paths of the cli and data
 # path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.39.4/TwitchDownloaderCLI.exe"
 # path_twitch_ffmpeg = path_base + "/thirdparty/Twitch_Downloader_1.39.4/ffmpeg.exe"
-path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.39.4/TwitchDownloaderCLI"
+path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.40.4/TwitchDownloaderCLI"
 path_twitch_ffmpeg = path_base + "/thirdparty/ffmpeg-4.3.1-amd64-static/ffmpeg"
 path_root = path_base + "/../data/"
+# path_temp = path_base + "/../data_temp/single_video/"
+path_temp = "/tmp/tvc_single_video/"
 
 # ================================================================
 # ================================================================
@@ -77,6 +80,8 @@ video_data = {
 path_data = path_root + "/" + video_data['user_name'].lower() + "/"
 if not os.path.exists(path_data):
     os.makedirs(path_data)
+if not os.path.exists(path_temp):
+    os.makedirs(path_temp)
 print("saving into " + video_data['user_name'].lower() + " user folder")
 
 # extract what folder we should save into
@@ -102,31 +107,37 @@ print("download video: " + file_path)
 if not utils.terminated_requested and not os.path.exists(file_path):
     cmd = path_twitch_cli + ' -m VideoDownload' \
           + ' --id ' + str(video['helix']['id']) + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
-                  + ' --quality 1080p60 -o ' + file_path
-                  #+ ' --temp-path "' + path_root + '/TEMP/" --quality 1080p60 -o ' + file_path
-    subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
+          + ' --temp-path "' + path_temp + '" --quality 1080p60 -o ' + file_path
+    # subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
+    subprocess.Popen(cmd, shell=True).wait()
 
 # CHAT: check if the file exists
 file_path_chat = path_data + export_folder + str(video['helix']['id']) + "_chat.json"
+file_path_chat_tmp = path_temp + str(video['helix']['id']) + "_chat.json"
 print("download chat: " + file_path_chat)
 if not utils.terminated_requested and not os.path.exists(file_path_chat):
     cmd = path_twitch_cli + ' -m ChatDownload' \
+          + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
           + ' --id ' + str(video['helix']['id']) + ' --embed-emotes' \
-          + ' -o ' + file_path_chat
-    subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
+          + ' -o ' + file_path_chat_tmp
+    #subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
+    subprocess.Popen(cmd, shell=True).wait()
+    shutil.move(file_path_chat_tmp, file_path_chat) 
 
 # RENDER: check if the file exists
 if render_chat:
     file_path_chat = path_data + export_folder + str(video['helix']['id']) + "_chat.json"
     file_path_render = path_data + export_folder + str(video['helix']['id']) + "_chat.mp4"
+    file_path_render_tmp = path_temp + str(video['helix']['id']) + "_chat.mp4"
     if os.path.exists(file_path_chat) and not os.path.exists(file_path_render):
         print("rendering chat: " + file_path_render)
         cmd = path_twitch_cli + ' -m ChatRender' \
               + ' -i ' + file_path_chat + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
-              + ' -h 1080 -w 320 --framerate 60 --font-size 13' \
-              + ' -o ' + file_path_render
-        # subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL).wait()
-        subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
+              + ' -h 926 -w 274 --update-rate 0.1 --framerate 60 --font-size 15' \
+              + ' --temp-path "' + path_temp + '" -o ' + file_path_render_tmp
+        # subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
+        subprocess.Popen(cmd, shell=True).wait()
+        shutil.move(file_path_render_tmp, file_path_render) 
 
 
 

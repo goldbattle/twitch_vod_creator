@@ -1,7 +1,9 @@
 # !/usr/bin/env python3
 
 import yaml  # pip install PyYAML
-from youtube_video_upload import upload_from_options, upload_video  # pip install youtube-video-upload
+# sudo pip install --upgrade google-api-python-client oauth2client progressbar2
+# pip install youtube-video-upload
+from youtube_video_upload import upload_from_options, upload_video
 
 import os
 import time
