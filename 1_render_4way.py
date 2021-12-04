@@ -39,8 +39,8 @@ starttime3 = "00:56:46"
 # ================================================================
 
 # paths of the cli and data
-# path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.39.4/TwitchDownloaderCLI.exe"
-# path_twitch_ffmpeg = path_base + "/thirdparty/Twitch_Downloader_1.39.4/ffmpeg.exe"
+# path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.40.4/TwitchDownloaderCLI.exe"
+# path_twitch_ffmpeg = path_base + "/thirdparty/Twitch_Downloader_1.40.4/ffmpeg.exe"
 path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.40.4/TwitchDownloaderCLI"
 path_twitch_ffmpeg = path_base + "/thirdparty/ffmpeg-4.3.1-amd64-static/ffmpeg"
 path_root = path_base + "/../data/"
