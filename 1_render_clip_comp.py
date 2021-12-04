@@ -22,19 +22,23 @@ client_secret = auth["client_secret"]
 # parameters
 channel = 'sodapoppin'
 max_clips = 30
-date_start = '2021-04-01T00:00:00.00Z'
-date_end = '2021-04-30T00:00:00.00Z'
+date_start = '2021-07-01T00:00:00.00Z'
+date_end = '2021-07-31T00:00:00.00Z'
 min_views_required = 1000
 get_latest_from_twitch = True
+clips_to_ignore = [
+    "",
+]
+
 
 # ================================================================
 # ================================================================
 
 # paths of the cli and data
-# path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.39.4/TwitchDownloaderCLI.exe"
+# path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.39.7/TwitchDownloaderCLI.exe"
 # path_twitch_ffmpeg = path_base + "/thirdparty/Twitch_Downloader_1.39.4/ffmpeg.exe"
 # path_twitch_ffprob = path_base + "/thirdparty/ffmpeg-N-99900-g89429cf2f2-win64-lgpl/ffprobe.exe"
-path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.39.4/TwitchDownloaderCLI"
+path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.40.4/TwitchDownloaderCLI"
 path_twitch_ffmpeg = path_base + "/thirdparty/ffmpeg-4.3.1-amd64-static/ffmpeg"
 path_twitch_ffprob = path_base + "/thirdparty/ffmpeg-4.3.1-amd64-static/ffprobe"
 path_font = path_base.replace("\\", "/").replace(":", "\\\\:") + "/thirdparty/bebas_neue/BebasNeue-Regular.ttf"
@@ -149,10 +153,11 @@ if get_latest_from_twitch:
             if not utils.terminated_requested and not os.path.exists(file_path):
                 print("\t- download clip: " + file_path)
                 cmd = path_twitch_cli + ' -m ClipDownload' \
-                      + ' --id ' + str(video['id']) + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
+                      + ' --id ' + str(video['id']) \
+                      + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
                       + ' --quality 1080p60 -o ' + file_path
-                # subprocess.Popen(cmd).wait()
-                subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
+                subprocess.Popen(cmd, shell=True).wait()
+                # subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
 
             # CHAT: check if the file exists
             file_path_chat = path_data + str(video['id']) + "_chat.json"
@@ -160,9 +165,10 @@ if get_latest_from_twitch:
                 print("\t- download chat: " + file_path_chat)
                 cmd = path_twitch_cli + ' -m ChatDownload' \
                       + ' --id ' + str(video['id']) + ' --embed-emotes' \
+                      + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
                       + ' -o ' + file_path_chat
-                # subprocess.Popen(cmd).wait()
-                subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
+                subprocess.Popen(cmd, shell=True).wait()
+                # subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
 
             # api returns clips in order of most watch to least watched
             print("\t- clip " + video['url'] + " (" + str(video['view_count']) + " views)")
@@ -199,6 +205,10 @@ for root, dirs, files in os.walk(path_data):
         if datetime_created < datetime_start:
             continue
         if datetime_created > datetime_end:
+            continue
+        # skip if in ignore list
+        if video_info["id"] in clips_to_ignore:
+            print("WARNING: " + video_info['id'] + " clip has been IGNORED!!!!")
             continue
         arr_clips.append(video_info)
 
@@ -255,6 +265,13 @@ for id1, video1 in enumerate(arr_clips):
         arr_clips_no_common.append(id1)
         continue
 
+# replace our list of clips with non-overlapping ones
+arr_clips_new = []
+for id1, video1 in enumerate(arr_clips):
+    if id1 in arr_clips_no_common:
+        arr_clips_new.append(video1)
+arr_clips = arr_clips_new
+
 # sort the clip array first by view count, then by date
 print("sorting " + str(len(arr_clips)) + " clips by viewcount")
 arr_clips.sort(key=lambda x: x['view_count'])
@@ -286,7 +303,7 @@ for video in arr_clips:
         print("\t- rendering chat: " + file_path_render)
         cmd = path_twitch_cli + ' -m ChatRender' \
               + ' -i ' + file_path_chat + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
-              + ' -h 1080 -w 320 --framerate 60 --font-size 15' \
+              + ' -h 926 -w 274 --update-rate 0.1 --framerate 60 --font-size 15' \
               + ' -o ' + file_path_render
         subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
 
@@ -303,6 +320,7 @@ for video in arr_clips:
 
         # render with chat
         # text fading based on: http://ffmpeg.shanewhite.co/
+        # -hide_banner -loglevel quiet -stats
         t0 = time.time()
         title_clean = re.sub(r'http\S+', '', video["title"])
         title_clean = re.sub(r'www\S+', '', title_clean)
@@ -313,27 +331,29 @@ for video in arr_clips:
             cmd = path_twitch_ffmpeg + ' -hide_banner -loglevel quiet -stats ' \
                   + ' -i ' + file_path \
                   + ' -i ' + file_path_render \
-                  + ' -filter_complex "scale=1600x900,pad=1920:1080:0:90:black [tmp0];' \
+                  + ' -filter_complex "scale=1646x926,pad=1920:926:0:90:black [tmp0];' \
                   + ' [tmp0]drawtext=text=\'' + title_clean \
-                  + '\':x=10:y=100:fontfile=' + path_font + ':fontsize=75:fontcolor=white:alpha=' \
-                  + '\'if(lt(t,0),0,if(lt(t,0),(t-0)/0,if(lt(t,4),1,if(lt(t,4.5),(0.5-(t-4))/0.5,0))))\'[tmp1]; ' \
-                  + ' [tmp1][1:v] overlay=shortest=0:x=1600:y=0:eof_action=endall" -shortest ' \
+                  + '\':x=25:y=25:fontfile=' + path_font + ':fontsize=85:fontcolor=white:bordercolor=black:borderw=5' \
+                  + ':alpha=\'if(lt(t,0),0,if(lt(t,0),(t-0)/0,if(lt(t,4),1,if(lt(t,4.5),(0.5-(t-4))/0.5,0))))\'[tmp1]; ' \
+                  + ' [tmp1][1:v] overlay=shortest=0:x=1646:y=0:eof_action=endall" -shortest ' \
                   + ' -c:a aac -ar 48k -ac 2 -vcodec libx264 -crf 19 -preset fast ' \
                   + ' -video_track_timescale 90000 -avoid_negative_ts make_zero -fflags +genpts -framerate 60 ' \
                   + file_path_composite
             subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
+            #subprocess.Popen(cmd, shell=True).wait()
         else:
             print("\t- rendering *without* chat overlay ")
             cmd = path_twitch_ffmpeg + ' -hide_banner -loglevel quiet -stats ' \
                   + ' -i ' + file_path \
-                  + ' -vf "scale=w=1920:h=1080,' \
+                  + ' -vf "scale=1646x926,pad=1920:926:0:90:black,' \
                   + 'drawtext=text=\'' + title_clean \
-                  + '\':x=10:y=10:fontfile=' + path_font + ':fontsize=75:fontcolor=white' \
+                  + '\':x=25:y=25:fontfile=' + path_font + ':fontsize=85:fontcolor=white:bordercolor=black:borderw=5' \
                   + ':alpha=\'if(lt(t,0),0,if(lt(t,0),(t-0)/0,if(lt(t,4),1,if(lt(t,4.5),(0.5-(t-4))/0.5,0))))\' ' \
                   + ' " -c:a aac -ar 48k -ac 2 -vcodec libx264 -crf 19 -preset fast ' \
                   + ' -video_track_timescale 90000 -avoid_negative_ts make_zero -fflags +genpts -framerate 60 ' \
                   + file_path_composite
             subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
+            #subprocess.Popen(cmd, shell=True).wait()
 
         # end timing
         t1 = time.time()
@@ -374,6 +394,7 @@ if not utils.terminated_requested and not os.path.exists(file_path_composite):
           + ' -c copy -avoid_negative_ts make_zero ' \
           + file_path_composite
     subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
+    #subprocess.Popen(cmd, shell=True).wait()
     os.remove(text_file_temp_videos)
 
     # end timing and compute debug stats
@@ -414,6 +435,9 @@ if not utils.terminated_requested and not os.path.exists(file_path_desc):
         # tmp = tmp + "Viewcount: " + str(video_info["view_count"]) + "\n"
         # tmp = tmp + "Created At: " + video_info["created_at"] + "\n"
         # tmp = tmp + "URL: " + video_info["url"] + "\n\n"
+        print("=============================")
+        print("  "+str(timestamp)+ " - "+video_info["id"])
+        print("  "+title_clean)
 
         # add how long this clip is
         # https://superuser.com/a/945604
@@ -424,6 +448,6 @@ if not utils.terminated_requested and not os.path.exists(file_path_desc):
         vid_length = pipe.communicate()[0]
         num_second_into_video += float(vid_length)
 
-    # finally writ ethe description to file
+    # finally write the description to file
     with open(file_path_desc, "w", encoding="utf-8") as text_file:
         text_file.write(tmp)
