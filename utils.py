@@ -18,6 +18,12 @@ def signal_handler(sig, frame):
 def setup_signal_handle():
     signal.signal(signal.SIGINT, signal_handler)
 
+def webvtt_time_string(seconds):
+    minutes = seconds / 60
+    seconds = seconds % 60
+    hours = int(minutes / 60)
+    minutes = int(minutes % 60)
+    return '%i:%02i:%06.3f' % (hours, minutes, seconds)
 
 def get_valid_filename(filename):
     valid_chars = "-_%s%s" % (string.ascii_letters, string.digits)

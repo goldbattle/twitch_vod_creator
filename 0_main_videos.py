@@ -2,12 +2,15 @@
 
 import twitch  # pip install python-twitch-client
 import yaml  # pip install PyYAML
+from webvtt import WebVTT, Caption  # pip install webvtt-py
+from vosk import Model, KaldiRecognizer, SetLogLevel  # pip install vosk
 
 import os
 import json
 import subprocess
 from datetime import datetime
 import utils
+import time
 import shutil
 
 # authentication information
@@ -32,6 +35,12 @@ render_chat = [
     False, False,
     False, False
 ]
+render_webvtt = [
+    True, False,
+    False, False, False, False,
+    False, False,
+    False, False
+]
 
 # ================================================================
 # ================================================================
@@ -44,6 +53,7 @@ path_twitch_ffmpeg = path_base + "/thirdparty/ffmpeg-4.3.1-amd64-static/ffmpeg"
 path_root = path_base + "/../data/"
 # path_temp = path_base + "/../data_temp/main_videos/"
 path_temp = "/tmp/tvc_main_videos/"
+path_model = path_base + "/thirdparty/vosk-model-small-en-us-0.15/"
 
 # ================================================================
 # ================================================================
@@ -60,11 +70,12 @@ for channel in channels:
         if user.name.lower() == channel.lower():
             users.append(user)
             break
-if len(channels) != len(render_chat) or len(channels) != len(users):
+if len(channels) != len(render_chat) or len(channels) != len(users) or len(channels) != len(render_webvtt):
     print('number of channels and chat render settings do not match!!')
     print('\tlen(channels) = %d' % len(channels))
     print('\tlen(users) = %d' % len(users))
     print('\tlen(render_chat) = %d' % len(render_chat))
+    print('\tlen(render_webvtt) = %d' % len(render_webvtt))
     exit(-1)
 
 # now lets loop through each user and make sure we have downloaded
@@ -181,18 +192,21 @@ for idx, user in enumerate(users):
         file_path = path_data + export_folder + str(video['helix']['id']) + ".mp4"
         print("\t- download video: " + file_path)
         if not utils.terminated_requested and not os.path.exists(file_path):
+            t0 = time.time()
             cmd = path_twitch_cli + ' -m VideoDownload' \
                   + ' --id ' + str(video['helix']['id']) + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
                   + ' --temp-path "' + path_temp + '" --quality 1080p60 -o ' + file_path
                   #+ ' --quality 1080p60 -o ' + file_path
             subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
             # subprocess.Popen(cmd, shell=True).wait()
+            print("\t- done in " + str(time.time() - t0) + " seconds")
 
         # CHAT: check if the file exists
         file_path_chat = path_data + export_folder + str(video['helix']['id']) + "_chat.json"
         file_path_chat_tmp = path_temp + str(video['helix']['id']) + "_chat.json"
         print("\t- download chat: " + file_path_chat)
         if not utils.terminated_requested and not os.path.exists(file_path_chat):
+            t0 = time.time()
             cmd = path_twitch_cli + ' -m ChatDownload' \
                   + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
                   + ' --id ' + str(video['helix']['id']) + ' --embed-emotes' \
@@ -200,13 +214,15 @@ for idx, user in enumerate(users):
             subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
             # subprocess.Popen(cmd, shell=True).wait()
             shutil.move(file_path_chat_tmp, file_path_chat) 
+            print("\t- done in " + str(time.time() - t0) + " seconds")
 
         # RENDER: check if the file exists
         file_path_chat = path_data + export_folder + str(video['helix']['id']) + "_chat.json"
         file_path_render = path_data + export_folder + str(video['helix']['id']) + "_chat.mp4"
         file_path_render_tmp = path_temp + str(video['helix']['id']) + "_chat.mp4"
-        if os.path.exists(file_path_chat) and not os.path.exists(file_path_render) and render_chat[idx]:
+        if not utils.terminated_requested and os.path.exists(file_path_chat) and not os.path.exists(file_path_render) and render_chat[idx]:
             print("\t- rendering chat: " + file_path_render)
+            t0 = time.time()
             cmd = path_twitch_cli + ' -m ChatRender' \
                   + ' -i ' + file_path_chat + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
                   + ' -h 926 -w 274 --update-rate 0.1 --framerate 60 --font-size 15' \
@@ -214,6 +230,7 @@ for idx, user in enumerate(users):
             subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
             # subprocess.Popen(cmd, shell=True).wait()
             shutil.move(file_path_render_tmp, file_path_render) 
+            print("\t- done in " + str(time.time() - t0) + " seconds")
 
         # RENDER: also render downscaled video for quick scrubbing....
         # file_path_render = path_data + export_folder + str(video['helix']['id']) + "_downscaled.mp4"
@@ -226,3 +243,43 @@ for idx, user in enumerate(users):
         #     # subprocess.Popen(cmd, shell=True).wait()
         #     shutil.move(file_path_render_tmp, file_path_render) 
 
+        # AUDIO-TO-TEXT: check if file exists
+        file_path_webvtt = path_data + export_folder + str(video['helix']['id']) + ".vtt"
+        if not utils.terminated_requested and os.path.exists(file_path) and not os.path.exists(file_path_webvtt) and render_webvtt[idx]:
+            print("\t- transcribing: " + file_path_webvtt)
+            t0 = time.time()
+
+            # open the model
+            SetLogLevel(-1)
+            sample_rate = 16000
+            model = Model(path_model)
+            rec = KaldiRecognizer(model, sample_rate)
+            rec.SetWords(True)
+
+            # open ffmpeg pipe stream of the audio file (from video)
+            command = [path_twitch_ffmpeg, '-nostdin', '-loglevel', 'quiet', '-i', file_path,
+                       '-ar', str(sample_rate), '-ac', '1', '-f', 's16le', '-']
+            # process = subprocess.Popen(command, stdout=subprocess.PIPE)
+            process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+            results = []
+            while True:
+                data = process.stdout.read(4000)
+                if len(data) == 0:
+                    break
+                if rec.AcceptWaveform(data):
+                    text = rec.Result()
+                    results.append(text)
+            results.append(rec.FinalResult())
+
+            # convert to standard format
+            vtt = WebVTT()
+            for i, res in enumerate(results):
+                words = json.loads(res).get('result')
+                if not words:
+                    continue
+                for word in words:
+                    start = utils.webvtt_time_string(word['start'])
+                    end = utils.webvtt_time_string(word['end'])
+                    vtt.captions.append(Caption(start, end, word['word']))
+            vtt.save(file_path_webvtt)
+            print("\t- done in " + str(time.time() - t0) + " seconds")

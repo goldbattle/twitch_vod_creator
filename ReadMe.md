@@ -5,6 +5,7 @@ At the core we leverage lay295's [TwitchDownload](https://github.com/lay295/Twit
 For all of these we can render the chat such that the twitch experience is preserved along with the original stream on the video-only youtube platform.
 Then we can perform specific "cutting" of downloaded videos to select game playthroughs or segments which others might want to watch.
 Both the original vod and chat are then render into the same video which can be uploaded to youtube.
+Additionally, a transcript of the video can be generated using [vosk](https://github.com/alphacep/vosk-api) for local use when editing.
 
 Example channels with these video renders:
 * Sodapoppin Clips - https://www.youtube.com/channel/UCreuVIdBwFEhf1qFhzyJVKw
@@ -22,6 +23,8 @@ pip install python-twitch-client
 pip install PyYAML
 pip install youtube-video-upload
 pip install youtube_dl
+pip install webvtt-py
+pip install vosk
 ```
 
 You will need to make a copy of *[config/auth_example.yaml](config/auth_example.yaml)* and rename it to `config/auth.yaml`.
