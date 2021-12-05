@@ -5285,36 +5285,36 @@
 # ===========================================
 
 
-- video: data/sodapoppin/2021-11/1218590497
-  title: "Setting up Christmas Decorations - (sodapoppin) - November 28, 2021"
-  t_start: "00:14:37"
-  t_end: "01:34:02"
+# - video: data/sodapoppin/2021-11/1218590497
+#   title: "Setting up Christmas Decorations - (sodapoppin) - November 28, 2021"
+#   t_start: "00:14:37"
+#   t_end: "01:34:02"
 
-- video: data/sodapoppin/2021-11/1218590497
-  title: "Final Fantasy XIV - Part 2 (sodapoppin) - November 28, 2021"
-  t_start: "01:34:02"
-  t_end: "05:30:34"
+# - video: data/sodapoppin/2021-11/1218590497
+#   title: "Final Fantasy XIV - Part 2 (sodapoppin) - November 28, 2021"
+#   t_start: "01:34:02"
+#   t_end: "05:30:34"
 
-- video: data/sodapoppin/2021-11/1218590497
-  title: "Final Fantasy XIV - Part 3 (sodapoppin) - November 28, 2021"
-  t_start: "05:30:34"
-  t_end: "10:50:58"
+# - video: data/sodapoppin/2021-11/1218590497
+#   title: "Final Fantasy XIV - Part 3 (sodapoppin) - November 28, 2021"
+#   t_start: "05:30:34"
+#   t_end: "10:50:58"
 
-- video: data/sodapoppin/2021-11/1218590497
-  title: "Little Big Snake #ad - (sodapoppin) - November 28, 2021"
-  t_start: "10:50:58"
-  t_end: "11:20:00"
+# - video: data/sodapoppin/2021-11/1218590497
+#   title: "Little Big Snake #ad - (sodapoppin) - November 28, 2021"
+#   t_start: "10:50:58"
+#   t_end: "11:20:00"
 
-- video: data/sodapoppin/2021-11/1219519846
-  title: "Chance Reacts to Channel 5 Return to Talladega - (sodapoppin) - November 29, 2021"
-  description: "Original Video:\nhttps://www.youtube.com/watch?v=6tuYIXi6nTQ"
-  t_start: "00:17:15"
-  t_end: "00:33:41"
+# - video: data/sodapoppin/2021-11/1219519846
+#   title: "Chance Reacts to Channel 5 Return to Talladega - (sodapoppin) - November 29, 2021"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=6tuYIXi6nTQ"
+#   t_start: "00:17:15"
+#   t_end: "00:33:41"
 
-- video: data/sodapoppin/2021-11/1219519846
-  title: "Warcraft III - (sodapoppin) - November 29, 2021"
-  t_start: "00:32:55"
-  t_end: "01:29:23"
+# - video: data/sodapoppin/2021-11/1219519846
+#   title: "Warcraft III - (sodapoppin) - November 29, 2021"
+#   t_start: "00:32:55"
+#   t_end: "01:29:23"
 
 
 # ===========================================
@@ -5323,106 +5323,142 @@
 
 
 
-- video: data/sodapoppin/2021-11/1219703596
-  title: "Final Fantasy XIV - Part 4 (sodapoppin) - November 29, 2021"
-  t_start: "00:33:30"
-  t_end: "05:21:17"
+# - video: data/sodapoppin/2021-11/1219703596
+#   title: "Final Fantasy XIV - Part 4 (sodapoppin) - November 29, 2021"
+#   t_start: "00:33:30"
+#   t_end: "05:21:17"
 
-- video: data/sodapoppin/2021-11/1219703596
-  title: "Final Fantasy XIV - Part 5 (sodapoppin) - November 29, 2021"
-  t_start: "05:21:17"
-  t_end: "11:09:28"
+# - video: data/sodapoppin/2021-11/1219703596
+#   title: "Final Fantasy XIV - Part 5 (sodapoppin) - November 29, 2021"
+#   t_start: "05:21:17"
+#   t_end: "11:09:28"
 
-- video: data/sodapoppin/2021-11/1220328261
-  title: "Little Big Snake #ad - (sodapoppin) - November 30, 2021"
-  t_start: "00:16:06"
-  t_end: "00:58:45"
+# - video: data/sodapoppin/2021-11/1220328261
+#   title: "Little Big Snake #ad - (sodapoppin) - November 30, 2021"
+#   t_start: "00:16:06"
+#   t_end: "00:58:45"
 
-- video: data/sodapoppin/2021-11/1220328261
-  title: "Final Fantasy XIV - Part 6 (sodapoppin) - November 30, 2021"
-  t_start: "00:58:45"
-  t_end: "08:53:30"
-
-
-- video: data/sodapoppin/2021-12/1221173495
-  title: "Roguelike Roulette - (sodapoppin) - December 1, 2021"
-  t_start: "00:10:27"
-  t_end: "04:38:58"
+# - video: data/sodapoppin/2021-11/1220328261
+#   title: "Final Fantasy XIV - Part 6 (sodapoppin) - November 30, 2021"
+#   t_start: "00:58:45"
+#   t_end: "08:53:30"
 
 
-- video: data/sodapoppin/2021-12/1221173495
-  title: "Banners of Ruin - (sodapoppin) - December 1, 2021"
-  t_start: "00:33:59"
-  t_end: "02:19:56"
-
-- video: data/sodapoppin/2021-12/1221173495
-  title: "Darkest Dungeon II - (sodapoppin) - December 1, 2021"
-  t_start: "02:19:56"
-  t_end: "02:45:28"
-
-- video: data/sodapoppin/2021-12/1221173495
-  title: "Roguebook - (sodapoppin) - December 1, 2021"
-  t_start: "02:45:28"
-  t_end: "03:38:01"
-
-- video: data/sodapoppin/2021-12/1221173495
-  title: "For The King - (sodapoppin) - December 1, 2021"
-  t_start: "03:38:01"
-  t_end: "04:38:58"
+# - video: data/sodapoppin/2021-12/1221173495
+#   title: "Roguelike Roulette - (sodapoppin) - December 1, 2021"
+#   t_start: "00:10:27"
+#   t_end: "04:38:58"
 
 
-- video: data/sodapoppin/2021-12/1222129359
-  title: "Batman Does Roguelike Roulette - (sodapoppin) - December 2, 2021"
-  t_start: "00:25:22"
-  t_end: "06:33:40"
+# - video: data/sodapoppin/2021-12/1221173495
+#   title: "Banners of Ruin - (sodapoppin) - December 1, 2021"
+#   t_start: "00:33:59"
+#   t_end: "02:19:56"
 
-- video: data/sodapoppin/2021-12/1222129359
-  title: "Domina - (sodapoppin) - December 2, 2021"
-  t_start: "00:34:14"
-  t_end: "01:21:00"
+# - video: data/sodapoppin/2021-12/1221173495
+#   title: "Darkest Dungeon II - (sodapoppin) - December 1, 2021"
+#   t_start: "02:19:56"
+#   t_end: "02:45:28"
 
-- video: data/sodapoppin/2021-12/1222129359
-  title: "Plague Inc: Evolved - (sodapoppin) - December 2, 2021"
-  t_start: "01:21:00"
-  t_end: "01:42:19"
+# - video: data/sodapoppin/2021-12/1221173495
+#   title: "Roguebook - (sodapoppin) - December 1, 2021"
+#   t_start: "02:45:28"
+#   t_end: "03:38:01"
 
-- video: data/sodapoppin/2021-12/1222129359
-  title: "Exanima - (sodapoppin) - December 2, 2021"
-  t_start: "01:42:19"
-  t_end: "01:52:52"
+# - video: data/sodapoppin/2021-12/1221173495
+#   title: "For The King - (sodapoppin) - December 1, 2021"
+#   t_start: "03:38:01"
+#   t_end: "04:38:58"
 
-- video: data/sodapoppin/2021-12/1222129359
-  title: "Ziggurat 2 - (sodapoppin) - December 2, 2021"
-  t_start: "01:52:52"
-  t_end: "02:23:40"
 
-- video: data/sodapoppin/2021-12/1222129359
-  title: "The Last Spell - (sodapoppin) - December 2, 2021"
-  t_start: "02:23:40"
-  t_end: "03:08:24"
+# - video: data/sodapoppin/2021-12/1222129359
+#   title: "Batman Does Roguelike Roulette - (sodapoppin) - December 2, 2021"
+#   t_start: "00:25:22"
+#   t_end: "06:33:40"
 
-- video: data/sodapoppin/2021-12/1222129359
-  title: "Noita - (sodapoppin) - December 2, 2021"
-  t_start: "03:08:24"
-  t_end: "03:53:37"
+# - video: data/sodapoppin/2021-12/1222129359
+#   title: "Domina - (sodapoppin) - December 2, 2021"
+#   t_start: "00:34:14"
+#   t_end: "01:21:00"
 
-- video: data/sodapoppin/2021-12/1222129359
-  title: "Ether Loop - (sodapoppin) - December 2, 2021"
-  t_start: "03:53:37"
-  t_end: "04:08:09"
+# - video: data/sodapoppin/2021-12/1222129359
+#   title: "Plague Inc: Evolved - (sodapoppin) - December 2, 2021"
+#   t_start: "01:21:00"
+#   t_end: "01:42:19"
 
-- video: data/sodapoppin/2021-12/1222129359
-  title: "Risk of Rain 2 - (sodapoppin) - December 2, 2021"
-  t_start: "04:08:09"
-  t_end: "05:08:54"
+# - video: data/sodapoppin/2021-12/1222129359
+#   title: "Exanima - (sodapoppin) - December 2, 2021"
+#   t_start: "01:42:19"
+#   t_end: "01:52:52"
 
-- video: data/sodapoppin/2021-12/1222129359
-  title: "Slay the Spire - (sodapoppin) - December 2, 2021"
-  t_start: "05:08:54"
-  t_end: "05:56:34"
+# - video: data/sodapoppin/2021-12/1222129359
+#   title: "Ziggurat 2 - (sodapoppin) - December 2, 2021"
+#   t_start: "01:52:52"
+#   t_end: "02:23:40"
 
-- video: data/sodapoppin/2021-12/1222129359
-  title: "Chatting in Other Streamer's Twitch Chats - (sodapoppin) - December 2, 2021"
-  t_start: "06:00:45"
-  t_end: "06:09:48"
+# - video: data/sodapoppin/2021-12/1222129359
+#   title: "The Last Spell - (sodapoppin) - December 2, 2021"
+#   t_start: "02:23:40"
+#   t_end: "03:08:24"
 
+# - video: data/sodapoppin/2021-12/1222129359
+#   title: "Noita - (sodapoppin) - December 2, 2021"
+#   t_start: "03:08:24"
+#   t_end: "03:53:37"
+
+# - video: data/sodapoppin/2021-12/1222129359
+#   title: "Ether Loop - (sodapoppin) - December 2, 2021"
+#   t_start: "03:53:37"
+#   t_end: "04:08:09"
+
+# - video: data/sodapoppin/2021-12/1222129359
+#   title: "Risk of Rain 2 - (sodapoppin) - December 2, 2021"
+#   t_start: "04:08:09"
+#   t_end: "05:08:54"
+
+# - video: data/sodapoppin/2021-12/1222129359
+#   title: "Slay the Spire - (sodapoppin) - December 2, 2021"
+#   t_start: "05:08:54"
+#   t_end: "05:56:34"
+
+# - video: data/sodapoppin/2021-12/1222129359
+#   title: "Chatting in Other Streamer's Twitch Chats - (sodapoppin) - December 2, 2021"
+#   t_start: "06:00:45"
+#   t_end: "06:09:48"
+
+
+# ===========================================
+# https://www.twitch.tv/sodapoppin/videos?filter=all
+# ===========================================
+
+
+- video: data/sodapoppin/2021-12/1223102539
+  title: "Chance Reacts to Mitch Jones Presents: Broken - (sodapoppin) - December 3, 2021"
+  t_start: "05:16:51,06:19:10"
+  t_end: "05:47:05,06:52:41"
+
+- video: data/sodapoppin/2021-12/1223102539
+  title: "Propnight with Friends - (sodapoppin) - December 3, 2021"
+  t_start: "04:00:42,05:47:15,06:51:45"
+  t_end: "05:16:51,06:18:55,10:07:50"
+
+- video: data/sodapoppin/2021-12/1223102539
+  title: "Final Fantasy XIV - Part 7 (sodapoppin) - December 3, 2021"
+  t_start: "03:13:52"
+  t_end: "04:00:29"
+
+- video: data/sodapoppin/2021-12/1223102539
+  title: "Warcraft 3 - (sodapoppin) - December 3, 2021"
+  t_start: "01:01:55"
+  t_end: "03:10:14"
+
+- video: data/sodapoppin/2021-12/1223102539
+  title: "Chance Reacts to Dunkey's Dislikes are Disabled Video - (sodapoppin) - December 3, 2021"
+  description: "Original Video:\nhttps://www.youtube.com/watch?v=vC5JnJD9KzY"
+  t_start: "00:58:11"
+  t_end: "01:00:37"
+
+- video: data/sodapoppin/2021-12/1223102539
+  title: "Chance Reacts to Tyler1's News Article - (sodapoppin) - December 3, 2021"
+  t_start: "00:18:23"
+  t_end: "00:52:45"
