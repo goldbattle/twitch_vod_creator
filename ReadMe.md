@@ -70,6 +70,15 @@ The first 10 minutes will be rendered, after which the video will cut to the 1 h
 Note that while here we can have as long as possible video, youtube has a max upload length of 12 hours.
 
 
+### Creating Segment Config Files
+
+
+See the below [website](./website/) directory for a small local interface for generating these files.
+Otherwise one can use VLC and [VLC Get Timestamp.ahk](./docs/VLC%20Get%20Timestamp.ahk) autohotkey script.
+
+![](./docs/website_example.png)
+
+
 ### Known Issues
 
 * The youtube uploader does not work for me.
