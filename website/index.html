@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <!-- meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- style files -->
+  <meta name="color-scheme" content="light dark">
+  <link rel="stylesheet" href="css/bootstrap.min.css" />
+  <link rel="stylesheet" href="css/bootstrap-nightfall.css" media="(prefers-color-scheme: dark)">
+
+  <!-- javascript files -->
+  <script type="text/javascript" src="js/jquery.min.js"></script>
+  <script type="text/javascript" src="js/bootstrap.bundle.min.js"></script>
+  <script type="text/javascript" src="js/clipboard.min.js"></script>
+  <script type="text/javascript" src="js/popper.min.js"></script>
+
+</head>
+
+<body>
+<div class="container-fluid">
+<div class="row" style="height: 100vh;">
+
+  <!-- main video -->
+  <div class="col-6" id="video" style="height:100%;overflow-y:hidden;">
+
+    <div class="input-group">
+      <span class="input-group-text" style="border-radius:0.2rem 0 0 0;">Current Video:</span>
+      <input class="form-control form-control-lg" id="datapath" onkeydown="readInputDataPath(this, event)" style="border-radius:0 0.2rem 0 0;" />
+    </div>
+
+    <div class="embed-responsive embed-responsive-16by9">
+      <video width="100%" id="video-active" class="embed-responsive-item" preload="auto" controls>
+        <!-- <source src="path_here.." type="video/mp4"> -->
+        Your browser does not support the video tag.
+      </video>
+    </div>
+    <!-- <div id="current">0:00</div>
+    <div id="duration">0:00</div>
+    <div id="text"></div> -->
+
+  </div>
+
+  <!-- transcript text -->
+  <div class="col-2" id="transcript-container" style="height:100%;overflow-y: scroll;">
+    <div id="transcript" style="font-size: 0.8em;word-wrap: break-word;overflow-y: auto;"></div>
+  </div>
+
+  <!-- rendered segments -->
+  <div class="col-4" style="height:100%;overflow-y: scroll;">
+    <a class="btn btn-primary d-grid" id="copybutton" style="border-radius:0.2rem 0.2rem 0 0;" >COPY TEXT</a>
+    <!-- <div class="card" style="border-radius:0 0 0 0;"> -->
+      <!-- <div class="card-body" style="line-height:0.8em;"> -->
+        <code id="segments" class="text-body">Add segments with "A"!</code>
+      <!-- </div> -->
+    <!-- </div> -->
+  </div>
+
+  <!-- error alert -->
+  <div class="col-12">
+    <div class="position-fixed top-50 start-50 translate-middle p-3" style="z-index: 11">
+      <div id="error-toast" class="toast hide align-items-center text-white bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+          <div class="toast-body text-center" id="error-toast-body">
+          </div>
+          <!-- <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button> -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div> <!-- row -->
+</div> <!-- container-fluid -->
+
+
+
+
+<script>
+
+var transcriptScoll = true;
+var lastScrollTime = new Date();
+var transcriptLast = 0;
+var transcriptItems = [];
+var segments = [];
+var segmentCurrent = 1;
+
+function updateTranscript(index, force=false) {
+
+  if(transcriptLast != index || force) {
+
+    // Remove old transcript if needed, add new highlight
+    if($("#item_"+transcriptLast).hasClass("text-info")) {
+      $("#item_"+transcriptLast).removeClass("text-info")
+    }
+    $("#item_"+index).addClass("text-info")
+
+    // https://stackoverflow.com/q/40243455/7718197
+    //var codeElement = document.querySelector("#item_" + index);
+    //var scrollableContainer = document.querySelector("#transcript");
+    //var scrollableContainerHeight = scrollableContainer.clientHeight;
+    //var offsetTop = codeElement.offsetTop;
+    //var diff = offsetTop - scrollableContainerHeight;
+    //targetScrollTop = diff + (scrollableContainerHeight / 2);
+    // https://stackoverflow.com/a/62044232/7718197
+    if(transcriptScoll) {
+      lastScrollTime = new Date();
+      //$('#transcript').animate({scrollTop: targetScrollTop}, 100, 'swing');
+      document.getElementById("item_"+index).scrollIntoView({
+          behavior: 'auto',
+          block: 'center',
+          inline: 'center'
+      });
+    }
+
+  }
+  transcriptLast = index;
+
+}
+
+function toHHMMSS(secs) {
+    var sec_num = parseInt(secs, 10)
+    var hours   = Math.floor(sec_num / 3600)
+    var minutes = Math.floor(sec_num / 60) % 60
+    var seconds = sec_num % 60
+    return String(hours).padStart(2, '0')+":"+
+      String(minutes).padStart(2, '0')+":"+
+      String(seconds).padStart(2, '0');
+}
+
+function onTrackedVideoFrame(currentTime, duration) {
+  //$("#current").text(currentTime);
+  //$("#duration").text(duration);
+  for (var i = 0; i < transcriptItems.length; i++) {
+    if(currentTime >= transcriptItems[i]["startTime"] && currentTime < transcriptItems[i]["endTime"]) {
+      //$("#text").text(transcriptItems[i]["text"]);
+      updateTranscript(i);
+      break
+    }
+  }
+}
+
+function onWordSeekClick(index) {
+  if(index >= transcriptItems.length || index < 0)
+    return false
+  updateTranscript(index);
+  document.querySelector('#video-active').currentTime = transcriptItems[index]["startTime"]
+  return false
+}
+
+function removeOnScrollButton() {
+  transcriptScoll = true;
+  $("#resume_scroll").remove();
+  updateTranscript(transcriptLast, true);
+  return false;
+}
+
+function readInputDataPath(el, e) {
+  if (e.keyCode == 13) {
+    location.href = "/?file="+el.value
+  }
+}
+
+// https://github.com/pavladan/subtitles-parser-vtt/blob/master/index.js#L67
+function timeMs(val) {
+  var regex = /(\d+):(\d{2}):(\d{2})[,.](\d{3})/;
+  var parts = regex.exec(val);
+  if (parts === null) {
+    return 0;
+  }
+  for (var i = 1; i < 5; i++) {
+    parts[i] = parseInt(parts[i], 10);
+    if (isNaN(parts[i])) parts[i] = 0;
+  }
+  // hours + minutes + seconds + ms
+  return parts[1] * 3600000 + parts[2] * 60000 + parts[3] * 1000 + parts[4];
+};
+
+
+function updateSegmentYaml() {
+  var text = updateSegmentYamlGenerate(false, "<br/>", "&nbsp;", true);
+  $("#segments").html(text);
+  var text2 = updateSegmentYamlGenerate(true, "\n", " ");
+  $('#copybutton').attr('data-clipboard-text', text2)
+}
+
+function updateSegmentYamlGenerate(reverse, lineending, space, highlight=false) {
+  var text = "";
+  if(reverse) {
+    segments.reverse();
+  }
+  for(var i=segments.length-1; i >= 0; i--) {
+    if(highlight && (i==segmentCurrent || (segmentCurrent == -1 && i==segments.length-1))) {
+      text += "<span class=\"text-warning\" style=\"font-weight: bold;\">"
+    }
+    text += "- video: "+document.querySelector('#datapath').value+lineending
+    text += space+space+"title: \""+segments[i]["title"]+"\""+lineending
+    text += space+space+"t_start: \""
+    for(var j=0; j<segments[i]["start"].length; j++) {
+      text += toHHMMSS(segments[i]["start"][j]);
+      if(j < segments[i]["start"].length - 1) {
+        text += ",";
+      }
+    }
+    text += "\""+lineending
+    text += space+space+"t_end: \""
+    for(var j=0; j<segments[i]["end"].length; j++) {
+      text += toHHMMSS(segments[i]["end"][j]);
+      if(j < segments[i]["end"].length - 1) {
+        text += ",";
+      }
+    }
+    text += "\""+lineending+lineending
+    if(highlight && (i==segmentCurrent || (segmentCurrent == -1 && i==segments.length-1))) {
+      text += "</span>"
+    }
+  }
+  if(reverse) {
+    segments.reverse();
+  }
+  return text;
+}
+
+//===========================================
+//===========================================
+//===========================================
+
+// $(window).resize(function () {
+//   $('#transcript').height($('#video').height());
+// });
+
+$("#video-active").on(
+    "timeupdate", 
+    function(event) {
+      onTrackedVideoFrame(this.currentTime, this.duration);
+    }
+);
+
+// $("#transcript").scroll(function(e) {
+//   if(((new Date()) - lastScrollTime) / 1000.0 > 0.25 && !$('#resume_scroll').length) {
+//     $("#transcript-container").append("<a class=\"btn btn-primary btn-lg d-grid\" id=\"resume_scroll\" onclick=\"removeOnScrollButton();\" style=\"border-radius:0 0 0.2rem 0.2rem;\">Resume Scroll</a>")
+//     transcriptScoll = false;
+//   }
+// });
+
+
+// http://gcctech.org/csc/javascript/javascript_keycodes.htm
+var theVideo = document.querySelector('#video-active');
+document.onkeydown = function(event) {
+
+  // T: ask user for the title
+  if (event.keyCode == 84) {
+    event.preventDefault();
+    if(segments.length > 0) {
+      var title = prompt("Current Segment Title", segments.at(segmentCurrent)["title"]);
+      segments.at(segmentCurrent)["title"] = title;
+      updateSegmentYaml();
+    }
+  }
+
+  // A: create new segment
+  if (event.keyCode == 65) {
+    event.preventDefault();
+    //if(segments.length > 0 && segments.at(segmentCurrent)["start"].length != segments.at(segmentCurrent)["end"].length) {
+    //  console.log("can't add new segment till last is finished")
+    //  $("#error-toast-body").html("<h2>Finish the current segment!</h2>");
+    //  (new bootstrap.Toast(document.getElementById('error-toast'), {delay: 1000})).show();
+    //} else {
+    segments.push({start: [theVideo.currentTime], end: [], title: ""})
+    segmentCurrent = -1;
+    updateSegmentYaml();
+  }
+
+  // S: append new start time
+  if (event.keyCode == 83) {
+    event.preventDefault();
+    if(segments.length < 1) {
+      segments.push({start: [theVideo.currentTime], end: [], title: ""})
+    } else {
+      var found = false;
+      var timestamp = theVideo.currentTime;
+      for(var i=0; i<segments.at(segmentCurrent)["start"].length; i++) {
+        if(segments.at(segmentCurrent)["start"].at(i) == timestamp) {
+          found = true;
+          break;
+        }
+      }
+      if(segments.at(segmentCurrent)["start"].length > segments.at(segmentCurrent)["end"].length) {
+        console.log("can't add another start before adding the previous end")
+        $("#error-toast-body").html("<h2>Add another END before starting!</h2>");
+        (new bootstrap.Toast(document.getElementById('error-toast'), {delay: 1000})).show();
+      } else if (!found) {
+        segments.at(segmentCurrent)["start"].push(timestamp)
+      }
+    }
+    updateSegmentYaml();
+  }
+
+  // D: append new end time
+  if (event.keyCode == 68) {
+    event.preventDefault();
+    if(segments.length < 1) {
+      segments.push({start: [theVideo.currentTime], end: [], title: ""})
+    } else {
+      var found = false;
+      var timestamp = theVideo.currentTime;
+      for(var i=0; i<segments.at(segmentCurrent)["end"].length; i++) {
+        if(segments.at(segmentCurrent)["end"].at(i) == timestamp) {
+          found = true;
+          break;
+        }
+      }
+      if(segments.at(segmentCurrent)["end"].length >= segments.at(segmentCurrent)["start"].length) {
+        console.log("can't add another end before adding a new start")
+      $("#error-toast-body").html("<h2>Add another START before starting!</h2>");
+      (new bootstrap.Toast(document.getElementById('error-toast'), {delay: 1000})).show();
+      } else if (!found) {
+        segments.at(segmentCurrent)["end"].push(timestamp)
+      }
+    }
+    updateSegmentYaml();
+  }
+
+  // up arrow
+  if (event.keyCode == 38) {
+    event.preventDefault();
+    if(segmentCurrent != -1) {
+      segmentCurrent = segmentCurrent + 1;
+      if(segmentCurrent >= segments.length) {
+        segmentCurrent = -1;
+      }
+      updateSegmentYaml();
+    }
+  }
+
+  // down arrow
+  if (event.keyCode == 40) {
+    event.preventDefault();
+    if(segmentCurrent != -1) {
+      segmentCurrent = segmentCurrent - 1;
+      if(segmentCurrent < 0) {
+        segmentCurrent = 0;
+      }
+    } else if(segments.length > 1) {
+      segmentCurrent = segments.length - 2
+    }
+    updateSegmentYaml();
+  }
+
+
+  // space bar
+  if (event.keyCode == 32) {
+    event.preventDefault();
+    if (theVideo.paused) {
+      theVideo.play();
+    } else {
+      theVideo.pause();
+    }
+  }
+
+  // left arrow
+  if (event.keyCode == 37 && !event.ctrlKey && !event.altKey) {
+    event.preventDefault();
+    theVideo.currentTime = theVideo.currentTime - 10;
+  }
+
+  // right arrow
+  if (event.keyCode == 39 && !event.ctrlKey && !event.altKey) {
+    event.preventDefault();
+    theVideo.currentTime = theVideo.currentTime + 10;
+  }
+
+  // left arrow + cntrl
+  if (event.keyCode == 37 && event.ctrlKey) {
+    event.preventDefault();
+    theVideo.currentTime = theVideo.currentTime - 60;
+  }
+
+  // right arrow + cntrl
+  if (event.keyCode == 39 && event.ctrlKey) {
+    event.preventDefault();
+    theVideo.currentTime = theVideo.currentTime + 60;
+  }
+
+  // left arrow + alt
+  if (event.keyCode == 37 && event.altKey) {
+    event.preventDefault();
+    theVideo.currentTime = theVideo.currentTime - 300;
+  }
+
+  // right arrow + alt
+  if (event.keyCode == 39 && event.altKey) {
+    event.preventDefault();
+    theVideo.currentTime = theVideo.currentTime + 300;
+  }
+
+  // up arrow
+  // https://stackoverflow.com/a/3027957/7718197
+  //if (event.keyCode == 38) {
+  //  event.preventDefault();
+  //  theVideo.playbackRate = Math.min(5, theVideo.playbackRate + 1);
+  //}
+
+  // down arrow
+  // https://stackoverflow.com/a/3027957/7718197
+  //if (event.keyCode == 40) {
+  //  event.preventDefault();
+  //  theVideo.playbackRate = Math.max(1, theVideo.playbackRate - 1);
+  //}
+
+
+};
+
+
+//===========================================
+//===========================================
+//===========================================
+
+$( document ).ready(function() {
+
+// Create clipboard object
+// https://clipboardjs.com/
+var clipboard = new ClipboardJS('#copybutton');
+
+// Get what video we are currently loading!
+const urlParams = new URLSearchParams(window.location.search);
+const filepath = urlParams.get('file');
+if(filepath) {
+  document.querySelector('#video-active').setAttribute('src', filepath+".mp4");
+  document.querySelector('#datapath').value = filepath;
+}
+
+// This will load our subtitles
+// https://github.com/pavladan/subtitles-parser-vtt/blob/master/index.js#L17
+$.ajax({
+    url : filepath+".vtt",
+    dataType: "text", 
+    success : function(data) {
+      data = data.replace(/\r/g, "");
+      var regex = /(\d+)?\n?(\d{2}:\d{2}:\d{2}[,.]\d{3}) --> (\d{2}:\d{2}:\d{2}[,.]\d{3}).*\n/g;
+      data = data.split(regex);
+      data.shift();
+      var items = [];
+      for (var i = 0; i < data.length; i += 4) {
+        var text = data[i + 3];
+        if (text.trim().length === 0) continue;
+        items.push({
+          id: data[i] ? +data[i].trim() : items.length + 1,
+          startTime: timeMs(data[i + 1].trim()) / 1000.0,
+          endTime: timeMs(data[i + 2].trim()) / 1000.0,
+          text: text.trim(),
+        });
+      }
+      transcriptItems = items;
+
+      // insert into transcript
+      //$('#transcript').height($('#video').height());
+      var last_timestamp = 0.0;
+      for (var i = 0; i < transcriptItems.length; i++) {
+        if(last_timestamp > 0.0 && transcriptItems[i]["startTime"] - last_timestamp > 2.0) {
+          $("#transcript").append("<br/><br/>");
+        }
+        $("#transcript").append("<span id=\"item_"+i+"\" onclick=\"onWordSeekClick("+i+");\" style=\"cursor:pointer;\">"+transcriptItems[i]["text"]+'</span> ');
+        last_timestamp = transcriptItems[i]["endTime"]
+      }
+    }
+});
+
+
+});
+</script>
+
+
+
+
+</body>
+
+</html>
