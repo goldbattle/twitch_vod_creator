@@ -5160,10 +5160,10 @@
 #   t_start: "01:04:02"
 #   t_end: "01:07:53"
 
-# - video: data/sodapoppin/2021-11/1213985693
-#   title: "Stoneshard - (sodapoppin) - November 23, 2021"
-#   t_start: "01:07:41"
-#   t_end: "03:23:10"
+- video: data/sodapoppin/2021-11/1213985693
+  title: "Stoneshard - (sodapoppin) - November 23, 2021"
+  t_start: "01:07:41"
+  t_end: "03:23:10"
 
 # - video: data/sodapoppin/2021-11/1213985693
 #   title: "Wheel of Fortune - (sodapoppin) - November 23, 2021"
@@ -5462,3 +5462,517 @@
   title: "Chance Reacts to Tyler1's News Article - (sodapoppin) - December 3, 2021"
   t_start: "00:18:23"
   t_end: "00:52:45"
+
+
+- video: data/sodapoppin/2021-12/1225141017
+  title: "Watching Game Trailer - (sodapoppin) - December 5, 2021"
+  t_start: "00:11:41"
+  t_end: "00:54:19"
+
+- video: data/sodapoppin/2021-12/1225141017
+  title: "Big Brain Academy: Brain vs. Brain - (sodapoppin) - December 5, 2021"
+  t_start: "00:54:20,03:03:26"
+  t_end: "03:01:26,03:06:18"
+
+- video: data/sodapoppin/2021-12/1225141017
+  title: "Happy's Humble Burger Farm - (sodapoppin) - December 5, 2021"
+  t_start: "03:01:33,04:52:27"
+  t_end: "04:36:17,08:17:13"
+
+# ===========================================
+# https://www.twitch.tv/sodapoppin/videos?filter=all
+# ===========================================
+
+
+- video: data/sodapoppin/2021-12/1226891901
+  title: "Propnight - (sodapoppin) - December 7, 2021"
+  t_start: "00:16:05"
+  t_end: "03:08:09"
+
+- video: data/sodapoppin/2021-12/1226891901
+  title: "Big Brain Academy: Brain vs. Brain - (sodapoppin) - December 7, 2021"
+  t_start: "03:08:54"
+  t_end: "04:14:29"
+
+- video: data/sodapoppin/2021-12/1226891901
+  title: "Little Big Snake #ad - (sodapoppin) - December 7, 2021"
+  t_start: "04:14:39"
+  t_end: "04:53:59"
+
+# ===========================================
+# https://www.twitch.tv/sodapoppin/videos?filter=all
+# ===========================================
+
+- video: data/sodapoppin/2021-12/1227931101
+  title: "Propnight - (sodapoppin) - December 8, 2021"
+  t_start: "00:23:30"
+  t_end: "01:29:52"
+
+- video: data/sodapoppin/2021-12/1227931101
+  title: "Warcraft III - (sodapoppin) - December 8, 2021"
+  t_start: "01:29:56"
+  t_end: "04:50:10"
+
+- video: data/sodapoppin/2021-12/1227931101
+  title: "First Class Trouble (with friends) - (sodapoppin) - December 8, 2021"
+  t_start: "04:50:10"
+  t_end: "06:29:50"
+
+# ===========================================
+# https://www.twitch.tv/sodapoppin/videos?filter=all
+# ===========================================
+
+- video: data/sodapoppin/2021-12/1228796300
+  title: "Chance Looks at the Shirts He Ordered - (sodapoppin) - December 9, 2021"
+  t_start: "00:15:08"
+  t_end: "00:48:08"
+
+- video: data/sodapoppin/2021-12/1228796300
+  title: "Chance Reacts to izi prime's Twitter - (sodapoppin) - December 9, 2021"
+  t_start: "00:51:49"
+  t_end: "00:57:59"
+
+- video: data/sodapoppin/2021-12/1228796300
+  title: "Propnight - (sodapoppin) - December 9, 2021"
+  t_start: "01:01:02"
+  t_end: "02:42:30"
+
+- video: data/sodapoppin/2021-12/1228796300
+  title: "Archvale - (sodapoppin) - December 9, 2021"
+  t_start: "02:44:08"
+  t_end: "05:17:58"
+
+- video: data/sodapoppin/2021-12/1228796300
+  title: "Watching Game Awards (sponsored by Bacardi #ad) - (sodapoppin) - December 9, 2021"
+  t_start: "05:17:49"
+  t_end: "08:49:50"
+
+# ===========================================
+# https://www.twitch.tv/sodapoppin/videos?filter=all
+# ===========================================
+
+- video: data/sodapoppin/2021-12/1229828028
+  title: "Chance on Video Game Show Awards - (sodapoppin) - December 10, 2021"
+  description: "Original Video:\nhttps://www.youtube.com/watch?v=p24cqO7rP8o"
+  t_start: "00:15:58"
+  t_end: "00:29:28"
+
+- video: data/sodapoppin/2021-12/1229828028
+  title: "Archvale - (sodapoppin) - December 10, 2021"
+  t_start: "00:30:49"
+  t_end: "02:48:18"
+
+- video: data/sodapoppin/2021-12/1229828028
+  title: "Chance Reacts to Jessica Nigri on Loot Goblins - (sodapoppin) - December 10, 2021"
+  t_start: "02:18:00"
+  t_end: "02:21:22"
+
+- video: data/sodapoppin/2021-12/1229828028
+  title: "Chance Watches and Stars in Twitch's The Winter Gathering - (sodapoppin) - December 10, 2021"
+  t_start: "02:48:18"
+  t_end: "05:00:50"
+
+# ===========================================
+# https://www.twitch.tv/sodapoppin/videos?filter=all
+# ===========================================
+
+
+- video: data/sodapoppin/2021-12/1230789138
+  title: "Chance on His Twitch Show Appearance - (sodapoppin) - December 11, 2021"
+  t_start: "00:13:07"
+  t_end: "00:25:31"
+
+- video: data/sodapoppin/2021-12/1230789138
+  title: "Watching Game Trailers - (sodapoppin) - December 11, 2021"
+  t_start: "00:25:31"
+  t_end: "01:05:07"
+
+- video: data/sodapoppin/2021-12/1230789138
+  title: "Nevermore: The Chamber Door - (sodapoppin) - December 11, 2021"
+  t_start: "01:05:37"
+  t_end: "01:20:21"
+
+- video: data/sodapoppin/2021-12/1230789138
+  title: "Wrought Flesh - (sodapoppin) - December 11, 2021"
+  t_start: "01:20:21"
+  t_end: "02:48:54"
+
+- video: data/sodapoppin/2021-12/1230789138
+  title: "Kiteboarding Pro - (sodapoppin) - December 11, 2021"
+  t_start: "02:50:56"
+  t_end: "03:00:23"
+
+- video: data/sodapoppin/2021-12/1230789138
+  title: "Act Normal - (sodapoppin) - December 11, 2021"
+  t_start: "03:00:17"
+  t_end: "03:09:04"
+
+- video: data/sodapoppin/2021-12/1230789138
+  title: "Chasing Static - (sodapoppin) - December 11, 2021"
+  t_start: "03:10:07"
+  t_end: "04:02:33"
+
+- video: data/sodapoppin/2021-12/1230789138
+  title: "Solar Ash - (sodapoppin) - December 11, 2021"
+  t_start: "04:02:34,04:52:27"
+  t_end: "04:18:34,05:47:42"
+
+- video: data/sodapoppin/2021-12/1230789138
+  title: "Chance Watches Cyr, Nmplol, Malena Xmas Cooking Stream - (sodapoppin) - December 11, 2021"
+  t_start: "04:18:35"
+  t_end: "04:29:34"
+
+- video: data/sodapoppin/2021-12/1230789138
+  title: "Chance Reacts to Gura Outfit Reveal - (sodapoppin) - December 11, 2021"
+  t_start: "04:29:34"
+  t_end: "04:52:27"
+
+# ===========================================
+# https://www.twitch.tv/sodapoppin/videos?filter=all
+# ===========================================
+
+- video: data/sodapoppin/2021-12/1231776715
+  title: "Chance Votes in Nymn's New Year Show 2021 - (sodapoppin) - December 12, 2021"
+  t_start: "00:10:43"
+  t_end: "01:47:59"
+
+- video: data/sodapoppin/2021-12/1231776715
+  title: "Archvale - Part 1 (sodapoppin) - December 12, 2021"
+  t_start: "01:57:43"
+  t_end: "06:23:01"
+
+- video: data/sodapoppin/2021-12/1231776715
+  title: "Archvale - Part 2 (sodapoppin) - December 12, 2021"
+  t_start: "06:23:01"
+  t_end: "11:11:11"
+
+# ===========================================
+# https://www.twitch.tv/sodapoppin/videos?filter=all
+# ===========================================
+
+
+- video: data/sodapoppin/2021-12/1232669185
+  title: "Propnight - (sodapoppin) - December 13, 2021"
+  t_start: "00:33:13"
+  t_end: "02:28:26"
+
+- video: data/sodapoppin/2021-12/1232669185
+  title: "Archvale - (sodapoppin) - December 13, 2021"
+  t_start: "02:28:36"
+  t_end: "07:14:43"
+
+# ===========================================
+# https://www.twitch.tv/sodapoppin/videos?filter=all
+# ===========================================
+
+
+- video: data/sodapoppin/2021-12/1233600488
+  title: "Propnight - (sodapoppin) - December 14, 2021"
+  t_start: "00:23:05,07:32:58"
+  t_end: "05:11:52,08:37:40"
+
+- video: data/sodapoppin/2021-12/1233600488
+  title: "Warcraft III - (sodapoppin) - December 14, 2021"
+  t_start: "05:24:59"
+  t_end: "07:26:19"
+
+- video: data/sodapoppin/2021-12/1233600488
+  title: "So What is Mizkif Doing? - (sodapoppin) - December 14, 2021"
+  t_start: "07:26:39"
+  t_end: "07:32:58"
+
+- video: data/sodapoppin/2021-12/1233600488
+  title: "Element TD 2 - (sodapoppin) - December 14, 2021"
+  t_start: "08:39:31"
+  t_end: "09:39:06"
+
+- video: data/sodapoppin/2021-12/1233600488
+  title: "For The King - (sodapoppin) - December 14, 2021"
+  t_start: "09:38:49"
+  t_end: "11:01:12"
+
+- video: data/sodapoppin/2021-12/1233600488
+  title: "Tappy Nippers GTA RP NoPixel 3.0 - Part 24 (sodapoppin) - December 14, 2021"
+  t_start: "11:05:03"
+  t_end: "11:52:51"
+
+- video: data/sodapoppin/2021-12/1233600488
+  title: "Propnight with Friends - (sodapoppin) - December 14, 2021"
+  t_start: "11:52:51"
+  t_end: "13:57:00"
+
+
+# ===========================================
+# https://www.twitch.tv/sodapoppin/videos?filter=all
+# ===========================================
+
+
+- video: data/sodapoppin/2021-12/1234626407
+  title: "Warcraft III - (sodapoppin) - December 15, 2021"
+  t_start: "00:22:06"
+  t_end: "02:20:10"
+
+- video: data/sodapoppin/2021-12/1234626407
+  title: "Loch Ness with Vigors, Rob, Surefour - (sodapoppin) - December 15, 2021"
+  t_start: "02:25:20"
+  t_end: "03:14:08"
+
+- video: data/sodapoppin/2021-12/1234626407
+  title: "Trash Sailors with Vigors, Rob, Surefour - (sodapoppin) - December 15, 2021"
+  t_start: "03:14:08"
+  t_end: "04:30:59"
+
+- video: data/sodapoppin/2021-12/1234626407
+  title: "STUFFED with Vigors, Rob, Surefour - (sodapoppin) - December 15, 2021"
+  t_start: "04:31:04"
+  t_end: "05:19:19"
+
+- video: data/sodapoppin/2021-12/1234626407
+  title: "Rubber Bandits with Vigors, Rob, Surefour - (sodapoppin) - December 15, 2021"
+  t_start: "05:19:19"
+  t_end: "06:03:55"
+
+- video: data/sodapoppin/2021-12/1234626407
+  title: "Codenames with Friends - (sodapoppin) - December 15, 2021"
+  t_start: "06:02:44"
+  t_end: "07:52:56"
+
+- video: data/sodapoppin/2021-12/1234626407
+  title: "GTA RP NoPixel 3.0 - Part 25 (sodapoppin) - December 15, 2021"
+  t_start: "07:58:17"
+  t_end: "10:24:56"
+
+- video: data/sodapoppin/2021-12/1234626407
+  title: "Propnight - (sodapoppin) - December 15, 2021"
+  t_start: "10:26:45"
+  t_end: "11:44:53"
+
+- video: data/sodapoppin/2021-12/1234626407
+  title: "Worms: Reloaded - (sodapoppin) - December 15, 2021"
+  t_start: "11:45:35"
+  t_end: "13:31:29"
+
+
+# ===========================================
+# https://www.twitch.tv/sodapoppin/videos?filter=all
+# ===========================================
+- video: data/sodapoppin/2021-12/1237257604
+  title: "Chance's Sleep Schedule - (sodapoppin) - December 18, 2021"
+  t_start: "00:16:01"
+  t_end: "00:22:07"
+
+- video: data/sodapoppin/2021-12/1237257604
+  title: "Watching Game Trailers - (sodapoppin) - December 18, 2021"
+  t_start: "00:22:10"
+  t_end: "01:17:29"
+
+- video: data/sodapoppin/2021-12/1237257604
+  title: "Ready or Not - (sodapoppin) - December 18, 2021"
+  t_start: "01:39:55"
+  t_end: "02:35:33"
+
+- video: data/sodapoppin/2021-12/1237257604
+  title: "Christmas Massacre - (sodapoppin) - December 18, 2021"
+  t_start: "02:42:48"
+  t_end: "03:00:46"
+
+- video: data/sodapoppin/2021-12/1237257604
+  title: "The Baby In Yellow - (sodapoppin) - December 18, 2021"
+  t_start: "03:01:46"
+  t_end: "03:13:05"
+
+- video: data/sodapoppin/2021-12/1237257604
+  title: "Five Nights at Freddy's: Security Breach - (sodapoppin) - December 18, 2021"
+  t_start: "03:13:02"
+  t_end: "06:47:33"
+
+- video: data/sodapoppin/2021-12/1237257604
+  title: "Sewer Rave - (sodapoppin) - December 18, 2021"
+  t_start: "06:47:38"
+  t_end: "07:15:01"
+
+
+# ===========================================
+# https://www.twitch.tv/sodapoppin/videos?filter=all
+# ===========================================
+
+
+- video: data/sodapoppin/2021-12/1238033270
+  title: "The Crackpet Show - (sodapoppin) - December 19, 2021"
+  t_start: "00:18:44"
+  t_end: "02:31:27"
+
+- video: data/sodapoppin/2021-12/1238033270
+  title: "The Apartment (horror) - (sodapoppin) - December 19, 2021"
+  t_start: "02:33:10"
+  t_end: "02:48:29"
+
+- video: data/sodapoppin/2021-12/1238033270
+  title: "Stickit - (sodapoppin) - December 19, 2021"
+  t_start: "02:48:41"
+  t_end: "03:20:33"
+
+- video: data/sodapoppin/2021-12/1238033270
+  title: "Jelles Marble League (the game) - (sodapoppin) - December 19, 2021"
+  t_start: "03:27:10"
+  t_end: "03:34:19"
+
+- video: data/sodapoppin/2021-12/1238033270
+  title: "Arena of Kings (reupload) - (sodapoppin) - December 19, 2021"
+  t_start: "03:35:52,10:12:53"
+  t_end: "09:55:34,11:55:02"
+
+
+
+# ===========================================
+# https://www.twitch.tv/sodapoppin/videos?filter=all
+# ===========================================
+
+- video: data/sodapoppin/2021-12/1239796891
+  title: "Chance Updates on Christmas Gift Unboxing - (sodapoppin) - December 21, 2021"
+  t_start: "00:11:23"
+  t_end: "00:16:09"
+
+- video: data/sodapoppin/2021-12/1239796891
+  title: "Babble Royale - (sodapoppin) - December 21, 2021"
+  t_start: "00:20:56"
+  t_end: "01:34:51"
+
+- video: data/sodapoppin/2021-12/1239796891
+  title: "Arena of Kings - (sodapoppin) - December 21, 2021"
+  t_start: "01:35:33,03:22:37"
+  t_end: "03:17:15,06:00:08"
+
+- video: data/sodapoppin/2021-12/1239796891
+  title: "Chance Surveys State of Twitch - (sodapoppin) - December 21, 2021"
+  t_start: "03:17:15,10:40:33"
+  t_end: "03:22:37,10:43:13"
+
+- video: data/sodapoppin/2021-12/1239796891
+  title: "Phasmophobia - (sodapoppin) - December 21, 2021"
+  t_start: "06:02:20"
+  t_end: "08:42:17"
+
+- video: data/sodapoppin/2021-12/1239796891
+  title: "Worms Armageddon - (sodapoppin) - December 21, 2021"
+  t_start: "08:42:17"
+  t_end: "10:00:28"
+
+- video: data/sodapoppin/2021-12/1239796891
+  title: "Chance Reacts to Nmplol Driving his GT3 - (sodapoppin) - December 21, 2021"
+  t_start: "10:12:55"
+  t_end: "10:16:29"
+
+- video: data/sodapoppin/2021-12/1239796891
+  title: "Propnight - (sodapoppin) - December 21, 2021"
+  t_start: "10:43:13"
+  t_end: "11:18:07"
+
+
+
+
+# ===========================================
+# https://www.twitch.tv/sodapoppin/videos?filter=all
+# ===========================================
+
+- video: data/sodapoppin/2021-12/1240638366
+  title: "What is in your driveway chance? - (sodapoppin) - December 22, 2021"
+  t_start: "00:29:46"
+  t_end: "00:34:22"
+
+- video: data/sodapoppin/2021-12/1240638366
+  title: "Dead by Daylight (new update) - (sodapoppin) - December 22, 2021"
+  t_start: "00:41:08"
+  t_end: "02:22:01"
+
+- video: data/sodapoppin/2021-12/1240638366
+  title: "Chance Does a Puzzel Box - (sodapoppin) - December 22, 2021"
+  t_start: "02:26:38"
+  t_end: "02:49:46"
+
+- video: data/sodapoppin/2021-12/1240638366
+  title: "Worms Armageddon - (sodapoppin) - December 22, 2021"
+  t_start: "02:50:06"
+  t_end: "04:05:49"
+
+- video: data/sodapoppin/2021-12/1240638366
+  title: "Chance Votes on The Steam Awards - (sodapoppin) - December 22, 2021"
+  t_start: "04:05:57"
+  t_end: "04:13:20"
+
+- video: data/sodapoppin/2021-12/1240638366
+  title: "Loop Hero - (sodapoppin) - December 22, 2021"
+  t_start: "04:13:20"
+  t_end: "05:40:44"
+
+- video: data/sodapoppin/2021-12/1240638366
+  title: "Ready or Not with Friends - (sodapoppin) - December 22, 2021"
+  t_start: "05:40:41"
+  t_end: "08:38:50"
+
+
+# ===========================================
+# https://www.twitch.tv/sodapoppin/videos?filter=all
+# ===========================================
+
+- video: data/sodapoppin/2021-12/1241639223
+  title: "Chance's Christmas Presents - (sodapoppin) - December 23, 2021"
+  t_start: "00:15:52"
+  t_end: "00:28:15"
+
+- video: data/sodapoppin/2021-12/1241639223
+  title: "Warcraft 3 - (sodapoppin) - December 23, 2021"
+  t_start: "00:32:53"
+  t_end: "04:12:14"
+
+- video: data/sodapoppin/2021-12/1241639223
+  title: "Dead By Daylight - (sodapoppin) - December 23, 2021"
+  t_start: "04:12:14"
+  t_end: "05:18:23"
+
+- video: data/sodapoppin/2021-12/1241639223
+  title: "Worms Armageddon - (sodapoppin) - December 23, 2021"
+  t_start: "05:18:40"
+  t_end: "06:22:00"
+
+- video: data/sodapoppin/2021-12/1241639223
+  title: "Hades - (sodapoppin) - December 23, 2021"
+  t_start: "06:22:56"
+  t_end: "07:23:17"
+
+- video: data/sodapoppin/2021-12/1241639223
+  title: "VR Chat Degen Hour - (sodapoppin) - December 23, 2021"
+  t_start: "07:23:17"
+  t_end: "10:52:40"
+
+
+# ===========================================
+# https://www.twitch.tv/sodapoppin/videos?filter=all
+# ===========================================
+
+
+- video: data/sodapoppin/2021-12/1244149813
+  title: "Christmas Gift Opening Stream $25000 - (sodapoppin) - December 26, 2021"
+  t_start: "00:11:12"
+  t_end: "07:50:30"
+
+- video: data/sodapoppin/2021-12/1244149813
+  title: "Doot Doot - (sodapoppin) - December 26, 2021"
+  t_start: "00:41:57"
+  t_end: "00:49:50"
+
+- video: data/sodapoppin/2021-12/1244149813
+  title: "To Chance From Soda - (sodapoppin) - December 26, 2021"
+  t_start: "03:15:03"
+  t_end: "03:36:02"
+
+- video: data/sodapoppin/2021-12/1244149813
+  title: "New Statue Reveal - (sodapoppin) - December 26, 2021"
+  t_start: "06:28:05"
+  t_end: "06:32:20"
+
+- video: data/sodapoppin/2021-12/1244149813
+  title: "Large Gifts Reveals - (sodapoppin) - December 26, 2021"
+  t_start: "06:34:39"
+  t_end: "07:50:30"
+

@@ -4,3 +4,8 @@
 client_id: xxxxxxxxxxxxxx
 client_secret: xxxxxxxxxxxxxx
 
+# https://pushover.net/
+pushover_enable: false
+pushover_user_key: xxxxxxxxxxxxxx
+pushover_app_key: xxxxxxxxxxxxxx
+

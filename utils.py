@@ -175,3 +175,11 @@ def get_clip_graphql_info(clip_id):
         headers={"Client-ID": client_id}
     )
     return response.text
+
+def send_pushover_message(auth, text):
+    if auth["pushover_enable"]:
+        payload = {"message": text, "user": auth["pushover_user_key"], "token": auth["pushover_app_key"] }
+        resp = requests.post('https://api.pushover.net/1/messages.json', data=payload, headers={'User-Agent': 'Python'})
+        if not resp.ok:
+            print("[error]: bad response from pushover: ")
+            print(resp)

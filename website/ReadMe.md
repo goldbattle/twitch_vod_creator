@@ -1,4 +1,3 @@
-
 # website editor
 
 This website aims to increase speed while editing locally downloaded VOD files.
@@ -29,4 +28,18 @@ For example, the text can be clicked to jump to that timestamp in the video, and
 - can be laggy on load / usage for long VODs due to number of transcript words
 
 
+
+## nginx on ubuntu
+
+
+```
+sudo apt install nginx
+sudo systemctl enable nginx
+sudo rm /etc/nginx/sites-enabled/default
+sudo sh -c "echo -n 'YOUR_USERNAME:' >> /etc/nginx/.htpasswd"
+sudo sh -c "openssl passwd -apr1 >> /etc/nginx/.htpasswd"
+cat /etc/nginx/.htpasswd
+sudo ln -s /mnt/twitchvods2/twitch_vod_creator/website/twitch_vod_editor.conf /etc/nginx/sites-enabled/
+sudo service nginx restart
+```
 

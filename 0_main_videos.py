@@ -145,6 +145,7 @@ for idx, user in enumerate(users):
             break
 
         # DATA: api data of this vod
+        t0_start = time.time()
         video_data = {
             'id': video['helix']['id'],
             'user_id': video['helix']['user_id'],
@@ -216,22 +217,6 @@ for idx, user in enumerate(users):
             shutil.move(file_path_chat_tmp, file_path_chat) 
             print("\t- done in " + str(time.time() - t0) + " seconds")
 
-        # RENDER: check if the file exists
-        file_path_chat = path_data + export_folder + str(video['helix']['id']) + "_chat.json"
-        file_path_render = path_data + export_folder + str(video['helix']['id']) + "_chat.mp4"
-        file_path_render_tmp = path_temp + str(video['helix']['id']) + "_chat.mp4"
-        if not utils.terminated_requested and os.path.exists(file_path_chat) and not os.path.exists(file_path_render) and render_chat[idx]:
-            print("\t- rendering chat: " + file_path_render)
-            t0 = time.time()
-            cmd = path_twitch_cli + ' -m ChatRender' \
-                  + ' -i ' + file_path_chat + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
-                  + ' -h 926 -w 274 --update-rate 0.1 --framerate 60 --font-size 15' \
-                  + ' --temp-path "' + path_temp + '" -o ' + file_path_render_tmp
-            subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
-            # subprocess.Popen(cmd, shell=True).wait()
-            shutil.move(file_path_render_tmp, file_path_render) 
-            print("\t- done in " + str(time.time() - t0) + " seconds")
-
         # RENDER: also render downscaled video for quick scrubbing....
         # file_path_render = path_data + export_folder + str(video['helix']['id']) + "_downscaled.mp4"
         # file_path_render_tmp = path_temp + str(video['helix']['id']) + "_downscaled.mp4"
@@ -282,4 +267,25 @@ for idx, user in enumerate(users):
                     end = utils.webvtt_time_string(word['end'])
                     vtt.captions.append(Caption(start, end, word['word']))
             vtt.save(file_path_webvtt)
+            print("\t- done in " + str(time.time() - t0) + " seconds")
+
+            # send pushover that this twitch vod is ready to edit
+            text = video['helix']['user_name'] + " vod " + str(video['helix']['id']) \
+                    + " ready to edit (" + str(int((time.time() - t0_start)/60.0)) + " min to prepare)"
+            utils.send_pushover_message(auth, text)
+
+        # RENDER: check if the file exists
+        file_path_chat = path_data + export_folder + str(video['helix']['id']) + "_chat.json"
+        file_path_render = path_data + export_folder + str(video['helix']['id']) + "_chat.mp4"
+        file_path_render_tmp = path_temp + str(video['helix']['id']) + "_chat.mp4"
+        if not utils.terminated_requested and os.path.exists(file_path_chat) and not os.path.exists(file_path_render) and render_chat[idx]:
+            print("\t- rendering chat: " + file_path_render)
+            t0 = time.time()
+            cmd = path_twitch_cli + ' -m ChatRender' \
+                  + ' -i ' + file_path_chat + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
+                  + ' -h 926 -w 274 --update-rate 0.1 --framerate 60 --font-size 15' \
+                  + ' --temp-path "' + path_temp + '" -o ' + file_path_render_tmp
+            subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
+            # subprocess.Popen(cmd, shell=True).wait()
+            shutil.move(file_path_render_tmp, file_path_render) 
             print("\t- done in " + str(time.time() - t0) + " seconds")
