@@ -26,6 +26,8 @@
   <!-- main video -->
   <div class="col-6" id="video" style="height:100%;overflow-y:hidden;">
 
+    <h2 id="title"></h2>
+    <h3 id="date" class="text-muted"></h3>
     <div class="input-group">
       <span class="input-group-text" style="border-radius:0.2rem 0 0 0;">Current Video:</span>
       <input class="form-control form-control-lg" id="datapath" onkeydown="readInputDataPath(this, event)" style="border-radius:0 0.2rem 0 0;" />
@@ -50,7 +52,7 @@
 
   <!-- rendered segments -->
   <div class="col-4" style="height:100%;overflow-y: scroll;">
-    <a class="btn btn-primary d-grid" id="copybutton" style="border-radius:0.2rem 0.2rem 0 0;" >COPY TEXT</a>
+    <a class="btn btn-primary d-grid" id="copybutton">COPY TEXT</a>
     <!-- <div class="card" style="border-radius:0 0 0 0;"> -->
       <!-- <div class="card-body" style="line-height:0.8em;"> -->
         <code id="segments" class="text-body">Add segments with "A"!</code>
@@ -85,6 +87,7 @@ var transcriptLast = 0;
 var transcriptItems = [];
 var segments = [];
 var segmentCurrent = 1;
+var playedGameItems = [];
 
 function updateTranscript(index, force=false) {
 
@@ -132,13 +135,22 @@ function toHHMMSS(secs) {
 function onTrackedVideoFrame(currentTime, duration) {
   //$("#current").text(currentTime);
   //$("#duration").text(duration);
-  for (var i = 0; i < transcriptItems.length; i++) {
-    if(currentTime >= transcriptItems[i]["startTime"] && currentTime < transcriptItems[i]["endTime"]) {
-      //$("#text").text(transcriptItems[i]["text"]);
-      updateTranscript(i);
-      break
-    }
-  }
+  // for (var i = 0; i < transcriptItems.length; i++) {
+  //   if(currentTime >= transcriptItems[i]["startTime"] && currentTime < transcriptItems[i]["endTime"]) {
+  //     //$("#text").text(transcriptItems[i]["text"]);
+  //     updateTranscript(i);
+  //     console.log("found -> " + i)
+  //     break
+  //   }
+  // }
+  // https://stackoverflow.com/a/57411916/7718197
+  const getClosest = (data, target) => 
+    data.reduce((acc, obj) =>
+      Math.abs(target - obj["startTime"]) < Math.abs(target - acc["startTime"]) ? obj : acc
+    );
+  //console.log("new -> "+ getClosest(transcriptItems, currentTime)["index"]);
+  updateTranscript(getClosest(transcriptItems, currentTime)["index"]);
+
 }
 
 function onWordSeekClick(index) {
@@ -146,6 +158,18 @@ function onWordSeekClick(index) {
     return false
   updateTranscript(index);
   document.querySelector('#video-active').currentTime = transcriptItems[index]["startTime"]
+  return false
+}
+
+function onGamePlayedSeekClick(time, id) {
+  document.querySelector('#video-active').currentTime = time
+  if(transcriptScoll) {
+    document.getElementById(id).scrollIntoView({
+        behavior: 'auto',
+        block: 'center',
+        inline: 'center'
+    });
+  }
   return false
 }
 
@@ -248,6 +272,11 @@ $("#video-active").on(
 // http://gcctech.org/csc/javascript/javascript_keycodes.htm
 var theVideo = document.querySelector('#video-active');
 document.onkeydown = function(event) {
+
+  // Don't do key events if we are in a form input
+  if (document.activeElement.tagName === "INPUT") {
+    return
+  }
 
   // T: ask user for the title
   if (event.keyCode == 84) {
@@ -375,24 +404,28 @@ document.onkeydown = function(event) {
   if (event.keyCode == 37 && event.ctrlKey) {
     event.preventDefault();
     theVideo.currentTime = theVideo.currentTime - 60;
+    onTrackedVideoFrame(theVideo.currentTime, theVideo.duration)
   }
 
   // right arrow + cntrl
   if (event.keyCode == 39 && event.ctrlKey) {
     event.preventDefault();
     theVideo.currentTime = theVideo.currentTime + 60;
+    onTrackedVideoFrame(theVideo.currentTime, theVideo.duration)
   }
 
   // left arrow + alt
   if (event.keyCode == 37 && event.altKey) {
     event.preventDefault();
     theVideo.currentTime = theVideo.currentTime - 300;
+    onTrackedVideoFrame(theVideo.currentTime, theVideo.duration)
   }
 
   // right arrow + alt
   if (event.keyCode == 39 && event.altKey) {
     event.preventDefault();
     theVideo.currentTime = theVideo.currentTime + 300;
+    onTrackedVideoFrame(theVideo.currentTime, theVideo.duration)
   }
 
   // up arrow
@@ -408,7 +441,6 @@ document.onkeydown = function(event) {
   //  event.preventDefault();
   //  theVideo.playbackRate = Math.max(1, theVideo.playbackRate - 1);
   //}
-
 
 };
 
@@ -431,39 +463,70 @@ if(filepath) {
   document.querySelector('#datapath').value = filepath;
 }
 
-// This will load our subtitles
-// https://github.com/pavladan/subtitles-parser-vtt/blob/master/index.js#L17
+// This will load our info json
 $.ajax({
-    url : filepath+".vtt",
-    dataType: "text", 
+    url : filepath+"_info.json",
+    dataType: "json", 
     success : function(data) {
-      data = data.replace(/\r/g, "");
-      var regex = /(\d+)?\n?(\d{2}:\d{2}:\d{2}[,.]\d{3}) --> (\d{2}:\d{2}:\d{2}[,.]\d{3}).*\n/g;
-      data = data.split(regex);
-      data.shift();
-      var items = [];
-      for (var i = 0; i < data.length; i += 4) {
-        var text = data[i + 3];
-        if (text.trim().length === 0) continue;
-        items.push({
-          id: data[i] ? +data[i].trim() : items.length + 1,
-          startTime: timeMs(data[i + 1].trim()) / 1000.0,
-          endTime: timeMs(data[i + 2].trim()) / 1000.0,
-          text: text.trim(),
-        });
-      }
-      transcriptItems = items;
 
-      // insert into transcript
-      //$('#transcript').height($('#video').height());
-      var last_timestamp = 0.0;
-      for (var i = 0; i < transcriptItems.length; i++) {
-        if(last_timestamp > 0.0 && transcriptItems[i]["startTime"] - last_timestamp > 2.0) {
-          $("#transcript").append("<br/><br/>");
+      // Display info
+      $("#title").text(data["title"]);
+      $("#date").text(data["recorded_at"]+" - "+data["duration"]);
+      for(var i = 0; i < data["moments"].length; i++) {
+        var game = data["moments"][i];
+        if(game["type"] == "GAME_CHANGE") {
+          playedGameItems.push({
+            startTime: game["offset"],
+            endTime: game["offset"] + game["duration"],
+            text: game["name"].trim()
+          });
         }
-        $("#transcript").append("<span id=\"item_"+i+"\" onclick=\"onWordSeekClick("+i+");\" style=\"cursor:pointer;\">"+transcriptItems[i]["text"]+'</span> ');
-        last_timestamp = transcriptItems[i]["endTime"]
       }
+
+
+      // This will load our subtitles
+      // https://github.com/pavladan/subtitles-parser-vtt/blob/master/index.js#L17
+      $.ajax({
+          url : filepath+".vtt",
+          dataType: "text", 
+          success : function(data) {
+            data = data.replace(/\r/g, "");
+            var regex = /(\d+)?\n?(\d{2}:\d{2}:\d{2}[,.]\d{3}) --> (\d{2}:\d{2}:\d{2}[,.]\d{3}).*\n/g;
+            data = data.split(regex);
+            data.shift();
+            var items = [];
+            for (var i = 0; i < data.length; i += 4) {
+              var text = data[i + 3];
+              if (text.trim().length === 0) continue;
+              items.push({
+                id: data[i] ? +data[i].trim() : items.length + 1,
+                startTime: timeMs(data[i + 1].trim()) / 1000.0,
+                endTime: timeMs(data[i + 2].trim()) / 1000.0,
+                text: text.trim(),
+                index: items.length,
+              });
+            }
+            transcriptItems = items;
+
+            // insert into transcript
+            //$('#transcript').height($('#video').height());
+            var currentPlayedGame = 0;
+            var last_timestamp = 0.0;
+            for (var i = 0; i < transcriptItems.length; i++) {
+              if(currentPlayedGame < playedGameItems.length && playedGameItems[currentPlayedGame]["startTime"] <= last_timestamp) {
+                $("#transcript").append("<h4 id=\"game_"+currentPlayedGame+"\" style=\"margin-top:1rem;cursor:pointer;text-decoration:underline;\" class=\"fw-bold text-warning\" onclick=\"onGamePlayedSeekClick("+playedGameItems[currentPlayedGame]["startTime"]+",'game_"+currentPlayedGame+"');\">"+playedGameItems[currentPlayedGame]["text"]+'</h4>');
+                currentPlayedGame = currentPlayedGame + 1;
+              } else if(last_timestamp > 0.0 && transcriptItems[i]["startTime"] - last_timestamp > 2.0) {
+                $("#transcript").append("<br/><br/>");
+              }
+              $("#transcript").append("<span id=\"item_"+i+"\" onclick=\"onWordSeekClick("+i+");\" style=\"cursor:pointer;\">"+transcriptItems[i]["text"]+'</span> ');
+              last_timestamp = transcriptItems[i]["endTime"]
+            }
+          }
+      });
+
+
+
     }
 });
 
