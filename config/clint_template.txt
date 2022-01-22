@@ -1,0 +1,15 @@
+This is a fan-made channel dedicated to upload uncut/unedited bits the livestream VODs. The goal is to act like an archive of runs and content that are streamed on the channel. Please checkout the official youtube channel and twitch live streams to join the community.
+
+
+
+Vod ID: $id
+Recorded At: $recorded
+
+Start Time: $t_start
+End Time: $t_end
+
+File: $file
+URL: $url
+
+
+

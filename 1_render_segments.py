@@ -11,7 +11,10 @@ import shutil
 
 # video file we wish to render
 path_base = os.path.dirname(os.path.abspath(__file__))
-video_file = path_base + "/config/soda_03_videos.yaml"
+video_file = path_base + "/config/soda_04_videos.yaml"
+config_file = path_base + "/config/soda_config_youtube.yaml"
+# video_file = path_base + "/config/clint_01_videos.yaml"
+# config_file = path_base + "/config/clint_config_youtube.yaml" @todo create
 
 # paths of the cli and data
 # path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.40.4/TwitchDownloaderCLI.exe"
@@ -26,10 +29,16 @@ path_temp = "/tmp/tvc_render_segments/"
 # ================================================================
 # ================================================================
 
+# load the yaml from file
+with open(config_file) as f:
+    config = yaml.load(f, Loader=yaml.FullLoader)
+print("loaded config file: " + config_file)
+
 # load the template file for the description
-template_file = path_base + "/config/template.txt"
+template_file = path_base + "/config/" + config["yt_template"]
 with open(template_file, "r") as myfile:
     template = myfile.read()
+print("loaded template file: " + template_file)
 
 # setup control+c handler
 utils.setup_signal_handle()
@@ -66,7 +75,8 @@ for video in data:
         video_info = json.load(f)
 
     # delete the temp folder if it is there
-    path_temp_parts = path_temp + "/parts/"
+    clean_video_title = utils.get_valid_filename(video["title"])
+    path_temp_parts = path_temp + "/parts/" + clean_video_title + "/"
     if os.path.exists(path_temp_parts) and os.path.isdir(path_temp_parts):
         shutil.rmtree(path_temp_parts)
     if not os.path.exists(path_temp):
@@ -75,7 +85,6 @@ for video in data:
         os.makedirs(path_temp_parts)
 
     # COMPOSITE: render the composite image
-    clean_video_title = utils.get_valid_filename(video["title"])
     file_path_composite = path_render + video["video"] + "_" + clean_video_title + ".mp4"
     file_path_composite_tmp = path_temp + clean_video_title + ".tmp.mp4"
     if not utils.terminated_requested and not os.path.exists(file_path_composite):
@@ -233,6 +242,10 @@ for video in data:
         tmp = video["title"] + "\n\n" + tmp
         with open(file_path_desc, "w", encoding="utf-8") as text_file:
             text_file.write(tmp)
+
+    # clean up our temp parts folder
+    if os.path.exists(path_temp_parts) and os.path.isdir(path_temp_parts):
+        shutil.rmtree(path_temp_parts)
 
     # nice split between each segment
     print("")

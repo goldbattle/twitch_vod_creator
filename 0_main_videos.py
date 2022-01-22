@@ -28,16 +28,16 @@ channels = [
     'jerma985', 'heydoubleu',
     'roflgator', 'cyr'
 ]
-max_videos = 20
+max_videos = 60
 render_chat = [
     True, False,
-    False, False, False, False,
+    False, True, False, False,
     False, False,
     False, False
 ]
 render_webvtt = [
     True, False,
-    False, False, False, False,
+    False, True, False, False,
     False, False,
     False, False
 ]
@@ -61,22 +61,32 @@ path_model = path_base + "/thirdparty/vosk-model-small-en-us-0.15/"
 # setup control+c handler
 utils.setup_signal_handle()
 
-# convert the usernames to ids (sort so the are in the same order)
-client_v5 = twitch.TwitchClient(client_id)
-users_tmp = client_v5.users.translate_usernames_to_ids(channels)
-users = []
-for channel in channels:
-    for user in users_tmp:
-        if user.name.lower() == channel.lower():
-            users.append(user)
-            break
-if len(channels) != len(render_chat) or len(channels) != len(users) or len(channels) != len(render_webvtt):
+if len(channels) != len(render_chat) or len(channels) != len(render_webvtt):
     print('number of channels and chat render settings do not match!!')
     print('\tlen(channels) = %d' % len(channels))
     print('\tlen(users) = %d' % len(users))
     print('\tlen(render_chat) = %d' % len(render_chat))
     print('\tlen(render_webvtt) = %d' % len(render_webvtt))
     exit(-1)
+
+# convert the usernames to ids (sort so the are in the same order)
+client_v5 = twitch.TwitchClient(client_id)
+users_tmp = client_v5.users.translate_usernames_to_ids(channels)
+users = []
+render_chat_tmp = []
+render_webvtt_tmp = []
+for idx, channel in enumerate(channels):
+    found = False
+    for user in users_tmp:
+        if user.name.lower() == channel.lower():
+            users.append(user)
+            render_chat_tmp.append(render_chat[idx])
+            render_webvtt_tmp.append(render_webvtt[idx])
+            found = True
+    if not found:
+        print("streamer %s wasn't found, are they banned???" % channel)
+render_chat = render_chat_tmp
+render_webvtt = render_webvtt_tmp
 
 # now lets loop through each user and make sure we have downloaded
 # their most recent VODs and if we have not, we should download them!
@@ -212,9 +222,10 @@ for idx, user in enumerate(users):
                   + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
                   + ' --id ' + str(video['helix']['id']) + ' --embed-emotes' \
                   + ' -o ' + file_path_chat_tmp
-            subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
-            # subprocess.Popen(cmd, shell=True).wait()
-            shutil.move(file_path_chat_tmp, file_path_chat) 
+            # subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
+            subprocess.Popen(cmd, shell=True).wait()
+            if os.path.exists(file_path_chat_tmp):
+                shutil.move(file_path_chat_tmp, file_path_chat) 
             print("\t- done in " + str(time.time() - t0) + " seconds")
 
         # RENDER: also render downscaled video for quick scrubbing....
@@ -285,7 +296,8 @@ for idx, user in enumerate(users):
                   + ' -i ' + file_path_chat + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
                   + ' -h 926 -w 274 --update-rate 0.1 --framerate 60 --font-size 15' \
                   + ' --temp-path "' + path_temp + '" -o ' + file_path_render_tmp
-            subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
-            # subprocess.Popen(cmd, shell=True).wait()
-            shutil.move(file_path_render_tmp, file_path_render) 
+            # subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
+            subprocess.Popen(cmd, shell=True).wait()
+            if os.path.exists(file_path_render_tmp):
+                shutil.move(file_path_render_tmp, file_path_render) 
             print("\t- done in " + str(time.time() - t0) + " seconds")

@@ -88,6 +88,7 @@ var transcriptItems = [];
 var segments = [];
 var segmentCurrent = 1;
 var playedGameItems = [];
+var extraTitleStuff = "";
 
 function updateTranscript(index, force=false) {
 
@@ -296,7 +297,7 @@ document.onkeydown = function(event) {
     //  $("#error-toast-body").html("<h2>Finish the current segment!</h2>");
     //  (new bootstrap.Toast(document.getElementById('error-toast'), {delay: 1000})).show();
     //} else {
-    segments.push({start: [theVideo.currentTime], end: [], title: ""})
+    segments.push({start: [theVideo.currentTime], end: [], title: extraTitleStuff})
     segmentCurrent = -1;
     updateSegmentYaml();
   }
@@ -482,7 +483,9 @@ $.ajax({
           });
         }
       }
-
+      var date = new Date(data["recorded_at"]);
+      var options = { year: 'numeric', month: 'long', day: 'numeric' };
+      extraTitleStuff = " w/ Chat - (" + data["user_name"] + ") - " + date.toLocaleDateString('en-US', options)
 
       // This will load our subtitles
       // https://github.com/pavladan/subtitles-parser-vtt/blob/master/index.js#L17
@@ -522,6 +525,12 @@ $.ajax({
               $("#transcript").append("<span id=\"item_"+i+"\" onclick=\"onWordSeekClick("+i+");\" style=\"cursor:pointer;\">"+transcriptItems[i]["text"]+'</span> ');
               last_timestamp = transcriptItems[i]["endTime"]
             }
+          },
+          error : function() {
+            for (var i = 0; i < playedGameItems.length; i++) {
+              $("#transcript").append("<h4 id=\"game_"+i+"\" style=\"margin-top:1rem;cursor:pointer;text-decoration:underline;\" class=\"fw-bold text-warning\" onclick=\"onGamePlayedSeekClick("+playedGameItems[i]["startTime"]+",'game_"+i+"');\">"+playedGameItems[i]["text"]+'</h4>');
+            }
+
           }
       });
 

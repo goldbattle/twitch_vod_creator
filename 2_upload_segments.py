@@ -11,9 +11,9 @@ import utils
 
 # video file we wish to render
 path_base = os.path.dirname(os.path.abspath(__file__))
-video_file = path_base + "/config/soda_03_videos.yaml"
-history_file = path_base + "/config/soda_03_uploads.yaml"
-config_file = path_base + "/config/soda_03_yt_config.yaml"
+video_file = path_base + "/config/soda_04_videos.yaml"
+history_file = path_base + "/config/soda_04_uploads.yaml"
+config_file = path_base + "/config/soda_config_youtube.yaml"
 
 # load the yaml from file
 with open(config_file) as f:
