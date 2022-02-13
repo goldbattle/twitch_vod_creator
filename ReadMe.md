@@ -8,7 +8,7 @@ Both the original vod and chat are then render into the same video which can be 
 Additionally, a transcript of the video can be generated using [vosk](https://github.com/alphacep/vosk-api) for local use when editing.
 
 Example channels with these video renders:
-* Sodapoppin Clips - https://www.youtube.com/channel/UCreuVIdBwFEhf1qFhzyJVKw
+* Sodapoppin Archives - https://www.youtube.com/channel/UCreuVIdBwFEhf1qFhzyJVKw
 * Sevadus Clips - https://www.youtube.com/channel/UCkWuSV5FukUzVLvFnhvPvKQ
 * Nmplol Clips - https://www.youtube.com/channel/UCf5sgK1NoQuac1P4P4olelg
 

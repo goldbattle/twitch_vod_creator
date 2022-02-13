@@ -14,7 +14,7 @@ path_base = os.path.dirname(os.path.abspath(__file__))
 video_file = path_base + "/config/soda_04_videos.yaml"
 config_file = path_base + "/config/soda_config_youtube.yaml"
 # video_file = path_base + "/config/clint_01_videos.yaml"
-# config_file = path_base + "/config/clint_config_youtube.yaml" @todo create
+# config_file = path_base + "/config/clint_config_youtube.yaml"
 
 # paths of the cli and data
 # path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.40.4/TwitchDownloaderCLI.exe"
