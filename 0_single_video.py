@@ -31,9 +31,9 @@ client_secret = auth["client_secret"]
 # ================================================================
 
 # paths of the cli and data
-# path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.40.4/TwitchDownloaderCLI.exe"
-# path_twitch_ffmpeg = path_base + "/thirdparty/Twitch_Downloader_1.40.4/ffmpeg.exe"
-path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.40.4/TwitchDownloaderCLI"
+# path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.40.7/TwitchDownloaderCLI.exe"
+# path_twitch_ffmpeg = path_base + "/thirdparty/Twitch_Downloader_1.40.7/ffmpeg.exe"
+path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.40.7/TwitchDownloaderCLI"
 path_twitch_ffmpeg = path_base + "/thirdparty/ffmpeg-4.3.1-amd64-static/ffmpeg"
 path_root = path_base + "/../data/"
 # path_temp = path_base + "/../data_temp/single_video/"
@@ -46,19 +46,16 @@ path_temp = "/tmp/tvc_single_video/"
 utils.setup_signal_handle()
 
 # create our twitch api python objects for query
-client_v5 = twitch.TwitchClient(client_id)
 client_helix = twitch.TwitchHelix(client_id=client_id, client_secret=client_secret)
 client_helix.get_oauth()
 
 print("trying to pull api info for vod " + str(vod_id_to_download))
 videos = client_helix.get_videos(video_ids=[vod_id_to_download])
-video_v5 = client_v5.videos.get_by_id(vod_id_to_download)
 assert (len(videos) == 1)
 
 # create the video object with all our information
 video = {
     'helix': videos[0],
-    'v5': video_v5,
 }
 
 # DATA: api data of this vod
@@ -68,12 +65,11 @@ video_data = {
     'user_name': video['helix']['user_name'],
     'title': video['helix']['title'],
     'duration': video['helix']['duration'],
-    'game': video['v5']['game'],
-    'url': video['v5']['url'],
-    'views': video['v5']['views'],
+    'url': video['helix']['url'],
+    'views': video['helix']['view_count'],
     'moments': utils.get_vod_moments(video['helix']['id']),
-    'muted_segments': (video['v5']['muted_segments'] if 'muted_segments' in video['v5'] else []),
-    'recorded_at': video['v5']['recorded_at'],
+    'muted_segments': (video['helix']['muted_segments'] if video['helix']['muted_segments'] != None else []),
+    'recorded_at': video['helix']['created_at'].strftime('%Y-%m-%dT%H:%M:%SZ'),
 }
 
 # check if the directory is created

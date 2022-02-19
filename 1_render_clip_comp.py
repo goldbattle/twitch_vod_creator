@@ -35,10 +35,10 @@ clips_to_ignore = [
 # ================================================================
 
 # paths of the cli and data
-# path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.40.4/TwitchDownloaderCLI.exe"
-# path_twitch_ffmpeg = path_base + "/thirdparty/Twitch_Downloader_1.40.4/ffmpeg.exe"
+# path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.40.7/TwitchDownloaderCLI.exe"
+# path_twitch_ffmpeg = path_base + "/thirdparty/Twitch_Downloader_1.40.7/ffmpeg.exe"
 # path_twitch_ffprob = path_base + "/thirdparty/ffmpeg-N-99900-g89429cf2f2-win64-lgpl/ffprobe.exe"
-path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.40.4/TwitchDownloaderCLI"
+path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.40.7/TwitchDownloaderCLI"
 path_twitch_ffmpeg = path_base + "/thirdparty/ffmpeg-4.3.1-amd64-static/ffmpeg"
 path_twitch_ffprob = path_base + "/thirdparty/ffmpeg-4.3.1-amd64-static/ffprobe"
 path_font = path_base.replace("\\", "/").replace(":", "\\\\:") + "/thirdparty/bebas_neue/BebasNeue-Regular.ttf"
@@ -60,22 +60,17 @@ if not os.path.exists(path_data):
 if get_latest_from_twitch:
 
     # convert the usernames to ids
-    client_v5 = twitch.TwitchClient(client_id)
-    users = client_v5.users.translate_usernames_to_ids(channel)
+    client_helix = twitch.TwitchHelix(client_id=client_id, client_secret=client_secret)
+    client_helix.get_oauth()
+    users = client_helix.get_users(login_names=channels)
     assert (len(users) == 1)
     user = users[0]
 
-    # get the mapping between the current game ids and name
-    gameid2name = {}
-    for game in client_v5.games.get_top(limit=100):
-        gameid2name[game['game']['id']] = game['game']['name']
-
     # loop through all clips
-    print("getting clips for -> " + user.name + " (id " + str(user.id) + ")")
-    client_helix = twitch.TwitchHelix(client_id=client_id, client_secret=client_secret)
-    client_helix.get_oauth()
-    vid_iter = client_helix.get_clips(broadcaster_id=user.id, page_size=100, started_at=date_start, ended_at=date_end)
-    # vid_iter = client_helix.get_clips(broadcaster_id=user.id, page_size=100)
+    gameid2name = {}
+    print("getting clips for -> " + user["login"] + " (id " + str(user["id"]) + ")")
+    vid_iter = client_helix.get_clips(broadcaster_id=user["id"], page_size=100, started_at=date_start, ended_at=date_end)
+    # vid_iter = client_helix.get_clips(broadcaster_id=user["id"], page_size=100)
     try:
         for video in vid_iter:
 

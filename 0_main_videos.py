@@ -46,9 +46,9 @@ render_webvtt = [
 # ================================================================
 
 # paths of the cli and data
-# path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.40.4/TwitchDownloaderCLI.exe"
-# path_twitch_ffmpeg = path_base + "/thirdparty/Twitch_Downloader_1.40.4/ffmpeg.exe"
-path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.40.4/TwitchDownloaderCLI"
+# path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.40.7/TwitchDownloaderCLI.exe"
+# path_twitch_ffmpeg = path_base + "/thirdparty/Twitch_Downloader_1.40.7/ffmpeg.exe"
+path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.40.7/TwitchDownloaderCLI"
 path_twitch_ffmpeg = path_base + "/thirdparty/ffmpeg-4.3.1-amd64-static/ffmpeg"
 path_root = path_base + "/../data/"
 # path_temp = path_base + "/../data_temp/main_videos/"
@@ -70,19 +70,21 @@ if len(channels) != len(render_chat) or len(channels) != len(render_webvtt):
     exit(-1)
 
 # convert the usernames to ids (sort so the are in the same order)
-client_v5 = twitch.TwitchClient(client_id)
-users_tmp = client_v5.users.translate_usernames_to_ids(channels)
+client_helix = twitch.TwitchHelix(client_id=client_id, client_secret=client_secret)
+client_helix.get_oauth()
+users_tmp = client_helix.get_users(login_names=channels)
 users = []
 render_chat_tmp = []
 render_webvtt_tmp = []
 for idx, channel in enumerate(channels):
     found = False
     for user in users_tmp:
-        if user.name.lower() == channel.lower():
+        if user["login"].lower() == channel.lower():
             users.append(user)
             render_chat_tmp.append(render_chat[idx])
             render_webvtt_tmp.append(render_webvtt[idx])
             found = True
+            break
     if not found:
         print("streamer %s wasn't found, are they banned???" % channel)
 render_chat = render_chat_tmp
@@ -90,9 +92,6 @@ render_webvtt = render_webvtt_tmp
 
 # now lets loop through each user and make sure we have downloaded
 # their most recent VODs and if we have not, we should download them!
-client_helix = twitch.TwitchHelix(client_id=client_id, client_secret=client_secret)
-client_helix.get_oauth()
-
 for idx, user in enumerate(users):
 
     # check if we should download any more
@@ -101,19 +100,21 @@ for idx, user in enumerate(users):
         break
 
     # check if the directory is created
-    path_data = path_root + "/" + user.name.lower() + "/"
+    path_data = path_root + "/" + user["login"].lower() + "/"
     if not os.path.exists(path_data):
         os.makedirs(path_data)
     if not os.path.exists(path_temp):
         os.makedirs(path_temp)
 
     # get this stream object, it will have something if the stream is live
-    stream = client_helix.get_streams(user_ids=[user.id])
+    client_helix = twitch.TwitchHelix(client_id=client_id, client_secret=client_secret)
+    client_helix.get_oauth()
+    stream = client_helix.get_streams(user_ids=[user["id"]])
     stream_is_live = (len(stream) == 1)
 
     # get the videos for this specific user
-    print("getting videos for -> " + user.name.lower() + " (id " + str(user.id) + ")")
-    vid_iter = client_helix.get_videos(user_id=user.id, page_size=100)
+    print("getting videos for -> " + user["login"].lower() + " (id " + str(user["id"]) + ")")
+    vid_iter = client_helix.get_videos(user_id=user["id"], page_size=100)
     arr_archive = []
     arr_highlight = []
     arr_upload = []
@@ -129,16 +130,13 @@ for idx, user in enumerate(users):
         # else lets process
         # "all", "upload", "archive", "highlight"
         if video['type'] == 'archive' and ct_added[0] < max_videos:
-            video_v5 = client_v5.videos.get_by_id(video['id'])
-            arr_archive.append({'helix': video, 'v5': video_v5})
+            arr_archive.append({'helix': video})
             ct_added[0] = ct_added[0] + 1
         elif video['type'] == 'highlight' and ct_added[1] < max_videos:
-            video_v5 = client_v5.videos.get_by_id(video['id'])
-            arr_highlight.append({'helix': video, 'v5': video_v5})
+            arr_highlight.append({'helix': video})
             ct_added[1] = ct_added[1] + 1
         elif video['type'] == 'upload' and ct_added[2] < max_videos:
-            video_v5 = client_v5.videos.get_by_id(video['id'])
-            arr_upload.append({'helix': video, 'v5': video_v5})
+            arr_upload.append({'helix': video})
             ct_added[2] = ct_added[2] + 1
 
     # nice debug print
@@ -162,12 +160,11 @@ for idx, user in enumerate(users):
             'user_name': video['helix']['user_name'],
             'title': video['helix']['title'],
             'duration': video['helix']['duration'],
-            'game': video['v5']['game'],
-            'url': video['v5']['url'],
-            'views': video['v5']['views'],
+            'url': video['helix']['url'],
+            'views': video['helix']['view_count'],
             'moments': utils.get_vod_moments(video['helix']['id']),
-            'muted_segments': (video['v5']['muted_segments'] if 'muted_segments' in video['v5'] else []),
-            'recorded_at': video['v5']['recorded_at'],
+            'muted_segments': (video['helix']['muted_segments'] if video['helix']['muted_segments'] != None else []),
+            'recorded_at': video['helix']['created_at'].strftime('%Y-%m-%dT%H:%M:%SZ'),
         }
 
         # extract what folder we should save into
@@ -222,8 +219,8 @@ for idx, user in enumerate(users):
                   + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
                   + ' --id ' + str(video['helix']['id']) + ' --embed-emotes' \
                   + ' -o ' + file_path_chat_tmp
-            # subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
-            subprocess.Popen(cmd, shell=True).wait()
+            subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
+            # subprocess.Popen(cmd, shell=True).wait()
             if os.path.exists(file_path_chat_tmp):
                 shutil.move(file_path_chat_tmp, file_path_chat) 
             print("\t- done in " + str(time.time() - t0) + " seconds")

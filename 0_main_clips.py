@@ -5,6 +5,7 @@ import yaml  # pip install PyYAML
 
 import os
 import json
+import sys
 import time
 import subprocess
 import utils
@@ -22,8 +23,8 @@ client_secret = auth["client_secret"]
 # parameters
 # channels = ['xqcow', 'moonmoon', 'sodapoppin', 'clintstevens', 'pokelawls', 'forsen', 'nmplol']
 # min_view_counts = [5000, 2000, 2000, 500, 1000, 5000, 2000]
-channels = ['sodapoppin', 'clintstevens', 'pokelawls', 'nmplol']
-min_view_counts = [2000, 500, 1000, 2000]
+channels = ['xqcow', 'moonmoon', 'sodapoppin', 'clintstevens', 'pokelawls', 'forsen', 'nmplol', 'jerma985', 'veibae']
+min_view_counts = [5000, 2000, 2000, 500, 1000, 5000, 2000, 500, 500]
 
 # number of days to try to request
 num_days_to_query = 20
@@ -36,9 +37,9 @@ print("End Day: "+date_end)
 # ================================================================
 
 # paths of the cli and data
-# path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.40.4/TwitchDownloaderCLI.exe"
-# path_twitch_ffmpeg = path_base + "/thirdparty/Twitch_Downloader_1.40.4/ffmpeg.exe"
-path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.40.4/TwitchDownloaderCLI"
+# path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.40.7/TwitchDownloaderCLI.exe"
+# path_twitch_ffmpeg = path_base + "/thirdparty/Twitch_Downloader_1.40.7/ffmpeg.exe"
+path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.40.7/TwitchDownloaderCLI"
 path_twitch_ffmpeg = path_base + "/thirdparty/ffmpeg-4.3.1-amd64-static/ffmpeg"
 path_root = path_base + "/../data_clips/"
 path_temp = "/tmp/tvc_main_clips/"
@@ -50,23 +51,20 @@ path_temp = "/tmp/tvc_main_clips/"
 utils.setup_signal_handle()
 
 # convert the usernames to ids (sort so the are in the same order)
-client_v5 = twitch.TwitchClient(client_id)
-users_tmp = client_v5.users.translate_usernames_to_ids(channels)
+client_helix = twitch.TwitchHelix(client_id=client_id, client_secret=client_secret)
+client_helix.get_oauth()
+users_tmp = client_helix.get_users(login_names=channels)
 users = []
 for channel in channels:
     for user in users_tmp:
-        if user.name.lower() == channel.lower():
+        if user["login"].lower() == channel.lower():
             users.append(user)
             break
-
-# get the mapping between the current game ids and name
-gameid2name = {}
-for game in client_v5.games.get_top(limit=100):
-    gameid2name[game['game']['id']] = game['game']['name']
 
 # now lets loop through each user and make sure we have downloaded
 # their most recent VODs and if we have not, we should download them!
 t0 = time.time()
+gameid2name = {}
 count_total_clips_checked = 0
 count_total_clips_downloaded = 0
 for idx, user in enumerate(users):
@@ -77,7 +75,7 @@ for idx, user in enumerate(users):
         break
 
     # check if the directory is created
-    path_data = path_root + "/" + user.name + "/"
+    path_data = path_root + "/" + user["login"] + "/"
     if not os.path.exists(path_data):
         os.makedirs(path_data)
     if not os.path.exists(path_temp):
@@ -85,12 +83,12 @@ for idx, user in enumerate(users):
 
     # get the videos for this specific user
     try:
-        print("getting clips for -> " + user.name + " (id " + str(user.id) + ")")
+        print("getting clips for -> " + user["login"] + " (id " + str(user["id"]) + ")")
         client_helix = twitch.TwitchHelix(client_id=client_id, client_secret=client_secret)
         client_helix.get_oauth()
-        vid_iter = client_helix.get_clips(broadcaster_id=user.id, page_size=100,
+        vid_iter = client_helix.get_clips(broadcaster_id=user["id"], page_size=100,
                                           started_at=date_start, ended_at=date_end)
-        # vid_iter = client_helix.get_clips(broadcaster_id=user.id, page_size=100)
+        # vid_iter = client_helix.get_clips(broadcaster_id=user["id"], page_size=100)
         arr_clips = []
         for video in vid_iter:
 
@@ -154,7 +152,7 @@ for idx, user in enumerate(users):
                     json.dump(data, file, indent=4)
 
             elif not utils.terminated_requested:
-                print("\t- updating clip info: " + file_path_info)
+                print("\t- updating clip info: " + str(video['view_count']) + " views")
                 with open(file_path_info) as f:
                     video_info = json.load(f)
                 # update view count
@@ -173,7 +171,7 @@ for idx, user in enumerate(users):
             # VIDEO: check if the file exists
             file_path = path_data + str(video['id']) + ".mp4"
             file_path_tmp = path_temp + str(video['id']) + ".mp4"
-            print("\t- download clip: " + file_path)
+            print("\t- download clip: " + str(video['id']))
             if not utils.terminated_requested and not os.path.exists(file_path):
                 cmd = path_twitch_cli + ' -m ClipDownload' \
                       + ' --id ' + str(video['id']) + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
@@ -187,7 +185,7 @@ for idx, user in enumerate(users):
             # CHAT: check if the file exists
             file_path_chat = path_data + str(video['id']) + "_chat.json"
             file_path_chat_tmp = path_temp + str(video['id']) + "_chat.json"
-            print("\t- download chat: " + file_path_chat)
+            print("\t- download chat: " + str(video['id']) + "_chat.json")
             if not utils.terminated_requested and not os.path.exists(file_path_chat):
                 cmd = path_twitch_cli + ' -m ChatDownload' \
                       + ' --id ' + str(video['id']) + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
