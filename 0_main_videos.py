@@ -24,22 +24,22 @@ client_secret = auth["client_secret"]
 # parameters
 channels = [
     'sodapoppin', 'nmplol',
-    'moonmoon', 'clintstevens', 'pokelawls', 'sevadus',
-    'jerma985', 'heydoubleu',
-    'roflgator', 'cyr', 'veibae'
+    'moonmoon', 'clintstevens', 'sevadus',
+    'jerma985', 'heydoubleu', 'veibae', 'squeex',
+    'mindcrack'
 ]
-max_videos = 60
+max_videos = 30
 render_chat = [
     True, False,
-    False, True, False, False,
-    False, False,
-    False, False, False
+    False, True, False,
+    False, False, False, False,
+    False
 ]
 render_webvtt = [
     True, False,
-    False, True, False, False,
-    False, False,
-    False, False, True
+    False, True, False,
+    False, False, True, False,
+    False
 ]
 
 # ================================================================
@@ -205,8 +205,8 @@ for idx, user in enumerate(users):
                   + ' --id ' + str(video['helix']['id']) + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
                   + ' --temp-path "' + path_temp + '" --quality 1080p60 -o ' + file_path
                   #+ ' --quality 1080p60 -o ' + file_path
-            subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
-            # subprocess.Popen(cmd, shell=True).wait()
+            # subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
+            subprocess.Popen(cmd, shell=True).wait()
             print("\t- done in " + str(time.time() - t0) + " seconds")
 
         # CHAT: check if the file exists
@@ -219,8 +219,8 @@ for idx, user in enumerate(users):
                   + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
                   + ' --id ' + str(video['helix']['id']) + ' --embed-emotes' \
                   + ' -o ' + file_path_chat_tmp
-            subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
-            # subprocess.Popen(cmd, shell=True).wait()
+            # subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
+            subprocess.Popen(cmd, shell=True).wait()
             if os.path.exists(file_path_chat_tmp):
                 shutil.move(file_path_chat_tmp, file_path_chat) 
             print("\t- done in " + str(time.time() - t0) + " seconds")
@@ -277,11 +277,6 @@ for idx, user in enumerate(users):
             vtt.save(file_path_webvtt)
             print("\t- done in " + str(time.time() - t0) + " seconds")
 
-            # send pushover that this twitch vod is ready to edit
-            text = video['helix']['user_name'] + " vod " + str(video['helix']['id']) \
-                    + " ready to edit (" + str(int((time.time() - t0_start)/60.0)) + " min to prepare)"
-            utils.send_pushover_message(auth, text)
-
         # RENDER: check if the file exists
         file_path_chat = path_data + export_folder + str(video['helix']['id']) + "_chat.json"
         file_path_render = path_data + export_folder + str(video['helix']['id']) + "_chat.mp4"
@@ -298,3 +293,8 @@ for idx, user in enumerate(users):
             if os.path.exists(file_path_render_tmp):
                 shutil.move(file_path_render_tmp, file_path_render) 
             print("\t- done in " + str(time.time() - t0) + " seconds")
+
+            # send pushover that this twitch vod is ready to edit
+            text = video['helix']['user_name'] + " vod " + str(video['helix']['id']) \
+                    + " ready to edit (" + str(int((time.time() - t0_start)/60.0)) + " min to prepare)"
+            utils.send_pushover_message(auth, text)
