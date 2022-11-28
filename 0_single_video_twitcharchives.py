@@ -12,7 +12,9 @@ import time
 import requests
 import subprocess
 import shutil
+import progressbar
 from datetime import datetime
+import urllib.request
 import utils
 
 
@@ -37,6 +39,25 @@ path_temp = "/tmp/tvc_single_video_twitcharchives/"
 # ================================================================
 # ================================================================
 
+# progress bar helper
+# https://stackoverflow.com/a/46825841/7718197
+pbar = None
+def show_progress(block_num, block_size, total_size):
+    global pbar
+    if pbar is None:
+        pbar = progressbar.ProgressBar(maxval=total_size)
+        pbar.start()
+    downloaded = block_num * block_size
+    if downloaded < total_size:
+        pbar.update(downloaded)
+    else:
+        pbar.finish()
+        pbar = None
+
+# set default user agents we will use
+opener = urllib.request.build_opener()
+opener.addheaders = [('User-agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36')]
+urllib.request.install_opener(opener)
 
 # setup control+c handler
 utils.setup_signal_handle()
@@ -48,13 +69,11 @@ videos = data_raw.json()
 assert (len(videos) == 1)
 video = videos[0]
 
-
 # check if the temp directory is created
 if os.path.exists(path_temp) and os.path.isdir(path_temp):
     shutil.rmtree(path_temp)
 if not os.path.exists(path_temp):
     os.makedirs(path_temp)
-
 
 # if invalid vod id then replace it with the twitch archive one
 if str(video['vodId']) == "0":
@@ -62,7 +81,11 @@ if str(video['vodId']) == "0":
     if video["metadataFile"]:
         file_path_tmp = path_temp + str(vod_id_to_download) + "_meta.json"
         # gdd.download_file_from_google_drive(file_id=video["metadataFile"], dest_path=file_path_tmp)
-        gdown.download(id=str(video["metadataFile"]), output=file_path_tmp, quiet=quiet_gdown, use_cookies=True)
+        # gdown.download(id=str(video["metadataFile"]), output=file_path_tmp, quiet=quiet_gdown, use_cookies=True)
+        # https://b2.twitcharchives.com/file/twitch-archives/41440005979/final.mp4
+        # https://b2.twitcharchives.com/file/twitch-archives/41440005979/metadata.json
+        url = "https://b2.twitcharchives.com/file/twitch-archives/" + str(vod_id_to_download) + "/metadata.json"
+        urllib.request.urlretrieve(url, file_path_tmp, show_progress)
         with open(file_path_tmp) as f:
             video_info = json.load(f)
             if (video_info["_id"][0] == "v"):
@@ -131,77 +154,85 @@ file_path = path_data + export_folder + str(video_data['id']) + ".mp4"
 file_path_tmp = path_temp + str(video_data['id']) + ".tmp.mp4"
 file_path_tmp_ytdl = path_temp + str(video_data['id']) + ".tmp.%(ext)s"
 print("download video: " + file_path)
-if not utils.terminated_requested and not os.path.exists(file_path):
+# if not utils.terminated_requested and not os.path.exists(file_path):
 
-    # split video into the parts (if over 10 hours it splits)
-    parts = video_data["twitcharchives"]["youtubeVideo"].split(",")
+#     # split video into the parts (if over 10 hours it splits)
+#     parts = video_data["twitcharchives"]["youtubeVideo"].split(",")
 
-    # first lets see if we need to download multiple parts
-    # example: sZ6u0r-SHNs,fTn4eIGpOQE
-    for idx, part in enumerate(parts):
-        # create filename if needed
-        tmp_output_file_ytdl = path_temp + str(video_data['id']) + "_" + str(idx) + ".%(ext)s"
-        if len(parts) == 1:
-            tmp_output_file_ytdl = file_path_tmp_ytdl
-        # download the youtube video
-        youtube_url = 'https://youtu.be/'+part
-        print("part "+str(idx)+": downloading from youtube: "+youtube_url)
-        ydl_opts = {
-            'format': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]',
-            'recodevideo': 'mp4',
-            'outtmpl': tmp_output_file_ytdl,
-        }
-        ydl = YoutubeDL(ydl_opts)
-        retcode = ydl.download([youtube_url])
-        print("\npart "+str(idx)+": return code: "+str(retcode))
+#     # first lets see if we need to download multiple parts
+#     # example: sZ6u0r-SHNs,fTn4eIGpOQE
+#     for idx, part in enumerate(parts):
+#         # create filename if needed
+#         tmp_output_file_ytdl = path_temp + str(video_data['id']) + "_" + str(idx) + ".%(ext)s"
+#         if len(parts) == 1:
+#             tmp_output_file_ytdl = file_path_tmp_ytdl
+#         # download the youtube video
+#         youtube_url = 'https://youtu.be/'+part
+#         print("part "+str(idx)+": downloading from youtube: "+youtube_url)
+#         ydl_opts = {
+#             'format': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]',
+#             'recodevideo': 'mp4',
+#             'outtmpl': tmp_output_file_ytdl,
+#         }
+#         ydl = YoutubeDL(ydl_opts)
+#         retcode = ydl.download([youtube_url])
+#         print("\npart "+str(idx)+": return code: "+str(retcode))
 
 
-    # if there are multiple parts lets stitch it all together into a single video
-    # otherwise we just need to move it to the file location
-    # https://stackoverflow.com/a/36045659
-    if not utils.terminated_requested and len(parts) != 1:
-        # text file will all segments
-        text_file_temp_videos = path_temp + "videos.txt"
-        with open(text_file_temp_videos, 'w') as the_file:
-            for idx, part in enumerate(parts):
-                tmp_output_file = path_temp + str(video_data['id']) + "_" + str(idx) + ".mp4"
-                the_file.write('file \'' + os.path.abspath(tmp_output_file) + '\'\n')
-        # now render
-        t0 = time.time()
-        print("\t- combining all videos into a single segment!")
-        cmd = path_twitch_ffmpeg + ' -hide_banner -loglevel quiet -stats ' \
-              + '-f concat -safe 0 ' \
-              + ' -i ' + text_file_temp_videos \
-              + ' -c copy -avoid_negative_ts make_zero ' \
-              + file_path_tmp
-        #print(cmd)
-        subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
-        #subprocess.Popen(cmd, shell=True).wait()
+#     # if there are multiple parts lets stitch it all together into a single video
+#     # otherwise we just need to move it to the file location
+#     # https://stackoverflow.com/a/36045659
+#     if not utils.terminated_requested and len(parts) != 1:
+#         # text file will all segments
+#         text_file_temp_videos = path_temp + "videos.txt"
+#         with open(text_file_temp_videos, 'w') as the_file:
+#             for idx, part in enumerate(parts):
+#                 tmp_output_file = path_temp + str(video_data['id']) + "_" + str(idx) + ".mp4"
+#                 the_file.write('file \'' + os.path.abspath(tmp_output_file) + '\'\n')
+#         # now render
+#         t0 = time.time()
+#         print("\t- combining all videos into a single segment!")
+#         cmd = path_twitch_ffmpeg + ' -hide_banner -loglevel quiet -stats ' \
+#               + '-f concat -safe 0 ' \
+#               + ' -i ' + text_file_temp_videos \
+#               + ' -c copy -avoid_negative_ts make_zero ' \
+#               + file_path_tmp
+#         #print(cmd)
+#         subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
+#         #subprocess.Popen(cmd, shell=True).wait()
 
-        # end timing
-        print("\t- time to render: " + str(time.time()-t0))
+#         # end timing
+#         print("\t- time to render: " + str(time.time()-t0))
 
-    # finally copy temp file to new location
-    if not utils.terminated_requested and os.path.exists(file_path_tmp):
-        print("\t- renaming temp export file to final filename")
-        shutil.move(file_path_tmp, file_path)
+#     # finally copy temp file to new location
+#     if not utils.terminated_requested and os.path.exists(file_path_tmp):
+#         print("\t- renaming temp export file to final filename")
+#         shutil.move(file_path_tmp, file_path)
 
 
 # try to download the video directly if we have it
 # https://drive.google.com/uc?id=<id here>
 # https://drive.google.com/file/d/1_4q-XR_RVMVRnLDE-etZypqTN3n-LbsT/view?usp=sharing
 # https://github.com/wkentaro/gdown/blob/main/gdown/download.py#L64-L75
-# if not utils.terminated_requested and not os.path.exists(file_path) and video_data["twitcharchives"]["gdriveVideo"]:
-#     # gdd.download_file_from_google_drive(file_id=video_data["twitcharchives"]["gdriveVideo"], dest_path=file_path, showsize="true")
-#     gdown.download(id=str(video_data["twitcharchives"]["gdriveVideo"]), output=file_path, quiet=quiet_gdown, use_cookies=True)
+# https://b2.twitcharchives.com/file/twitch-archives/41440005979/final.mp4
+if not utils.terminated_requested and not os.path.exists(file_path):
+    # and video_data["twitcharchives"]["gdriveVideo"]:
+    # gdd.download_file_from_google_drive(file_id=video_data["twitcharchives"]["gdriveVideo"], dest_path=file_path, showsize="true")
+    # gdown.download(id=str(video_data["twitcharchives"]["gdriveVideo"]), output=file_path, quiet=quiet_gdown, use_cookies=True)
+    url = "https://b2.twitcharchives.com/file/twitch-archives/" + str(vod_id_to_download) + "/final.mp4"
+    urllib.request.urlretrieve(url, file_path, show_progress)
 
 # try to download chat if we have it
 # https://drive.google.com/uc?id=<id here>
+# https://b2.twitcharchives.com/file/twitch-archives/41440005979/chat.json
 file_path_chat = path_data + export_folder + str(video_data['id']) + "_chat.json"
 print("download chat: " + file_path_chat)
-if not utils.terminated_requested and not os.path.exists(file_path_chat) and video_data["twitcharchives"]["gdriveChat"]:
+if not utils.terminated_requested and not os.path.exists(file_path_chat):
+    #  and video_data["twitcharchives"]["gdriveChat"]:
     # gdd.download_file_from_google_drive(file_id=video_data["twitcharchives"]["gdriveChat"], dest_path=file_path_chat)
-    gdown.download(id=str(video_data["twitcharchives"]["gdriveChat"]), output=file_path_chat, quiet=quiet_gdown, use_cookies=True)
+    # gdown.download(id=str(video_data["twitcharchives"]["gdriveChat"]), output=file_path_chat, quiet=quiet_gdown, use_cookies=True)
+    url = "https://b2.twitcharchives.com/file/twitch-archives/" + str(vod_id_to_download) + "/chat.json"
+    urllib.request.urlretrieve(url, file_path_chat, show_progress)
 
 
 # CHAT VIDEO: check if the file exists

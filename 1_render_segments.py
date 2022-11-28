@@ -230,7 +230,7 @@ for video in data:
         tmp = str(template)
         tmp = tmp.replace("$id", video_info["id"])
         tmp = tmp.replace("$title", video_info["title"])
-        tmp = tmp.replace("$game", video_info["game"])
+        # tmp = tmp.replace("$game", video_info["game"])
         tmp = tmp.replace("$views", str(video_info["views"]))
         tmp = tmp.replace("$t_start", video["t_start"])
         tmp = tmp.replace("$t_end", video["t_end"])
