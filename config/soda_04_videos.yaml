@@ -256,438 +256,4040 @@
 #   t_start: "00:14:12"
 #   t_end: "00:19:20"
 
-- video: data/sodapoppin/2022-01/1268502742
-  title: "League of Legends - (sodapoppin) - January 18, 2022"
-  t_start: "00:18:02"
-  t_end: "05:37:50"
+# - video: data/sodapoppin/2022-01/1268502742
+#   title: "League of Legends - (sodapoppin) - January 18, 2022"
+#   t_start: "00:18:02"
+#   t_end: "05:37:50"
 
-- video: data/sodapoppin/2022-01/1268829976
-  title: "League of Legends - (sodapoppin) - January 19, 2022"
-  t_start: "00:03:08,00:55:44,01:38:06,02:15:13,02:40:56,03:12:53,03:40:48,04:08:32"
-  t_end: "00:40:15,01:14:25,02:07:37,02:34:40,03:03:24,03:38:54,04:04:29,05:42:20"
-
-- video: data/sodapoppin/2022-01/1268829976
-  title: "Chance Reacts to Nick's Stream - (sodapoppin) - January 19, 2022"
-  t_start: "00:40:15"
-  t_end: "00:42:07"
-
-- video: data/sodapoppin/2022-01/1269781795
-  title: "Risk of Rain 2 - (sodapoppin) - January 20, 2022"
-  t_start: "00:20:59"
-  t_end: "01:10:40"
-
-- video: data/sodapoppin/2022-01/1269781795
-  title: "League of Legends with Rob - (sodapoppin) - January 20, 2022"
-  t_start: "01:11:26"
-  t_end: "09:44:14"
-
-
-- video: data/sodapoppin/2022-01/1272382919
-  title: "Watching Game Trailers w/ Chat - (sodapoppin) - January 22, 2022"
-  t_start: "00:14:12"
-  t_end: "01:02:15"
-
-- video: data/sodapoppin/2022-01/1272382919
-  title: "Vampire Survivors w/ Chat - (sodapoppin) - January 22, 2022"
-  t_start: "01:02:18"
-  t_end: "03:14:07"
-
-- video: data/sodapoppin/2022-01/1272382919
-  title: "How Fish is Made (horror) w/ Chat - (sodapoppin) - January 22, 2022"
-  t_start: "03:14:15"
-  t_end: "03:37:56"
-
-- video: data/sodapoppin/2022-01/1272382919
-  title: "LUL inc w/ Chat - (sodapoppin) - January 22, 2022"
-  t_start: "03:38:07"
-  t_end: "04:25:53"
-
-- video: data/sodapoppin/2022-01/1272382919
-  title: "Virus at Home w/ Chat - (sodapoppin) - January 22, 2022"
-  t_start: "04:27:05"
-  t_end: "05:01:14"
-
-- video: data/sodapoppin/2022-01/1272382919
-  title: "V696 (horror) w/ Chat - (sodapoppin) - January 22, 2022"
-  t_start: "05:05:03"
-  t_end: "05:17:58"
-
-- video: data/sodapoppin/2022-01/1272382919
-  title: "Buck Up And Drive w/ Chat - (sodapoppin) - January 22, 2022"
-  t_start: "05:18:34"
-  t_end: "06:00:19"
-
-- video: data/sodapoppin/2022-01/1272382919
-  title: "Windjammers 2 w/ Chat - (sodapoppin) - January 22, 2022"
-  t_start: "06:00:47"
-  t_end: "07:04:04"
-
-# ===========================================
-# https://www.twitch.tv/sodapoppin/videos?filter=all
-# ===========================================
-
-
-- video: data/skippypoppin/2022-01/1270749809
-  title: "Chance and Veibae Play Terraria Calamity w/ Chat - Part 1 (skippypoppin) - January 21, 2022"
-  t_start: "12:18:15"
-  t_end: "15:34:00"
-
-- video: data/skippypoppin/2022-01/1271422692
-  title: "Chance and Veibae Play Terraria Calamity w/ Chat - Part 2 (skippypoppin) - January 21, 2022"
-  t_start: "00:00:00"
-  t_end: "00:57:30"
-
-
-# ===========================================
-# https://www.twitch.tv/sodapoppin/videos?filter=all
-# ===========================================
-
-
-- video: data/sodapoppin/2022-01/1273409001
-  title: "Vampire Survivors w/ Chat - (sodapoppin) - January 23, 2022"
-  t_start: "00:45:25"
-  t_end: "02:37:03"
-
-- video: data/sodapoppin/2022-01/1273409001
-  title: "League of Legends w/ Chat (reupload) - (sodapoppin) - January 23, 2022"
-  t_start: "02:36:46,04:51:13"
-  t_end: "04:49:13,06:23:58"
-
-
-
-- video: data/sodapoppin/2022-01/1274461255
-  title: "Chance Updates His Audio w/ Chat - (sodapoppin) - January 24, 2022"
-  t_start: "00:16:15"
-  t_end: "00:26:30"
-
-- video: data/sodapoppin/2022-01/1274461255
-  title: "Vampire Survivors w/ Chat - (sodapoppin) - January 24, 2022"
-  t_start: "00:26:27"
-  t_end: "01:50:19"
-
-- video: data/sodapoppin/2022-01/1274461255
-  title: "Chance Reacts to Crumpet w/ Chat - (sodapoppin) - January 24, 2022"
-  t_start: "01:50:19"
-  t_end: "02:00:26"
-
-- video: data/sodapoppin/2022-01/1274461255
-  title: "League of Legends w/ Chat - (sodapoppin) - January 24, 2022"
-  t_start: "02:00:36"
-  t_end: "03:44:19"
-
-- video: data/sodapoppin/2022-01/1274461255
-  title: "Chance and Veibae Play Terraria w/ Chat - Part 3 (sodapoppin) - January 24, 2022"
-  t_start: "03:44:12"
-  t_end: "06:23:21"
-
-
-- video: data/sodapoppin/2022-01/1275765117
-  title: "Vampire Survivors w/ Chat - (sodapoppin) - January 25, 2022"
-  t_start: "00:15:38"
-  t_end: "01:54:53"
-
-- video: data/sodapoppin/2022-01/1275765117
-  title: "League of Legends w/ Chat - (sodapoppin) - January 25, 2022"
-  t_start: "01:56:03"
-  t_end: "04:19:10"
-
-- video: data/sodapoppin/2022-01/1275765117
-  title: "Chance and Veibae Play Terraria w/ Chat - Part 4 (sodapoppin) - January 25, 2022"
-  t_start: "04:19:26,05:35:59"
-  t_end: "05:15:35,07:13:10"
-
-- video: data/sodapoppin/2022-01/1276773625
-  title: "League of Legends w/ Chat - (sodapoppin) - January 26, 2022"
-  t_start: "00:17:26"
-  t_end: "00:57:50"
-
-- video: data/sodapoppin/2022-01/1277887464
-  title: "League of Legends w/ Chat - (sodapoppin) - January 27, 2022"
-  t_start: "00:17:23,07:09:41"
-  t_end: "07:04:11,08:33:00"
-
-
-- video: data/sodapoppin/2022-01/1279001285
-  title: "Vampire Survivors w/ Chat - (sodapoppin) - January 28, 2022"
-  t_start: "00:21:20"
-  t_end: "03:37:36"
-
-- video: data/sodapoppin/2022-01/1279001285
-  title: "Chance Reacts to Channel 5 w/ Chat - (sodapoppin) - January 28, 2022"
-  t_start: "03:38:25"
-  t_end: "04:22:13"
-
-- video: data/sodapoppin/2022-01/1279001285
-  title: "Chance and Veibae Play Terraria w/ Chat - Part 5 (sodapoppin) - January 28, 2022"
-  t_start: "04:35:03"
-  t_end: "09:12:20"
-
-
-- video: data/sodapoppin/2022-01/1280205877
-  title: "Watchin Game Trailers w/ Chat - (sodapoppin) - January 29, 2022"
-  t_start: "00:12:18"
-  t_end: "00:39:49"
+# - video: data/sodapoppin/2022-01/1268829976
+#   title: "League of Legends - (sodapoppin) - January 19, 2022"
+#   t_start: "00:03:08,00:55:44,01:38:06,02:15:13,02:40:56,03:12:53,03:40:48,04:08:32"
+#   t_end: "00:40:15,01:14:25,02:07:37,02:34:40,03:03:24,03:38:54,04:04:29,05:42:20"
+
+# - video: data/sodapoppin/2022-01/1268829976
+#   title: "Chance Reacts to Nick's Stream - (sodapoppin) - January 19, 2022"
+#   t_start: "00:40:15"
+#   t_end: "00:42:07"
+
+# - video: data/sodapoppin/2022-01/1269781795
+#   title: "Risk of Rain 2 - (sodapoppin) - January 20, 2022"
+#   t_start: "00:20:59"
+#   t_end: "01:10:40"
+
+# - video: data/sodapoppin/2022-01/1269781795
+#   title: "League of Legends with Rob - (sodapoppin) - January 20, 2022"
+#   t_start: "01:11:26"
+#   t_end: "09:44:14"
+
+
+# - video: data/sodapoppin/2022-01/1272382919
+#   title: "Watching Game Trailers w/ Chat - (sodapoppin) - January 22, 2022"
+#   t_start: "00:14:12"
+#   t_end: "01:02:15"
+
+# - video: data/sodapoppin/2022-01/1272382919
+#   title: "Vampire Survivors w/ Chat - (sodapoppin) - January 22, 2022"
+#   t_start: "01:02:18"
+#   t_end: "03:14:07"
+
+# - video: data/sodapoppin/2022-01/1272382919
+#   title: "How Fish is Made (horror) w/ Chat - (sodapoppin) - January 22, 2022"
+#   t_start: "03:14:15"
+#   t_end: "03:37:56"
+
+# - video: data/sodapoppin/2022-01/1272382919
+#   title: "LUL inc w/ Chat - (sodapoppin) - January 22, 2022"
+#   t_start: "03:38:07"
+#   t_end: "04:25:53"
+
+# - video: data/sodapoppin/2022-01/1272382919
+#   title: "Virus at Home w/ Chat - (sodapoppin) - January 22, 2022"
+#   t_start: "04:27:05"
+#   t_end: "05:01:14"
+
+# - video: data/sodapoppin/2022-01/1272382919
+#   title: "V696 (horror) w/ Chat - (sodapoppin) - January 22, 2022"
+#   t_start: "05:05:03"
+#   t_end: "05:17:58"
+
+# - video: data/sodapoppin/2022-01/1272382919
+#   title: "Buck Up And Drive w/ Chat - (sodapoppin) - January 22, 2022"
+#   t_start: "05:18:34"
+#   t_end: "06:00:19"
+
+# - video: data/sodapoppin/2022-01/1272382919
+#   title: "Windjammers 2 w/ Chat - (sodapoppin) - January 22, 2022"
+#   t_start: "06:00:47"
+#   t_end: "07:04:04"
+
+# # ===========================================
+# # https://www.twitch.tv/sodapoppin/videos?filter=all
+# # ===========================================
+
+
+# - video: data/skippypoppin/2022-01/1270749809
+#   title: "Chance and Veibae Play Terraria Calamity w/ Chat - Part 1 (skippypoppin) - January 21, 2022"
+#   t_start: "12:18:15"
+#   t_end: "15:34:00"
+
+# - video: data/skippypoppin/2022-01/1271422692
+#   title: "Chance and Veibae Play Terraria Calamity w/ Chat - Part 2 (skippypoppin) - January 21, 2022"
+#   t_start: "00:00:00"
+#   t_end: "00:57:30"
+
+
+# # ===========================================
+# # https://www.twitch.tv/sodapoppin/videos?filter=all
+# # ===========================================
+
+
+# - video: data/sodapoppin/2022-01/1273409001
+#   title: "Vampire Survivors w/ Chat - (sodapoppin) - January 23, 2022"
+#   t_start: "00:45:25"
+#   t_end: "02:37:03"
+
+# - video: data/sodapoppin/2022-01/1273409001
+#   title: "League of Legends w/ Chat (reupload) - (sodapoppin) - January 23, 2022"
+#   t_start: "02:36:46,04:51:13"
+#   t_end: "04:49:13,06:23:58"
+
+
+
+# - video: data/sodapoppin/2022-01/1274461255
+#   title: "Chance Updates His Audio w/ Chat - (sodapoppin) - January 24, 2022"
+#   t_start: "00:16:15"
+#   t_end: "00:26:30"
+
+# - video: data/sodapoppin/2022-01/1274461255
+#   title: "Vampire Survivors w/ Chat - (sodapoppin) - January 24, 2022"
+#   t_start: "00:26:27"
+#   t_end: "01:50:19"
+
+# - video: data/sodapoppin/2022-01/1274461255
+#   title: "Chance Reacts to Crumpet w/ Chat - (sodapoppin) - January 24, 2022"
+#   t_start: "01:50:19"
+#   t_end: "02:00:26"
+
+# - video: data/sodapoppin/2022-01/1274461255
+#   title: "League of Legends w/ Chat - (sodapoppin) - January 24, 2022"
+#   t_start: "02:00:36"
+#   t_end: "03:44:19"
+
+# - video: data/sodapoppin/2022-01/1274461255
+#   title: "Chance and Veibae Play Terraria w/ Chat - Part 3 (sodapoppin) - January 24, 2022"
+#   t_start: "03:44:12"
+#   t_end: "06:23:21"
+
+
+# - video: data/sodapoppin/2022-01/1275765117
+#   title: "Vampire Survivors w/ Chat - (sodapoppin) - January 25, 2022"
+#   t_start: "00:15:38"
+#   t_end: "01:54:53"
+
+# - video: data/sodapoppin/2022-01/1275765117
+#   title: "League of Legends w/ Chat - (sodapoppin) - January 25, 2022"
+#   t_start: "01:56:03"
+#   t_end: "04:19:10"
+
+# - video: data/sodapoppin/2022-01/1275765117
+#   title: "Chance and Veibae Play Terraria w/ Chat - Part 4 (sodapoppin) - January 25, 2022"
+#   t_start: "04:19:26,05:35:59"
+#   t_end: "05:15:35,07:13:10"
+
+# - video: data/sodapoppin/2022-01/1276773625
+#   title: "League of Legends w/ Chat - (sodapoppin) - January 26, 2022"
+#   t_start: "00:17:26"
+#   t_end: "00:57:50"
+
+# - video: data/sodapoppin/2022-01/1277887464
+#   title: "League of Legends w/ Chat - (sodapoppin) - January 27, 2022"
+#   t_start: "00:17:23,07:09:41"
+#   t_end: "07:04:11,08:33:00"
+
+
+# - video: data/sodapoppin/2022-01/1279001285
+#   title: "Vampire Survivors w/ Chat - (sodapoppin) - January 28, 2022"
+#   t_start: "00:21:20"
+#   t_end: "03:37:36"
+
+# - video: data/sodapoppin/2022-01/1279001285
+#   title: "Chance Reacts to Channel 5 w/ Chat - (sodapoppin) - January 28, 2022"
+#   t_start: "03:38:25"
+#   t_end: "04:22:13"
+
+# - video: data/sodapoppin/2022-01/1279001285
+#   title: "Chance and Veibae Play Terraria w/ Chat - Part 5 (sodapoppin) - January 28, 2022"
+#   t_start: "04:35:03"
+#   t_end: "09:12:20"
+
+
+# - video: data/sodapoppin/2022-01/1280205877
+#   title: "Watchin Game Trailers w/ Chat - (sodapoppin) - January 29, 2022"
+#   t_start: "00:12:18"
+#   t_end: "00:39:49"
 
-- video: data/sodapoppin/2022-01/1280205877
-  title: "Levitation Simulator w/ Chat - (sodapoppin) - January 29, 2022"
-  t_start: "00:40:01"
-  t_end: "01:06:58"
+# - video: data/sodapoppin/2022-01/1280205877
+#   title: "Levitation Simulator w/ Chat - (sodapoppin) - January 29, 2022"
+#   t_start: "00:40:01"
+#   t_end: "01:06:58"
 
-- video: data/sodapoppin/2022-01/1280205877
-  title: "Parkour Tag w/ Chat - (sodapoppin) - January 29, 2022"
-  t_start: "01:07:53"
-  t_end: "02:16:06"
-
-- video: data/sodapoppin/2022-01/1280205877
-  title: "Needy Streamer Overdose w/ Chat - (sodapoppin) - January 29, 2022"
-  t_start: "02:17:46"
-  t_end: "02:50:53"
-
-- video: data/sodapoppin/2022-01/1280205877
-  title: "Velocity Noodle w/ Chat - (sodapoppin) - January 29, 2022"
-  t_start: "02:51:42"
-  t_end: "03:11:49"
-
-- video: data/sodapoppin/2022-01/1280205877
-  title: "BallFrog w/ Chat - (sodapoppin) - January 29, 2022"
-  t_start: "03:13:06"
-  t_end: "03:29:30"
-
-- video: data/sodapoppin/2022-01/1280205877
-  title: "Deep Fishing w/ Chat - (sodapoppin) - January 29, 2022"
-  t_start: "03:31:51"
-  t_end: "03:39:47"
-
-- video: data/sodapoppin/2022-01/1280205877
-  title: "Rogue Tower w/ Chat - (sodapoppin) - January 29, 2022"
-  t_start: "03:40:56"
-  t_end: "05:14:09"
-
-- video: data/sodapoppin/2022-01/1280205877
-  title: "Warm Snow w/ Chat - (sodapoppin) - January 29, 2022"
-  t_start: "05:17:03"
-  t_end: "05:25:56"
-
-- video: data/sodapoppin/2022-01/1280205877
-  title: "Abduction w/ Chat - (sodapoppin) - January 29, 2022"
-  t_start: "05:25:31"
-  t_end: "05:58:26"
-
-
-
-# ===========================================
-# https://www.twitch.tv/sodapoppin/videos?filter=all
-# https://www.twitch.tv/skippypoppin/videos?filter=all
-# ===========================================
-
-
-# 1272083593
-# 1273868409
-
-
-- video: data/sodapoppin/2022-02/1283802534
-  title: "Rogue Tower w/ Chat - (sodapoppin) - February 1, 2022"
-  t_start: "00:22:36"
-  t_end: "03:07:04"
-
-- video: data/sodapoppin/2022-02/1283802534
-  title: "League of Legends w/ Chat - (sodapoppin) - February 1, 2022"
-  t_start: "03:07:20"
-  t_end: "06:10:30"
-
-- video: data/sodapoppin/2022-02/1283802534
-  title: "Chance Reacts to New Risk of Rain 2 Champion w/ Chat - (sodapoppin) - February 1, 2022"
-  t_start: "05:01:41"
-  t_end: "05:03:33"
-
-
-
-- video: data/sodapoppin/2022-02/1284594432
-  title: "Chance on Getting a Haircut w/ Chat - (sodapoppin) - February 2, 2022"
-  t_start: "00:19:59"
-  t_end: "00:34:42"
-
-- video: data/sodapoppin/2022-02/1284594432
-  title: "Rogue Tower w/ Chat - (sodapoppin) - February 2, 2022"
-  t_start: "00:34:24"
-  t_end: "01:44:29"
-
-- video: data/sodapoppin/2022-02/1284594432
-  title: "Warm Snow w/ Chat - (sodapoppin) - February 2, 2022"
-  t_start: "01:57:36"
-  t_end: "03:50:36"
-
-- video: data/sodapoppin/2022-02/1284594432
-  title: "PlayStation Gran Turismo 7 w/ Chat - (sodapoppin) - February 2, 2022"
-  t_start: "03:50:23"
-  t_end: "04:17:44"
-
-
-
-- video: data/sodapoppin/2022-02/1285666710
-  title: "New Haircut w/ Chat - (sodapoppin) - February 3, 2022"
-  t_start: "00:17:28"
-  t_end: "00:27:03"
-
-- video: data/sodapoppin/2022-02/1285666710
-  title: "Rogue Tower w/ Chat - (sodapoppin) - February 3, 2022"
-  t_start: "00:27:01"
-  t_end: "02:58:37"
-
-- video: data/sodapoppin/2022-02/1285666710
-  title: "League of Legends w/ Chat - (sodapoppin) - February 3, 2022"
-  t_start: "03:21:48,04:20:39,04:59:15"
-  t_end: "04:15:44,04:53:37,06:03:21"
+# - video: data/sodapoppin/2022-01/1280205877
+#   title: "Parkour Tag w/ Chat - (sodapoppin) - January 29, 2022"
+#   t_start: "01:07:53"
+#   t_end: "02:16:06"
+
+# - video: data/sodapoppin/2022-01/1280205877
+#   title: "Needy Streamer Overdose w/ Chat - (sodapoppin) - January 29, 2022"
+#   t_start: "02:17:46"
+#   t_end: "02:50:53"
+
+# - video: data/sodapoppin/2022-01/1280205877
+#   title: "Velocity Noodle w/ Chat - (sodapoppin) - January 29, 2022"
+#   t_start: "02:51:42"
+#   t_end: "03:11:49"
+
+# - video: data/sodapoppin/2022-01/1280205877
+#   title: "BallFrog w/ Chat - (sodapoppin) - January 29, 2022"
+#   t_start: "03:13:06"
+#   t_end: "03:29:30"
+
+# - video: data/sodapoppin/2022-01/1280205877
+#   title: "Deep Fishing w/ Chat - (sodapoppin) - January 29, 2022"
+#   t_start: "03:31:51"
+#   t_end: "03:39:47"
+
+# - video: data/sodapoppin/2022-01/1280205877
+#   title: "Rogue Tower w/ Chat - (sodapoppin) - January 29, 2022"
+#   t_start: "03:40:56"
+#   t_end: "05:14:09"
+
+# - video: data/sodapoppin/2022-01/1280205877
+#   title: "Warm Snow w/ Chat - (sodapoppin) - January 29, 2022"
+#   t_start: "05:17:03"
+#   t_end: "05:25:56"
+
+# - video: data/sodapoppin/2022-01/1280205877
+#   title: "Abduction w/ Chat - (sodapoppin) - January 29, 2022"
+#   t_start: "05:25:31"
+#   t_end: "05:58:26"
+
+
+
+# # ===========================================
+# # https://www.twitch.tv/sodapoppin/videos?filter=all
+# # https://www.twitch.tv/skippypoppin/videos?filter=all
+# # ===========================================
+
+
+# # 1272083593
+# # 1273868409
+
+
+# - video: data/sodapoppin/2022-02/1283802534
+#   title: "Rogue Tower w/ Chat - (sodapoppin) - February 1, 2022"
+#   t_start: "00:22:36"
+#   t_end: "03:07:04"
+
+# - video: data/sodapoppin/2022-02/1283802534
+#   title: "League of Legends w/ Chat - (sodapoppin) - February 1, 2022"
+#   t_start: "03:07:20"
+#   t_end: "06:10:30"
+
+# - video: data/sodapoppin/2022-02/1283802534
+#   title: "Chance Reacts to New Risk of Rain 2 Champion w/ Chat - (sodapoppin) - February 1, 2022"
+#   t_start: "05:01:41"
+#   t_end: "05:03:33"
+
+
+
+# - video: data/sodapoppin/2022-02/1284594432
+#   title: "Chance on Getting a Haircut w/ Chat - (sodapoppin) - February 2, 2022"
+#   t_start: "00:19:59"
+#   t_end: "00:34:42"
+
+# - video: data/sodapoppin/2022-02/1284594432
+#   title: "Rogue Tower w/ Chat - (sodapoppin) - February 2, 2022"
+#   t_start: "00:34:24"
+#   t_end: "01:44:29"
+
+# - video: data/sodapoppin/2022-02/1284594432
+#   title: "Warm Snow w/ Chat - (sodapoppin) - February 2, 2022"
+#   t_start: "01:57:36"
+#   t_end: "03:50:36"
+
+# - video: data/sodapoppin/2022-02/1284594432
+#   title: "PlayStation Gran Turismo 7 w/ Chat - (sodapoppin) - February 2, 2022"
+#   t_start: "03:50:23"
+#   t_end: "04:17:44"
+
+
 
 # - video: data/sodapoppin/2022-02/1285666710
-#   title: "Chance Reacts to Dunkey's Best of 2021 w/ Chat - (sodapoppin) - February 3, 2022"
-#   description: "Original Video\nhttps://www.youtube.com/watch?v=LCgYKW-UPYc"
-#   t_start: "04:54:44"
-#   t_end: "04:59:15"
+#   title: "New Haircut w/ Chat - (sodapoppin) - February 3, 2022"
+#   t_start: "00:17:28"
+#   t_end: "00:27:03"
 
-- video: data/sodapoppin/2022-02/1287121413
-  title: "Vampire Survivors w/ Chat - (sodapoppin) - February 4, 2022"
-  t_start: "00:21:59"
-  t_end: "01:16:42"
+# - video: data/sodapoppin/2022-02/1285666710
+#   title: "Rogue Tower w/ Chat - (sodapoppin) - February 3, 2022"
+#   t_start: "00:27:01"
+#   t_end: "02:58:37"
 
-- video: data/sodapoppin/2022-02/1287121413
-  title: "Words On Stream w/ Chat - (sodapoppin) - February 4, 2022"
-  t_start: "01:16:47"
-  t_end: "01:49:33"
+# - video: data/sodapoppin/2022-02/1285666710
+#   title: "League of Legends w/ Chat - (sodapoppin) - February 3, 2022"
+#   t_start: "03:21:48,04:20:39,04:59:15"
+#   t_end: "04:15:44,04:53:37,06:03:21"
 
-- video: data/sodapoppin/2022-02/1287121413
-  title: "Chance Watches Twitch w/ Chat - (sodapoppin) - February 4, 2022"
-  t_start: "01:49:33"
-  t_end: "02:00:07"
+# # - video: data/sodapoppin/2022-02/1285666710
+# #   title: "Chance Reacts to Dunkey's Best of 2021 w/ Chat - (sodapoppin) - February 3, 2022"
+# #   description: "Original Video\nhttps://www.youtube.com/watch?v=LCgYKW-UPYc"
+# #   t_start: "04:54:44"
+# #   t_end: "04:59:15"
 
-- video: data/sodapoppin/2022-02/1287121413
-  title: "League of Legends w/ Chat - (sodapoppin) - February 4, 2022"
-  t_start: "02:00:48,03:16:57"
-  t_end: "02:56:42,05:00:19"
+# - video: data/sodapoppin/2022-02/1287121413
+#   title: "Vampire Survivors w/ Chat - (sodapoppin) - February 4, 2022"
+#   t_start: "00:21:59"
+#   t_end: "01:16:42"
 
-- video: data/sodapoppin/2022-02/1287121413
-  title: "Slay the Spire w/ Chat - (sodapoppin) - February 4, 2022"
-  t_start: "05:00:27"
-  t_end: "06:04:50"
+# - video: data/sodapoppin/2022-02/1287121413
+#   title: "Words On Stream w/ Chat - (sodapoppin) - February 4, 2022"
+#   t_start: "01:16:47"
+#   t_end: "01:49:33"
 
-- video: data/sodapoppin/2022-02/1287121413
-  title: "Warm Snow w/ Chat - (sodapoppin) - February 4, 2022"
-  t_start: "06:04:38"
-  t_end: "09:02:20"
+# - video: data/sodapoppin/2022-02/1287121413
+#   title: "Chance Watches Twitch w/ Chat - (sodapoppin) - February 4, 2022"
+#   t_start: "01:49:33"
+#   t_end: "02:00:07"
 
+# - video: data/sodapoppin/2022-02/1287121413
+#   title: "League of Legends w/ Chat - (sodapoppin) - February 4, 2022"
+#   t_start: "02:00:48,03:16:57"
+#   t_end: "02:56:42,05:00:19"
 
-- video: data/sodapoppin/2022-02/1288278179
-  title: "Chance Does a Puzzle Box w/ Chat - (sodapoppin) - February 5, 2022"
-  t_start: "00:11:06"
-  t_end: "00:19:29"
+# - video: data/sodapoppin/2022-02/1287121413
+#   title: "Slay the Spire w/ Chat - (sodapoppin) - February 4, 2022"
+#   t_start: "05:00:27"
+#   t_end: "06:04:50"
 
-- video: data/sodapoppin/2022-02/1288278179
-  title: "Bloodborne PSX w/ Chat - (sodapoppin) - February 5, 2022"
-  t_start: "00:49:34"
-  t_end: "02:15:19"
-
-- video: data/sodapoppin/2022-02/1288278179
-  title: "Chat's Party w/ Chat - (sodapoppin) - February 5, 2022"
-  t_start: "02:15:24"
-  t_end: "02:24:28"
-
-- video: data/sodapoppin/2022-02/1288278179
-  title: "SCP: Nine-Tailed Fox w/ Chat - (sodapoppin) - February 5, 2022"
-  t_start: "02:26:45"
-  t_end: "03:24:09"
-
-- video: data/sodapoppin/2022-02/1288278179
-  title: "Deflector w/ Chat - (sodapoppin) - February 5, 2022"
-  t_start: "03:24:09"
-  t_end: "03:44:28"
-
-- video: data/sodapoppin/2022-02/1288278179
-  title: "Pepo w/ Chat - (sodapoppin) - February 5, 2022"
-  t_start: "03:45:27"
-  t_end: "04:00:15"
-
-- video: data/sodapoppin/2022-02/1288278179
-  title: "Ghost (horror) w/ Chat - (sodapoppin) - February 5, 2022"
-  t_start: "04:07:46"
-  t_end: "04:32:22"
-
-- video: data/sodapoppin/2022-02/1288278179
-  title: "Experiment: Groceries (horror) w/ Chat - (sodapoppin) - February 5, 2022"
-  t_start: "04:33:30"
-  t_end: "04:45:37"
-
-- video: data/sodapoppin/2022-02/1288278179
-  title: "Serious Sam: Siberian Mayhem w/ Chat - (sodapoppin) - February 5, 2022"
-  t_start: "04:45:37"
-  t_end: "05:49:36"
+# - video: data/sodapoppin/2022-02/1287121413
+#   title: "Warm Snow w/ Chat - (sodapoppin) - February 4, 2022"
+#   t_start: "06:04:38"
+#   t_end: "09:02:20"
 
 
+# - video: data/sodapoppin/2022-02/1288278179
+#   title: "Chance Does a Puzzle Box w/ Chat - (sodapoppin) - February 5, 2022"
+#   t_start: "00:11:06"
+#   t_end: "00:19:29"
+
+# - video: data/sodapoppin/2022-02/1288278179
+#   title: "Bloodborne PSX w/ Chat - (sodapoppin) - February 5, 2022"
+#   t_start: "00:49:34"
+#   t_end: "02:15:19"
+
+# - video: data/sodapoppin/2022-02/1288278179
+#   title: "Chat's Party w/ Chat - (sodapoppin) - February 5, 2022"
+#   t_start: "02:15:24"
+#   t_end: "02:24:28"
+
+# - video: data/sodapoppin/2022-02/1288278179
+#   title: "SCP: Nine-Tailed Fox w/ Chat - (sodapoppin) - February 5, 2022"
+#   t_start: "02:26:45"
+#   t_end: "03:24:09"
+
+# - video: data/sodapoppin/2022-02/1288278179
+#   title: "Deflector w/ Chat - (sodapoppin) - February 5, 2022"
+#   t_start: "03:24:09"
+#   t_end: "03:44:28"
+
+# - video: data/sodapoppin/2022-02/1288278179
+#   title: "Pepo w/ Chat - (sodapoppin) - February 5, 2022"
+#   t_start: "03:45:27"
+#   t_end: "04:00:15"
+
+# - video: data/sodapoppin/2022-02/1288278179
+#   title: "Ghost (horror) w/ Chat - (sodapoppin) - February 5, 2022"
+#   t_start: "04:07:46"
+#   t_end: "04:32:22"
+
+# - video: data/sodapoppin/2022-02/1288278179
+#   title: "Experiment: Groceries (horror) w/ Chat - (sodapoppin) - February 5, 2022"
+#   t_start: "04:33:30"
+#   t_end: "04:45:37"
+
+# - video: data/sodapoppin/2022-02/1288278179
+#   title: "Serious Sam: Siberian Mayhem w/ Chat - (sodapoppin) - February 5, 2022"
+#   t_start: "04:45:37"
+#   t_end: "05:49:36"
 
 
 
-- video: data/sodapoppin/2022-02/1289525555
-  title: "Sifu w/ Chat (reupload) - (sodapoppin) - February 6, 2022"
-  t_start: "01:26:01"
-  t_end: "04:02:20"
 
-- video: data/sodapoppin/2022-02/1291414562
-  title: "Lost Ark w/ Chat - Part 1 (sodapoppin) - February 8, 2022"
-  t_start: "00:03:07"
-  t_end: "01:43:42"
 
-- video: data/sodapoppin/2022-02/1291535231
-  title: "Lost Ark w/ Chat - Part 2 (sodapoppin) - February 8, 2022"
+# - video: data/sodapoppin/2022-02/1289525555
+#   title: "Sifu w/ Chat (reupload) - (sodapoppin) - February 6, 2022"
+#   t_start: "01:26:01"
+#   t_end: "04:02:20"
+
+# - video: data/sodapoppin/2022-02/1291414562
+#   title: "Lost Ark w/ Chat - Part 1 (sodapoppin) - February 8, 2022"
+#   t_start: "00:03:07"
+#   t_end: "01:43:42"
+
+# - video: data/sodapoppin/2022-02/1291535231
+#   title: "Lost Ark w/ Chat - Part 2 (sodapoppin) - February 8, 2022"
+#   t_start: "00:00:00"
+#   t_end: "04:42:05"
+
+# - video: data/sodapoppin/2022-02/1291535231
+#   title: "Lost Ark w/ Chat - Part 3 (sodapoppin) - February 8, 2022"
+#   t_start: "04:42:05"
+#   t_end: "08:03:40"
+
+# - video: data/sodapoppin/2022-02/1292647196
+#   title: "Lost Ark w/ Chat - Part 4 (sodapoppin) - February 9, 2022"
+#   t_start: "00:01:35"
+#   t_end: "02:35:10"
+
+# - video: data/sodapoppin/2022-02/1292647196
+#   title: "Chance Watches Nintendo Direct w/ Chat - (sodapoppin) - February 9, 2022"
+#   t_start: "02:35:10"
+#   t_end: "03:15:49"
+
+# - video: data/sodapoppin/2022-02/1292647196
+#   title: "Lost Ark w/ Chat - Part 5 (sodapoppin) - February 9, 2022"
+#   t_start: "03:21:57"
+#   t_end: "07:37:57"
+
+# - video: data/sodapoppin/2022-02/1292647196
+#   title: "Lost Ark w/ Chat - Part 6 (sodapoppin) - February 9, 2022"
+#   t_start: "07:37:57"
+#   t_end: "11:04:10"
+
+
+# # https://www.twitch.tv/videos/1290944320?filter=archives&sort=time
+# # 1290944320
+# - video: data/skippypoppin/2022-02/1290944320
+#   title: "Chance and Veibae Play Games (no voice) - (skippypoppin) - February 7, 2022"
+#   t_start: "01:18:09"
+#   t_end: "06:51:00"
+
+
+# - video: data/sodapoppin/2022-02/1297326392
+#   title: "Lost Ark w/ Chat - Part 7 (sodapoppin) - February 13, 2022"
+#   t_start: "00:06:08"
+#   t_end: "08:27:20"
+
+# - video: data/sodapoppin/2022-02/1298317686
+#   title: "Lost Ark w/ Chat - Part 8 (sodapoppin) - February 14, 2022"
+#   t_start: "00:00:07"
+#   t_end: "04:17:10"
+
+# - video: data/sodapoppin/2022-02/1301035763
+#   title: "Lost Ark w/ Chat - Part 8 (sodapoppin) - February 17, 2022"
+#   t_start: "00:09:07,06:21:13,07:40:49,08:52:57,09:11:44"
+#   t_end: "06:00:02,07:19:52,08:44:10,09:10:40,09:37:38"
+
+
+
+
+# - video: data/sodapoppin/2022-02/1302444390
+#   title: "Dark Roll: Free Kick Challenge w/ Chat - (sodapoppin) - February 18, 2022"
+#   t_start: "03:09:54"
+#   t_end: "03:30:16"
+
+# - video: data/sodapoppin/2022-02/1302444390
+#   title: "Golf It! w/ Chat - (sodapoppin) - February 18, 2022"
+#   t_start: "03:30:16"
+#   t_end: "04:01:09"
+
+# - video: data/sodapoppin/2022-02/1302444390
+#   title: "Roblox w/ Chat - (sodapoppin) - February 18, 2022"
+#   t_start: "04:01:12"
+#   t_end: "04:20:43"
+
+# - video: data/sodapoppin/2022-02/1302444390
+#   title: "Crab Game w/ Chat - (sodapoppin) - February 18, 2022"
+#   t_start: "04:27:56"
+#   t_end: "04:53:09"
+
+# - video: data/sodapoppin/2022-02/1302444390
+#   title: "Vampire Survivors w/ Chat - (sodapoppin) - February 18, 2022"
+#   t_start: "04:53:09"
+#   t_end: "05:22:30"
+
+# - video: data/sodapoppin/2022-02/1302780041
+#   title: "Vampire Survivors (low bitrate) w/ Chat - (sodapoppin) - February 18, 2022"
+#   t_start: "00:00:00"
+#   t_end: "00:06:27"
+
+
+
+# - video: data/sodapoppin/2022-02/1303767830
+#   title: "Gang Beasts with Erob, Zoil, and Russel w/ Chat - (sodapoppin) - February 19, 2022"
+#   t_start: "00:24:24"
+#   t_end: "01:26:44"
+
+# - video: data/sodapoppin/2022-02/1303767830
+#   title: "Dark Deception (horror) w/ Chat - (sodapoppin) - February 19, 2022"
+#   t_start: "01:45:56"
+#   t_end: "02:45:48"
+
+# - video: data/sodapoppin/2022-02/1303767830
+#   title: "OlliOlli World w/ Chat - (sodapoppin) - February 19, 2022"
+#   t_start: "02:47:34"
+#   t_end: "03:11:17"
+
+# - video: data/sodapoppin/2022-02/1303767830
+#   title: "Ouija Rumours (horror) w/ Chat - (sodapoppin) - February 19, 2022"
+#   t_start: "03:12:42"
+#   t_end: "03:36:07"
+
+# - video: data/sodapoppin/2022-02/1303767830
+#   title: "Blood West (horror) w/ Chat - (sodapoppin) - February 19, 2022"
+#   t_start: "03:36:54"
+#   t_end: "05:49:09"
+
+
+
+# - video: data/sodapoppin/2022-02/1304619199
+#   title: "Dark Souls III Convergence w/ Chat - Part 1 (sodapoppin) - February 20, 2022"
+#   t_start: "00:38:01"
+#   t_end: "07:19:29"
+
+# - video: data/sodapoppin/2022-02/1305506739
+#   title: "Naraka: Bladepoint #ad w/ Chat - (sodapoppin) - February 21, 2022"
+#   t_start: "01:16:07"
+#   t_end: "03:27:00"
+
+# - video: data/sodapoppin/2022-02/1305506739
+#   title: "Dark Souls III Convergence w/ Chat - Part 2 (sodapoppin) - February 21, 2022"
+#   t_start: "03:27:00"
+#   t_end: "06:54:50"
+
+
+# - video: data/sodapoppin/2022-02/1307680661
+#   title: "ShellShock Live w/ Chat - (sodapoppin) - February 23, 2022"
+#   t_start: "00:29:03"
+#   t_end: "00:53:39"
+
+# - video: data/sodapoppin/2022-02/1307680661
+#   title: "Parkour Tag w/ Chat - (sodapoppin) - February 23, 2022"
+#   t_start: "01:01:17"
+#   t_end: "01:15:04"
+
+# - video: data/sodapoppin/2022-02/1307680661
+#   title: "Lethal League Blaze w/ Chat - (sodapoppin) - February 23, 2022"
+#   t_start: "01:21:36"
+#   t_end: "02:00:17"
+
+# - video: data/sodapoppin/2022-02/1307680661
+#   title: "Warcraft III w/ Chat - (sodapoppin) - February 23, 2022"
+#   t_start: "02:02:31"
+#   t_end: "03:15:55"
+
+# - video: data/sodapoppin/2022-02/1307680661
+#   title: "For The King w/ Chat - (sodapoppin) - February 23, 2022"
+#   t_start: "04:58:18"
+#   t_end: "06:16:09"
+
+# - video: data/sodapoppin/2022-02/1406556029
+#   title: "Elden Ring w/ Chat - Part 1 (sodapoppin) - February 24, 2022"
+#   t_start: "00:08:28"
+#   t_end: "04:24:00"
+
+
+
+
+# - video: data/sodapoppin/2022-02/1406971733
+#   title: "Elden Ring w/ Chat - Part 2 (sodapoppin) - February 24, 2022"
+#   t_start: "00:00:29"
+#   t_end: "02:34:30"
+
+
+
+# - video: data/sodapoppin/2022-02/1407796438
+#   title: "Chance Reacts to I Hired Actors to Replace My Friends - (sodapoppin) - February 25, 2022"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=77l0IJLOsRs"
+#   t_start: "00:04:01"
+#   t_end: "00:25:53"
+
+# - video: data/sodapoppin/2022-02/1407796438
+#   title: "Elden Ring w/ Chat - Part 3 (sodapoppin) - February 25, 2022"
+#   t_start: "00:24:16"
+#   t_end: "07:37:19"
+
+# - video: data/sodapoppin/2022-02/1408288129
+#   title: "Elden Ring w/ Chat - Part 4 (sodapoppin) - February 25, 2022"
+#   t_start: "00:00:22"
+#   t_end: "06:48:37"
+
+# - video: data/sodapoppin/2022-02/1408288129
+#   title: "Elden Ring w/ Chat - Part 5 (sodapoppin) - February 25, 2022"
+#   t_start: "06:48:37"
+#   t_end: "14:21:40"
+
+
+
+# - video: data/sodapoppin/2022-02/1409972545
+#   title: "Elden Ring w/ Chat - Part 6 (sodapoppin) - February 27, 2022"
+#   t_start: "00:10:03"
+#   t_end: "07:24:30"
+
+# - video: data/sodapoppin/2022-02/1410982219
+#   title: "Elden Ring w/ Chat - Part 7 (sodapoppin) - February 28, 2022"
+#   t_start: "00:14:38"
+#   t_end: "08:40:50"
+
+
+
+# # https://www.twitch.tv/videos/1412535358?filter=archives&sort=time
+# # 1412535358
+
+# - video: data/skippypoppin/2022-03/1412535358
+#   title: "Elden Ring Coop with Veibae w/ Chat - (skippypoppin) - March 1, 2022"
+#   t_start: "00:06:01"
+#   t_end: "02:57:26"
+
+# - video: data/skippypoppin/2022-03/1412535358
+#   title: "Dark Roll: Free Kick Challenge with Veibae w/ Chat - (skippypoppin) - March 1, 2022"
+#   t_start: "02:58:14"
+#   t_end: "03:08:11"
+
+# - video: data/skippypoppin/2022-03/1412535358
+#   title: "Hand Simulator with Veibae w/ Chat - (skippypoppin) - March 1, 2022"
+#   t_start: "03:08:11"
+#   t_end: "03:20:48"
+
+# - video: data/skippypoppin/2022-03/1412535358
+#   title: "Spy Party with Veibae w/ Chat - (skippypoppin) - March 1, 2022"
+#   t_start: "03:25:15"
+#   t_end: "04:10:26"
+
+# - video: data/skippypoppin/2022-03/1412535358
+#   title: "Wanba Warriors with Veibae w/ Chat - (skippypoppin) - March 1, 2022"
+#   t_start: "04:10:27"
+#   t_end: "04:40:10"
+
+
+
+
+# - video: data/sodapoppin/2022-03/1413281523
+#   title: "Elden Ring w/ Chat - Part 7 (sodapoppin) - March 2, 2022"
+#   t_start: "00:08:06"
+#   t_end: "07:24:40"
+
+# - video: data/sodapoppin/2022-03/1414283244
+#   title: "Elden Ring w/ Chat - Part 8 (sodapoppin) - March 3, 2022"
+#   t_start: "00:13:30"
+#   t_end: "05:24:00"
+
+# - video: data/sodapoppin/2022-03/1415323353
+#   title: "Elden Ring w/ Chat - (sodapoppin) - Part 9 March 4, 2022"
+#   t_start: "00:03:47"
+#   t_end: "05:16:02"
+
+# - video: data/sodapoppin/2022-03/1416447296
+#   title: "Elden Ring w/ Chat - Part 11 (sodapoppin) - March 5, 2022"
+#   t_start: "00:08:05"
+#   t_end: "04:04:10"
+
+# - video: data/sodapoppin/2022-03/1417720593
+#   title: "Elden Ring w/ Chat - Part 12 (sodapoppin) - March 6, 2022"
+#   t_start: "00:02:28"
+#   t_end: "06:49:00"
+
+
+
+# - video: data/sodapoppin/2022-03/1418668525
+#   title: "Elden Ring w/ Chat - Part 13 (sodapoppin) - March 7, 2022"
+#   t_start: "00:03:30"
+#   t_end: "06:49:40"
+
+
+
+# # ===========================================
+# # https://www.twitch.tv/sodapoppin/videos?filter=all
+# # ===========================================
+
+
+# - video: data/sodapoppin/2022-03/1420456400
+#   title: "Super Auto Pets w/ Chat - (sodapoppin) - March 9, 2022"
+#   t_start: "00:25:26"
+#   t_end: "04:28:59"
+
+# - video: data/sodapoppin/2022-03/1420456400
+#   title: "Risk of Rain 2 New DLC Survivors of the Void w/ Chat - (sodapoppin) - March 9, 2022"
+#   t_start: "04:28:59"
+#   t_end: "08:37:40"
+
+
+# - video: data/sodapoppin/2022-03/1422622315
+#   title: "Chance Reacts to Channel 5 The Peoples Convoy w/ Chat - (sodapoppin) - March 11, 2022"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=sKcJrBRVZn4"
+#   t_start: "00:43:51"
+#   t_end: "01:53:25"
+
+# - video: data/sodapoppin/2022-03/1422622315
+#   title: "Risk of Rain 2 New DLC Survivors of the Void w/ Chat - (sodapoppin) - March 11, 2022"
+#   t_start: "01:53:25"
+#   t_end: "05:40:56"
+
+# - video: data/sodapoppin/2022-03/1422622315
+#   title: "Mario Kart 8 Deluxe w/ Chat - (sodapoppin) - March 11, 2022"
+#   t_start: "05:41:17"
+#   t_end: "07:25:00"
+
+
+# # ===========================================
+# # https://www.twitch.tv/sodapoppin/videos?filter=all
+# # ===========================================
+
+# - video: data/sodapoppin/2022-03/1423693906
+#   title: "Aperture Desk Job w/ Chat - (sodapoppin) - March 12, 2022"
+#   t_start: "00:57:31"
+#   t_end: "01:27:39"
+
+# - video: data/sodapoppin/2022-03/1423693906
+#   title: "Bad Cat w/ Chat - (sodapoppin) - March 12, 2022"
+#   t_start: "01:29:09"
+#   t_end: "01:40:05"
+
+# - video: data/sodapoppin/2022-03/1423693906
+#   title: "Iron Lung (horror) w/ Chat - (sodapoppin) - March 12, 2022"
+#   t_start: "01:40:57"
+#   t_end: "02:45:33"
+
+# - video: data/sodapoppin/2022-03/1423693906
+#   title: "Have a Nice Death w/ Chat - (sodapoppin) - March 12, 2022"
+#   t_start: "02:47:21"
+#   t_end: "03:43:42"
+
+
+
+# - video: data/sodapoppin/2022-03/1425758887
+#   title: "SpyParty with Veibae w/ Chat - (sodapoppin) - March 14, 2022"
+#   t_start: "00:31:06"
+#   t_end: "00:55:24"
+
+# - video: data/sodapoppin/2022-03/1425758887
+#   title: "Monopoly Plus with Friends w/ Chat - (sodapoppin) - March 14, 2022"
+#   t_start: "00:55:22"
+#   t_end: "04:06:03"
+
+# - video: data/sodapoppin/2022-03/1425758887
+#   title: "GunBound with Friends w/ Chat - (sodapoppin) - March 14, 2022"
+#   t_start: "04:06:03"
+#   t_end: "05:33:59"
+
+
+
+# - video: data/sodapoppin/2022-03/1427681184
+#   title: "Chance Reacts to Livestreamfails w/ Chat - (sodapoppin) - March 16, 2022"
+#   t_start: "00:12:22"
+#   t_end: "00:27:10"
+# - video: data/sodapoppin/2022-03/1427681184
+#   title: "Tunic w/ Chat - (sodapoppin) - March 16, 2022"
+#   t_start: "00:38:28"
+#   t_end: "01:15:10"
+# - video: data/sodapoppin/2022-03/1427681184
+#   title: "Mario Kart 8 Delux OTK Gamenight w/ Chat - (sodapoppin) - March 16, 2022"
+#   t_start: "01:15:10"
+#   t_end: "04:27:00"
+# - video: data/sodapoppin/2022-03/1427681184
+#   title: "Golf it! OTK Gamenight w/ Chat - (sodapoppin) - March 16, 2022"
+#   t_start: "04:27:00"
+#   t_end: "06:08:24"
+# - video: data/sodapoppin/2022-03/1427681184
+#   title: "GunBound with Friends w/ Chat - (sodapoppin) - March 16, 2022"
+#   t_start: "06:08:24"
+#   t_end: "08:32:00"
+
+
+# - video: data/sodapoppin/2022-03/1428659761
+#   title: "Chance Reacts to Sony State of Play w/ Chat - (sodapoppin) - March 17, 2022"
+#   t_start: "00:11:08"
+#   t_end: "00:38:25"
+
+# - video: data/sodapoppin/2022-03/1428659761
+#   title: "Rounds w/ Chat - (sodapoppin) - March 17, 2022"
+#   t_start: "00:38:52"
+#   t_end: "02:01:44"
+
+# - video: data/sodapoppin/2022-03/1428659761
+#   title: "Nidhogg 2 w/ Chat - (sodapoppin) - March 17, 2022"
+#   t_start: "02:01:37"
+#   t_end: "02:37:19"
+
+# - video: data/sodapoppin/2022-03/1428659761
+#   title: "Depth w/ Chat - (sodapoppin) - March 17, 2022"
+#   t_start: "02:41:45"
+#   t_end: "03:17:21"
+
+# - video: data/sodapoppin/2022-03/1428659761
+#   title: "Core Keeper w/ Chat - (sodapoppin) - March 17, 2022"
+#   t_start: "03:17:37"
+#   t_end: "06:01:50"
+
+
+# - video: data/sodapoppin/2022-03/1429430247
+#   title: "OTK League Tournament w/ Chat - (sodapoppin) - March 18, 2022"
+#   t_start: "00:20:37"
+#   t_end: "07:54:40"
+
+
+
+
+# - video: data/sodapoppin/2022-03/1431648955
+#   title: "The Closing Shift (horror) w/ Chat - (sodapoppin) - March 20, 2022"
+#   t_start: "00:28:36"
+#   t_end: "02:16:55"
+
+# - video: data/sodapoppin/2022-03/1431648955
+#   title: "Out of Sight (horror) w/ Chat - (sodapoppin) - March 20, 2022"
+#   t_start: "02:17:28"
+#   t_end: "02:26:28"
+
+# - video: data/sodapoppin/2022-03/1431648955
+#   title: "The Shopping List (indie horror) w/ Chat - (sodapoppin) - March 20, 2022"
+#   t_start: "02:28:09"
+#   t_end: "03:19:29"
+
+# - video: data/sodapoppin/2022-03/1431648955
+#   title: "GoodNight (horror) w/ Chat - (sodapoppin) - March 20, 2022"
+#   t_start: "03:20:40"
+#   t_end: "03:41:56"
+
+# - video: data/sodapoppin/2022-03/1431648955
+#   title: "Shrek Wazouski (indie horror) w/ Chat - (sodapoppin) - March 20, 2022"
+#   t_start: "03:42:01"
+#   t_end: "03:50:22"
+
+# - video: data/sodapoppin/2022-03/1431648955
+#   title: "Cleaning Red Ville (horror) w/ Chat - (sodapoppin) - March 20, 2022"
+#   t_start: "03:49:56"
+#   t_end: "04:12:07"
+
+# - video: data/sodapoppin/2022-03/1431648955
+#   title: "Sponge Massacre (indie horror) w/ Chat - (sodapoppin) - March 20, 2022"
+#   t_start: "04:12:54"
+#   t_end: "04:24:02"
+
+# - video: data/sodapoppin/2022-03/1431648955
+#   title: "Slendergus (indie horror) w/ Chat - (sodapoppin) - March 20, 2022"
+#   t_start: "04:23:53"
+#   t_end: "04:32:27"
+
+# - video: data/sodapoppin/2022-03/1431648955
+#   title: "Chance Checks Livestreamfails w/ Chat - (sodapoppin) - March 20, 2022"
+#   t_start: "04:33:49"
+#   t_end: "04:37:21"
+
+# - video: data/sodapoppin/2022-03/1431648955
+#   title: "Martha Is Dead (horror) w/ Chat - (sodapoppin) - March 20, 2022"
+#   t_start: "04:37:20"
+#   t_end: "05:12:40"
+
+
+
+
+
+
+# - video: data/skippypoppin/2022-03/1421759928
+#   title: "Portal 2 with Veibae w/ Chat - (skippypoppin) - March 10, 2022"
+#   t_start: "00:00:00"
+#   t_end: "02:20:39"
+
+# - video: data/skippypoppin/2022-03/1421759928
+#   title: "Super Auto Pets with Veibae w/ Chat - (skippypoppin) - March 10, 2022"
+#   t_start: "02:20:39"
+#   t_end: "02:59:44"
+
+# - video: data/skippypoppin/2022-03/1421759928
+#   title: "Phasmophobia with Veibae w/ Chat - (skippypoppin) - March 10, 2022"
+#   t_start: "03:15:31"
+#   t_end: "05:01:30"
+
+
+
+
+
+# - video: data/sodapoppin/2022-03/1432526646
+#   title: "Chance Reminisces About Middle School w/ Chat - (sodapoppin) - March 21, 2022"
+#   t_start: "00:13:09"
+#   t_end: "00:35:52"
+
+# - video: data/sodapoppin/2022-03/1432526646
+#   title: "Mario Kart 8 Deluxe w/ Chat - (sodapoppin) - March 21, 2022"
+#   t_start: "00:48:10"
+#   t_end: "02:07:26"
+
+# - video: data/sodapoppin/2022-03/1432526646
+#   title: "Super Auto Pets w/ Chat - (sodapoppin) - March 21, 2022"
+#   t_start: "02:07:04"
+#   t_end: "04:46:10"
+
+
+
+# - video: data/sodapoppin/2022-03/1433421553
+#   title: "Chance Talks About Texas Storm w/ Chat - (sodapoppin) - March 22, 2022"
+#   t_start: "00:22:49"
+#   t_end: "00:27:53"
+
+# - video: data/sodapoppin/2022-03/1433421553
+#   title: "Super Auto Pets w/ Chat - (sodapoppin) - March 22, 2022"
+#   t_start: "00:26:27"
+#   t_end: "02:40:39"
+
+# - video: data/sodapoppin/2022-03/1433421553
+#   title: "League of Legends w/ Chat - (sodapoppin) - March 22, 2022"
+#   t_start: "02:39:00"
+#   t_end: "06:35:48"
+
+
+
+# - video: data/sodapoppin/2022-03/1434640053
+#   title: "Vampire Survivors (NEW UPDATE) w/ Chat - (sodapoppin) - March 23, 2022"
+#   t_start: "00:15:44"
+#   t_end: "01:01:02"
+
+# - video: data/sodapoppin/2022-03/1434640053
+#   title: "OTK Game Night Mario Kart 8 Deluxe w/ Chat - (sodapoppin) - March 23, 2022"
+#   t_start: "01:00:48"
+#   t_end: "03:08:20"
+
+# - video: data/sodapoppin/2022-03/1434640053
+#   title: "Super Auto Pets w/ Chat - (sodapoppin) - March 23, 2022"
+#   t_start: "03:10:51"
+#   t_end: "04:31:59"
+
+# - video: data/sodapoppin/2022-03/1434640053
+#   title: "Slay the Spire w/ Chat - (sodapoppin) - March 23, 2022"
+#   t_start: "04:32:54"
+#   t_end: "04:41:55"
+
+# - video: data/sodapoppin/2022-03/1434640053
+#   title: "Who Wants to Be a Millionaire w/ Chat - (sodapoppin) - March 23, 2022"
+#   t_start: "04:41:56"
+#   t_end: "04:47:17"
+
+# - video: data/sodapoppin/2022-03/1434640053
+#   title: "League of Legends w/ Chat - (sodapoppin) - March 23, 2022"
+#   t_start: "04:47:19"
+#   t_end: "06:28:00"
+
+
+
+
+# - video: data/sodapoppin/2022-03/1436345034
+#   title: "Chance Reacts to Fun Maps that Describe Our World w/ Chat - (sodapoppin) - March 25, 2022"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=ApcltGAlxTw"
+#   t_start: "00:25:17"
+#   t_end: "00:52:51"
+
+# - video: data/sodapoppin/2022-03/1436345034
+#   title: "Chance Reacts to Yama Q w/ Chat - (sodapoppin) - March 25, 2022"
+#   description: "Yama Q Channel:\nhttps://www.youtube.com/channel/UC20ED07lWsx3ahgG4y1H3iQ"
+#   t_start: "00:52:51"
+#   t_end: "01:17:23"
+
+# - video: data/sodapoppin/2022-03/1436345034
+#   title: "GhostWire: Tokyo w/ Chat - (sodapoppin) - March 25, 2022"
+#   t_start: "01:17:48"
+#   t_end: "05:41:23"
+
+# - video: data/sodapoppin/2022-03/1436345034
+#   title: "Chance Reacts Inbred Family-The Whittakers w/ Chat - (sodapoppin) - March 25, 2022"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=nkGiFpJC9LM"
+#   t_start: "05:43:02"
+#   t_end: "05:55:16"
+
+# - video: data/sodapoppin/2022-03/1436345034
+#   title: "Super Auto Pets w/ Chat - (sodapoppin) - March 25, 2022"
+#   t_start: "05:55:16"
+#   t_end: "06:30:13"
+
+# - video: data/sodapoppin/2022-03/1436345034
+#   title: "League of Legends w/ Chat - (sodapoppin) - March 25, 2022"
+#   t_start: "06:58:23"
+#   t_end: "08:14:06"
+
+
+
+# - video: data/sodapoppin/2022-03/1437540185
+#   title: "Hoverkittty Hoververse w/ Chat - (sodapoppin) - March 26, 2022"
+#   t_start: "01:23:25"
+#   t_end: "01:46:35"
+
+# - video: data/sodapoppin/2022-03/1437540185
+#   title: "New Scuffed Bhop Simulation w/ Chat - (sodapoppin) - March 26, 2022"
+#   t_start: "01:48:03"
+#   t_end: "02:10:01"
+
+# - video: data/sodapoppin/2022-03/1437540185
+#   title: "Anno Mutationem w/ Chat - (sodapoppin) - March 26, 2022"
+#   t_start: "02:12:28"
+#   t_end: "02:47:40"
+
+# - video: data/sodapoppin/2022-03/1437540185
+#   title: "No Lights 2 w/ Chat - (sodapoppin) - March 26, 2022"
+#   t_start: "03:13:13"
+#   t_end: "03:21:49"
+
+# - video: data/sodapoppin/2022-03/1437540185
+#   title: "Seraph's Last Stand w/ Chat - (sodapoppin) - March 26, 2022"
+#   t_start: "03:22:04"
+#   t_end: "03:59:13"
+
+# - video: data/sodapoppin/2022-03/1437540185
+#   title: "Pill Baby w/ Chat - (sodapoppin) - March 26, 2022"
+#   t_start: "04:02:27"
+#   t_end: "04:24:07"
+
+# - video: data/sodapoppin/2022-03/1437540185
+#   title: "The Lost and The Wicked w/ Chat - (sodapoppin) - March 26, 2022"
+#   t_start: "04:34:25"
+#   t_end: "04:48:23"
+
+# - video: data/sodapoppin/2022-03/1437540185
+#   title: "Expedition Zero w/ Chat - (sodapoppin) - March 26, 2022"
+#   t_start: "05:02:03"
+#   t_end: "05:17:17"
+
+# - video: data/sodapoppin/2022-03/1437540185
+#   title: "Slender: The Eight Pages (horror) w/ Chat - (sodapoppin) - March 26, 2022"
+#   t_start: "05:18:54"
+#   t_end: "05:28:29"
+
+# - video: data/sodapoppin/2022-03/1437540185
+#   title: "Slenderman: Mirror World (horror) w/ Chat - (sodapoppin) - March 26, 2022"
+#   t_start: "05:29:54"
+#   t_end: "05:58:21"
+
+
+# - video: data/sodapoppin/2022-03/1438436584
+#   title: "League of Legends with Veibae w/ Chat - (sodapoppin) - March 27, 2022"
+#   t_start: "02:13:07,04:22:15"
+#   t_end: "04:13:18,05:53:00"
+
+# - video: data/sodapoppin/2022-03/1438436584
+#   title: "Phasmophobia with Veibae w/ Chat - (sodapoppin) - March 27, 2022"
+#   t_start: "05:53:00"
+#   t_end: "06:48:18"
+
+
+
+# - video: data/sodapoppin/2022-03/1439438948
+#   title: "Chance Drink Tier Lists w/ Chat - (sodapoppin) - March 28, 2022"
+#   t_start: "00:24:44"
+#   t_end: "00:40:27"
+
+# - video: data/sodapoppin/2022-03/1439438948
+#   title: "For The King w/ Chat - (sodapoppin) - March 28, 2022"
+#   t_start: "00:40:27"
+#   t_end: "01:11:24"
+
+# - video: data/sodapoppin/2022-03/1439438948
+#   title: "Super Auto Pets w/ Chat - (sodapoppin) - March 28, 2022"
+#   t_start: "01:11:24"
+#   t_end: "01:33:29"
+
+# - video: data/sodapoppin/2022-03/1439438948
+#   title: "Seraph's Last Stand w/ Chat - (sodapoppin) - March 28, 2022"
+#   t_start: "01:34:17"
+#   t_end: "02:31:40"
+
+# - video: data/sodapoppin/2022-03/1439438948
+#   title: "Vampire Survivors w/ Chat - (sodapoppin) - March 28, 2022"
+#   t_start: "02:31:40"
+#   t_end: "02:59:47"
+
+# - video: data/sodapoppin/2022-03/1439438948
+#   title: "Orcs Must Die! 3 w/ Chat - (sodapoppin) - March 28, 2022"
+#   t_start: "02:59:47"
+#   t_end: "04:00:09"
+
+
+
+
+
+
+# - video: data/sodapoppin/2022-03/1441342474
+#   title: "Orcs Must Die! 3 w/ Chat - (sodapoppin) - March 30, 2022"
+#   t_start: "00:24:06"
+#   t_end: "02:51:54"
+
+# - video: data/sodapoppin/2022-03/1441342474
+#   title: "Risk of Rain 2 w/ Chat - (sodapoppin) - March 30, 2022"
+#   t_start: "02:51:50"
+#   t_end: "03:47:05"
+
+# - video: data/sodapoppin/2022-03/1441342474
+#   title: "Super Auto Pets w/ Chat - (sodapoppin) - March 30, 2022"
+#   t_start: "03:47:05"
+#   t_end: "04:21:41"
+
+# - video: data/sodapoppin/2022-03/1441342474
+#   title: "Gang Beasts with Friends w/ Chat - (sodapoppin) - March 30, 2022"
+#   t_start: "04:21:41,04:33:59"
+#   t_end: "04:31:42,07:08:20"
+
+
+
+# - video: data/sodapoppin/2022-03/1442310109
+#   title: "Midnight Ghost Hunt w/ Chat - (sodapoppin) - March 31, 2022"
+#   t_start: "00:34:40"
+#   t_end: "02:29:09"
+
+# - video: data/sodapoppin/2022-03/1442310109
+#   title: "Longvinter w/ Chat - (sodapoppin) - March 31, 2022"
+#   t_start: "02:29:23"
+#   t_end: "02:51:43"
+
+# - video: data/sodapoppin/2022-03/1442310109
+#   title: "Seraph's Last Stand w/ Chat - (sodapoppin) - March 31, 2022"
+#   t_start: "02:51:43"
+#   t_end: "04:04:35"
+
+# - video: data/sodapoppin/2022-03/1442310109
+#   title: "Risk of Rain 2 w/ Chat - (sodapoppin) - March 31, 2022"
+#   t_start: "04:04:31"
+#   t_end: "05:09:48"
+
+
+
+
+# - video: data/sodapoppin/2022-04/1443390829
+#   title: "Reddit Place w/ Chat - (sodapoppin) - April 1, 2022"
+#   t_start: "00:10:24,03:59:55,05:50:57"
+#   t_end: "02:41:21,04:02:30,05:53:37"
+
+# - video: data/sodapoppin/2022-04/1443390829
+#   title: "Chance Reacts to That Zone Between Area 50 and 52 w/ Chat - (sodapoppin) - April 1, 2022"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=IZ7F6ELO-hQ"
+#   t_start: "03:19:29"
+#   t_end: "03:59:55"
+
+# - video: data/sodapoppin/2022-04/1443390829
+#   title: "Chance Reacts to I Gave My Goldfish $50,000 to Trade Stocks w/ Chat - (sodapoppin) - April 1, 2022"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=USKD3vPD6ZA"
+#   t_start: "04:02:30"
+#   t_end: "04:17:19"
+
+# - video: data/sodapoppin/2022-04/1443390829
+#   title: "Warcraft III w/ Chat - (sodapoppin) - April 1, 2022"
+#   t_start: "04:17:25"
+#   t_end: "05:50:57"
+
+# - video: data/sodapoppin/2022-04/1443390829
+#   title: "Rogue Tower w/ Chat - (sodapoppin) - April 1, 2022"
+#   t_start: "05:53:37"
+#   t_end: "06:30:00"
+
+
+# - video: data/sodapoppin/2022-04/1444314073
+#   title: "Reddit Place w/ Chat - (sodapoppin) - April 2, 2022"
+#   t_start: "00:10:51"
+#   t_end: "05:07:10"
+
+
+
+
+
+
+# - video: data/sodapoppin/2022-04/1445609650
+#   title: "Reddit Place w/ Chat - (sodapoppin) - April 3, 2022"
+#   t_start: "00:04:33,08:02:38"
+#   t_end: "00:17:51,08:17:16"
+
+# - video: data/sodapoppin/2022-04/1445609650
+#   title: "Project Sparrow w/ Chat - (sodapoppin) - April 3, 2022"
+#   t_start: "01:26:17"
+#   t_end: "01:46:36"
+
+# - video: data/sodapoppin/2022-04/1445609650
+#   title: "Seraph's Last Stand w/ Chat - (sodapoppin) - April 3, 2022"
+#   t_start: "01:52:56"
+#   t_end: "02:16:05"
+
+# - video: data/sodapoppin/2022-04/1445609650
+#   title: "Warcraft III w/ Chat - (sodapoppin) - April 3, 2022"
+#   t_start: "02:16:05"
+#   t_end: "05:42:19"
+
+# - video: data/sodapoppin/2022-04/1445609650
+#   title: "Super Auto Pets with Rofgator w/ Chat - (sodapoppin) - April 3, 2022"
+#   t_start: "05:42:19"
+#   t_end: "06:34:55"
+
+# - video: data/sodapoppin/2022-04/1445609650
+#   title: "Forewarned VR with Rofgator, Zzyzx, and Kyo w/ Chat - (sodapoppin) - April 3, 2022"
+#   t_start: "06:34:55"
+#   t_end: "07:55:55"
+
+# - video: data/sodapoppin/2022-04/1445609650
+#   title: "League of Legends with Rofgator and Surefour w/ Chat - (sodapoppin) - April 3, 2022"
+#   t_start: "07:55:55"
+#   t_end: "10:17:10"
+
+
+
+
+# - video: data/sodapoppin/2022-04/1446447128
+#   title: "Reddit Place w/ Chat - (sodapoppin) - April 4, 2022"
+#   t_start: "00:10:12,02:04:37"
+#   t_end: "02:02:05,02:15:12"
+
+# - video: data/sodapoppin/2022-04/1446447128
+#   title: "Seraph's Last Stand w/ Chat - (sodapoppin) - April 4, 2022"
+#   t_start: "02:15:15"
+#   t_end: "02:42:23"
+
+# - video: data/sodapoppin/2022-04/1446447128
+#   title: "Super Auto Pets w/ Chat - (sodapoppin) - April 4, 2022"
+#   t_start: "02:42:23"
+#   t_end: "03:10:52"
+
+# - video: data/sodapoppin/2022-04/1446447128
+#   title: "Risk of Rain 2 w/ Chat - (sodapoppin) - April 4, 2022"
+#   t_start: "03:12:59"
+#   t_end: "04:06:50"
+
+
+
+
+
+
+
+
+# - video: data/sodapoppin/2022-04/1448272581
+#   title: "Chance Tries to Open His Goo w/ Chat - (sodapoppin) - April 6, 2022"
+#   t_start: "00:16:54"
+#   t_end: "00:24:58"
+
+# - video: data/sodapoppin/2022-04/1448272581
+#   title: "Forward: Escape the Fold w/ Chat - (sodapoppin) - April 6, 2022"
+#   t_start: "00:26:20"
+#   t_end: "01:33:14"
+
+# - video: data/sodapoppin/2022-04/1448272581
+#   title: "Enter the Gungeon w/ Chat - (sodapoppin) - April 6, 2022"
+#   t_start: "01:33:26"
+#   t_end: "03:53:54"
+
+# - video: data/sodapoppin/2022-04/1448272581
+#   title: "The Nightmare Inside (horror) w/ Chat - (sodapoppin) - April 6, 2022"
+#   t_start: "03:55:01"
+#   t_end: "04:24:09"
+
+# - video: data/sodapoppin/2022-04/1448272581
+#   title: "Ikai (horror) w/ Chat - (sodapoppin) - April 6, 2022"
+#   t_start: "04:24:59"
+#   t_end: "05:19:00"
+
+
+
+# - video: data/sodapoppin/2022-04/1449328681
+#   title: "Enter the Gungeon w/ Chat - (sodapoppin) - April 7, 2022"
+#   t_start: "00:18:38"
+#   t_end: "01:37:07"
+
+# - video: data/sodapoppin/2022-04/1449328681
+#   title: "Reddit The Place 2022 Summary w/ Chat - (sodapoppin) - April 7, 2022"
+#   t_start: "00:22:00"
+#   t_end: "00:24:41"
+
+# - video: data/sodapoppin/2022-04/1449328681
+#   title: "Forward: Escape the Fold w/ Chat - (sodapoppin) - April 7, 2022"
+#   t_start: "01:36:54"
+#   t_end: "02:23:43"
+
+# - video: data/sodapoppin/2022-04/1449328681
+#   title: "Seraph's Last Stand w/ Chat - (sodapoppin) - April 7, 2022"
+#   t_start: "02:23:43"
+#   t_end: "02:55:32"
+
+# - video: data/sodapoppin/2022-04/1449328681
+#   title: "Vampire Survivors (new update) w/ Chat - (sodapoppin) - April 7, 2022"
+#   t_start: "02:57:12"
+#   t_end: "04:09:39"
+
+# - video: data/sodapoppin/2022-04/1449328681
+#   title: "Super Auto Pets w/ Chat - (sodapoppin) - April 7, 2022"
+#   t_start: "04:09:39"
+#   t_end: "05:07:25"
+
+# - video: data/sodapoppin/2022-04/1449328681
+#   title: "Ikai (horror) w/ Chat - (sodapoppin) - April 7, 2022"
+#   t_start: "05:07:26"
+#   t_end: "06:18:37"
+
+# - video: data/sodapoppin/2022-04/1449328681
+#   title: "Chance Reacts to Adin Ross Dating in VRChat w/ Chat - (sodapoppin) - April 7, 2022"
+#   t_start: "06:18:28"
+#   t_end: "07:30:50"
+
+
+
+# - video: data/sodapoppin/2022-04/1450372800
+#   title: "Era Dream Chapter: I (horror) w/ Chat - (sodapoppin) - April 8, 2022"
+#   t_start: "02:32:06"
+#   t_end: "02:37:15"
+
+# - video: data/sodapoppin/2022-04/1450372800
+#   title: "Eason (horror) w/ Chat - (sodapoppin) - April 8, 2022"
+#   t_start: "02:38:06"
+#   t_end: "03:02:27"
+
+# - video: data/sodapoppin/2022-04/1450372800
+#   title: "The Backrooms: Survival (horror) w/ Chat - (sodapoppin) - April 8, 2022"
+#   t_start: "03:02:55"
+#   t_end: "03:47:15"
+
+# - video: data/sodapoppin/2022-04/1450372800
+#   title: "Lilly Monster (horror?) w/ Chat - (sodapoppin) - April 8, 2022"
+#   t_start: "03:48:03"
+#   t_end: "03:52:59"
+
+# - video: data/sodapoppin/2022-04/1450372800
+#   title: "Araignees (horror) w/ Chat - (sodapoppin) - April 8, 2022"
+#   t_start: "03:53:13"
+#   t_end: "04:21:35"
+
+# - video: data/sodapoppin/2022-04/1450372800
+#   title: "Dead by Daylight w/ Chat - (sodapoppin) - April 8, 2022"
+#   t_start: "04:21:35"
+#   t_end: "06:31:30"
+
+
+
+
+
+
+# - video: data/sodapoppin/2022-04/1451220681
+#   title: "Chance Reacts to Rich, Cyr, Andy in Italy Clips w/ Chat - (sodapoppin) - April 9, 2022"
+#   t_start: "00:10:08"
+#   t_end: "00:11:54"
+
+# - video: data/sodapoppin/2022-04/1451220681
+#   title: "One Night at Shrek's Hotel (horror) w/ Chat - (sodapoppin) - April 9, 2022"
+#   t_start: "01:18:36"
+#   t_end: "01:24:04"
+
+# - video: data/sodapoppin/2022-04/1451220681
+#   title: "Are You Smarter Than the Crowd? w/ Chat - (sodapoppin) - April 9, 2022"
+#   t_start: "01:24:58"
+#   t_end: "01:44:44"
+
+# - video: data/sodapoppin/2022-04/1451220681
+#   title: "Keep it Live (twitch mod sim) w/ Chat - (sodapoppin) - April 9, 2022"
+#   t_start: "01:45:01"
+#   t_end: "02:34:33"
+
+# - video: data/sodapoppin/2022-04/1451220681
+#   title: "Forgive Me Father w/ Chat - (sodapoppin) - April 9, 2022"
+#   t_start: "02:36:06"
+#   t_end: "03:40:00"
+
+# - video: data/sodapoppin/2022-04/1451220681
+#   title: "JANITOR BLEEDS (horror) w/ Chat - (sodapoppin) - April 9, 2022"
+#   t_start: "03:42:41"
+#   t_end: "05:27:49"
+
+# - video: data/sodapoppin/2022-04/1451220681
+#   title: "Office Elevator (horror) w/ Chat - (sodapoppin) - April 9, 2022"
+#   t_start: "05:29:24"
+#   t_end: "05:36:43"
+
+
+# - video: data/sodapoppin/2022-04/1452987659
+#   title: "Chance Reacts to Sseth Elden Ring Review w/ Chat - (sodapoppin) - April 11, 2022"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=bsmk2VMxS4Q"
+#   t_start: "00:17:31"
+#   t_end: "00:30:28"
+
+# - video: data/sodapoppin/2022-04/1452987659
+#   title: "Mini Healer w/ Chat - (sodapoppin) - April 11, 2022"
+#   t_start: "00:49:33"
+#   t_end: "07:34:50"
+
+
+
+
+# - video: data/sodapoppin/2022-04/1469469512
+#   title: "Chance Talks About His Ban w/ Chat - (sodapoppin) - April 28, 2022"
+#   t_start: "00:10:13"
+#   t_end: "00:37:58"
+
+# - video: data/sodapoppin/2022-04/1469469512
+#   title: "The Stanley Parable Ultra Deluxe w/ Chat - (sodapoppin) - April 28, 2022"
+#   t_start: "00:52:20"
+#   t_end: "05:26:15"
+
+# - video: data/sodapoppin/2022-04/1469469512
+#   title: "Eating an Apple w/ Chat - (sodapoppin) - April 28, 2022"
+#   t_start: "05:33:09"
+#   t_end: "05:37:39"
+
+# # - video: data/sodapoppin/2022-04/1469469512
+# #   title: "Chance Reacts Nazralath: The Fallen World w/ Chat - (sodapoppin) - April 28, 2022"
+# #   t_start: "05:37:39"
+# #   t_end: "05:41:43"
+
+# - video: data/sodapoppin/2022-04/1469469512
+#   title: "Mini Healer w/ Chat - (sodapoppin) - April 28, 2022"
+#   t_start: "05:42:30"
+#   t_end: "05:55:00"
+
+# - video: data/sodapoppin/2022-04/1469469512
+#   title: "The House of the Dead Remake w/ Chat - (sodapoppin) - April 28, 2022"
+#   t_start: "05:55:00"
+#   t_end: "06:33:47"
+
+
+# - video: data/sodapoppin/2022-04/1470515178
+#   title: "Peglin w/ Chat - (sodapoppin) - April 29, 2022"
+#   t_start: "00:13:40"
+#   t_end: "02:03:50"
+
+
+
+
+
+
+# - video: data/sodapoppin/2022-04/1470619634
+#   title: "Peglin w/ Chat - (sodapoppin) - April 29, 2022"
+#   t_start: "00:00:00"
+#   t_end: "00:41:54"
+
+# - video: data/sodapoppin/2022-04/1470619634
+#   title: "Mario Kart 8 Deluxe w/ Chat - (sodapoppin) - April 29, 2022"
+#   t_start: "00:54:03"
+#   t_end: "01:47:55"
+
+# - video: data/sodapoppin/2022-04/1470619634
+#   title: "League of Legends w/ Chat - (sodapoppin) - April 29, 2022"
+#   t_start: "01:49:13,15:54:19"
+#   t_end: "04:17:01,21:19:50"
+
+# - video: data/sodapoppin/2022-04/1470619634
+#   title: "Nintendo Switch Sports w/ Chat - (sodapoppin) - April 29, 2022"
+#   t_start: "04:21:19"
+#   t_end: "07:30:24"
+
+# - video: data/sodapoppin/2022-04/1470619634
+#   title: "The Night of the Scissors (indie horror) w/ Chat - (sodapoppin) - April 29, 2022"
+#   t_start: "08:11:13"
+#   t_end: "08:49:58"
+
+# - video: data/sodapoppin/2022-04/1470619634
+#   title: "Fear the Spotlight (indie horror) w/ Chat - (sodapoppin) - April 29, 2022"
+#   t_start: "08:49:58"
+#   t_end: "09:05:02"
+
+# - video: data/sodapoppin/2022-04/1470619634
+#   title: "The Interview (indie horror) w/ Chat - (sodapoppin) - April 29, 2022"
+#   t_start: "09:05:02"
+#   t_end: "09:14:39"
+
+# - video: data/sodapoppin/2022-04/1470619634
+#   title: "Oin At Mcd (indie horror) w/ Chat - (sodapoppin) - April 29, 2022"
+#   t_start: "09:14:39"
+#   t_end: "09:22:33"
+
+# - video: data/sodapoppin/2022-04/1470619634
+#   title: "Filled With Freedom (indie horror) w/ Chat - (sodapoppin) - April 29, 2022"
+#   t_start: "09:22:33"
+#   t_end: "09:31:59"
+
+# - video: data/sodapoppin/2022-04/1470619634
+#   title: "M. Stain (indie horror) w/ Chat - (sodapoppin) - April 29, 2022"
+#   t_start: "09:34:29"
+#   t_end: "09:50:13"
+
+# - video: data/sodapoppin/2022-04/1470619634
+#   title: "Drive Time Radio (indie horror) w/ Chat - (sodapoppin) - April 29, 2022"
+#   t_start: "09:50:13"
+#   t_end: "10:10:02"
+
+# - video: data/sodapoppin/2022-04/1470619634
+#   title: "The Drive (indie horror) w/ Chat - (sodapoppin) - April 29, 2022"
+#   t_start: "10:10:02"
+#   t_end: "10:15:27"
+
+# - video: data/sodapoppin/2022-04/1470619634
+#   title: "Backrooms Buff Doge Horror w/ Chat - (sodapoppin) - April 29, 2022"
+#   t_start: "10:15:38"
+#   t_end: "10:20:17"
+
+# - video: data/sodapoppin/2022-04/1470619634
+#   title: "The Man Man (indie horror?) w/ Chat - (sodapoppin) - April 29, 2022"
+#   t_start: "10:20:17"
+#   t_end: "10:34:12"
+
+# - video: data/sodapoppin/2022-04/1470619634
+#   title: "Contemp (indie horror) w/ Chat - (sodapoppin) - April 29, 2022"
+#   t_start: "10:35:21"
+#   t_end: "13:44:11"
+
+# - video: data/sodapoppin/2022-04/1470619634
+#   title: "New Testament (indie horror) w/ Chat - (sodapoppin) - April 29, 2022"
+#   t_start: "10:44:37"
+#   t_end: "11:03:24"
+
+# - video: data/sodapoppin/2022-04/1470619634
+#   title: "2000 Navidson Lane (indie horror) w/ Chat - (sodapoppin) - April 29, 2022"
+#   t_start: "11:03:24"
+#   t_end: "11:14:27"
+
+# - video: data/sodapoppin/2022-04/1470619634
+#   title: "Under (indie horror) w/ Chat - (sodapoppin) - April 29, 2022"
+#   t_start: "11:14:34"
+#   t_end: "11:29:11"
+
+# - video: data/sodapoppin/2022-04/1470619634
+#   title: "No-Snake Hotel (indie horror) w/ Chat - (sodapoppin) - April 29, 2022"
+#   t_start: "11:29:11"
+#   t_end: "11:38:18"
+
+# - video: data/sodapoppin/2022-04/1470619634
+#   title: "Uncle Nook's (indie horror) VOLUMN WARNING w/ Chat - (sodapoppin) - April 29, 2022"
+#   t_start: "11:41:13"
+#   t_end: "11:48:00"
+
+# - video: data/sodapoppin/2022-04/1470619634
+#   title: "La Villa de la Muerte (horror) w/ Chat - (sodapoppin) - April 29, 2022"
+#   t_start: "11:47:16"
+#   t_end: "12:07:07"
+
+# - video: data/sodapoppin/2022-04/1470619634
+#   title: "Arachnophobia (horror) w/ Chat - (sodapoppin) - April 29, 2022"
+#   t_start: "12:07:07"
+#   t_end: "12:15:33"
+
+# - video: data/sodapoppin/2022-04/1470619634
+#   title: "The Hike (horror) w/ Chat - (sodapoppin) - April 29, 2022"
+#   t_start: "12:15:33"
+#   t_end: "12:59:24"
+
+# - video: data/sodapoppin/2022-04/1470619634
+#   title: "Turbo Overkill w/ Chat - (sodapoppin) - April 29, 2022"
+#   t_start: "13:14:25"
+#   t_end: "15:24:07"
+
+# - video: data/sodapoppin/2022-04/1470619634
+#   title: "Unsouled w/ Chat - (sodapoppin) - April 29, 2022"
+#   t_start: "15:33:28"
+#   t_end: "15:54:03"
+
+
+
+# - video: data/sodapoppin/2022-05/1472311011
+#   title: "World of Warcraft w/ Chat - (sodapoppin) - May 1, 2022"
+#   t_start: "00:27:02"
+#   t_end: "07:46:40"
+
+
+# - video: data/sodapoppin/2022-05/1477784394
+#   title: "Stacklands w/ Chat - (sodapoppin) - May 7, 2022"
+#   t_start: "01:29:59"
+#   t_end: "03:34:25"
+
+# - video: data/sodapoppin/2022-05/1477784394
+#   title: "Nmplol Provides Food w/ Chat - (sodapoppin) - May 7, 2022"
+#   t_start: "02:16:27,04:01:28"
+#   t_end: "02:19:13,04:07:58"
+
+# - video: data/sodapoppin/2022-05/1477784394
+#   title: "The Heilwald Loophole (horror) w/ Chat - (sodapoppin) - May 7, 2022"
+#   t_start: "03:37:17"
+#   t_end: "04:21:52"
+
+# - video: data/sodapoppin/2022-05/1477784394
+#   title: "Shrimp (horror) w/ Chat - (sodapoppin) - May 7, 2022"
+#   t_start: "04:25:15"
+#   t_end: "04:28:49"
+
+# - video: data/sodapoppin/2022-05/1477784394
+#   title: "Chance Reacts to Mitch's Arena w/ Chat - (sodapoppin) - May 7, 2022"
+#   t_start: "04:29:10"
+#   t_end: "04:37:36"
+
+# - video: data/sodapoppin/2022-05/1477784394
+#   title: "Seraph's Last Stand w/ Chat - (sodapoppin) - May 7, 2022"
+#   t_start: "04:45:10"
+#   t_end: "06:03:40"
+
+
+# # ===========================================
+# # https://www.twitch.tv/sodapoppin/videos?filter=all
+# # ===========================================
+
+# - video: data/sodapoppin/2022-05/1489081949
+#   title: "Opening Presents and On Streaming w/ Chat - (sodapoppin) - May 20, 2022"
+#   t_start: "00:06:00,00:31:26"
+#   t_end: "00:14:52,01:01:36"
+
+# - video: data/sodapoppin/2022-05/1489081949
+#   title: "Evil Dead: The Game w/ Chat - (sodapoppin) - May 20, 2022"
+#   t_start: "01:14:03"
+#   t_end: "02:23:31"
+
+
+
+# - video: data/sodapoppin/2022-05/1490045325
+#   title: "Ravenous Devils w/ Chat - (sodapoppin) - May 21, 2022"
+#   t_start: "00:42:01"
+#   t_end: "01:42:19"
+
+# - video: data/sodapoppin/2022-05/1490045325
+#   title: "Prognostic (horror) w/ Chat - (sodapoppin) - May 21, 2022"
+#   t_start: "01:43:39"
+#   t_end: "02:39:29"
+
+# - video: data/sodapoppin/2022-05/1490045325
+#   title: "Ratman (horror) w/ Chat - (sodapoppin) - May 21, 2022"
+#   t_start: "02:41:10"
+#   t_end: "02:55:15"
+
+# - video: data/sodapoppin/2022-05/1490045325
+#   title: "I'm on Observation Duty 5 (horror) w/ Chat - (sodapoppin) - May 21, 2022"
+#   t_start: "02:57:17"
+#   t_end: "03:36:40"
+
+
+
+# - video: data/sodapoppin/2022-05/1311481061
+#   title: "Update on Kevin w/ Chat - (sodapoppin) - May 28, 2022"
+#   t_start: "00:12:03"
+#   t_end: "00:24:21"
+
+# - video: data/sodapoppin/2022-05/1311481061
+#   title: "Warcraft III w/ Chat - (sodapoppin) - May 28, 2022"
+#   t_start: "00:38:50"
+#   t_end: "03:53:09"
+
+# - video: data/sodapoppin/2022-05/1311481061
+#   title: "Super Auto Pets w/ Chat - (sodapoppin) - May 28, 2022"
+#   t_start: "03:54:02"
+#   t_end: "04:38:35"
+
+# - video: data/sodapoppin/2022-05/1311481061
+#   title: "For The King w/ Chat - (sodapoppin) - May 28, 2022"
+#   t_start: "04:42:54"
+#   t_end: "06:34:20"
+
+
+
+# - video: data/sodapoppin/2022-06/1315013360
+#   title: "Chance Reacts to Depp vs Heard w/ Chat - (sodapoppin) - June 1, 2022"
+#   t_start: "01:22:47"
+#   t_end: "01:56:00"
+
+# - video: data/sodapoppin/2022-06/1315013360
+#   title: "Agarta w/ Chat - (sodapoppin) - June 1, 2022"
+#   t_start: "02:08:19"
+#   t_end: "02:21:29"
+
+# - video: data/sodapoppin/2022-06/1315013360
+#   title: "Resident Evil 2 Modded w/ Chat - (sodapoppin) - June 1, 2022"
+#   t_start: "02:21:08"
+#   t_end: "05:39:30"
+
+
+
+
+
+# - video: data/sodapoppin/2022-06/1493531275
+#   title: "Sony State of Play 2022 w/ Chat - (sodapoppin) - June 3, 2022"
+#   t_start: "00:19:54"
+#   t_end: "00:42:00"
+
+# - video: data/sodapoppin/2022-06/1493531275
+#   title: "World of Warcraft w/ Chat - (sodapoppin) - June 3, 2022"
+#   t_start: "00:42:17"
+#   t_end: "06:40:40"
+
+
+
+# - video: data/sodapoppin/2022-06/1494496394
+#   title: "Resident Evil 2 Modded w/ Chat - Part 2 (sodapoppin) - June 4, 2022"
+#   t_start: "00:12:37"
+#   t_end: "03:43:32"
+
+# - video: data/sodapoppin/2022-06/1494496394
+#   title: "The Backrooms 1998 (indie horror) w/ Chat - (sodapoppin) - June 4, 2022"
+#   t_start: "03:43:42"
+#   t_end: "04:21:26"
+
+# - video: data/sodapoppin/2022-06/1494496394
+#   title: "Room Before the Dark (indie horror) w/ Chat - (sodapoppin) - June 4, 2022"
+#   t_start: "04:22:19"
+#   t_end: "04:26:51"
+
+# - video: data/sodapoppin/2022-06/1494496394
+#   title: "Lights Off (indie horror) w/ Chat - (sodapoppin) - June 4, 2022"
+#   t_start: "04:26:51"
+#   t_end: "04:39:13"
+
+# - video: data/sodapoppin/2022-06/1494496394
+#   title: "Dying of Thirst (indie horror) w/ Chat - (sodapoppin) - June 4, 2022"
+#   t_start: "04:39:13"
+#   t_end: "04:43:20"
+
+# - video: data/sodapoppin/2022-06/1494496394
+#   title: "Invasion Vill (indie horror) w/ Chat - (sodapoppin) - June 4, 2022"
+#   t_start: "04:43:33"
+#   t_end: "04:56:47"
+
+# - video: data/sodapoppin/2022-06/1494496394
+#   title: "Dwerve w/ Chat - (sodapoppin) - June 4, 2022"
+#   t_start: "05:15:04"
+#   t_end: "06:31:50"
+
+
+
+
+
+# - video: data/sodapoppin/2022-06/1495566423
+#   title: "World of Warcraft w/ Chat - Part 1 (sodapoppin) - June 5, 2022"
+#   t_start: "00:07:08"
+#   t_end: "02:23:53"
+
+# - video: data/sodapoppin/2022-06/1495697135
+#   title: "World of Warcraft w/ Chat - Part 2 (sodapoppin) - June 5, 2022"
+#   t_start: "00:00:14"
+#   t_end: "05:13:20"
+
+
+
+
+# - video: data/asmongold/2022-06/1498213686
+#   title: "OTK Game Expo Sodapoppin Supercut w/ Chat - June 8, 2022"
+#   t_start: "00:20:03,00:45:18,00:57:38,02:15:14,03:02:57,03:16:44,03:27:04,03:40:12,04:56:59"
+#   t_end: "00:30:45,00:51:08,01:03:53,02:34:10,03:15:41,03:21:49,03:33:11,03:50:40,05:01:01"
+
+
+
+
+# - video: data/sodapoppin/2022-06/1506373551
+#   title: "Chance Reacts to Summer Games Expo w/ Chat - (sodapoppin) - June 17, 2022"
+#   t_start: "00:17:25"
+#   t_end: "01:17:39"
+
+# - video: data/sodapoppin/2022-06/1506373551
+#   title: "Chance Reacts to Devolver Digital Showcase w/ Chat - (sodapoppin) - June 17, 2022"
+#   t_start: "01:17:40"
+#   t_end: "01:39:29"
+
+# - video: data/sodapoppin/2022-06/1506373551
+#   title: "Chance Reacts to Bethesda Xbox Showcase w/ Chat - (sodapoppin) - June 17, 2022"
+#   t_start: "01:39:29"
+#   t_end: "02:18:20"
+
+# - video: data/sodapoppin/2022-06/1506373551
+#   title: "Chance Reacts to CAPCOM Showcase w/ Chat - (sodapoppin) - June 17, 2022"
+#   t_start: "02:18:20"
+#   t_end: "02:35:43"
+
+# - video: data/sodapoppin/2022-06/1506373551
+#   title: "Chance Reacts to PCGamer Showcase w/ Chat - (sodapoppin) - June 17, 2022"
+#   t_start: "02:35:43"
+#   t_end: "03:20:14"
+
+# - video: data/sodapoppin/2022-06/1506373551
+#   title: "20 Minutes Till Dawn w/ Chat - (sodapoppin) - June 17, 2022"
+#   t_start: "03:22:37"
+#   t_end: "05:50:30"
+
+
+
+
+
+# - video: data/sodapoppin/2022-06/1507376114
+#   title: "Chance on WoW Changes w/ Chat - (sodapoppin) - June 18, 2022"
+#   t_start: "00:08:19"
+#   t_end: "00:18:38"
+
+# - video: data/sodapoppin/2022-06/1507376114
+#   title: "20 Minutes Till Dawn w/ Chat - (sodapoppin) - June 18, 2022"
+#   t_start: "00:24:25"
+#   t_end: "00:39:48"
+
+# - video: data/sodapoppin/2022-06/1507376114
+#   title: "Redout 2 w/ Chat - (sodapoppin) - June 18, 2022"
+#   t_start: "00:39:39"
+#   t_end: "01:31:26"
+
+# - video: data/sodapoppin/2022-06/1507376114
+#   title: "Chance Reacts to Dunkey's Anti E3 2022 w/ Chat - (sodapoppin) - June 18, 2022"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=YBD3ExFI9_E"
+#   t_start: "01:32:14"
+#   t_end: "01:43:31"
+
+# - video: data/sodapoppin/2022-06/1507376114
+#   title: "Arruyo (horror) w/ Chat - (sodapoppin) - June 18, 2022"
+#   t_start: "01:47:48"
+#   t_end: "02:01:59"
+
+# - video: data/sodapoppin/2022-06/1507376114
+#   title: "Oxide: Room 104 (horror) w/ Chat - (sodapoppin) - June 18, 2022"
+#   t_start: "02:04:42"
+#   t_end: "02:57:06"
+
+# - video: data/sodapoppin/2022-06/1507376114
+#   title: "Chance Looks at his Twitch Chat Stats w/ Chat - (sodapoppin) - June 18, 2022"
+#   t_start: "02:58:32"
+#   t_end: "03:01:04"
+
+# - video: data/sodapoppin/2022-06/1507376114
+#   title: "The Looker (puzzle) w/ Chat - (sodapoppin) - June 18, 2022"
+#   t_start: "03:02:54"
+#   t_end: "04:38:12"
+
+# - video: data/sodapoppin/2022-06/1507376114
+#   title: "Card Shark w/ Chat - (sodapoppin) - June 18, 2022"
+#   t_start: "04:43:54"
+#   t_end: "05:04:40"
+
+# - video: data/sodapoppin/2022-06/1507376114
+#   title: "Almost Home Now (indie horror) w/ Chat - (sodapoppin) - June 18, 2022"
+#   t_start: "05:05:11"
+#   t_end: "05:10:33"
+
+# - video: data/sodapoppin/2022-06/1507376114
+#   title: "Pac-Man RTX w/ Chat - (sodapoppin) - June 18, 2022"
+#   t_start: "05:10:36"
+#   t_end: "05:13:52"
+
+# - video: data/sodapoppin/2022-06/1507376114
+#   title: "Mr. Hopp's Playhouse 2 (horror) w/ Chat - (sodapoppin) - June 18, 2022"
+#   t_start: "05:16:22"
+#   t_end: "06:00:50"
+
+
+# - video: data/sodapoppin/2022-06/1508289660
+#   title: "The Quarry w/ Chat - Part 1 (sodapoppin) - June 19, 2022"
+#   t_start: "00:13:05"
+#   t_end: "05:24:19"
+
+# - video: data/sodapoppin/2022-06/1509144016
+#   title: "The Quarry w/ Chat - Part 2 (sodapoppin) - June 20, 2022"
+#   t_start: "00:02:52"
+#   t_end: "01:21:29"
+
+# - video: data/sodapoppin/2022-06/1509144016
+#   title: "Rounds w/ Chat - (sodapoppin) - June 20, 2022"
+#   t_start: "01:22:51"
+#   t_end: "02:03:34"
+
+# - video: data/sodapoppin/2022-06/1509144016
+#   title: "Ultimate Chicken Horse w/ Chat - (sodapoppin) - June 20, 2022"
+#   t_start: "02:03:34"
+#   t_end: "02:23:09"
+
+# - video: data/sodapoppin/2022-06/1509144016
+#   title: "20 Minutes Till Dawn w/ Chat - (sodapoppin) - June 20, 2022"
+#   t_start: "02:23:09"
+#   t_end: "02:37:47"
+
+# - video: data/sodapoppin/2022-06/1509144016
+#   title: "Neon White w/ Chat - (sodapoppin) - June 20, 2022"
+#   t_start: "02:40:28"
+#   t_end: "03:32:17"
+
+# - video: data/sodapoppin/2022-06/1509144016
+#   title: "Dead by Daylight w/ Chat - (sodapoppin) - June 20, 2022"
+#   t_start: "03:33:51"
+#   t_end: "04:57:02"
+
+# - video: data/sodapoppin/2022-06/1509144016
+#   title: "Super Auto Pets w/ Chat - (sodapoppin) - June 20, 2022"
+#   t_start: "05:00:15"
+#   t_end: "05:40:40"
+
+
+
+
+
+# - video: data/sodapoppin/2022-06/1512944610
+#   title: "Prestream Updates w/ Chat - (sodapoppin) - June 24, 2022"
+#   t_start: "00:03:36"
+#   t_end: "00:25:44"
+
+# - video: data/sodapoppin/2022-06/1512944610
+#   title: "Fall Guys w/ Chat - (sodapoppin) - June 24, 2022"
+#   t_start: "00:26:03"
+#   t_end: "02:32:47"
+
+# - video: data/sodapoppin/2022-06/1512944610
+#   title: "Hades w/ Chat - (sodapoppin) - June 24, 2022"
+#   t_start: "02:39:12"
+#   t_end: "04:21:33"
+
+# - video: data/sodapoppin/2022-06/1512944610
+#   title: "Spirits of the Hellements w/ Chat - (sodapoppin) - June 24, 2022"
+#   t_start: "04:24:18"
+#   t_end: "05:11:05"
+
+# - video: data/sodapoppin/2022-06/1512944610
+#   title: "Ultimate Chicken Horse w/ Chat - (sodapoppin) - June 24, 2022"
+#   t_start: "05:12:20"
+#   t_end: "05:30:02"
+
+# - video: data/sodapoppin/2022-06/1512944610
+#   title: "Dead by Daylight w/ Chat - (sodapoppin) - June 24, 2022"
+#   t_start: "05:30:02"
+#   t_end: "06:17:20"
+
+
+
+
+
+# - video: data/sodapoppin/2022-06/1513926673
+#   title: "Fadeout: Underground w/ Chat - (sodapoppin) - June 25, 2022"
+#   t_start: "00:09:00"
+#   t_end: "00:19:03"
+
+# - video: data/sodapoppin/2022-06/1513926673
+#   title: "Ilum w/ Chat - (sodapoppin) - June 25, 2022"
+#   t_start: "00:19:39"
+#   t_end: "00:47:15"
+
+# - video: data/sodapoppin/2022-06/1513926673
+#   title: "Vacuum Story w/ Chat - (sodapoppin) - June 25, 2022"
+#   t_start: "00:48:31"
+#   t_end: "01:07:08"
+
+# - video: data/sodapoppin/2022-06/1513926673
+#   title: "Holocure: Save the Fans! w/ Chat - (sodapoppin) - June 25, 2022"
+#   t_start: "01:10:56"
+#   t_end: "01:43:11"
+
+# - video: data/sodapoppin/2022-06/1513926673
+#   title: "Simba the Cat w/ Chat - (sodapoppin) - June 25, 2022"
+#   t_start: "01:42:59"
+#   t_end: "01:49:38"
+
+# - video: data/sodapoppin/2022-06/1513926673
+#   title: "Tower Princess: Knight's Trial w/ Chat - (sodapoppin) - June 25, 2022"
+#   t_start: "01:50:12"
+#   t_end: "02:10:00"
+
+# - video: data/sodapoppin/2022-06/1513926673
+#   title: "Ruggnar w/ Chat - (sodapoppin) - June 25, 2022"
+#   t_start: "02:11:13"
+#   t_end: "02:26:07"
+
+# - video: data/sodapoppin/2022-06/1513926673
+#   title: "Clone Drone in the Danger Zone w/ Chat - (sodapoppin) - June 25, 2022"
+#   t_start: "02:26:30"
+#   t_end: "02:59:51"
+
+# - video: data/sodapoppin/2022-06/1513926673
+#   title: "Reality Simulator w/ Chat - (sodapoppin) - June 25, 2022"
+#   t_start: "02:59:51"
+#   t_end: "03:03:14"
+
+# - video: data/sodapoppin/2022-06/1513926673
+#   title: "Brutal Japan (horror) w/ Chat - (sodapoppin) - June 25, 2022"
+#   t_start: "03:04:07"
+#   t_end: "03:13:41"
+
+# - video: data/sodapoppin/2022-06/1513926673
+#   title: "Viltnemda (horror) w/ Chat - (sodapoppin) - June 25, 2022"
+#   t_start: "03:17:40"
+#   t_end: "03:21:19"
+
+# - video: data/sodapoppin/2022-06/1513926673
+#   title: "Fright Night (horror) w/ Chat - (sodapoppin) - June 25, 2022"
+#   t_start: "03:22:26"
+#   t_end: "03:38:31"
+
+# - video: data/sodapoppin/2022-06/1513926673
+#   title: "Control Room Alpha (horror) w/ Chat - (sodapoppin) - June 25, 2022"
+#   t_start: "03:42:44"
+#   t_end: "03:48:32"
+
+# - video: data/sodapoppin/2022-06/1513926673
+#   title: "They Are Here: Alien Abduction Horror w/ Chat - (sodapoppin) - June 25, 2022"
+#   t_start: "03:50:43"
+#   t_end: "03:58:00"
+
+# - video: data/sodapoppin/2022-06/1513926673
+#   title: "The True Ingredients (horror) w/ Chat - (sodapoppin) - June 25, 2022"
+#   t_start: "03:59:04"
+#   t_end: "04:21:35"
+
+# - video: data/sodapoppin/2022-06/1513926673
+#   title: "Toiletrooms (horror) w/ Chat - (sodapoppin) - June 25, 2022"
+#   t_start: "04:23:24"
+#   t_end: "04:37:10"
+
+# - video: data/sodapoppin/2022-06/1513926673
+#   title: "Loveland (horror) w/ Chat - (sodapoppin) - June 25, 2022"
+#   t_start: "04:38:19"
+#   t_end: "05:09:10"
+
+
+
+# - video: data/sodapoppin/2022-06/1514848877
+#   title: "Fall Guys w/ Chat - (sodapoppin) - June 26, 2022"
+#   t_start: "00:15:26"
+#   t_end: "01:04:14"
+
+# - video: data/sodapoppin/2022-06/1514848877
+#   title: "V Rising w/ Chat - (sodapoppin) - June 26, 2022"
+#   t_start: "01:04:15"
+#   t_end: "04:51:55"
+
+# - video: data/sodapoppin/2022-06/1514848877
+#   title: "Warcraft III w/ Chat - (sodapoppin) - June 26, 2022"
+#   t_start: "04:51:55"
+#   t_end: "06:58:31"
+
+
+
+# - video: data/sodapoppin/2022-06/1516665823
+#   title: "Overwatch w/ Chat - (sodapoppin) - June 28, 2022"
+#   t_start: "00:06:56"
+#   t_end: "00:14:49"
+
+# - video: data/sodapoppin/2022-06/1516665823
+#   title: "Warcraft III w/ Chat - (sodapoppin) - June 28, 2022"
+#   t_start: "00:14:49"
+#   t_end: "02:07:23"
+
+# - video: data/sodapoppin/2022-06/1516665823
+#   title: "Raft with Veibae w/ Chat - (sodapoppin) - June 28, 2022"
+#   t_start: "02:07:23"
+#   t_end: "04:33:22"
+
+# - video: data/sodapoppin/2022-06/1516665823
+#   title: "Valheim with Veibae w/ Chat - (sodapoppin) - June 28, 2022"
+#   t_start: "04:33:22"
+#   t_end: "07:59:20"
+
+
+
+# - video: data/sodapoppin/2022-06/1518637515
+#   title: "Risk of Rain 2 PvP KingKombatArena w/ Chat - (sodapoppin) - June 30, 2022"
+#   t_start: "00:10:01"
+#   t_end: "02:53:02"
+
+# - video: data/sodapoppin/2022-06/1518637515
+#   title: "Cuphead vs Veibae w/ Chat - (sodapoppin) - June 30, 2022"
+#   t_start: "02:53:26"
+#   t_end: "05:49:10"
+
+
+
+
+# - video: data/sodapoppin/2022-07/1524359983
+#   title: "Hearthstone w/ Chat - (sodapoppin) - July 6, 2022"
+#   t_start: "00:07:10"
+#   t_end: "00:10:35"
+
+# - video: data/sodapoppin/2022-07/1524359983
+#   title: "Chance on His Mogul Money Live w/ Chat - (sodapoppin) - July 6, 2022"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=5RlI6peh_fg"
+#   t_start: "00:13:06"
+#   t_end: "00:32:28"
+
+# - video: data/sodapoppin/2022-07/1524359983
+#   title: "Chance Reacts to Channel 5 Fourth of July w/ Chat - (sodapoppin) - July 6, 2022"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=67SB6pI3wak"
+#   t_start: "00:44:57"
+#   t_end: "00:49:45"
+
+# - video: data/sodapoppin/2022-07/1524359983
+#   title: "Mini Healer w/ Chat - (sodapoppin) - July 6, 2022"
+#   t_start: "00:52:34"
+#   t_end: "05:08:03"
+
+# - video: data/sodapoppin/2022-07/1524359983
+#   title: "Ready or Not with Veibae w/ Chat - (sodapoppin) - July 6, 2022"
+#   t_start: "05:07:56"
+#   t_end: "07:31:50"
+
+
+
+# - video: data/sodapoppin/2022-07/1525161487
+#   title: "Fall Guys w/ Chat - (sodapoppin) - July 7, 2022"
+#   t_start: "00:07:15"
+#   t_end: "02:21:18"
+
+# - video: data/sodapoppin/2022-07/1525161487
+#   title: "Chance Reacts to Daily Dose Drying a Car with Water w/ Chat - (sodapoppin) - July 7, 2022"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=PHJuvO_Eazc"
+#   t_start: "02:21:18"
+#   t_end: "02:24:50"
+
+# - video: data/sodapoppin/2022-07/1525161487
+#   title: "Reacting To Climbing Videos w/ Chat - (sodapoppin) - July 7, 2022"
+#   t_start: "02:24:50"
+#   t_end: "02:38:33"
+
+# - video: data/sodapoppin/2022-07/1525161487
+#   title: "Reacting to Memes for zoil to watch because he has nothing better to do #24 w/ Chat - (sodapoppin) - July 7, 2022"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=N6i_FbJcoi8"
+#   t_start: "02:38:33"
+#   t_end: "02:51:26"
+
+# - video: data/sodapoppin/2022-07/1525161487
+#   title: "Reacting to TikToks w/ Chat - (sodapoppin) - July 7, 2022"
+#   t_start: "02:51:26"
+#   t_end: "03:19:37"
+
+# - video: data/sodapoppin/2022-07/1525161487
+#   title: "Mini Healer w/ Chat - (sodapoppin) - July 7, 2022"
+#   t_start: "03:24:17"
+#   t_end: "06:16:20"
+
+
+
+
+# - video: data/sodapoppin/2022-07/1527092000
+#   title: "Madison (horror) w/ Chat - (sodapoppin) - July 9, 2022"
+#   t_start: "00:56:54"
+#   t_end: "05:39:00"
+
+
+
+# - video: data/sodapoppin/2022-07/1528039576
+#   title: "Escape PS1 Hagrid (horror) w/ Chat - (sodapoppin) - July 10, 2022"
+#   t_start: "00:23:17"
+#   t_end: "00:42:21"
+
+# - video: data/sodapoppin/2022-07/1528039576
+#   title: "Scranny (horror) w/ Chat - (sodapoppin) - July 10, 2022"
+#   t_start: "00:42:21"
+#   t_end: "00:48:53"
+
+# - video: data/sodapoppin/2022-07/1528039576
+#   title: "Placid Plastic Duck Simulator w/ Chat - (sodapoppin) - July 10, 2022"
+#   t_start: "00:48:53,02:00:00,02:02:02,02:08:24,02:27:55,02:35:20,03:01:07,03:16:14,03:54:41,04:35:43"
+#   t_end: "01:58:38,02:00:53,02:03:09,02:08:43,02:31:59,02:37:12,03:01:27,03:16:39,03:55:35,04:37:27"
+
+# - video: data/sodapoppin/2022-07/1528039576
+#   title: "Trepang2 Demo w/ Chat - (sodapoppin) - July 10, 2022"
+#   t_start: "02:03:09"
+#   t_end: "02:27:55"
+
+# - video: data/sodapoppin/2022-07/1528039576
+#   title: "Boss Hunter w/ Chat - (sodapoppin) - July 10, 2022"
+#   t_start: "02:32:33"
+#   t_end: "02:36:02"
+
+# - video: data/sodapoppin/2022-07/1528039576
+#   title: "League of Legends w/ Chat - (sodapoppin) - July 10, 2022"
+#   t_start: "02:37:17"
+#   t_end: "11:35:20"
+
+
+
+# - video: data/nmplol/2022-07/1529619042
+#   title: "Nerf WAR ft Sodapoppin Esfand Techtone Rich Malena w/ Chat - (Nmplol) - July 12, 2022"
+#   t_start: "02:00:28"
+#   t_end: "03:51:15"
+
+# - video: data/nmplol/2022-07/dQtc__PWIMs
+#   title: "Chef Soda Cooking Show - (Nmplol) - July 8, 2022"
+#   t_start: "00:00:00"
+#   t_end: "01:37:32"
+
+
+
+# - video: data/sodapoppin/2022-07/1533700457
+#   title: "Twitchcon 2022 Amsterdam w/ Chat - (sodapoppin) - July 16, 2022"
+#   t_start: "00:07:17"
+#   t_end: "00:13:25"
+
+# - video: data/sodapoppin/2022-07/1533700457
+#   title: "Watching Trailers w/ Chat - (sodapoppin) - July 16, 2022"
+#   t_start: "00:13:25"
+#   t_end: "01:09:31"
+
+# - video: data/sodapoppin/2022-07/1533700457
+#   title: "Escape Academy (puzzle game) w/ Chat - (sodapoppin) - July 16, 2022"
+#   t_start: "01:09:31"
+#   t_end: "02:42:03"
+
+# - video: data/sodapoppin/2022-07/1533700457
+#   title: "PowerWash Simulator w/ Chat - (sodapoppin) - July 16, 2022"
+#   t_start: "02:43:28"
+#   t_end: "04:23:32"
+
+# - video: data/sodapoppin/2022-07/1533700457
+#   title: "Toilet Chronicles (puzzle? horror?) w/ Chat - (sodapoppin) - July 16, 2022"
+#   t_start: "04:25:47"
+#   t_end: "04:54:43"
+
+# - video: data/sodapoppin/2022-07/1533700457
+#   title: "Milk inside a bag of milk inside a bag of milk w/ Chat - July 16, 2022"
+#   t_start: "04:54:43"
+#   t_end: "05:11:12"
+
+# - video: data/sodapoppin/2022-07/1533700457
+#   title: "Downtown Jam w/ Chat - (sodapoppin) - July 16, 2022"
+#   t_start: "05:11:57"
+#   t_end: "05:21:40"
+
+# - video: data/sodapoppin/2022-07/1533700457
+#   title: "Girls' Civilization 3 w/ Chat - (sodapoppin) - July 16, 2022"
+#   t_start: "05:21:40"
+#   t_end: "05:30:37"
+
+# - video: data/sodapoppin/2022-07/1533700457
+#   title: "Void Dementia w/ Chat - (sodapoppin) - July 16, 2022"
+#   t_start: "05:32:16"
+#   t_end: "05:42:32"
+
+# - video: data/sodapoppin/2022-07/1533700457
+#   title: "Necrosmith w/ Chat - (sodapoppin) - July 16, 2022"
+#   t_start: "05:45:23"
+#   t_end: "06:07:58"
+
+# - video: data/sodapoppin/2022-07/1533700457
+#   title: "Kayak VR Mirage w/ Chat - (sodapoppin) - July 16, 2022"
+#   t_start: "06:18:09"
+#   t_end: "06:41:22"
+
+# - video: data/sodapoppin/2022-07/1533700457
+#   title: "Chance Reacts to Memes for soda because he cried about it w/ Chat - July 16, 2022"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=JQByG6JrhE0"
+#   t_start: "06:47:01"
+#   t_end: "06:57:26"
+
+# - video: data/sodapoppin/2022-07/1533700457
+#   title: "Chance Reacts Memes for Zoil? or Memes for Sodapoppin? #26 w/ Chat - July 16, 2022"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=sE6IrLv8FJ8"
+#   t_start: "06:57:26"
+#   t_end: "07:17:48"
+
+# - video: data/sodapoppin/2022-07/1533700457
+#   title: "Bughouse (horror) w/ Chat - (sodapoppin) - July 16, 2022"
+#   t_start: "07:19:01"
+#   t_end: "07:31:45"
+
+# - video: data/sodapoppin/2022-07/1533700457
+#   title: "Growing My Grandpa (horror) w/ Chat - (sodapoppin) - July 16, 2022"
+#   t_start: "07:32:36"
+#   t_end: "07:51:33"
+
+
+# - video: data/sodapoppin/2022-07/1533700457
+#   title: "League of Legends w/ Chat - (sodapoppin) - July 16, 2022"
+#   t_start: "08:04:55,09:29:23"
+#   t_end: "09:27:50,10:13:30"
+
+
+
+
+# - video: data/sodapoppin/2022-07/1534628283
+#   title: "Chance Reacts to Memes for zoil - (sodapoppin) - July 17, 2022"
+#   description: "Original Videos:\nhttps://www.youtube.com/watch?v=LGLl-I0K6yM\nhttps://www.youtube.com/watch?v=CiGvRtjkee0"
+#   t_start: "00:10:08"
+#   t_end: "00:48:47"
+
+# - video: data/sodapoppin/2022-07/1534628283
+#   title: "PowerWash Simulator w/ Chat - (sodapoppin) - July 17, 2022"
+#   t_start: "00:48:26"
+#   t_end: "01:44:51"
+
+# - video: data/sodapoppin/2022-07/1534628283
+#   title: "Escape Academy (puzzles) w/ Chat - (sodapoppin) - July 17, 2022"
+#   t_start: "01:47:19"
+#   t_end: "02:41:37"
+
+# - video: data/sodapoppin/2022-07/1534628283
+#   title: "Amnesia: The Dark Descent w/ Chat - (sodapoppin) - July 17, 2022"
+#   t_start: "02:42:16"
+#   t_end: "03:13:53"
+
+# - video: data/sodapoppin/2022-07/1534628283
+#   title: "I'm on Observation Duty 5 w/ Chat - (sodapoppin) - July 17, 2022"
+#   t_start: "03:16:54"
+#   t_end: "03:36:48"
+
+# - video: data/sodapoppin/2022-07/1534628283
+#   title: "Warcraft III w/ Chat - (sodapoppin) - July 17, 2022"
+#   t_start: "03:38:39"
+#   t_end: "04:52:50"
+
+
+
+# - video: data/mizkif/2022-07/1538933484
+#   title: "OTK Sodapoppin Ghost Hunting in Haunted Asylum w/ Chat - (sodapoppin) - July 21, 2022"
+#   t_start: "00:31:02"
+#   t_end: "02:21:56"
+
+# - video: data/sodapoppin/2022-07/1539059460
+#   title: "OTK Sodapoppin Spooky Hide Seek w/ Chat - (sodapoppin) - July 21, 2022"
+#   t_start: "00:00:00"
+#   t_end: "00:58:14"
+
+
+
+# - video: data/sodapoppin/2022-07/1539531887
+#   title: "OTK Sodapoppin Talks About Joining OTK w/ Chat - (sodapoppin) - July 22, 2022"
+#   t_start: "00:08:11"
+#   t_end: "00:51:24"
+
+# - video: data/sodapoppin/2022-07/1539531887
+#   title: "Chance Reacts to TikTok w/ Chat - (sodapoppin) - July 22, 2022"
+#   t_start: "00:51:24"
+#   t_end: "01:04:55"
+
+# - video: data/sodapoppin/2022-07/1539531887
+#   title: "Watching Trailers w/ Chat - (sodapoppin) - July 22, 2022"
+#   t_start: "01:04:55"
+#   t_end: "01:18:19"
+
+# - video: data/sodapoppin/2022-07/1539531887
+#   title: "Video Horror Society w/ Chat - (sodapoppin) - July 22, 2022"
+#   t_start: "01:18:19"
+#   t_end: "01:47:49"
+
+# - video: data/sodapoppin/2022-07/1539531887
+#   title: "Ranking Sodas IRL with Asmongold w/ Chat - (sodapoppin) - July 22, 2022"
+#   t_start: "01:47:49"
+#   t_end: "04:19:32"
+
+
+
+
+# - video: data/sodapoppin/2022-07/1540559460
+#   title: "Watching Game Trailers w/ Chat - (sodapoppin) - July 23, 2022"
+#   t_start: "00:11:36"
+#   t_end: "00:48:18"
+
+# - video: data/sodapoppin/2022-07/1540559460
+#   title: "Stray (part 1) w/ Chat - (sodapoppin) - July 23, 2022"
+#   t_start: "00:48:18"
+#   t_end: "01:02:40"
+
+# - video: data/sodapoppin/2022-07/1540619210
+#   title: "(reupload) Stray (part 2) w/ Chat - (sodapoppin) - July 23, 2022"
+#   t_start: "00:00:00"
+#   t_end: "03:30:07"
+
+# - video: data/sodapoppin/2022-07/1540619210
+#   title: "(reupload) Battle Part w/ Chat - (sodapoppin) - July 23, 2022"
+#   t_start: "03:32:44"
+#   t_end: "04:28:28"
+
+# - video: data/sodapoppin/2022-07/1540619210
+#   title: "(reupload) Tinyfolks w/ Chat - (sodapoppin) - July 23, 2022"
+#   t_start: "04:28:56"
+#   t_end: "04:43:00"
+
+# - video: data/richwcampbell/2022-07/1540939055
+#   title: "Escape Room w/ Ritch, Mia, Maya, Nick, Malena, Slick, and Tectone - July 23, 2022"
+#   t_start: "02:31:07"
+#   t_end: "03:42:56"
+
+# - video: data/sodapoppin/2022-07/1542517071
+#   title: "Warcraft III w/ Chat - (sodapoppin) - July 25, 2022"
+#   t_start: "00:11:39"
+#   t_end: "02:51:23"
+
+# - video: data/sodapoppin/2022-07/1542517071
+#   title: "Tinyfolks w/ Chat - (sodapoppin) - July 25, 2022"
+#   t_start: "02:53:04"
+#   t_end: "03:41:40"
+
+
+
+# - video: data/sodapoppin/2022-07/1545010333
+#   title: "Remnant Records w/ Vei, Crumpet, and Rob - (sodapoppin) - July 28, 2022"
+#   t_start: "00:00:03"
+#   t_end: "01:22:31"
+
+# - video: data/sodapoppin/2022-07/1545010333
+#   title: "Tor Eternum w/ Vei, Crumpet, and Rob - (sodapoppin) - July 28, 2022"
+#   t_start: "01:22:31"
+#   t_end: "01:36:42"
+
+# - video: data/sodapoppin/2022-07/1545010333
+#   title: "MultiVersus w/ Vei, Crumpet, and Rob - (sodapoppin) - July 28, 2022"
+#   t_start: "01:36:42"
+#   t_end: "03:49:10"
+
+
+# - video: data/sodapoppin/2022-07/1545409409
+#   title: "Endling: Extinction is Forever w/ Chat - (sodapoppin) - July 28, 2022"
+#   t_start: "00:11:31"
+#   t_end: "01:38:20"
+
+# - video: data/sodapoppin/2022-07/1545409409
+#   title: "Setting up New Alerts w/ Chat - (sodapoppin) - July 28, 2022"
+#   t_start: "01:44:00"
+#   t_end: "02:04:36"
+
+# - video: data/sodapoppin/2022-07/1545409409
+#   title: "Evolve Stage 2 w/ Chat - (sodapoppin) - July 28, 2022"
+#   t_start: "01:52:11"
+#   t_end: "03:45:41"
+
+# - video: data/sodapoppin/2022-07/1545409409
+#   title: "MultiVersus w/ Chat - (sodapoppin) - July 28, 2022"
+#   t_start: "03:45:46"
+#   t_end: "05:54:30"
+
+
+
+
+
+# - video: data/sodapoppin/2022-07/1546525725
+#   title: "Chance on Knut in His Car w/ Chat - (sodapoppin) - July 29, 2022"
+#   t_start: "00:18:02"
+#   t_end: "00:20:16"
+
+# - video: data/sodapoppin/2022-07/1546525725
+#   title: "Dead by Daylight w/ Chat - (sodapoppin) - July 29, 2022"
+#   t_start: "00:24:16"
+#   t_end: "01:16:12"
+
+# - video: data/sodapoppin/2022-07/1546525725
+#   title: "MultiVersus with Vei w/ Chat - (sodapoppin) - July 29, 2022"
+#   t_start: "01:16:12"
+#   t_end: "04:27:07"
+
+# - video: data/sodapoppin/2022-07/1546525725
+#   title: "Wine w/ Chat - (sodapoppin) - July 29, 2022"
+#   t_start: "02:22:36"
+#   t_end: "02:25:04"
+
+# - video: data/sodapoppin/2022-07/1546525725
+#   title: "Slay the Spire w/ Vei (modded multiplayer) - (sodapoppin) - July 29, 2022"
+#   t_start: "04:27:04"
+#   t_end: "05:05:18"
+
+# - video: data/sodapoppin/2022-07/1546525725
+#   title: "Evolve Stage 2 w/ Chat - (sodapoppin) - July 29, 2022"
+#   t_start: "06:01:17"
+#   t_end: "06:33:08"
+
+# - video: data/sodapoppin/2022-07/1546525725
+#   title: "World of Warcraft WotLK Classic w/ Chat - (sodapoppin) - July 29, 2022"
+#   t_start: "06:33:08"
+#   t_end: "07:08:36"
+
+# - video: data/sodapoppin/2022-07/1546525725
+#   title: "Elden Ring Coop w/ Vei - Part 1 (sodapoppin) - July 29, 2022"
+#   t_start: "07:22:02"
+#   t_end: "16:56:25"
+
+# - video: data/sodapoppin/2022-07/1546525725
+#   title: "Elden Ring Coop w/ Vei - Part 2 (sodapoppin) - July 29, 2022"
+#   t_start: "17:15:25"
+#   t_end: "20:56:02"
+
+# - video: data/sodapoppin/2022-07/1546525725
+#   title: "Who Wants to Be a Millionaire w/ Chat - (sodapoppin) - July 29, 2022"
+#   t_start: "20:53:32"
+#   t_end: "21:54:20"
+
+
+
+
+
+# - video: data/sodapoppin/2022-08/1549300794
+#   title: "Chance on Twitch Ninja Course w/ Chat - (sodapoppin) - August 1, 2022"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=k9J4H5gkLqw"
+#   t_start: "00:10:53"
+#   t_end: "01:02:16"
+
+# - video: data/sodapoppin/2022-08/1549300794
+#   title: "Drift King (demo) w/ Chat - (sodapoppin) - August 1, 2022"
+#   t_start: "01:47:01"
+#   t_end: "02:24:48"
+
+# - video: data/sodapoppin/2022-08/1549300794
+#   title: "MultiVersus w/ Chat - (sodapoppin) - August 1, 2022"
+#   t_start: "02:28:37"
+#   t_end: "04:43:40"
+
+
+
+# - video: data/sodapoppin/2022-08/1551241040
+#   title: "The Mortuary Assistant (horror) w/ Chat - (sodapoppin) - August 3, 2022"
+#   t_start: "00:15:44"
+#   t_end: "04:25:20"
+
+# - video: data/sodapoppin/2022-08/1551241040
+#   title: "Trombone Champ w/ Chat - (sodapoppin) - August 3, 2022"
+#   t_start: "04:27:21"
+#   t_end: "04:49:55"
+
+# - video: data/sodapoppin/2022-08/1551241040
+#   title: "MultiVersus w/ Chat - (sodapoppin) - August 3, 2022"
+#   t_start: "04:55:55"
+#   t_end: "06:22:11"
+
+
+
+# - video: data/richwcampbell/2022-07/1543690118
+#   title: "Island of Riches ft. Sodapoppin - (richwcampbell) - July 26, 2022"
+#   description: "Originally Streamed on:\nhttps://www.twitch.tv/richwcampbell"
+#   t_start: "00:21:27"
+#   t_end: "02:27:36"
+
+
+
+# - video: data/sodapoppin/2022-08/1554324626
+#   title: "Food From Nick's Stream w/ Chat - (sodapoppin) - August 6, 2022"
+#   t_start: "00:06:05"
+#   t_end: "00:30:18"
+
+# - video: data/sodapoppin/2022-08/1554324626
+#   title: "Chance Reacts to Memes for soda #2 by nahtaN - (sodapoppin) - August 6, 2022"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=Ama27aao6Pg"
+#   t_start: "00:30:18"
+#   t_end: "00:40:45"
+
+# - video: data/sodapoppin/2022-08/1554324626
+#   title: "Another Princess Is In Our Castle (horror?) w/ Chat - (sodapoppin) - August 6, 2022"
+#   t_start: "01:18:18"
+#   t_end: "01:34:23"
+
+# - video: data/sodapoppin/2022-08/1554324626
+#   title: "HunterX w/ Chat - (sodapoppin) - August 6, 2022"
+#   t_start: "01:39:05"
+#   t_end: "02:08:09"
+
+# - video: data/sodapoppin/2022-08/1554324626
+#   title: "Turbo Golf Racing w/ Chat - (sodapoppin) - August 6, 2022"
+#   t_start: "02:09:15"
+#   t_end: "02:58:08"
+
+# - video: data/sodapoppin/2022-08/1554324626
+#   title: "Obama Maze w/ Chat - (sodapoppin) - August 6, 2022"
+#   t_start: "02:58:36"
+#   t_end: "03:03:41"
+
+# - video: data/sodapoppin/2022-08/1554324626
+#   title: "Nick and Malena Cosplay w/ Chat - (sodapoppin) - August 6, 2022"
+#   t_start: "03:05:04,03:49:01,04:12:56"
+#   t_end: "03:07:05,03:50:51,04:15:06"
+
+# - video: data/sodapoppin/2022-08/1554324626
+#   title: "Forrader Hero w/ Chat - (sodapoppin) - August 6, 2022"
+#   t_start: "03:08:02"
+#   t_end: "03:48:15"
+
+# - video: data/sodapoppin/2022-08/1554324626
+#   title: "Recipe for Disaster w/ Chat - (sodapoppin) - August 6, 2022"
+#   t_start: "03:51:08,04:15:13"
+#   t_end: "04:12:56,05:38:22"
+
+# - video: data/sodapoppin/2022-08/1554324626
+#   title: "A Devilish Nightmare (horror) w/ Chat - (sodapoppin) - August 6, 2022"
+#   t_start: "05:40:24"
+#   t_end: "05:57:45"
+
+# - video: data/sodapoppin/2022-08/1554324626
+#   title: "Backpack Hero w/ Chat - (sodapoppin) - August 6, 2022"
+#   t_start: "05:58:32"
+#   t_end: "07:07:00"
+
+
+# - video: data/sodapoppin/2022-08/1555308977
+#   title: "Status of Twitch w/ Chat - (sodapoppin) - August 7, 2022"
+#   description: "Original Stream Title:\nEating healthy and working out! #CAMPKNUT\nhttps://campknut.gg/"
+#   t_start: "00:09:00"
+#   t_end: "00:17:56"
+
+
+
+
+# - video: data/sodapoppin/2022-08/1553966638
+#   title: "Chance Discusses Twitch Gambling Boom w/ Chat - (sodapoppin) - August 6, 2022"
+#   t_start: "00:07:34"
+#   t_end: "00:29:30"
+
+# - video: data/sodapoppin/2022-08/1553966638
+#   title: "Momo Mother Bird: Final Story (horror) w/ Chat - (sodapoppin) - August 6, 2022"
+#   t_start: "00:35:47"
+#   t_end: "00:52:02"
+
+# - video: data/sodapoppin/2022-08/1553966638
+#   title: "Hinter (horror) w/ Chat - (sodapoppin) - August 6, 2022"
+#   t_start: "00:53:37"
+#   t_end: "01:17:41"
+
+# - video: data/sodapoppin/2022-08/1553966638
+#   title: "Reacting to Memes for zoil that he will not DIESOFCRINGE #2 - (sodapoppin) - August 6, 2022"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=x1xKAgtCccw"
+#   t_start: "01:17:36"
+#   t_end: "01:21:03"
+
+# - video: data/sodapoppin/2022-08/1553966638
+#   title: "MultiVersus w/ Chat - (sodapoppin) - August 6, 2022"
+#   t_start: "01:24:05"
+#   t_end: "04:44:40"
+
+# - video: data/sodapoppin/2022-08/1553966638
+#   title: "Ghost Watchers w/ Rob, Vei, Kyo - (sodapoppin) - August 6, 2022"
+#   t_start: "04:47:50"
+#   t_end: "06:04:55"
+
+# - video: data/sodapoppin/2022-08/1553966638
+#   title: "The Long Drive w/ Rob, Vei, Kyo - (sodapoppin) - August 6, 2022"
+#   t_start: "06:06:51"
+#   t_end: "08:03:03"
+
+# - video: data/sodapoppin/2022-08/1553966638
+#   title: "Teamfight Tactics w/ Friends - (sodapoppin) - August 6, 2022"
+#   t_start: "08:03:03"
+#   t_end: "08:47:15"
+
+# - video: data/sodapoppin/2022-08/1553966638
+#   title: "World of Warcraft w/ Chat - (sodapoppin) - August 6, 2022"
+#   t_start: "08:47:15"
+#   t_end: "10:29:21"
+
+
+
+
+
+
+# - video: data/mizkif/2022-08/1556111758
+#   title: "OTK Shareholders Meeting w/ Chat - August 8, 2022"
+#   description: "Originally Streamed on:\nhttps://www.twitch.tv/mizkif"
+#   t_start: "00:22:32"
+#   t_end: "02:23:00"
+
+# - video: data/mizkif/2022-08/1556111758
+#   title: "OTK Sodapoppin Science Fair w/ Chat - August 8, 2022"
+#   description: "Originally Streamed on:\nhttps://www.twitch.tv/mizkif"
+#   t_start: "01:28:45"
+#   t_end: "01:46:34"
+
+
+
+
+
+# - video: data/sodapoppin/2022-08/1556682171
+#   title: "Chance on OTK Starforge Systems w/ Chat - (sodapoppin) - August 9, 2022"
+#   t_start: "00:06:02"
+#   t_end: "00:24:05"
+
+# - video: data/sodapoppin/2022-08/1556682171
+#   title: "Stoneshard w/ Chat - (sodapoppin) - August 9, 2022"
+#   t_start: "00:24:05"
+#   t_end: "04:11:55"
+
+# - video: data/sodapoppin/2022-08/1556682171
+#   title: "Risk of Rain 2 w/ Chat - (sodapoppin) - August 9, 2022"
+#   t_start: "06:39:39"
+#   t_end: "08:26:26"
+
+# - video: data/sodapoppin/2022-08/1556682171
+#   title: "Wanba Warriors w/ Chat - (sodapoppin) - August 9, 2022"
+#   t_start: "08:27:47"
+#   t_end: "08:50:41"
+
+# - video: data/sodapoppin/2022-08/1556682171
+#   title: "Teamfight Tactics w/ Veibae - (sodapoppin) - August 9, 2022"
+#   t_start: "08:51:47"
+#   t_end: "10:52:33"
+
+# - video: data/sodapoppin/2022-08/1556682171
+#   title: "PlateUp! w/ Veibae - (sodapoppin) - August 9, 2022"
+#   t_start: "10:51:26"
+#   t_end: "12:54:54"
+
+
+
+
+# - video: data/sodapoppin/2022-08/1558955348
+#   title: "Cult of the Lamb w/ Chat - (sodapoppin) - August 11, 2022"
+#   t_start: "00:24:40"
+#   t_end: "05:50:22"
+
+# - video: data/otknetwork/2022-08/1559501795
+#   title: "OTK Sodapoppin Starforge PC Build w/ Chat - August 11, 2022"
+#   t_start: "00:00:20"
+#   t_end: "03:20:14"
+
+
+# - video: data/sodapoppin/2022-08/1560059759
+#   title: "Chance Reacts THQ Nordic Digital Showcase 2022 - (sodapoppin) - August 12, 2022"
+#   t_start: "00:16:30"
+#   t_end: "00:55:04"
+
+# - video: data/sodapoppin/2022-08/1560059759
+#   title: "Cult of the Lamb w/ Chat - (sodapoppin) - August 12, 2022"
+#   t_start: "00:55:04"
+#   t_end: "03:51:18"
+
+# - video: data/sodapoppin/2022-08/1560059759
+#   title: "Tower of Fantasy w/ Chat #ad - (sodapoppin) - August 12, 2022"
+#   t_start: "03:51:09"
+#   t_end: "05:57:30"
+
+
+
+
+# - video: data/sodapoppin/2022-08/1562038007
+#   title: "Stoneshard w/ Chat - (sodapoppin) - August 14, 2022"
+#   t_start: "00:21:32"
+#   t_end: "05:57:30"
+
+
+# - video: data/sodapoppin/2022-08/1563749137
+#   title: "Chance on Kyokeru's and Rob w/ Chat - (sodapoppin) - August 16, 2022"
+#   t_start: "00:19:18"
+#   t_end: "00:30:59"
+
+# - video: data/sodapoppin/2022-08/1563749137
+#   title: "Chance on WoW Bans w/ Chat - (sodapoppin) - August 16, 2022"
+#   t_start: "00:31:21"
+#   t_end: "00:35:08"
+
+# - video: data/sodapoppin/2022-08/1563749137
+#   title: "Backpack Hero w/ Chat - (sodapoppin) - August 16, 2022"
+#   t_start: "00:37:01"
+#   t_end: "03:03:45"
+
+# - video: data/sodapoppin/2022-08/1563749137
+#   title: "Super Auto Pets w/ Chat - (sodapoppin) - August 16, 2022"
+#   t_start: "03:10:27"
+#   t_end: "03:22:33"
+
+# - video: data/sodapoppin/2022-08/1563749137
+#   title: "Slay the Spire w/ Chat - (sodapoppin) - August 16, 2022"
+#   t_start: "03:22:10"
+#   t_end: "05:18:59"
+
+# - video: data/sodapoppin/2022-08/1563749137
+#   title: "Inside the Backrooms (horror) w/ Chat - (sodapoppin) - August 16, 2022"
+#   t_start: "05:20:04"
+#   t_end: "09:00:00"
+
+# - video: data/sodapoppin/2022-08/1563749137
+#   title: "Inside the Backrooms (horror) w/ Veibae - (sodapoppin) - August 16, 2022"
+#   t_start: "05:53:54"
+#   t_end: "09:00:00"
+
+# - video: data/sodapoppin/2022-08/1564737134
+#   title: "Slay the Spire w/ Chat - (sodapoppin) - August 17, 2022"
+#   t_start: "00:19:57"
+#   t_end: "02:47:24"
+
+# - video: data/sodapoppin/2022-08/1564737134
+#   title: "Backpack Hero w/ Chat - (sodapoppin) - August 17, 2022"
+#   t_start: "02:47:24"
+#   t_end: "05:38:50"
+
+
+
+
+# - video: data/sodapoppin/2022-08/1565655497
+#   title: "Thymesia w/ Chat - (sodapoppin) - August 18, 2022"
+#   t_start: "00:23:50"
+#   t_end: "04:06:15"
+
+# - video: data/sodapoppin/2022-08/1565655497
+#   title: "Stoneshard w/ Chat - (sodapoppin) - August 18, 2022"
+#   t_start: "04:10:06"
+#   t_end: "04:32:07"
+
+# - video: data/sodapoppin/2022-08/1565655497
+#   title: "PlateUp! w/ Veibae - (sodapoppin) - August 18, 2022"
+#   t_start: "04:33:00"
+#   t_end: "07:55:50"
+
+# - video: data/sodapoppin/2022-08/1566701998
+#   title: "Reacting to Youtube Videos w/ Chat - (sodapoppin) - August 19, 2022"
+#   t_start: "00:17:19"
+#   t_end: "01:37:57"
+
+
+
+# - video: data/sodapoppin/2022-08/1568578823
+#   title: "Across the Obelisk w/ Chat - (sodapoppin) - August 21, 2022"
+#   t_start: "02:34:52"
+#   t_end: "02:49:38"
+
+# - video: data/sodapoppin/2022-08/1568578823
+#   title: "Warcraft III w/ Chat - (sodapoppin) - August 21, 2022"
+#   t_start: "02:49:24"
+#   t_end: "04:30:28"
+
+# - video: data/sodapoppin/2022-08/1568578823
+#   title: "PlateUp! w/ Veibae - (sodapoppin) - August 21, 2022"
+#   t_start: "04:44:57"
+#   t_end: "06:25:33"
+
+# - video: data/sodapoppin/2022-08/1568578823
+#   title: "Inside the Backrooms w/ Veibae - (sodapoppin) - August 21, 2022"
+#   t_start: "06:30:57"
+#   t_end: "07:56:20"
+
+
+
+# - video: data/sodapoppin/2022-08/1572270955
+#   title: "gamescom 2022 Opening Night Live w/ Chat - (sodapoppin) - August 25, 2022"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=7eRnGpMC98c"
+#   t_start: "00:12:11"
+#   t_end: "02:26:38"
+
+# - video: data/sodapoppin/2022-08/1572270955
+#   title: "Future Games Show w/ Chat - (sodapoppin) - August 25, 2022"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=FnBAKwsNwfY"
+#   t_start: "02:26:26"
+#   t_end: "03:03:35"
+
+# - video: data/sodapoppin/2022-08/1572270955
+#   title: "Skinwalker Hunt (horror) w/ Chat - (sodapoppin) - August 25, 2022"
+#   t_start: "03:03:43,03:30:34"
+#   t_end: "03:07:24,05:37:06"
+
+# - video: data/sodapoppin/2022-08/1572270955
+#   title: "Reacting to Badlands Chugs w/ Chat - (sodapoppin) - August 25, 2022"
+#   description: "Original Videos:\nhttps://www.youtube.com/watch?v=_yLhX7dgYxM\nhttps://www.youtube.com/watch?v=77A-ijBnLME"
+#   t_start: "03:07:19"
+#   t_end: "03:30:31"
+
+# - video: data/sodapoppin/2022-08/1572270955
+#   title: "Last Visit (horror) w/ Chat - (sodapoppin) - August 25, 2022"
+#   t_start: "05:40:01"
+#   t_end: "05:53:57"
+
+# - video: data/sodapoppin/2022-08/1572270955
+#   title: "Are You Smarter Than a 5th Grader? w/ Chat - (sodapoppin) - August 25, 2022"
+#   t_start: "05:56:14"
+#   t_end: "06:28:41"
+
+
+
+
+# - video: data/sodapoppin/2022-08/1573325525
+#   title: "Channel Status WOTLK w/ Chat - (sodapoppin) - August 26, 2022"
+#   t_start: "00:12:20"
+#   t_end: "00:29:04"
+
+# - video: data/sodapoppin/2022-08/1573325525
+#   title: "Dorfromantik w/ Chat - (sodapoppin) - August 26, 2022"
+#   t_start: "00:46:01"
+#   t_end: "01:34:47"
+
+# - video: data/sodapoppin/2022-08/1573325525
+#   title: "For the King w/ Chat - (sodapoppin) - August 26, 2022"
+#   t_start: "01:34:32"
+#   t_end: "02:15:28"
+
+# - video: data/sodapoppin/2022-08/1573325525
+#   title: "Warcraft III w/ Chat - (sodapoppin) - August 26, 2022"
+#   t_start: "02:20:42"
+#   t_end: "05:22:02"
+
+# - video: data/sodapoppin/2022-08/1573325525
+#   title: "Cursed to Golf w/ Chat - (sodapoppin) - August 26, 2022"
+#   t_start: "05:25:49"
+#   t_end: "05:56:21"
+
+
+
+# - video: data/sodapoppin/2022-08/1574252283
+#   title: "Watching Game Trailers w/ Chat - (sodapoppin) - August 27, 2022"
+#   t_start: "00:08:03"
+#   t_end: "03:31:59"
+
+# - video: data/sodapoppin/2022-08/1574252283
+#   title: "Bad Monday Simulator (undertail) w/ Chat - (sodapoppin) - August 27, 2022"
+#   t_start: "02:24:46"
+#   t_end: "03:03:54"
+
+# - video: data/sodapoppin/2022-08/1574252283
+#   title: "Cursed to Golf w/ Chat - (sodapoppin) - August 27, 2022"
+#   t_start: "03:31:59"
+#   t_end: "04:52:56"
+
+# - video: data/sodapoppin/2022-08/1574252283
+#   title: "Hamster Playground w/ Chat - (sodapoppin) - August 27, 2022"
+#   t_start: "04:54:57"
+#   t_end: "05:39:51"
+
+# - video: data/sodapoppin/2022-08/1574252283
+#   title: "The Bridge Curse: Road To Salvation (horror) w/ Chat - Part 1 - August 27, 2022"
+#   t_start: "05:41:51"
+#   t_end: "06:36:43"
+
+
+# - video: data/sodapoppin/2022-08/1574632851
+#   title: "League of Legends w/ Veibae - (sodapoppin) - August 27, 2022"
+#   t_start: "00:08:05"
+#   t_end: "03:53:40"
+
+# - video: data/sodapoppin/2022-08/1574632851
+#   title: "Badlands Chug's Message to Veibae - (sodapoppin) - August 27, 2022"
+#   t_start: "00:22:26"
+#   t_end: "00:27:40"
+
+
+# - video: data/sodapoppin/2022-08/1575261370
+#   title: "Zapling Bygone w/ Chat - (sodapoppin) - August 28, 2022"
+#   t_start: "00:15:34"
+#   t_end: "00:47:01"
+
+
+# - video: data/sodapoppin/2022-08/1575314137
+#   title: "The Bridge Curse: Road To Salvation (horror) w/ Chat - Part 2 - August 28, 2022"
+#   t_start: "00:00:12"
+#   t_end: "03:02:09"
+
+# - video: data/sodapoppin/2022-08/1575314137
+#   title: "My Dear Sister (horror) w/ Chat - (sodapoppin) - August 28, 2022"
+#   t_start: "03:05:06"
+#   t_end: "03:23:33"
+
+# - video: data/sodapoppin/2022-08/1575314137
+#   title: "Arcade Paradise w/ Chat - (sodapoppin) - August 28, 2022"
+#   t_start: "03:29:07"
+#   t_end: "04:40:26"
+
+# - video: data/sodapoppin/2022-08/1575314137
+#   title: "Ultimate Fishing Simulator 2 w/ Chat - (sodapoppin) - August 28, 2022"
+#   t_start: "04:41:25"
+#   t_end: "05:28:25"
+
+# - video: data/sodapoppin/2022-08/1575314137
+#   title: "Rollerdrome w/ Chat - (sodapoppin) - August 28, 2022"
+#   t_start: "05:31:46"
+#   t_end: "06:49:11"
+
+
+
+# - video: data/sodapoppin/2022-08/1577043180
+#   title: "20 Minutes Till Dawn w/ Chat - (sodapoppin) - August 30, 2022"
+#   t_start: "01:30:40"
+#   t_end: "02:04:35"
+
+# - video: data/sodapoppin/2022-08/1577043180
+#   title: "Ultimate Chicken Horse w/ Chat - (sodapoppin) - August 30, 2022"
+#   t_start: "02:04:37"
+#   t_end: "02:14:08"
+
+# - video: data/sodapoppin/2022-08/1577043180
+#   title: "Fall Guys w/ Chat - (sodapoppin) - August 30, 2022"
+#   t_start: "02:14:08"
+#   t_end: "02:23:25"
+
+# - video: data/sodapoppin/2022-08/1577043180
+#   title: "Rollerdrome w/ Chat - (sodapoppin) - August 30, 2022"
+#   t_start: "02:23:25"
+#   t_end: "03:17:11"
+
+# - video: data/sodapoppin/2022-08/1577043180
+#   title: "Dead by Daylight w/ Chat - (sodapoppin) - August 30, 2022"
+#   t_start: "03:19:02"
+#   t_end: "04:21:06"
+
+# - video: data/sodapoppin/2022-08/1577043180
+#   title: "WotLK Classic WoW w/ Chat - Part 1 (sodapoppin) - August 30, 2022"
+#   t_start: "04:34:29"
+#   t_end: "15:06:03"
+
+# - video: data/sodapoppin/2022-08/1577043180
+#   title: "WotLK Classic WoW w/ Chat - Part 2 (sodapoppin) - August 30, 2022"
+#   t_start: "15:06:03"
+#   t_end: "25:44:40"
+
+
+# - video: data/sodapoppin/2022-09/1578506940
+#   title: "WotLK Classic WoW w/ Chat - Part 3 (sodapoppin) - August 31, 2022"
+#   t_start: "00:19:29"
+#   t_end: "08:37:30"
+
+# - video: data/sodapoppin/2022-09/1578506940
+#   title: "WotLK Classic WoW w/ Chat REUPLOAD2 - Part 4 (sodapoppin) - August 31, 2022"
+#   t_start: "08:37:30,11:07:13"
+#   t_end: "10:40:43,17:07:00"
+
+# - video: data/sodapoppin/2022-09/1578506940
+#   title: "Sodapoppin Reacts to OTK IQ TEST CHALLENGE - August 31, 2022"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=2BdLTdZKt6o"
+#   t_start: "10:41:05"
+#   t_end: "11:08:07"
+
+# - video: data/sodapoppin/2022-09/1579380587
+#   title: "WotLK Classic WoW w/ Chat - Part 5 (sodapoppin) - September 1, 2022"
+#   t_start: "00:09:05"
+#   t_end: "06:27:22"
+
+# - video: data/sodapoppin/2022-09/1579380587
+#   title: "WotLK Classic WoW w/ Chat - Part 6 (sodapoppin) - September 1, 2022"
+#   t_start: "06:27:22"
+#   t_end: "13:16:50"
+
+# - video: data/sodapoppin/2022-09/1580443985
+#   title: "WotLK Classic WoW w/ Chat - Part 7 (sodapoppin) - September 3, 2022"
+#   t_start: "00:00:00"
+#   t_end: "06:00:24"
+
+# - video: data/sodapoppin/2022-09/1580443985
+#   title: "WotLK Classic WoW w/ Chat - Part 8 (sodapoppin) - September 3, 2022"
+#   t_start: "06:00:24"
+#   t_end: "12:52:00"
+
+
+# - video: data/sodapoppin/2022-09/1581372893
+#   title: "WotLK Classic WoW w/ Chat - Part 9 (sodapoppin) - September 4, 2022"
+#   t_start: "00:00:00"
+#   t_end: "03:32:50"
+
+# - video: data/sodapoppin/2022-09/1581535309
+#   title: "WotLK Classic WoW w/ Chat - Part 10 (sodapoppin) - September 4, 2022"
+#   t_start: "00:00:00"
+#   t_end: "03:49:10"
+
+# - video: data/sodapoppin/2022-09/1581535309
+#   title: "New BRB Screen w/ Chat - (sodapoppin) - September 4, 2022"
+#   t_start: "03:18:14"
+#   t_end: "03:44:54"
+
+# - video: data/sodapoppin/2022-09/1584292153
+#   title: "WotLK Classic WoW w/ Chat - Part 11 (sodapoppin) - September 7, 2022"
+#   t_start: "00:00:00"
+#   t_end: "06:28:00"
+
+# - video: data/sodapoppin/2022-09/1585388698
+#   title: "WotLK Classic WoW w/ Chat - Part 12 (sodapoppin) - September 8, 2022"
+#   t_start: "00:00:00"
+#   t_end: "06:03:10"
+
+# - video: data/sodapoppin/2022-09/1587082427
+#   title: "WotLK Classic WoW w/ Chat - Part 13 (sodapoppin) - September 10, 2022"
+#   t_start: "00:00:00"
+#   t_end: "09:08:16"
+
+# - video: data/sodapoppin/2022-09/1587082427
+#   title: "WotLK Classic WoW w/ Chat - Part 14 (sodapoppin) - September 10, 2022"
+#   t_start: "09:08:16"
+#   t_end: "15:12:30"
+
+# - video: data/sodapoppin/2022-09/1588237025
+#   title: "WotLK Classic WoW w/ Chat - Part 15 (sodapoppin) - September 11, 2022"
+#   t_start: "00:00:00"
+#   t_end: "06:36:21"
+
+# - video: data/sodapoppin/2022-09/1590801496
+#   title: "WotLK Classic WoW w/ Chat - Part 16 (sodapoppin) - September 14, 2022"
+#   t_start: "00:00:00"
+#   t_end: "07:08:10"
+
+# - video: data/sodapoppin/2022-09/1591666782
+#   title: "WotLK Classic WoW w/ Chat - Part 17 (sodapoppin) - September 15, 2022"
+#   t_start: "00:00:00"
+#   t_end: "06:23:10"
+
+# - video: data/sodapoppin/2022-09/1592473780
+#   title: "OTK League Tournament w/ Chat - (sodapoppin) - September 16, 2022"
+#   t_start: "00:00:00"
+#   t_end: "09:54:34"
+
+# - video: data/sodapoppin/2022-09/1592473780
+#   title: "Warcraft with Veibae and Friends w/ Chat - (sodapoppin) - September 16, 2022"
+#   t_start: "09:54:37"
+#   t_end: "12:16:00"
+
+
+# - video: data/sodapoppin/2022-09/1594538444
+#   title: "WotLK Classic WoW w/ Chat - Part 18 (sodapoppin) - September 18, 2022"
+#   t_start: "00:13:51"
+#   t_end: "03:29:54"
+
+# - video: data/sodapoppin/2022-09/1594538444
+#   title: "WotLK Classic WoW Sunwell w/ Chat - Part 19 (sodapoppin) - September 18, 2022"
+#   t_start: "03:29:54"
+#   t_end: "11:02:44"
+
+# - video: data/sodapoppin/2022-09/1596493681
+#   title: "WotLK Classic WoW w/ Chat - Part 20 (sodapoppin) - September 20, 2022"
+#   t_start: "00:00:00"
+#   t_end: "06:44:40"
+
+# - video: data/sodapoppin/2022-09/1597227010
+#   title: "WotLK Classic WoW w/ Chat - Part 21 (sodapoppin) - September 21, 2022"
+#   t_start: "00:00:00"
+#   t_end: "08:52:30"
+
+
+# - video: data/sodapoppin/2022-09/1599200165
+#   title: "WotLK Classic WoW w/ Chat - Part 22 (sodapoppin) - September 23, 2022"
+#   t_start: "00:01:41"
+#   t_end: "05:39:30"
+
+# - video: data/sodapoppin/2022-09/1599200165
+#   title: "Chance Reacts to Memes for chunk #3 w/ Chat - (sodapoppin) - September 23, 2022"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=2dz7yq34jgs"
+#   t_start: "02:31:21"
+#   t_end: "03:01:09"
+
+
+
+# - video: data/sodapoppin/2022-09/1599535732
+#   title: "Lvling with Forsen w/ Chat - (sodapoppin) - September 23, 2022"
+#   t_start: "00:00:00"
+#   t_end: "01:35:40"
+
+
+# - video: data/sodapoppin/2022-09/1600217944
+#   title: "WotLK Classic WoW w/ Chat - Part 23 (sodapoppin) - September 24, 2022"
+#   t_start: "00:00:00,02:42:20"
+#   t_end: "02:37:57,04:50:20"
+
+# - video: data/sodapoppin/2022-09/1600217944
+#   title: "Chance Reacting to Lacari w/ Chat - (sodapoppin) - September 24, 2022"
+#   t_start: "02:32:40"
+#   t_end: "02:42:20"
+
+
+# - video: data/sodapoppin/2022-09/1602149181
+#   title: "WotLK Classic WoW Release w/ Chat - Part 24 (sodapoppin) - September 26, 2022"
+#   t_start: "00:00:00,01:12:10"
+#   t_end: "00:52:34,04:09:50"
+
+
+# - video: data/sodapoppin/2022-09/1602359299
+#   title: "WotLK Classic WoW Release w/ Chat - Part 25 (sodapoppin) - September 26, 2022"
+#   t_start: "00:00:00"
+#   t_end: "07:47:41"
+
+# - video: data/sodapoppin/2022-09/1602359299
+#   title: "WotLK Classic WoW Release w/ Chat - Part 26 (sodapoppin) - September 26, 2022"
+#   t_start: "07:47:41,13:48:03"
+#   t_end: "13:11:58,16:39:00"
+
+# - video: data/sodapoppin/2022-09/1602359299
+#   title: "Chance Reacts to I did a thing Worst Video Ideas w/ Chat - (sodapoppin) - September 26, 2022"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=Ag-909TI-XY"
+#   t_start: "13:13:06"
+#   t_end: "13:30:37"
+
+
+# - video: data/sodapoppin/2022-09/1603273752
+#   title: "WotLK Classic WoW Release w/ Chat - Part 27 (sodapoppin) - September 27, 2022"
+#   t_start: "00:00:00"
+#   t_end: "06:47:23"
+
+# - video: data/sodapoppin/2022-09/1603273752
+#   title: "WotLK Classic WoW Release w/ Chat - Part 28 (sodapoppin) - September 27, 2022"
+#   t_start: "06:47:23"
+#   t_end: "12:34:50"
+
+# - video: data/sodapoppin/2022-09/1603839670
+#   title: "WotLK Classic WoW Release w/ Chat - Part 29 (sodapoppin) - September 28, 2022"
+#   t_start: "00:00:00"
+#   t_end: "07:03:10"
+
+# - video: data/sodapoppin/2022-09/1604722337
+#   title: "WotLK Classic WoW Release w/ Chat - Part 30 (sodapoppin) - September 29, 2022"
+#   t_start: "00:00:00"
+#   t_end: "08:46:30"
+
+# - video: data/sodapoppin/2022-09/1605494975
+#   title: "WotLK Classic WoW Release w/ Chat - Part 31 (sodapoppin) - September 30, 2022"
+#   t_start: "00:00:00"
+#   t_end: "03:56:20"
+
+
+# - video: data/sodapoppin/2022-10/1606526172
+#   title: "WotLK Classic WoW Release w/ Chat - Part 32 (sodapoppin) - October 1, 2022"
+#   t_start: "00:00:00,02:09:11"
+#   t_end: "01:44:48,03:51:50"
+
+# - video: data/sodapoppin/2022-10/1606526172
+#   title: "Reacting to Linus Tech Tips Review Starforge PC w/ Chat - (sodapoppin) - October 1, 2022"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=7Fle55mZ_WQ"
+#   t_start: "01:44:23"
+#   t_end: "02:12:41"
+
+
+
+# - video: data/sodapoppin/2022-10/1607603263
+#   title: "WotLK Classic WoW Release w/ Chat - Part 33 (sodapoppin) - October 2, 2022"
+#   t_start: "00:00:00"
+#   t_end: "04:40:40"
+
+
+# - video: data/sodapoppin/2022-10/1610935714
+#   title: "WotLK Classic WoW Release w/ Chat - Part 34 (sodapoppin) - October 6, 2022"
+#   t_start: "00:00:00"
+#   t_end: "03:32:10"
+
+
+# - video: data/sodapoppin/2022-10/1617874357
+#   title: "Twitchcon OTK Razer Booth #ad w/ Chat - (sodapoppin) - October 7, 2022"
+#   t_start: "00:20:28"
+#   t_end: "03:06:12"
+
+
+# - video: data/sodapoppin/2022-10/1618775739
+#   title: "WotLK Classic WoW HOTEL POV w/ Chat - Part 35 (sodapoppin) - October 8, 2022"
+#   t_start: "00:13:01"
+#   t_end: "00:50:31"
+
+# - video: data/sodapoppin/2022-10/1618855729
+#   title: "WotLK Classic WoW HOTEL POV w/ Chat - Part 36 (sodapoppin) - October 8, 2022"
+#   t_start: "00:00:00"
+#   t_end: "07:16:17"
+
+# - video: data/sodapoppin/2022-10/1619933527
+#   title: "Twitchcon Rivals with Nmplol w/ Chat - (sodapoppin) - October 9, 2022"
+#   t_start: "00:00:00"
+#   t_end: "02:20:12"
+
+# - video: data/sodapoppin/2022-10/1622313078
+#   title: "Chance on His Twitchcon Experience w/ Chat - (sodapoppin) - October 12, 2022"
+#   t_start: "00:00:00"
+#   t_end: "00:22:51"
+
+# - video: data/sodapoppin/2022-10/1622313078
+#   title: "WotLK Classic WoW w/ Chat - Part 37 (sodapoppin) - October 12, 2022"
+#   t_start: "00:22:18"
+#   t_end: "06:38:40"
+
+# - video: data/sodapoppin/2022-10/1623193019
+#   title: "WotLK Classic WoW w/ Chat - Part 38 (sodapoppin) - October 13, 2022"
+#   t_start: "00:02:08"
+#   t_end: "03:50:20"
+
+# - video: data/sodapoppin/2022-10/1624238254
+#   title: "WotLK Classic WoW NAXX RAID w/ Chat - Part 38 (sodapoppin) - October 14, 2022"
+#   t_start: "00:09:10,01:57:22"
+#   t_end: "00:53:16,09:47:50"
+
+# - video: data/sodapoppin/2022-10/1624238254
+#   title: "Sodapoppin Reacts to Man in Cave w/ Chat - (sodapoppin) - October 14, 2022"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=Ip9VGZeqMfo"
+#   t_start: "00:53:16"
+#   t_end: "01:57:22"
+
+# - video: data/sodapoppin/2022-10/1624238254
+#   title: "Burger Smoothie w/ Chat - (sodapoppin) - October 14, 2022"
+#   t_start: "06:18:42"
+#   t_end: "06:37:48"
+
+
+
+
+# - video: data/sodapoppin/2022-10/1626029798
+#   title: "Trombone Champ w/ Chat - (sodapoppin) - October 16, 2022"
+#   t_start: "00:16:01"
+#   t_end: "01:22:17"
+
+# - video: data/sodapoppin/2022-10/1626029798
+#   title: "Stay Out of the House (horror) w/ Chat - (sodapoppin) - October 16, 2022"
+#   t_start: "01:39:22"
+#   t_end: "02:58:16"
+
+# - video: data/sodapoppin/2022-10/1626029798
+#   title: "My Bloody Weekend (horror) w/ Chat - (sodapoppin) - October 16, 2022"
+#   t_start: "02:59:04"
+#   t_end: "03:23:14"
+
+# - video: data/sodapoppin/2022-10/1626029798
+#   title: "Left to Rot (horror) w/ Chat - Part 1 (sodapoppin) - October 16, 2022"
+#   t_start: "03:25:14"
+#   t_end: "03:47:01"
+
+
+
+
+# - video: data/sodapoppin/2022-10/1626228464
+#   title: "Bark w/ Chat - (sodapoppin) - October 16, 2022"
+#   t_start: "00:12:21"
+#   t_end: "00:57:05"
+
+# - video: data/sodapoppin/2022-10/1626228464
+#   title: "WotLK Classic WoW OS 25 RAID w/ Chat - Part 38 (sodapoppin) - October 16, 2022"
+#   t_start: "00:57:05"
+#   t_end: "03:53:10"
+
+# - video: data/sodapoppin/2022-10/1626228464
+#   title: "Punishment Drinks w/ Chat - (sodapoppin) - October 16, 2022"
+#   t_start: "03:29:23"
+#   t_end: "03:53:10"
+
+# - video: data/sodapoppin/2022-10/1626872943
+#   title: "Sodapoppin Reacts to TSM Erobb w/ Chat - (sodapoppin) - October 17, 2022"
+#   t_start: "00:05:04,00:17:05"
+#   t_end: "00:10:45,00:18:35"
+
+# - video: data/sodapoppin/2022-10/1626872943
+#   title: "Scorn (horror) w/ Chat - (sodapoppin) - October 17, 2022"
+#   t_start: "00:18:35"
+#   t_end: "05:47:20"
+
+
+
+# - video: data/sodapoppin/2022-10/1628649792
+#   title: "Terraria Zenith w/ Chat - (sodapoppin) - October 19, 2022"
+#   t_start: "00:10:44"
+#   t_end: "02:02:56"
+
+# - video: data/sodapoppin/2022-10/1628649792
+#   title: "Slime Rancher 2 w/ Chat - (sodapoppin) - October 19, 2022"
+#   t_start: "02:10:28"
+#   t_end: "02:42:30"
+
+
+# - video: data/sodapoppin/2022-10/1628786432
+#   title: "Chance Reacts to Silent Hill Transmission w/ Chat - (sodapoppin) - October 19, 2022"
+#   t_start: "00:16:25"
+#   t_end: "00:57:48"
+
+# - video: data/sodapoppin/2022-10/1628786432
+#   title: "Crypt w/ Chat - (sodapoppin) - October 19, 2022"
+#   t_start: "00:59:02"
+#   t_end: "01:12:20"
+
+# - video: data/sodapoppin/2022-10/1628786432
+#   title: "SpiderHeck w/ Chat - (sodapoppin) - October 19, 2022"
+#   t_start: "01:15:12"
+#   t_end: "01:24:00"
+
+
+# - video: data/sodapoppin/2022-10/1628850981
+#   title: "Slime Rancher 2 w/ Chat - Part 2 (sodapoppin) - October 19, 2022"
+#   t_start: "00:03:41"
+#   t_end: "02:05:20"
+
+
+# - video: data/nmplol/2022-10/1628482296
+#   title: "Ban Council ft. Nmplol, Malena, Rofgator w/ Chat - October 19, 2022"
+#   t_start: "01:10:10"
+#   t_end: "03:48:48"
+
+
+# - video: data/esfandtv/2022-10/1629584328
+#   title: "Loot Goblins ft. Sodapoppin and Veibae LOSER POV - October 20, 2022"
+#   t_start: "00:20:05"
+#   t_end: "02:44:25"
+
+
+
+# - video: data/sodapoppin/2022-10/1630460233
+#   title: "Vampire Survivors w/ Chat - (sodapoppin) - October 21, 2022"
+#   t_start: "00:18:33"
+#   t_end: "02:52:37"
+
+# - video: data/sodapoppin/2022-10/1630460233
+#   title: "Brotato w/ Chat - (sodapoppin) - October 21, 2022"
+#   t_start: "02:52:13"
+#   t_end: "03:59:34"
+
+# - video: data/sodapoppin/2022-10/1630460233
+#   title: "WotLK Classic WoW w/ Chat - Part 41 (sodapoppin) - October 21, 2022"
+#   t_start: "03:59:34"
+#   t_end: "08:42:10"
+
+# - video: data/sodapoppin/2022-10/1630460233
+#   title: "NoPixel LAN Raid w/ Chat - (sodapoppin) - October 21, 2022"
+#   t_start: "04:23:30"
+#   t_end: "08:42:10"
+
+
+
+# - video: data/sodapoppin/2022-10/1632392807
+#   title: "Chance Reacts to Super Mario Bros. Movie w/ Chat - (sodapoppin) - October 23, 2022"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=KydqdKKyGEk"
+#   t_start: "00:07:43"
+#   t_end: "00:11:56"
+
+# - video: data/sodapoppin/2022-10/1632392807
+#   title: "Dome Keeper w/ Chat - (sodapoppin) - October 23, 2022"
+#   t_start: "00:11:58"
+#   t_end: "04:12:45"
+
+
+# - video: data/sodapoppin/2022-10/1633266075
+#   title: "Brotato w/ Chat - (sodapoppin) - October 24, 2022"
+#   t_start: "00:25:12"
+#   t_end: "01:47:09"
+
+# - video: data/sodapoppin/2022-10/1633266075
+#   title: "Dome Keeper w/ Chat - (sodapoppin) - October 24, 2022"
+#   t_start: "01:46:50"
+#   t_end: "04:56:50"
+
+
+# - video: data/sodapoppin/2022-10/1634198727
+#   title: "Dragonflight New Talent w/ Chat - (sodapoppin) - October 25, 2022"
+#   t_start: "00:08:57"
+#   t_end: "00:23:06"
+
+# - video: data/sodapoppin/2022-10/1634198727
+#   title: "Brotato w/ Chat - (sodapoppin) - October 25, 2022"
+#   t_start: "00:25:31"
+#   t_end: "04:09:35"
+
+# - video: data/sodapoppin/2022-10/1634198727
+#   title: "Propnight New Patch w/ Chat - (sodapoppin) - October 25, 2022"
+#   t_start: "04:10:00"
+#   t_end: "04:59:50"
+
+
+
+
+
+# - video: data/sodapoppin/2022-10/1635969038
+#   title: "Chance Reacts to How I Cook My $2 Steak w/ Chat - (sodapoppin) - October 27, 2022"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=hETgbsF5yY8"
+#   t_start: "00:23:10"
+#   t_end: "00:46:20"
+
+# - video: data/sodapoppin/2022-10/1635969038
+#   title: "Dome Keeper w/ Chat - (sodapoppin) - October 27, 2022"
+#   t_start: "00:46:29"
+#   t_end: "03:38:25"
+
+# - video: data/sodapoppin/2022-10/1635969038
+#   title: "Brotato w/ Chat - (sodapoppin) - October 27, 2022"
+#   t_start: "03:44:12"
+#   t_end: "04:19:38"
+
+# - video: data/sodapoppin/2022-10/1635969038
+#   title: "Call of Duty: Modern Warfare II w/ Chat - Part 1 (sodapoppin) - October 27, 2022"
+#   t_start: "04:38:12"
+#   t_end: "05:55:40"
+
+
+# - video: data/sodapoppin/2022-10/1636256129
+#   title: "Call of Duty: Modern Warfare II w/ Chat - Part 2 (sodapoppin) - October 27, 2022"
+#   t_start: "00:00:01"
+#   t_end: "02:51:03"
+
+# - video: data/sodapoppin/2022-10/1636256129
+#   title: "Endoparasitic w/ Chat - (sodapoppin) - October 27, 2022"
+#   t_start: "02:53:09"
+#   t_end: "04:00:34"
+
+# - video: data/sodapoppin/2022-10/1636256129
+#   title: "Propnight w/ Chat - (sodapoppin) - October 27, 2022"
+#   t_start: "04:02:32,04:30:00"
+#   t_end: "04:16:13,05:07:31"
+
+# - video: data/sodapoppin/2022-10/1636256129
+#   title: "Chance Reacts to Tragic Transformation of Nikocado Avocado - October 27, 2022"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=wJa2thBJ8Fw"
+#   t_start: "04:16:13"
+#   t_end: "04:30:00"
+
+# - video: data/sodapoppin/2022-10/1636256129
+#   title: "Warcraft III 8-bit Raid w/ Chat - (sodapoppin) - October 27, 2022"
+#   t_start: "05:14:59"
+#   t_end: "05:44:52"
+
+# - video: data/sodapoppin/2022-10/1636256129
+#   title: "Slay the Spire w/ Chat - (sodapoppin) - October 27, 2022"
+#   t_start: "05:49:40"
+#   t_end: "07:20:10"
+
+# - video: data/schlatt/2022-10/1636986903
+#   title: "Streamers VS Youtuber Dodgeball Tournament w/ Chat - October 28, 2022"
+#   t_start: "00:01:13"
+#   t_end: "01:37:52"
+
+
+# - video: data/sodapoppin/2022-10/1637123908
+#   title: "Chance on His Dodgeball Tourney w/ Chat - (sodapoppin) - October 28, 2022"
+#   t_start: "00:00:30"
+#   t_end: "00:25:38"
+
+# - video: data/sodapoppin/2022-10/1637123908
+#   title: "WotLK Classic WoW w/ Chat - Part 42 (sodapoppin) - October 28, 2022"
+#   t_start: "00:25:23"
+#   t_end: "04:45:00"
+
+
+
+
+# - video: data/sodapoppin/2022-10/1637988492
+#   title: "Raid Rankings Reaction to RIOT MMO Details Revealed - (sodapoppin) - October 29, 2022"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=pxL1yfYyK_0"
+#   t_start: "00:04:34"
+#   t_end: "00:39:23"
+
+# - video: data/sodapoppin/2022-10/1637988492
+#   title: "Chicken Feet (horror) w/ Chat - (sodapoppin) - October 29, 2022"
+#   t_start: "00:59:43"
+#   t_end: "01:51:45"
+
+# - video: data/sodapoppin/2022-10/1637988492
+#   title: "Dark and Darker (reupload) w/ Chat - (sodapoppin) - October 29, 2022"
+#   t_start: "01:53:35"
+#   t_end: "04:49:58"
+
+# - video: data/sodapoppin/2022-10/1637988492
+#   title: "Signalis (horror) w/ Chat - (sodapoppin) - October 29, 2022"
+#   t_start: "04:50:41"
+#   t_end: "06:44:46"
+
+# - video: data/sodapoppin/2022-10/1637988492
+#   title: "Resident Evil Village DLC w/ Chat - (sodapoppin) - October 29, 2022"
+#   t_start: "07:28:59"
+#   t_end: "10:58:44"
+
+# - video: data/sodapoppin/2022-10/1637988492
+#   title: "Dave The Diver w/ Chat - (sodapoppin) - October 29, 2022"
+#   t_start: "11:04:26"
+#   t_end: "11:33:00"
+
+
+
+# - video: data/sodapoppin/2022-10/1637988492
+#   title: "Dark and Darker with Veibae w/ Chat - Part 1 (sodapoppin) - October 29, 2022"
+#   t_start: "11:33:00"
+#   t_end: "12:28:21"
+
+# - video: data/sodapoppin/2022-10/1638511741
+#   title: "Dark and Darker with Veibae w/ Chat - Part 2 (sodapoppin) - October 30, 2022"
+#   t_start: "00:00:00"
+#   t_end: "03:47:50"
+
+
+
+# - video: data/sodapoppin/2022-10/1638986574
+#   title: "Watching Tom Scott Videos w/ Chat - (sodapoppin) - October 30, 2022"
+#   description: "Original Videos\nhttps://www.youtube.com/watch?v=fzfpExS_wic\nhttps://www.youtube.com/watch?v=DMKcO-T5Y4o\nhttps://www.youtube.com/watch?v=bJ_seXo-Enc\nhttps://www.youtube.com/watch?v=4aCMDQsx740\nhttps://www.youtube.com/watch?v=wD79NZroV88\nhttps://www.youtube.com/watch?v=G025oxyWv0E\nhttps://www.youtube.com/watch?v=r6Rp-uo6HmI\nhttps://www.youtube.com/watch?v=h9j89L8eQQk\nhttps://www.youtube.com/watch?v=AcQifPHcMLE\nhttps://www.youtube.com/watch?v=2tdiKTSdE9Y"
+#   t_start: "00:29:00"
+#   t_end: "01:46:18"
+
+# - video: data/sodapoppin/2022-10/1638986574
+#   title: "Dome Keeper w/ Chat - (sodapoppin) - October 30, 2022"
+#   t_start: "03:00:56"
+#   t_end: "04:44:03"
+
+# - video: data/sodapoppin/2022-10/1638986574
+#   title: "Dark and Darker w/ Chat - (sodapoppin) - October 30, 2022"
+#   t_start: "04:43:37"
+#   t_end: "15:45:20"
+
+
+# - video: data/sodapoppin/2022-10/1639897309
+#   title: "Chance's Halloween Costumes w/ Chat - (sodapoppin) - October 31, 2022"
+#   t_start: "00:13:57"
+#   t_end: "00:52:17"
+
+# - video: data/sodapoppin/2022-10/1639897309
+#   title: "Late Night Mop (horror) w/ Chat - (sodapoppin) - October 31, 2022"
+#   t_start: "00:51:50"
+#   t_end: "00:59:57"
+
+# - video: data/sodapoppin/2022-10/1639897309
+#   title: "Alisa (horror) w/ Chat - (sodapoppin) - October 31, 2022"
+#   t_start: "00:59:58"
+#   t_end: "01:26:45"
+
+# - video: data/sodapoppin/2022-10/1639897309
+#   title: "The Bathhouse (horror) w/ Chat - (sodapoppin) - October 31, 2022"
+#   t_start: "01:27:05"
+#   t_end: "02:46:13"
+
+# - video: data/sodapoppin/2022-10/1639897309
+#   title: "Broken Through (horror) w/ Chat - (sodapoppin) - October 31, 2022"
+#   t_start: "02:46:54"
+#   t_end: "03:45:22"
+
+# - video: data/sodapoppin/2022-10/1639897309
+#   title: "Tscampmassacre (horror) w/ Chat - (sodapoppin) - October 31, 2022"
+#   t_start: "03:45:19"
+#   t_end: "04:00:28"
+
+# - video: data/sodapoppin/2022-10/1639897309
+#   title: "Cycle (horror) w/ Chat - (sodapoppin) - October 31, 2022"
+#   t_start: "04:00:28"
+#   t_end: "04:25:16"
+
+# - video: data/sodapoppin/2022-10/1639897309
+#   title: "Theres Nobody (horror) w/ Chat - (sodapoppin) - October 31, 2022"
+#   t_start: "04:25:15"
+#   t_end: "04:29:19"
+
+# - video: data/sodapoppin/2022-10/1639897309
+#   title: "Music Disc 11 (horror) w/ Chat - (sodapoppin) - October 31, 2022"
+#   t_start: "04:29:19"
+#   t_end: "04:33:13"
+
+# - video: data/sodapoppin/2022-10/1639897309
+#   title: "Halloween I and II (horror) w/ Chat - (sodapoppin) - October 31, 2022"
+#   t_start: "04:33:13"
+#   t_end: "05:18:24"
+
+# - video: data/sodapoppin/2022-10/1639897309
+#   title: "Poppy Playtime: Episode 2 (horror) w/ Chat - (sodapoppin) - October 31, 2022"
+#   t_start: "05:18:48"
+#   t_end: "07:36:15"
+
+# - video: data/sodapoppin/2022-10/1639897309
+#   title: "Dark and Darker w/ Chat - (sodapoppin) - October 31, 2022"
+#   t_start: "07:36:38"
+#   t_end: "08:02:27"
+
+
+# - video: data/sodapoppin/2022-11/1641640811
+#   title: "Brotato w/ Chat - (sodapoppin) - November 2, 2022"
+#   t_start: "00:39:31"
+#   t_end: "01:08:13"
+
+# - video: data/sodapoppin/2022-11/1641640811
+#   title: "Rampage Knights w/ Chat - (sodapoppin) - November 2, 2022"
+#   t_start: "01:08:04"
+#   t_end: "02:24:49"
+
+# - video: data/sodapoppin/2022-11/1641640811
+#   title: "20 Minutes Till Dawn w/ Chat - (sodapoppin) - November 2, 2022"
+#   t_start: "02:24:49"
+#   t_end: "04:09:58"
+
+# - video: data/sodapoppin/2022-11/1641640811
+#   title: "Dome Keeper w/ Chat - (sodapoppin) - November 2, 2022"
+#   t_start: "04:12:53"
+#   t_end: "06:07:50"
+
+
+
+# - video: data/sodapoppin/2022-11/1643410573
+#   title: "SODA (Official Movie) Joker Parody w/ Chat - (sodapoppin) - November 4, 2022"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=kTYcNiC-gc8"
+#   t_start: "00:21:27"
+#   t_end: "00:33:27"
+
+# - video: data/sodapoppin/2022-11/1643410573
+#   title: "Chance Reacts to The iPhone USB-C MKBHD - November 4, 2022"
+#   description: "Original Videos:\nhttps://www.youtube.com/watch?v=UdgRUCVUts0\nhttps://www.youtube.com/watch?v=C6Ni9rH6VmA"
+#   t_start: "00:35:57"
+#   t_end: "01:06:04"
+
+# - video: data/sodapoppin/2022-11/1643410573
+#   title: "Big Announcement w/ Chat - (sodapoppin) - November 4, 2022"
+#   t_start: "01:18:58"
+#   t_end: "01:39:41"
+
+# - video: data/sodapoppin/2022-11/1643410573
+#   title: "Tiny Rogues w/ Chat - (sodapoppin) - November 4, 2022"
+#   t_start: "01:39:51"
+#   t_end: "05:34:42"
+
+# - video: data/sodapoppin/2022-11/1643410573
+#   title: "Brotato w/ Chat - (sodapoppin) - November 4, 2022"
+#   t_start: "05:35:13"
+#   t_end: "06:03:51"
+
+# - video: data/sodapoppin/2022-11/1643410573
+#   title: "Dome Keeper w/ Chat - (sodapoppin) - November 4, 2022"
+#   t_start: "06:03:51"
+#   t_end: "07:20:53"
+
+# - video: data/sodapoppin/2022-11/1643410573
+#   title: "Chance on God of War Playthrough w/ Chat - (sodapoppin) - November 4, 2022"
+#   t_start: "07:24:09"
+#   t_end: "07:29:37"
+
+# - video: data/sodapoppin/2022-11/1643410573
+#   title: "Noita w/ Chat - (sodapoppin) - November 4, 2022"
+#   t_start: "07:29:40"
+#   t_end: "08:16:42"
+
+
+# - video: data/sodapoppin/2022-11/1644519740
+#   title: "Barji Kart w/ Chat - (sodapoppin) - November 5, 2022"
+#   t_start: "00:36:31"
+#   t_end: "00:54:59"
+
+# - video: data/sodapoppin/2022-11/1644519740
+#   title: "Skull Chainz w/ Chat - (sodapoppin) - November 5, 2022"
+#   t_start: "00:55:52"
+#   t_end: "02:04:24"
+
+# - video: data/sodapoppin/2022-11/1644519740
+#   title: "Evil Nun: The Broken Mask (horror) w/ Chat - (sodapoppin) - November 5, 2022"
+#   t_start: "02:05:59"
+#   t_end: "02:42:35"
+
+# - video: data/sodapoppin/2022-11/1644519740
+#   title: "Cat Herder w/ Chat - (sodapoppin) - November 5, 2022"
+#   t_start: "02:43:16"
+#   t_end: "03:06:43"
+
+# - video: data/sodapoppin/2022-11/1644519740
+#   title: "The Chant w/ Chat - (sodapoppin) - November 5, 2022"
+#   t_start: "03:07:13"
+#   t_end: "03:47:50"
+
+
+
+# - video: data/sodapoppin/2022-11/1645367038
+#   title: "Response on Dome Keeper Drilling w/ Chat - (sodapoppin) - November 6, 2022"
+#   t_start: "00:16:21,00:30:43"
+#   t_end: "00:27:19,00:31:47"
+
+# - video: data/sodapoppin/2022-11/1645367038
+#   title: "Tiny Rogues w/ Chat - (sodapoppin) - November 6, 2022"
+#   t_start: "00:27:19"
+#   t_end: "07:13:40"
+
+
+# - video: data/sodapoppin/2022-11/1646255995
+#   title: "Tiny Rogues w/ Chat - (sodapoppin) - November 7, 2022"
+#   t_start: "00:09:39,02:01:54"
+#   t_end: "01:56:19,03:34:59"
+
+# - video: data/sodapoppin/2022-11/1646255995
+#   title: "OTK Winter Merch w/ Chat - (sodapoppin) - November 7, 2022"
+#   t_start: "01:56:19"
+#   t_end: "02:01:54"
+
+# - video: data/sodapoppin/2022-11/1646255995
+#   title: "Soulstone Survivors w/ Chat - (sodapoppin) - November 7, 2022"
+#   t_start: "03:34:40"
+#   t_end: "04:50:00"
+
+
+# - video: data/sodapoppin/2022-11/1647208736
+#   title: "Sonic Frontiers #ad w/ Chat - (sodapoppin) - November 8, 2022"
+#   t_start: "00:43:57"
+#   t_end: "02:39:30"
+
+
+
+# - video: data/sodapoppin/2022-11/1648075074
+#   title: "Tiny Rogues w/ Chat - (sodapoppin) - November 9, 2022"
+#   t_start: "00:18:49"
+#   t_end: "03:19:53"
+
+# - video: data/sodapoppin/2022-11/1648075074
+#   title: "Dome Keeper Prestige Mode w/ Chat - (sodapoppin) - November 9, 2022"
+#   t_start: "03:19:53"
+#   t_end: "06:01:27"
+
+# - video: data/sodapoppin/2022-11/1648075074
+#   title: "Soulstone Survivors w/ Chat - (sodapoppin) - November 9, 2022"
+#   t_start: "06:01:27"
+#   t_end: "07:31:10"
+
+
+
+
+# - video: data/sodapoppin/2022-11/1648898516
+#   title: "Chance Reacts to PogOween by Muhlen w/ Chat - (sodapoppin) - November 10, 2022"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=QDQvp89uoJc"
+#   t_start: "00:15:47"
+#   t_end: "00:17:47"
+
+# - video: data/sodapoppin/2022-11/1648898516
+#   title: "Razor Naga Unboxing #ad w/ Chat - (sodapoppin) - November 10, 2022"
+#   t_start: "03:16:47"
+#   t_end: "03:43:20"
+
+# - video: data/sodapoppin/2022-11/1648898516
+#   title: "Soulstone Survivors w/ Chat - (sodapoppin) - November 10, 2022"
+#   t_start: "03:44:24"
+#   t_end: "06:50:20"
+
+
+
+
+
+# - video: data/sodapoppin/2022-11/1650851475
+#   title: "Chance Reacts to OTK $1000 STEAK COOKING CHALLENGE - (sodapoppin) - November 12, 2022"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=uBa_Awfgy2Y"
+#   t_start: "00:15:49"
+#   t_end: "00:37:37"
+
+# - video: data/sodapoppin/2022-11/1650851475
+#   title: "Single Player: Horror w/ Chat - (sodapoppin) - November 12, 2022"
+#   t_start: "00:49:17"
+#   t_end: "01:09:45"
+
+# - video: data/sodapoppin/2022-11/1650851475
+#   title: "Lunistice w/ Chat - (sodapoppin) - November 12, 2022"
+#   t_start: "01:09:45"
+#   t_end: "01:22:59"
+
+# - video: data/sodapoppin/2022-11/1650851475
+#   title: "Dredge w/ Chat - (sodapoppin) - November 12, 2022"
+#   t_start: "01:23:02"
+#   t_end: "02:19:57"
+
+# - video: data/sodapoppin/2022-11/1650851475
+#   title: "There Is No Light w/ Chat - (sodapoppin) - November 12, 2022"
+#   t_start: "02:24:25"
+#   t_end: "03:18:32"
+
+# - video: data/sodapoppin/2022-11/1650851475
+#   title: "Squidward's Prediction (horror) w/ Chat - (sodapoppin) - November 12, 2022"
+#   t_start: "03:24:15"
+#   t_end: "03:40:42"
+
+# - video: data/sodapoppin/2022-11/1650851475
+#   title: "The Thing PT (horror) w/ Chat - (sodapoppin) - November 12, 2022"
+#   t_start: "03:43:19"
+#   t_end: "03:48:42"
+
+# - video: data/sodapoppin/2022-11/1650851475
+#   title: "Hats and Hand Grenades w/ Chat - (sodapoppin) - November 12, 2022"
+#   t_start: "03:52:02"
+#   t_end: "04:12:52"
+
+# - video: data/sodapoppin/2022-11/1650851475
+#   title: "Southpoint (horror) w/ Chat - (sodapoppin) - November 12, 2022"
+#   t_start: "04:15:20"
+#   t_end: "04:39:11"
+
+# - video: data/sodapoppin/2022-11/1650851475
+#   title: "Hololive Error (horror) w/ Chat - (sodapoppin) - November 12, 2022"
+#   t_start: "04:47:35"
+#   t_end: "05:24:24"
+
+# - video: data/sodapoppin/2022-11/1650851475
+#   title: "I Frog-ot w/ Chat - (sodapoppin) - November 12, 2022"
+#   t_start: "05:28:20"
+#   t_end: "06:07:25"
+
+# - video: data/sodapoppin/2022-11/1650851475
+#   title: "Moonscars w/ Chat - (sodapoppin) - November 12, 2022"
+#   t_start: "06:09:44"
+#   t_end: "07:16:32"
+
+
+# - video: data/sodapoppin/2022-11/1651819775
+#   title: "Wanba Warriors OTK TRASH TALK w/ Chat - (sodapoppin) - November 13, 2022"
+#   t_start: "00:18:16"
+#   t_end: "03:49:12"
+
+
+
+# - video: data/sodapoppin/2022-11/1652682938
+#   title: "Among Us VR w/ Chat - (sodapoppin) - November 14, 2022"
+#   t_start: "00:08:50"
+#   t_end: "00:13:44"
+
+# - video: data/sodapoppin/2022-11/1652682938
+#   title: "Day After Wanba Warriors Trash Talk w/ Chat - (sodapoppin) - November 14, 2022"
+#   t_start: "00:13:45"
+#   t_end: "00:20:40"
+
+# - video: data/sodapoppin/2022-11/1652682938
+#   title: "Game Awards Voting w/ Chat - (sodapoppin) - November 14, 2022"
+#   t_start: "00:20:29"
+#   t_end: "00:57:37"
+
+# - video: data/sodapoppin/2022-11/1652682938
+#   title: "Dome Keeper New Keeper w/ Chat - (sodapoppin) - November 14, 2022"
+#   t_start: "00:57:03"
+#   t_end: "01:39:38"
+
+# - video: data/sodapoppin/2022-11/1652682938
+#   title: "Enter the Gungeon w/ Chat - (sodapoppin) - November 14, 2022"
+#   t_start: "01:39:38"
+#   t_end: "03:13:35"
+
+# - video: data/sodapoppin/2022-11/1652682938
+#   title: "Soulstone Survivors w/ Chat - (sodapoppin) - November 14, 2022"
+#   t_start: "03:13:43"
+#   t_end: "05:19:50"
+
+
+#======================================================================
+#======================================================================
+#======================================================================
+
+
+- video: data/sodapoppin/2022-11/1654472924
+  title: "Anglerfish w/ Chat - (sodapoppin) - November 16, 2022"
+  t_start: "00:26:03"
+  t_end: "01:56:17"
+
+- video: data/sodapoppin/2022-11/1654472924
+  title: "Chatting with Vigors w/ Chat - (sodapoppin) - November 16, 2022"
+  t_start: "01:56:31"
+  t_end: "02:12:33"
+
+- video: data/sodapoppin/2022-11/1654472924
+  title: "Obama Boss Fight w/ Chat - (sodapoppin) - November 16, 2022"
+  t_start: "02:12:33"
+  t_end: "02:20:00"
+
+- video: data/sodapoppin/2022-11/1654472924
+  title: "Tiny Rogues w/ Chat - (sodapoppin) - November 16, 2022"
+  t_start: "02:20:45"
+  t_end: "03:06:05"
+
+- video: data/sodapoppin/2022-11/1654472924
+  title: "Backpack Hero w/ Chat - (sodapoppin) - November 16, 2022"
+  t_start: "03:05:51"
+  t_end: "06:26:50"
+
+
+
+
+- video: data/nmplol/2022-11/1656216825
+  title: "OTK Arena Invitational ft. Asmonfold, Soda, Nmplol, Esfand - November 18, 2022"
+  t_start: "00:13:16"
+  t_end: "05:30:03"
+
+
+- video: data/sodapoppin/2022-11/1657355325
+  title: "LostGamer.io w/ Chat - (sodapoppin) - November 19, 2022"
+  t_start: "00:25:19"
+  t_end: "00:33:32"
+
+- video: data/sodapoppin/2022-11/1657355325
+  title: "Watching Game Trailer w/ Chat - (sodapoppin) - November 19, 2022"
+  t_start: "00:09:36"
+  t_end: "01:11:37"
+
+- video: data/sodapoppin/2022-11/1657355325
+  title: "The Shadow over Route 80 (indie horror) w/ Chat - (sodapoppin) - November 19, 2022"
+  t_start: "01:11:37"
+  t_end: "01:38:09"
+
+- video: data/sodapoppin/2022-11/1657355325
+  title: "The Sinless (indie horror) w/ Chat - (sodapoppin) - November 19, 2022"
+  t_start: "01:39:20"
+  t_end: "01:51:24"
+
+- video: data/sodapoppin/2022-11/1657355325
+  title: "Melissa (indie horror) w/ Chat - (sodapoppin) - November 19, 2022"
+  t_start: "01:52:15"
+  t_end: "02:08:36"
+
+- video: data/sodapoppin/2022-11/1657355325
+  title: "Rental (indie horror) w/ Chat - (sodapoppin) - November 19, 2022"
+  t_start: "02:09:22"
+  t_end: "02:14:38"
+
+- video: data/sodapoppin/2022-11/1657355325
+  title: "We Who Are About To Die w/ Chat - (sodapoppin) - November 19, 2022"
+  t_start: "02:15:19"
+  t_end: "04:38:46"
+
+- video: data/sodapoppin/2022-11/1657355325
+  title: "Skateboards FAKKU x Veibae w/ Chat - (sodapoppin) - November 19, 2022"
+  description: "https://merch.fakku.net/products/fakku-x-veibae?variant=43948643385664"
+  t_start: "03:36:32"
+  t_end: "03:41:54"
+
+- video: data/sodapoppin/2022-11/1657355325
+  title: "Dreamwild w/ Chat - (sodapoppin) - November 19, 2022"
+  t_start: "04:40:13"
+  t_end: "04:46:30"
+
+
+- video: data/sodapoppin/2022-11/1657355325
+  title: "McPixel 3 w/ Chat - (sodapoppin) - November 19, 2022"
+  t_start: "04:46:32"
+  t_end: "05:29:19"
+
+- video: data/sodapoppin/2022-11/1657355325
+  title: "Organs Please w/ Chat - (sodapoppin) - November 19, 2022"
+  t_start: "05:31:56"
+  t_end: "05:43:12"
+
+- video: data/sodapoppin/2022-11/1657355325
+  title: "Reacting to LivestreamFails w/ Chat - (sodapoppin) - November 19, 2022"
+  t_start: "05:44:29"
+  t_end: "05:50:55"
+
+- video: data/sodapoppin/2022-11/1657355325
+  title: "Edengate: The Edge of Life w/ Chat - (sodapoppin) - November 19, 2022"
+  t_start: "05:51:22"
+  t_end: "06:14:42"
+
+- video: data/sodapoppin/2022-11/1657355325
+  title: "Witchpunk w/ Chat - (sodapoppin) - November 19, 2022"
+  t_start: "06:15:17"
+  t_end: "06:26:41"
+
+
+- video: data/sodapoppin/2022-11/1657691618
+  title: "Dandy Ace w/ Chat - (sodapoppin) - November 19, 2022"
+  t_start: "00:00:18"
+  t_end: "00:58:17"
+
+
+- video: data/sodapoppin/2022-11/1657833950
+  title: "Wanba Warriors vs Lacari w/ Chat - (sodapoppin) - November 19, 2022"
+  t_start: "00:00:10"
+  t_end: "01:29:49"
+
+
+- video: data/nmplol/2022-11/1658152528
+  title: "OTK Friendsgiving Prestream w/ Chat - (Nmplol) - November 20, 2022"
+  t_start: "01:36:29"
+  t_end: "05:04:58"
+
+- video: data/sodapoppin/2022-11/1658389558
+  title: "OTK Friendsgiving w/ Chat - (sodapoppin) - November 20, 2022"
+  t_start: "00:21:31"
+  t_end: "04:22:16"
+
+
+
+- video: data/sodapoppin/2022-11/1662455753
+  title: "Stacklands w/ Chat - (sodapoppin) - November 25, 2022"
+  t_start: "00:19:24"
+  t_end: "01:47:51"
+
+- video: data/sodapoppin/2022-11/1662455753
+  title: "Isle of Arrows w/ Chat - (sodapoppin) - November 25, 2022"
+  t_start: "01:58:45"
+  t_end: "04:57:20"
+
+
+
+- video: data/sodapoppin/2022-11/1663337792
+  title: "Overwatch New Hero w/ Chat - (sodapoppin) - November 26, 2022"
+  t_start: "00:04:39"
+  t_end: "00:15:41"
+
+- video: data/sodapoppin/2022-11/1663337792
+  title: "Watching Game Trailers w/ Chat - (sodapoppin) - November 26, 2022"
+  t_start: "00:15:41"
+  t_end: "00:46:17"
+
+- video: data/sodapoppin/2022-11/1663337792
+  title: "The Ball Game (indie horror) w/ Chat - (sodapoppin) - November 26, 2022"
+  t_start: "00:46:48"
+  t_end: "00:57:56"
+
+- video: data/sodapoppin/2022-11/1663337792
+  title: "Spin to Win (indie horror) w/ Chat - (sodapoppin) - November 26, 2022"
+  t_start: "00:58:12"
+  t_end: "01:10:25"
+
+- video: data/sodapoppin/2022-11/1663337792
+  title: "Try to Fly w/ Chat - (sodapoppin) - November 26, 2022"
+  t_start: "01:11:32"
+  t_end: "02:01:36"
+
+- video: data/sodapoppin/2022-11/1663337792
+  title: "Para Eyes (horror) w/ Chat - Part 1 (sodapoppin) - November 26, 2022"
+  t_start: "02:02:36"
+  t_end: "02:46:01"
+
+- video: data/sodapoppin/2022-11/1663472880
+  title: "Para Eyes (horror) w/ Chat - Part 2 (sodapoppin) - November 26, 2022"
   t_start: "00:00:00"
-  t_end: "04:42:05"
+  t_end: "00:36:31"
 
-- video: data/sodapoppin/2022-02/1291535231
-  title: "Lost Ark w/ Chat - Part 3 (sodapoppin) - February 8, 2022"
-  t_start: "04:42:05"
-  t_end: "08:03:40"
+- video: data/sodapoppin/2022-11/1663472880
+  title: "Goat Simulator 3 w/ Veibae - (sodapoppin) - November 26, 2022"
+  t_start: "00:36:31"
+  t_end: "02:01:34"
 
-- video: data/sodapoppin/2022-02/1292647196
-  title: "Lost Ark w/ Chat - Part 4 (sodapoppin) - February 9, 2022"
-  t_start: "00:01:35"
-  t_end: "02:35:10"
-
-- video: data/sodapoppin/2022-02/1292647196
-  title: "Chance Watches Nintendo Direct w/ Chat - (sodapoppin) - February 9, 2022"
-  t_start: "02:35:10"
-  t_end: "03:15:49"
-
-- video: data/sodapoppin/2022-02/1292647196
-  title: "Lost Ark w/ Chat - Part 5 (sodapoppin) - February 9, 2022"
-  t_start: "03:21:57"
-  t_end: "07:37:57"
-
-- video: data/sodapoppin/2022-02/1292647196
-  title: "Lost Ark w/ Chat - Part 6 (sodapoppin) - February 9, 2022"
-  t_start: "07:37:57"
-  t_end: "11:04:10"
+- video: data/sodapoppin/2022-11/1663472880
+  title: "Warhammer Darktide w/ Veibae #ad - (sodapoppin) - November 26, 2022"
+  t_start: "02:01:29"
+  t_end: "06:56:40"
 
 
-# https://www.twitch.tv/videos/1290944320?filter=archives&sort=time
-# 1290944320
-- video: data/skippypoppin/2022-02/1290944320
-  title: "Chance and Veibae Play Games (no voice) - (skippypoppin) - February 7, 2022"
-  t_start: "01:18:09"
-  t_end: "06:51:00"
-
-
-- video: data/sodapoppin/2022-02/1297326392
-  title: "Lost Ark w/ Chat - Part 7 (sodapoppin) - February 13, 2022"
-  t_start: "00:06:08"
-  t_end: "08:27:20"
-
-- video: data/sodapoppin/2022-02/1298317686
-  title: "Lost Ark w/ Chat - Part 8 (sodapoppin) - February 14, 2022"
-  t_start: "00:00:07"
-  t_end: "04:17:10"
-
-- video: data/sodapoppin/2022-02/1301035763
-  title: "Lost Ark w/ Chat - Part 8 (sodapoppin) - February 17, 2022"
-  t_start: "00:09:07,06:21:13,07:40:49,08:52:57,09:11:44"
-  t_end: "06:00:02,07:19:52,08:44:10,09:10:40,09:37:38"
 
 
 
