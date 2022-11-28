@@ -2,6 +2,8 @@
 
 import twitch  # pip install python-twitch-client
 import yaml  # pip install PyYAML
+from webvtt import WebVTT, Caption  # pip install webvtt-py
+from vosk import Model, KaldiRecognizer, SetLogLevel  # pip install vosk
 
 import os
 import sys
@@ -10,6 +12,7 @@ import subprocess
 import shutil
 from datetime import datetime
 import utils
+import time
 
 
 # the vod which we wish to download
@@ -18,6 +21,7 @@ if len(sys.argv) != 2:
     exit(-1)
 vod_id_to_download = int(sys.argv[1])
 render_chat = False
+transcribe = False
 
 # authentication information
 path_base = os.path.dirname(os.path.abspath(__file__))
@@ -38,6 +42,7 @@ path_twitch_ffmpeg = path_base + "/thirdparty/ffmpeg-4.3.1-amd64-static/ffmpeg"
 path_root = path_base + "/../data/"
 # path_temp = path_base + "/../data_temp/single_video/"
 path_temp = "/tmp/tvc_single_video/"
+path_model = path_base + "/thirdparty/vosk-model-small-en-us-0.15/"
 
 # ================================================================
 # ================================================================
@@ -119,6 +124,48 @@ if not utils.terminated_requested and not os.path.exists(file_path_chat):
     #subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
     subprocess.Popen(cmd, shell=True).wait()
     shutil.move(file_path_chat_tmp, file_path_chat) 
+
+# AUDIO-TO-TEXT: check if file exists
+if transcribe:
+    file_path_webvtt = path_data + export_folder + str(video['helix']['id']) + ".vtt"
+    if not utils.terminated_requested and os.path.exists(file_path) and not os.path.exists(file_path_webvtt):
+        print("transcribing: " + file_path_webvtt)
+        t0 = time.time()
+
+        # open the model
+        SetLogLevel(-1)
+        sample_rate = 16000
+        model = Model(path_model)
+        rec = KaldiRecognizer(model, sample_rate)
+        rec.SetWords(True)
+
+        # open ffmpeg pipe stream of the audio file (from video)
+        command = [path_twitch_ffmpeg, '-nostdin', '-loglevel', 'quiet', '-i', file_path,
+                '-ar', str(sample_rate), '-ac', '1', '-f', 's16le', '-']
+        # process = subprocess.Popen(command, stdout=subprocess.PIPE)
+        process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+        results = []
+        while True:
+            data = process.stdout.read(4000)
+            if len(data) == 0:
+                break
+            if rec.AcceptWaveform(data):
+                text = rec.Result()
+                results.append(text)
+        results.append(rec.FinalResult())
+
+        # convert to standard format
+        vtt = WebVTT()
+        for i, res in enumerate(results):
+            words = json.loads(res).get('result')
+            if not words:
+                continue
+            for word in words:
+                start = utils.webvtt_time_string(word['start'])
+                end = utils.webvtt_time_string(word['end'])
+                vtt.captions.append(Caption(start, end, word['word']))
+        vtt.save(file_path_webvtt)
+        print("done in " + str(time.time() - t0) + " seconds")
 
 # RENDER: check if the file exists
 if render_chat:
