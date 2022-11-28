@@ -19,4 +19,5 @@ fi
 DATE=$(date +\%Y-\%m-\%d)
 TIME=$(date +\%H-\%M-\%S)
 mkdir -p "$CWD/../logs/$DATE/"
-python3 "$CWD/../$1" "${@:2}" &> "$CWD/../logs/$DATE/$TIME-$1.log"
+#python3 "$CWD/../$1" "${@:2}" &> "$CWD/../logs/$DATE/$TIME-$1.log"
+python3 "$CWD/../$1" "${@:2}" 2>&1 | tee "$CWD/../logs/$DATE/$TIME-$1.log"
