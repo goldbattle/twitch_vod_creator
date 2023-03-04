@@ -27,9 +27,7 @@ client_secret = auth["client_secret"]
 # ================================================================
 
 # paths of the cli and data
-# path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.40.7/TwitchDownloaderCLI.exe"
 # path_twitch_ffmpeg = path_base + "/thirdparty/Twitch_Downloader_1.40.7/ffmpeg.exe"
-path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.40.7/TwitchDownloaderCLI"
 path_twitch_ffmpeg = path_base + "/thirdparty/ffmpeg-4.3.1-amd64-static/ffmpeg"
 path_root = path_base + "/../data/"
 path_model = path_base + "/thirdparty/vosk-model-small-en-us-0.15/"
@@ -41,7 +39,7 @@ path_model = path_base + "/thirdparty/vosk-model-small-en-us-0.15/"
 utils.setup_signal_handle()
 
 
-channel = "clintstevens"
+channel = "sodapoppin"
 
 
 # find the live video files
@@ -49,13 +47,17 @@ files_names = []
 files_out = []
 for subdir, dirs, files in os.walk(path_root + "/" + channel + "/"):
     for file in files:
+        if utils.terminated_requested:
+            break
         ext = file.split(os.extsep)
         if len(ext) != 2:
             continue
-        if ext[1] == "mp4":
+        if ext[1] == "mp4" and "_" not in file:
             files_out.append(os.path.join(subdir, ext[0]+".vtt"))
             files_names.append(os.path.join(subdir, file))
             print(os.path.join(subdir, ext[0]+".vtt"))
+    if utils.terminated_requested:
+        break
 print("found "+str(len(files_out))+" videos found to process")
 
 # loop through each video and convert it using ffmpeg

@@ -20,7 +20,7 @@ if len(sys.argv) != 2:
     print("please pass at least a single vod id to download...")
     exit(-1)
 vod_id_to_download = int(sys.argv[1])
-render_chat = False
+render_chat = True
 transcribe = False
 
 # authentication information
@@ -35,9 +35,7 @@ client_secret = auth["client_secret"]
 # ================================================================
 
 # paths of the cli and data
-# path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.40.7/TwitchDownloaderCLI.exe"
-# path_twitch_ffmpeg = path_base + "/thirdparty/Twitch_Downloader_1.40.7/ffmpeg.exe"
-path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.40.7/TwitchDownloaderCLI"
+path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.51.2/TwitchDownloaderCLI"
 path_twitch_ffmpeg = path_base + "/thirdparty/ffmpeg-4.3.1-amd64-static/ffmpeg"
 path_root = path_base + "/../data/"
 # path_temp = path_base + "/../data_temp/single_video/"
@@ -106,9 +104,10 @@ if not utils.terminated_requested and not os.path.exists(file_path_info):
 file_path = path_data + export_folder + str(video['helix']['id']) + ".mp4"
 print("download video: " + file_path)
 if not utils.terminated_requested and not os.path.exists(file_path):
-    cmd = path_twitch_cli + ' -m VideoDownload' \
+    cmd = path_twitch_cli + ' videodownload' \
           + ' --id ' + str(video['helix']['id']) + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
           + ' --temp-path "' + path_temp + '" --quality 1080p60 -o ' + file_path
+    print(cmd)
     # subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
     subprocess.Popen(cmd, shell=True).wait()
 
@@ -117,12 +116,14 @@ file_path_chat = path_data + export_folder + str(video['helix']['id']) + "_chat.
 file_path_chat_tmp = path_temp + str(video['helix']['id']) + "_chat.json"
 print("download chat: " + file_path_chat)
 if not utils.terminated_requested and not os.path.exists(file_path_chat):
-    cmd = path_twitch_cli + ' -m ChatDownload' \
-          + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
-          + ' --id ' + str(video['helix']['id']) + ' --embed-emotes' \
+    cmd = path_twitch_cli + ' chatdownload' \
+          + ' --id ' + str(video['helix']['id']) \
+          + ' --embed-images --chat-connections 6' \
+          + ' --bttv true --ffz true --stv true' \
           + ' -o ' + file_path_chat_tmp
-    #subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
-    subprocess.Popen(cmd, shell=True).wait()
+    #print(cmd)
+    subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
+    #subprocess.Popen(cmd, shell=True).wait()
     shutil.move(file_path_chat_tmp, file_path_chat) 
 
 # AUDIO-TO-TEXT: check if file exists
@@ -174,12 +175,16 @@ if render_chat:
     file_path_render_tmp = path_temp + str(video['helix']['id']) + "_chat.mp4"
     if os.path.exists(file_path_chat) and not os.path.exists(file_path_render):
         print("rendering chat: " + file_path_render)
-        cmd = path_twitch_cli + ' -m ChatRender' \
-              + ' -i ' + file_path_chat + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
-              + ' -h 926 -w 274 --update-rate 0.1 --framerate 60 --font-size 15' \
-              + ' --temp-path "' + path_temp + '" -o ' + file_path_render_tmp
-        # subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
-        subprocess.Popen(cmd, shell=True).wait()
+        cmd = path_twitch_cli + ' chatrender' \
+                + ' -i ' + file_path_chat + ' -o ' + file_path_render_tmp \
+                + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
+                + ' -h 926 -w 274 --update-rate 0.1 --framerate 60 --font-size 15' \
+                + ' --bttv true --ffz true --stv true --sub-messages true --badges true' \
+                + ' --temp-path "' + path_temp + '" '
+                # + ' --background-color #111111 --message-color #ffffff' \
+        #print(cmd)
+        subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
+        #subprocess.Popen(cmd, shell=True).wait()
         shutil.move(file_path_render_tmp, file_path_render) 
 
 

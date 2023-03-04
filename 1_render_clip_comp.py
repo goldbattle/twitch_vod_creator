@@ -22,13 +22,13 @@ client_secret = auth["client_secret"]
 
 # parameters
 channel = 'sodapoppin'
-max_clips = 30
-date_start = '2022-10-01T00:00:00.00Z'
-date_end = '2022-10-31T00:00:00.00Z'
+max_clips = 100
+date_start = '2022-01-01T00:00:00.00Z'
+date_end = '2022-12-31T00:00:00.00Z'
 min_views_required = 1000
-get_latest_from_twitch = True
+get_latest_from_twitch = False
 clips_to_ignore = [
-    # "EasyFairLlamaHoneyBadger-rxZed8PoO1MR3PgL",
+    "EasyFairLlamaHoneyBadger-rxZed8PoO1MR3PgL",
 ]
 
 
@@ -39,11 +39,12 @@ clips_to_ignore = [
 # path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.40.7/TwitchDownloaderCLI.exe"
 # path_twitch_ffmpeg = path_base + "/thirdparty/Twitch_Downloader_1.40.7/ffmpeg.exe"
 # path_twitch_ffprob = path_base + "/thirdparty/ffmpeg-N-99900-g89429cf2f2-win64-lgpl/ffprobe.exe"
-path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.40.7/TwitchDownloaderCLI"
+# path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.40.7/TwitchDownloaderCLI"
+path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.50.7/TwitchDownloaderCLI"
 path_twitch_ffmpeg = path_base + "/thirdparty/ffmpeg-4.3.1-amd64-static/ffmpeg"
 path_twitch_ffprob = path_base + "/thirdparty/ffmpeg-4.3.1-amd64-static/ffprobe"
 path_font = path_base.replace("\\", "/").replace(":", "\\\\:") + "/thirdparty/bebas_neue/BebasNeue-Regular.ttf"
-path_root = path_base + "/../data_clips/"
+path_root = path_base + "/../data_clips_new/"
 path_render = path_base + "/../data_rendered/"
 path_temp = "/tmp/tvc_render_clip_comp/"
 
@@ -94,9 +95,19 @@ if get_latest_from_twitch:
             # api returns clips in order of most watch to least watched
             print("clip " + video['url'] + " (" + str(video['view_count']) + " views)")
 
+            # extract what folder we should save into
+            # create the folder if it isn't created already
+            try:
+                date = video['created_at']
+                export_folder = format(date.year, '02') + "-" + format(date.month, '02') + "/"
+            except:
+                export_folder = "unknown/"
+            if not os.path.exists(path_data + export_folder):
+                os.makedirs(path_data + export_folder)
+
             # INFO: always save to file so our viewcount gets updated!
             # INFO: we only update the viewcount, as when the VOD gets deleted most elements are lost
-            file_path_info = path_data + str(video['id']) + "_info.json"
+            file_path_info = path_data + export_folder + str(video['id']) + "_info.json"
             if not utils.terminated_requested and not os.path.exists(file_path_info):
                 print("\t- saving clip info: " + str(video['id']))
 
@@ -151,33 +162,41 @@ if get_latest_from_twitch:
                     json.dump(video_info, file, indent=4)
 
             # VIDEO: check if the file exists
-            file_path = path_data + str(video['id']) + ".mp4"
+            file_path = path_data + export_folder + str(video['id']) + ".mp4"
             file_path_tmp = path_temp + str(video['id']) + ".mp4"
             if not utils.terminated_requested and not os.path.exists(file_path):
                 print("\t- download clip: " + str(video['id']))
-                cmd = path_twitch_cli + ' -m ClipDownload' \
+                cmd = path_twitch_cli + ' clipdownload' \
                       + ' --id ' + str(video['id']) \
-                      + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
-                      + ' --quality 1080 -o ' + file_path_tmp
-                      #TODO REVERT THIS BACK ONCE TWITCHDOWNLOAD IS FIXED!!!
-                      #https://github.com/lay295/TwitchDownloader/commit/f214574607d7ee2a73457853beee7d922a594ede
-                      # + ' --quality 1080p60 -o ' + file_path_tmp
-                subprocess.Popen(cmd, shell=True).wait()
-                # subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
-                shutil.move(file_path_tmp, file_path) 
+                      + ' -o ' + file_path_tmp
+                # cmd = path_twitch_cli + ' -m ClipDownload' \
+                #       + ' --id ' + str(video['id']) \
+                #       + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
+                #       + ' --quality 1080 -o ' + file_path_tmp
+                #       #TODO REVERT THIS BACK ONCE TWITCHDOWNLOAD IS FIXED!!!
+                #       #https://github.com/lay295/TwitchDownloader/commit/f214574607d7ee2a73457853beee7d922a594ede
+                #       # + ' --quality 1080p60 -o ' + file_path_tmp
+                # subprocess.Popen(cmd, shell=True).wait()
+                subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
+                shutil.move(file_path_tmp, file_path)
 
             # CHAT: check if the file exists
             try:
-                file_path_chat = path_data + str(video['id']) + "_chat.json"
+                file_path_chat = path_data + export_folder + str(video['id']) + "_chat.json"
                 file_path_chat_tmp = path_temp + str(video['id']) + "_chat.json"
                 if not utils.terminated_requested and not os.path.exists(file_path_chat):
                     print("\t- download chat: " + str(video['id']))
-                    cmd = path_twitch_cli + ' -m ChatDownload' \
-                          + ' --id ' + str(video['id']) + ' --embed-emotes' \
-                          + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
-                          + ' -o ' + file_path_chat_tmp
-                    subprocess.Popen(cmd, shell=True).wait()
-                    # subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
+                    # cmd = path_twitch_cli + ' -m ChatDownload' \
+                    #       + ' --id ' + str(video['id']) + ' --embed-emotes' \
+                    #       + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
+                    #       + ' -o ' + file_path_chat_tmp
+                    cmd = path_twitch_cli + ' chatdownload' \
+                        + ' --id ' + str(video['id']) \
+                        + ' --embed-images --chat-connections 6' \
+                        + ' --bttv true --ffz true --stv true' \
+                        + ' -o ' + file_path_chat_tmp
+                    # subprocess.Popen(cmd, shell=True).wait()
+                    subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
                     shutil.move(file_path_chat_tmp, file_path_chat) 
             except Exception as e:
                 print(e)
@@ -202,7 +221,9 @@ for root, dirs, files in os.walk(path_data):
             continue
         with open(root + "/" + file) as f:
             video_info = json.load(f)
-        file_path = path_data + str(video_info['id']) + ".mp4"
+        datetime_created = datetime.datetime.strptime(video_info['created_at'], "%Y-%m-%d %H:%M:%SZ")
+        export_folder = format(datetime_created.year, '02') + "-" + format(datetime_created.month, '02') + "/"
+        file_path = path_data + export_folder + str(video_info['id']) + ".mp4"
         if not os.path.exists(file_path):
             print("WARNING: " + video_info['id'] + " is missing its main video file!!!!")
             continue
@@ -294,6 +315,7 @@ if len(arr_clips) < max_clips:
     print("ERROR: unable to find enough requested clips....")
     print("ERROR: either decrease the min view count or number of requested clips..")
     exit(-1)
+print("")
 
 # ================================================================
 # ================================================================
@@ -302,25 +324,36 @@ if len(arr_clips) < max_clips:
 # now lets loop through each and download / render them
 for video in arr_clips:
     # debug print
-    print("clip has " + str(video['view_count']) + " views (clipped at "
-          + video['created_at'] + ") - " + video['url'])
+    print("clip has " + str(video['view_count']) + " views (clipped at " + video['created_at'] + ")")
+    print("\t- " + video['url'])
+
+    # recover sub-folder this clip is in
+    datetime_created = datetime.datetime.strptime(video['created_at'], "%Y-%m-%d %H:%M:%SZ")
+    export_folder = format(datetime_created.year, '02') + "-" + format(datetime_created.month, '02') + "/"
 
     # CHAT: check if the file exists, render if needed
-    file_path_chat = path_data + str(video['id']) + "_chat.json"
-    file_path_render = path_data + str(video['id']) + "_chat.mp4"
+    file_path_chat = path_data + export_folder + str(video['id']) + "_chat.json"
+    file_path_render = path_data + export_folder + str(video['id']) + "_chat.mp4"
     if not utils.terminated_requested and os.path.exists(file_path_chat) and not os.path.exists(file_path_render):
-        print("\t- rendering chat: " + file_path_render)
-        cmd = path_twitch_cli + ' -m ChatRender' \
-              + ' -i ' + file_path_chat + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
-              + ' -h 926 -w 274 --update-rate 0.1 --framerate 60 --font-size 15' \
-              + ' -o ' + file_path_render
+        print("\t- rendering chat: " + export_folder + str(video['id']) + "_chat.mp4")
+        # cmd = path_twitch_cli + ' -m ChatRender' \
+        #       + ' -i ' + file_path_chat + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
+        #       + ' -h 926 -w 274 --update-rate 0.1 --framerate 60 --font-size 15' \
+        #       + ' -o ' + file_path_render
+        cmd = path_twitch_cli + ' chatrender' \
+                + ' -i ' + file_path_chat + ' -o ' + file_path_render \
+                + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
+                + ' -h 926 -w 274 --update-rate 0.1 --framerate 60 --font-size 15' \
+                + ' --bttv true --ffz true --stv true --sub-messages true --badges true' \
+                + ' --temp-path "' + path_temp + '" '
         subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
+        # subprocess.Popen(cmd, shell=True).wait()
 
     # COMPOSITE: render the composite image
-    file_path = path_data + str(video['id']) + ".mp4"
-    file_path_composite = path_data + str(video['id']) + "_rendered.mp4"
+    file_path = path_data + export_folder + str(video['id']) + ".mp4"
+    file_path_composite = path_data + export_folder + str(video['id']) + "_rendered.mp4"
     if not utils.terminated_requested and not os.path.exists(file_path_composite):
-        print("\t- rendering composite: " + file_path_composite)
+        print("\t- rendering composite: " + export_folder + str(video['id']) + "_rendered.mp4")
 
         # make directory if needed
         dir_path_composite = os.path.dirname(os.path.abspath(file_path_composite))
@@ -346,7 +379,7 @@ for video in arr_clips:
                   + ':alpha=\'if(lt(t,0),0,if(lt(t,0),(t-0)/0,if(lt(t,4),1,if(lt(t,4.5),(0.5-(t-4))/0.5,0))))\'[tmp1]; ' \
                   + ' [tmp1][1:v] overlay=shortest=0:x=1646:y=0:eof_action=endall" -shortest ' \
                   + ' -c:a aac -ar 48k -ac 2 -vcodec libx264 -crf 19 -preset fast ' \
-                  + ' -video_track_timescale 90000 -avoid_negative_ts make_zero -fflags +genpts -framerate 60 ' \
+                  + ' -video_track_timescale 90000 -avoid_negative_ts make_zero -map_chapters -1 -fflags +genpts -framerate 60 ' \
                   + file_path_composite
             subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
             #subprocess.Popen(cmd, shell=True).wait()
@@ -359,7 +392,7 @@ for video in arr_clips:
                   + '\':x=25:y=25:fontfile=' + path_font + ':fontsize=85:fontcolor=white:bordercolor=black:borderw=5' \
                   + ':alpha=\'if(lt(t,0),0,if(lt(t,0),(t-0)/0,if(lt(t,4),1,if(lt(t,4.5),(0.5-(t-4))/0.5,0))))\' ' \
                   + ' " -c:a aac -ar 48k -ac 2 -vcodec libx264 -crf 19 -preset fast ' \
-                  + ' -video_track_timescale 90000 -avoid_negative_ts make_zero -fflags +genpts -framerate 60 ' \
+                  + ' -video_track_timescale 90000 -avoid_negative_ts make_zero -map_chapters -1 -fflags +genpts -framerate 60 ' \
                   + file_path_composite
             subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
             #subprocess.Popen(cmd, shell=True).wait()
@@ -388,7 +421,13 @@ if not utils.terminated_requested and not os.path.exists(file_path_composite):
     # text file will all segments
     with open(text_file_temp_videos, 'a') as the_file:
         for video in arr_clips:
-            tmp_output_file = path_data + str(video['id']) + "_rendered.mp4"
+
+            # recover sub-folder this clip is in
+            datetime_created = datetime.datetime.strptime(video['created_at'], "%Y-%m-%d %H:%M:%SZ")
+            export_folder = format(datetime_created.year, '02') + "-" + format(datetime_created.month, '02') + "/"
+
+            # append to our file
+            tmp_output_file = path_data + export_folder + str(video['id']) + "_rendered.mp4"
             if os.path.exists(tmp_output_file):
                 the_file.write('file \'' + os.path.abspath(tmp_output_file) + '\'\n')
             else:
@@ -400,7 +439,7 @@ if not utils.terminated_requested and not os.path.exists(file_path_composite):
     cmd = path_twitch_ffmpeg + ' -hide_banner -loglevel quiet -stats ' \
           + '-f concat -safe 0 ' \
           + ' -i ' + text_file_temp_videos \
-          + ' -c copy -avoid_negative_ts make_zero ' \
+          + ' -c copy -avoid_negative_ts make_zero -map_chapters -1 ' \
           + file_path_composite
     subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
     #subprocess.Popen(cmd, shell=True).wait()
@@ -420,8 +459,14 @@ if not utils.terminated_requested and not os.path.exists(file_path_desc):
     # loop through each clip, and calculate its location in the video
     num_second_into_video = 0
     for video in arr_clips:
-        file_path_info = path_data + str(video['id']) + "_info.json"
-        tmp_output_file = path_data + str(video['id']) + "_rendered.mp4"
+
+        # recover sub-folder this clip is in
+        datetime_created = datetime.datetime.strptime(video['created_at'], "%Y-%m-%d %H:%M:%SZ")
+        export_folder = format(datetime_created.year, '02') + "-" + format(datetime_created.month, '02') + "/"
+
+        # construct the filepath
+        file_path_info = path_data + export_folder + str(video['id']) + "_info.json"
+        tmp_output_file = path_data + export_folder + str(video['id']) + "_rendered.mp4"
         if not os.path.exists(tmp_output_file):
             print("\t- WARNING: skipping " + tmp_output_file)
             continue
