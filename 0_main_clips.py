@@ -39,7 +39,8 @@ print("End Day: "+date_end)
 # ================================================================
 
 # paths of the cli and data
-path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.51.2/TwitchDownloaderCLI"
+# path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.51.2/TwitchDownloaderCLI"
+path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_7ce7382/TwitchDownloaderCLI"
 path_twitch_ffmpeg = path_base + "/thirdparty/ffmpeg-4.3.1-amd64-static/ffmpeg"
 path_root = path_base + "/../data_clips_new/"
 path_temp = "/tmp/tvc_main_clips/"
@@ -191,7 +192,7 @@ for idx, user in enumerate(users):
             if not utils.terminated_requested and not os.path.exists(file_path):
                 print("\t- download clip: " + str(video['id']))
                 cmd = path_twitch_cli + ' clipdownload' \
-                      + ' --id ' + str(video['id']) \
+                      + ' --id https://clips.twitch.tv/' + str(video['id']) \
                       + ' -o ' + file_path_tmp
                 subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
                 #subprocess.Popen(cmd, shell=True).wait()

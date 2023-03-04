@@ -22,11 +22,12 @@ client_secret = auth["client_secret"]
 
 # parameters
 channel = 'sodapoppin'
-max_clips = 100
-date_start = '2022-01-01T00:00:00.00Z'
-date_end = '2022-12-31T00:00:00.00Z'
+max_clips = 30
+date_start = '2023-02-01T00:00:00.00Z'
+date_end = '2023-02-28T00:00:00.00Z'
 min_views_required = 1000
-get_latest_from_twitch = False
+get_latest_from_twitch = True
+remove_rendered = True
 clips_to_ignore = [
     "EasyFairLlamaHoneyBadger-rxZed8PoO1MR3PgL",
 ]
@@ -36,7 +37,8 @@ clips_to_ignore = [
 # ================================================================
 
 # paths of the cli and data
-path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.51.2/TwitchDownloaderCLI"
+# path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.51.2/TwitchDownloaderCLI"
+path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_7ce7382/TwitchDownloaderCLI"
 path_twitch_ffmpeg = path_base + "/thirdparty/ffmpeg-4.3.1-amd64-static/ffmpeg"
 path_twitch_ffprob = path_base + "/thirdparty/ffmpeg-4.3.1-amd64-static/ffprobe"
 path_font = path_base.replace("\\", "/").replace(":", "\\\\:") + "/thirdparty/bebas_neue/BebasNeue-Regular.ttf"
@@ -163,9 +165,9 @@ if get_latest_from_twitch:
             if not utils.terminated_requested and not os.path.exists(file_path):
                 print("\t- download clip: " + str(video['id']))
                 cmd = path_twitch_cli + ' clipdownload' \
-                      + ' --id ' + str(video['id']) \
-                      + ' -o ' + file_path_tmp
-                # subprocess.Popen(cmd, shell=True).wait()
+                    + ' --id https://clips.twitch.tv/' + str(video['id']) \
+                    + ' -o ' + file_path_tmp
+                #subprocess.Popen(cmd, shell=True).wait()
                 subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
                 shutil.move(file_path_tmp, file_path)
 
@@ -182,7 +184,7 @@ if get_latest_from_twitch:
                         + ' -o ' + file_path_chat_tmp
                     # subprocess.Popen(cmd, shell=True).wait()
                     subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
-                    shutil.move(file_path_chat_tmp, file_path_chat) 
+                    shutil.move(file_path_chat_tmp, file_path_chat)
             except Exception as e:
                 print(e)
 
@@ -321,15 +323,11 @@ for video in arr_clips:
     file_path_render = path_data + export_folder + str(video['id']) + "_chat.mp4"
     if not utils.terminated_requested and os.path.exists(file_path_chat) and not os.path.exists(file_path_render):
         print("\t- rendering chat: " + export_folder + str(video['id']) + "_chat.mp4")
-        # cmd = path_twitch_cli + ' -m ChatRender' \
-        #       + ' -i ' + file_path_chat + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
-        #       + ' -h 926 -w 274 --update-rate 0.1 --framerate 60 --font-size 15' \
-        #       + ' -o ' + file_path_render
         cmd = path_twitch_cli + ' chatrender' \
                 + ' -i ' + file_path_chat + ' -o ' + file_path_render \
                 + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
                 + ' -h 926 -w 274 --update-rate 0.1 --framerate 60 --font-size 15' \
-                + ' --bttv true --ffz true --stv true --sub-messages true --badges true' \
+                + ' --bttv true --ffz true --stv true --sub-messages true --badges true --sharpening true' \
                 + ' --temp-path "' + path_temp + '" '
         subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
         # subprocess.Popen(cmd, shell=True).wait()
@@ -490,3 +488,13 @@ if not utils.terminated_requested and not os.path.exists(file_path_desc):
     # finally write the description to file
     with open(file_path_desc, "w", encoding="utf-8") as text_file:
         text_file.write(tmp)
+
+
+# finally remove the old render file to save space...
+if not utils.terminated_requested and remove_rendered:
+    for video in arr_clips:
+        datetime_created = datetime.datetime.strptime(video['created_at'], "%Y-%m-%d %H:%M:%SZ")
+        export_folder = format(datetime_created.year, '02') + "-" + format(datetime_created.month, '02') + "/"
+        tmp_output_file = path_data + export_folder + str(video['id']) + "_rendered.mp4"
+        if os.path.exists(tmp_output_file):
+            os.remove(tmp_output_file)

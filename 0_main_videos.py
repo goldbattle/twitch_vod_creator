@@ -46,7 +46,8 @@ render_webvtt = [
 # ================================================================
 
 # paths of the cli and data
-path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.51.2/TwitchDownloaderCLI"
+# path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.51.2/TwitchDownloaderCLI"
+path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_7ce7382/TwitchDownloaderCLI"
 path_twitch_ffmpeg = path_base + "/thirdparty/ffmpeg-4.3.1-amd64-static/ffmpeg"
 path_root = path_base + "/../data/"
 # path_temp = path_base + "/../data_temp/main_videos/"
@@ -286,7 +287,7 @@ for idx, user in enumerate(users):
                 + ' -i ' + file_path_chat + ' -o ' + file_path_render_tmp \
                 + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
                 + ' -h 926 -w 274 --update-rate 0.1 --framerate 60 --font-size 15' \
-                + ' --bttv true --ffz true --stv true --sub-messages true --badges true' \
+                + ' --bttv true --ffz true --stv true --sub-messages true --badges true --sharpening true' \
                 + ' --temp-path "' + path_temp + '" '
                 # + ' --background-color #111111 --message-color #ffffff' \
             subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
