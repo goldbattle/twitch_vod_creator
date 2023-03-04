@@ -22,7 +22,7 @@ You will need at least version 0.7.1 installed to have the correct api support f
 pip install python-twitch-client
 pip install PyYAML
 pip install youtube-video-upload
-pip install youtube_dl
+pip install drivedl
 pip install webvtt-py
 pip install vosk
 ```
