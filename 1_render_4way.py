@@ -38,12 +38,11 @@ starttime3 = "00:56:46"
 # ================================================================
 
 # paths of the cli and data
-# path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.40.7/TwitchDownloaderCLI.exe"
-# path_twitch_ffmpeg = path_base + "/thirdparty/Twitch_Downloader_1.40.7/ffmpeg.exe"
-path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.40.7/TwitchDownloaderCLI"
+path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.51.2/TwitchDownloaderCLI"
 path_twitch_ffmpeg = path_base + "/thirdparty/ffmpeg-4.3.1-amd64-static/ffmpeg"
 path_root = path_base + "/../data/"
 path_render = path_base + "/../data_rendered/"
+path_temp = "/tmp/tvc_render_4way/"
 
 # ================================================================
 # ================================================================
@@ -51,6 +50,8 @@ path_render = path_base + "/../data_rendered/"
 # setup control+c handler
 utils.setup_signal_handle()
 
+if not os.path.exists(path_temp):
+    os.makedirs(path_temp)
 
 # VIDEO: check that we have the video
 videos = [video0, video1, video2, video3]
@@ -72,13 +73,17 @@ if not os.path.exists(file_path_chat):
     quit()
 
 # CHAT: actually make sure we render it
+file_path_render_tmp = path_temp + video0 + "_chat.mp4"
 if not os.path.exists(file_path_render):
     print("\t- rendering chat: " + file_path_chat)
-    cmd = path_twitch_cli + ' -m ChatRender' \
-          + ' -i ' + file_path_chat + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
-          + ' -h 926 -w 274 --update-rate 0.1 --framerate 60 --font-size 15' \
-          + ' -o ' + file_path_render
+    cmd = path_twitch_cli + ' chatrender' \
+        + ' -i ' + file_path_chat + ' -o ' + file_path_render_tmp \
+        + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
+        + ' -h 926 -w 274 --update-rate 0.1 --framerate 60 --font-size 15' \
+        + ' --bttv true --ffz true --stv true --sub-messages true --badges true' \
+        + ' --temp-path "' + path_temp + '" '
     subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
+    shutil.move(file_path_render_tmp, file_path_render) 
 
 
 # COMPOSITE: render the composite image
@@ -137,7 +142,7 @@ cmd = path_twitch_ffmpeg + ' -hide_banner -loglevel quiet -stats ' \
       + ' [tmp2][tmp3]hstack=inputs=2:shortest=1[bottom]; ' \
       + ' [top][bottom]vstack=inputs=2:shortest=1[main]; ' \
       + ' [main][4:v]hstack=inputs=2:shortest=1[stack]" -shortest -map "[stack]" -map 0:a ' \
-      + ' -vcodec libx264 -crf 18 -preset veryfast -avoid_negative_ts make_zero -framerate 60 ' \
+      + ' -vcodec libx264 -crf 18 -preset veryfast -avoid_negative_ts make_zero -map_chapters -1 -framerate 60 ' \
       + ' -c:a aac ' \
       + file_path_composite_tmp
 print(cmd)

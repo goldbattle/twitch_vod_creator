@@ -27,7 +27,6 @@ vod_yt_hash = sys.argv[2]
 
 # paths of the cli and data
 path_base = os.path.dirname(os.path.abspath(__file__))
-# path_twitch_ffmpeg = path_base + "/thirdparty/Twitch_Downloader_1.40.7/ffmpeg.exe"
 path_twitch_ffmpeg = path_base + "/thirdparty/ffmpeg-4.3.1-amd64-static/ffmpeg"
 path_root = path_base + "/../data/"
 
