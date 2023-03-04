@@ -199,15 +199,11 @@ for idx, user in enumerate(users):
         print("\t- download video: " + file_path)
         if not utils.terminated_requested and not os.path.exists(file_path):
             t0 = time.time()
-            # cmd = path_twitch_cli + ' -m VideoDownload' \
-            #       + ' --id ' + str(video['helix']['id']) + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
-            #       + ' --temp-path "' + path_temp + '" --quality 1080p60 -o ' + file_path
-            #       #+ ' --quality 1080p60 -o ' + file_path
             cmd = path_twitch_cli + ' videodownload' \
                 + ' --id ' + str(video['helix']['id']) + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
                 + ' --temp-path "' + path_temp + '" --quality 1080p60 -o ' + file_path
-            # subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
-            subprocess.Popen(cmd, shell=True).wait()
+            subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
+            #subprocess.Popen(cmd, shell=True).wait()
             print("\t- done in " + str(time.time() - t0) + " seconds")
 
         # CHAT: check if the file exists
@@ -216,17 +212,13 @@ for idx, user in enumerate(users):
         print("\t- download chat: " + file_path_chat)
         if not utils.terminated_requested and not os.path.exists(file_path_chat):
             t0 = time.time()
-            # cmd = path_twitch_cli + ' -m ChatDownload' \
-            #       + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
-            #       + ' --id ' + str(video['helix']['id']) + ' --embed-emotes' \
-            #       + ' -o ' + file_path_chat_tmp
             cmd = path_twitch_cli + ' chatdownload' \
                 + ' --id ' + str(video['helix']['id']) \
                 + ' --embed-images --chat-connections 6' \
                 + ' --bttv true --ffz true --stv true' \
                 + ' -o ' + file_path_chat_tmp
-            # subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
-            subprocess.Popen(cmd, shell=True).wait()
+            subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
+            #subprocess.Popen(cmd, shell=True).wait()
             if os.path.exists(file_path_chat_tmp):
                 shutil.move(file_path_chat_tmp, file_path_chat) 
             print("\t- done in " + str(time.time() - t0) + " seconds")
@@ -290,10 +282,6 @@ for idx, user in enumerate(users):
         if not utils.terminated_requested and os.path.exists(file_path_chat) and not os.path.exists(file_path_render) and render_chat[idx]:
             print("\t- rendering chat: " + file_path_render)
             t0 = time.time()
-            # cmd = path_twitch_cli + ' -m ChatRender' \
-            #       + ' -i ' + file_path_chat + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
-            #       + ' -h 926 -w 274 --update-rate 0.1 --framerate 60 --font-size 15' \
-            #       + ' --temp-path "' + path_temp + '" -o ' + file_path_render_tmp
             cmd = path_twitch_cli + ' chatrender' \
                 + ' -i ' + file_path_chat + ' -o ' + file_path_render_tmp \
                 + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
@@ -301,8 +289,8 @@ for idx, user in enumerate(users):
                 + ' --bttv true --ffz true --stv true --sub-messages true --badges true' \
                 + ' --temp-path "' + path_temp + '" '
                 # + ' --background-color #111111 --message-color #ffffff' \
-            # subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
-            subprocess.Popen(cmd, shell=True).wait()
+            subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
+            #subprocess.Popen(cmd, shell=True).wait()
             if os.path.exists(file_path_render_tmp):
                 shutil.move(file_path_render_tmp, file_path_render) 
             print("\t- done in " + str(time.time() - t0) + " seconds")

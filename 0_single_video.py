@@ -38,7 +38,6 @@ client_secret = auth["client_secret"]
 path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.51.2/TwitchDownloaderCLI"
 path_twitch_ffmpeg = path_base + "/thirdparty/ffmpeg-4.3.1-amd64-static/ffmpeg"
 path_root = path_base + "/../data/"
-# path_temp = path_base + "/../data_temp/single_video/"
 path_temp = "/tmp/tvc_single_video/"
 path_model = path_base + "/thirdparty/vosk-model-small-en-us-0.15/"
 

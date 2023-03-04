@@ -165,13 +165,6 @@ if get_latest_from_twitch:
                 cmd = path_twitch_cli + ' clipdownload' \
                       + ' --id ' + str(video['id']) \
                       + ' -o ' + file_path_tmp
-                # cmd = path_twitch_cli + ' -m ClipDownload' \
-                #       + ' --id ' + str(video['id']) \
-                #       + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
-                #       + ' --quality 1080 -o ' + file_path_tmp
-                #       #TODO REVERT THIS BACK ONCE TWITCHDOWNLOAD IS FIXED!!!
-                #       #https://github.com/lay295/TwitchDownloader/commit/f214574607d7ee2a73457853beee7d922a594ede
-                #       # + ' --quality 1080p60 -o ' + file_path_tmp
                 # subprocess.Popen(cmd, shell=True).wait()
                 subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
                 shutil.move(file_path_tmp, file_path)
@@ -182,10 +175,6 @@ if get_latest_from_twitch:
                 file_path_chat_tmp = path_temp + str(video['id']) + "_chat.json"
                 if not utils.terminated_requested and not os.path.exists(file_path_chat):
                     print("\t- download chat: " + str(video['id']))
-                    # cmd = path_twitch_cli + ' -m ChatDownload' \
-                    #       + ' --id ' + str(video['id']) + ' --embed-emotes' \
-                    #       + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
-                    #       + ' -o ' + file_path_chat_tmp
                     cmd = path_twitch_cli + ' chatdownload' \
                         + ' --id ' + str(video['id']) \
                         + ' --embed-images --chat-connections 6' \

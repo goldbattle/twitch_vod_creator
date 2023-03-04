@@ -98,13 +98,8 @@ for video in data:
             file_path_chat = path_root + video["video"] + "_chat.json"
             file_path_render = path_root + video["video"] + "_chat.mp4"
             file_path_render_tmp = path_temp + clean_video_title + "_chat.mp4"
-                shutil.move(file_path_render_tmp, file_path_render) 
             if not utils.terminated_requested and should_render_chat and os.path.exists(file_path_chat) and not os.path.exists(file_path_render):
                 print("\t- rendering chat: " + file_path_chat)
-                # cmd = path_twitch_cli + ' -m ChatRender' \
-                #       + ' -i ' + file_path_chat + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
-                #       + ' -h 926 -w 274 --update-rate 0.1 --framerate 60 --font-size 15' \
-                #       + ' --temp-path "' + path_temp + '" -o ' + file_path_render_tmp
                 cmd = path_twitch_cli + ' chatrender' \
                     + ' -i ' + file_path_chat + ' -o ' + file_path_render_tmp \
                     + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
