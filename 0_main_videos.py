@@ -23,20 +23,20 @@ client_secret = auth["client_secret"]
 
 # parameters
 channels = [
-    'sodapoppin', 'nmplol',
+    'sodapoppin', 'nmplol', 'skippypoppin',
     'moonmoon', 'clintstevens', 'sevadus',
-    'jerma985', 'heydoubleu', 'veibae', 'squeex',
+    'jerma985', 'heydoubleu', 'vei', 'squeex',
     # 'mindcrack'
 ]
 max_videos = 30
 render_chat = [
-    True, False,
+    True, False, False,
     False, True, False,
     False, False, False, False,
     # False
 ]
 render_webvtt = [
-    True, False,
+    True, False, False,
     False, True, False,
     False, False, True, False,
     # False

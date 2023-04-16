@@ -23,7 +23,7 @@ client_secret = auth["client_secret"]
 # parameters
 # channels = ['xqc', 'moonmoon', 'sodapoppin', 'clintstevens', 'pokelawls', 'forsen', 'nmplol']
 # min_view_counts = [5000, 2000, 2000, 500, 1000, 5000, 2000]
-channels = ['xqc', 'moonmoon', 'sodapoppin', 'clintstevens', 'pokelawls', 'forsen', 'nmplol', 'jerma985', 'veibae']
+channels = ['xqc', 'moonmoon', 'sodapoppin', 'clintstevens', 'pokelawls', 'forsen', 'nmplol', 'jerma985', 'vei']
 min_view_counts = [6000, 2000, 1000, 500, 1000, 5000, 2000, 500, 500]
 
 
