@@ -5134,16 +5134,16 @@
 
 
 
-- video: data/sodapoppin/2023-02/1738990752
-  title: "Dark and Darker w/ Veibae - (sodapoppin) - February 15, 2023"
-  t_start: "00:11:25,02:54:45"
-  t_end: "01:46:12,06:52:40"
+# - video: data/sodapoppin/2023-02/1738990752
+#   title: "Dark and Darker w/ Veibae - (sodapoppin) - February 15, 2023"
+#   t_start: "00:11:25,02:54:45"
+#   t_end: "01:46:12,06:52:40"
 
-- video: data/sodapoppin/2023-02/1738990752
-  title: "Sodapoppin Reacts to JSC Son Spend $275,000 w/ Chat - February 15, 2023"
-  description: "Original Video:\nhttps://www.youtube.com/watch?v=4iluOmq1DYY"
-  t_start: "01:45:26,01:52:58"
-  t_end: "01:49:22,02:49:38"
+# - video: data/sodapoppin/2023-02/1738990752
+#   title: "Sodapoppin Reacts to JSC Son Spend $275,000 w/ Chat - February 15, 2023"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=4iluOmq1DYY"
+#   t_start: "01:45:26,01:52:58"
+#   t_end: "01:49:22,02:49:38"
 
 
 
@@ -5174,52 +5174,812 @@
 #   t_start: "00:21:44"
 #   t_end: "00:24:17"
 
-- video: data/sodapoppin/2023-02/1740943502
-  title: "Chance Reacts to Harry Potter and the Forbidden Game Dunkey w/ Chat - (sodapoppin) - February 17, 2023"
-  description: "Original Video:\nhttps://www.youtube.com/watch?v=3OV4VaNW4FU"
-  t_start: "00:24:17"
-  t_end: "00:29:24"
+# - video: data/sodapoppin/2023-02/1740943502
+#   title: "Chance Reacts to Harry Potter and the Forbidden Game Dunkey w/ Chat - (sodapoppin) - February 17, 2023"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=3OV4VaNW4FU"
+#   t_start: "00:24:17"
+#   t_end: "00:29:24"
 
-- video: data/sodapoppin/2023-02/1740943502
-  title: "Chance Reacts to DailyDose w/ Chat - (sodapoppin) - February 17, 2023"
-  description: "Original Videos:\nhttps://www.youtube.com/watch?v=XyuIIUrGGEY\nhttps://www.youtube.com/watch?v=ZwWXidWng9E\nhttps://www.youtube.com/watch?v=Ooeg_SaFfWc\nhttps://www.youtube.com/watch?v=_4fwgRQbwDo"
-  t_start: "00:29:28,00:51:13"
-  t_end: "00:35:10,01:02:10"
+# - video: data/sodapoppin/2023-02/1740943502
+#   title: "Chance Reacts to DailyDose w/ Chat - (sodapoppin) - February 17, 2023"
+#   description: "Original Videos:\nhttps://www.youtube.com/watch?v=XyuIIUrGGEY\nhttps://www.youtube.com/watch?v=ZwWXidWng9E\nhttps://www.youtube.com/watch?v=Ooeg_SaFfWc\nhttps://www.youtube.com/watch?v=_4fwgRQbwDo"
+#   t_start: "00:29:28,00:51:13"
+#   t_end: "00:35:10,01:02:10"
 
-- video: data/sodapoppin/2023-02/1740943502
-  title: "Chance Reacts to Ludwig Logged in as Him w/ Chat - (sodapoppin) - February 17, 2023"
-  t_start: "01:02:10"
-  t_end: "01:18:11"
+# - video: data/sodapoppin/2023-02/1740943502
+#   title: "Chance Reacts to Ludwig Logged in as Him w/ Chat - (sodapoppin) - February 17, 2023"
+#   t_start: "01:02:10"
+#   t_end: "01:18:11"
 
-- video: data/sodapoppin/2023-02/1740943502
-  title: "Chance Reacts to Steak and Eggs First Podcast w/ Chat - (sodapoppin) - February 17, 2023"
-  description: "Original Video:\nhttps://www.youtube.com/watch?v=JxpszfaNzuw"
-  t_start: "01:18:11"
-  t_end: "02:23:44"
+# - video: data/sodapoppin/2023-02/1740943502
+#   title: "Chance Reacts to Steak and Eggs First Podcast w/ Chat - (sodapoppin) - February 17, 2023"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=JxpszfaNzuw"
+#   t_start: "01:18:11"
+#   t_end: "02:23:44"
 
-- video: data/sodapoppin/2023-02/1740943502
-  title: "Chance Builds His 4090 Starforge PC w/ Chat - (sodapoppin) - February 17, 2023"
-  t_start: "02:34:12"
-  t_end: "04:35:00"
-
-
-
-- video: data/sodapoppin/2023-02/1743141615
-  title: "Hitman World of Assassination w/ Chat - (sodapoppin) - February 19, 2023"
-  t_start: "00:00:21"
-  t_end: "04:51:20"
-
-- video: data/sodapoppin/2023-02/1744095034
-  title: "Streamer Awards Voting w/ Chat - (sodapoppin) - February 20, 2023"
-  t_start: "00:08:23"
-  t_end: "01:29:27"
-
-- video: data/sodapoppin/2023-02/1744095034
-  title: "Hitman World of Assassination w/ Chat - (sodapoppin) - February 20, 2023"
-  t_start: "01:29:56"
-  t_end: "03:05:30"
+# - video: data/sodapoppin/2023-02/1740943502
+#   title: "Chance Builds His 4090 Starforge PC w/ Chat - (sodapoppin) - February 17, 2023"
+#   t_start: "02:34:12"
+#   t_end: "04:35:00"
 
 
+
+# - video: data/sodapoppin/2023-02/1743141615
+#   title: "Hitman World of Assassination w/ Chat - (sodapoppin) - February 19, 2023"
+#   t_start: "00:00:21"
+#   t_end: "04:51:20"
+
+# - video: data/sodapoppin/2023-02/1744095034
+#   title: "Streamer Awards Voting w/ Chat - (sodapoppin) - February 20, 2023"
+#   t_start: "00:08:23"
+#   t_end: "01:29:27"
+
+# - video: data/sodapoppin/2023-02/1744095034
+#   title: "Hitman World of Assassination w/ Chat - (sodapoppin) - February 20, 2023"
+#   t_start: "01:29:56"
+#   t_end: "03:05:30"
+
+
+
+# - video: data/sodapoppin/2023-02/1745914372
+#   title: "Dome Keeper w/ Chat - (sodapoppin) - February 22, 2023"
+#   t_start: "00:25:23"
+#   t_end: "01:33:09"
+
+# - video: data/sodapoppin/2023-02/1745914372
+#   title: "Warcraft III w/ Chat - (sodapoppin) - February 22, 2023"
+#   t_start: "01:33:09"
+#   t_end: "01:42:58"
+
+# - video: data/sodapoppin/2023-02/1745914372
+#   title: "League of Legends w/ Chat - (sodapoppin) - February 22, 2023"
+#   t_start: "01:42:44"
+#   t_end: "06:14:20"
+
+
+
+
+# - video: data/sodapoppin/2023-02/1748932938
+#   title: "Reading Reddit Druid Dark and Darker w/ Chat - (sodapoppin) - February 25, 2023"
+#   t_start: "00:23:08"
+#   t_end: "00:37:36"
+
+# - video: data/sodapoppin/2023-02/1748932938
+#   title: "Bone Dust w/ Chat - (sodapoppin) - February 25, 2023"
+#   t_start: "00:37:36"
+#   t_end: "00:45:59"
+
+# - video: data/sodapoppin/2023-02/1748932938
+#   title: "Hellcard w/ Chat - (sodapoppin) - February 25, 2023"
+#   t_start: "00:45:59"
+#   t_end: "05:43:19"
+
+# - video: data/sodapoppin/2023-02/1748932938
+#   title: "Otherwar w/ Chat - (sodapoppin) - February 25, 2023"
+#   t_start: "05:45:27"
+#   t_end: "07:15:08"
+
+# - video: data/sodapoppin/2023-02/1748932938
+#   title: "Back to Ashes w/ Chat - (sodapoppin) - February 25, 2023"
+#   t_start: "07:16:44"
+#   t_end: "07:51:41"
+
+# - video: data/sodapoppin/2023-02/1748932938
+#   title: "Elderand w/ Chat - (sodapoppin) - February 25, 2023"
+#   t_start: "07:53:10"
+#   t_end: "08:41:06"
+
+# - video: data/sodapoppin/2023-02/1748932938
+#   title: "Corpse Keeper w/ Chat - (sodapoppin) - February 25, 2023"
+#   t_start: "08:42:47"
+#   t_end: "09:35:29"
+
+# - video: data/sodapoppin/2023-02/1748932938
+#   title: "Golgotha (horror) w/ Chat - (sodapoppin) - February 25, 2023"
+#   t_start: "09:36:32"
+#   t_end: "10:07:30"
+
+
+
+# - video: data/sodapoppin/2023-02/1749955255
+#   title: "Elden Ring Randomizer w/ Chat - Part 1 (sodapoppin) - February 26, 2023"
+#   description: "All drops, bosses and mobs are randomly placed.\nhttps://www.nexusmods.com/eldenring/mods/428"
+#   t_start: "00:06:15"
+#   t_end: "05:42:09"
+
+# - video: data/sodapoppin/2023-02/1749955255
+#   title: "Elden Ring Randomizer w/ Chat - Part 2 (sodapoppin) - February 26, 2023"
+#   description: "All drops, bosses and mobs are randomly placed.\nhttps://www.nexusmods.com/eldenring/mods/428"
+#   t_start: "05:42:09"
+#   t_end: "10:29:00"
+
+
+# - video: data/sodapoppin/2023-02/1751813042
+#   title: "Mythic Talent Announcement w/ Chat - (sodapoppin) - February 28, 2023"
+#   t_start: "00:09:29"
+#   t_end: "00:13:44"
+
+# - video: data/sodapoppin/2023-02/1751813042
+#   title: "Elden Ring Randomizer w/ Chat - Part 3 (sodapoppin) - February 28, 2023"
+#   description: "All drops, bosses and mobs are randomly placed.\nhttps://www.nexusmods.com/eldenring/mods/428"
+#   t_start: "00:13:26"
+#   t_end: "05:58:30"
+
+
+
+# - video: data/sodapoppin/2023-03/1753648635
+#   title: "Fall Guys w/ Chat - (sodapoppin) - March 2, 2023"
+#   t_start: "00:05:58"
+#   t_end: "00:20:37"
+
+# - video: data/sodapoppin/2023-03/1753648635
+#   title: "Elden Ring Randomizer w/ Chat - Part 4 (sodapoppin) - March 2, 2023"
+#   description: "All drops, bosses and mobs are randomly placed.\nhttps://www.nexusmods.com/eldenring/mods/428"
+#   t_start: "00:23:22"
+#   t_end: "06:16:40"
+
+
+# - video: data/nmplol/2023-02/1747930006
+#   title: "OTK Game Day: Soccer w/ Chat - (Nmplol) - February 24, 2023"
+#   t_start: "00:19:31"
+#   t_end: "02:26:11"
+
+
+# - video: data/nmplol/2023-03/1754637153
+#   title: "OTK Game Day: Basketball w/ Chat - (Nmplol) - March 3, 2023"
+#   t_start: "00:19:43"
+#   t_end: "02:42:38"
+
+
+# - video: data/sodapoppin/2023-03/1755612772
+#   title: "Elden Ring Randomizer w/ Chat - Part 5 (sodapoppin) - March 4, 2023"
+#   description: "All drops, bosses and mobs are randomly placed.\nhttps://www.nexusmods.com/eldenring/mods/428"
+#   t_start: "00:11:45"
+#   t_end: "07:23:10"
+
+
+# - video: data/sodapoppin/2023-03/1756607650
+#   title: "OTK Updates and The Place w/ Chat - (sodapoppin) - March 5, 2023"
+#   t_start: "00:06:20"
+#   t_end: "00:11:34"
+
+# - video: data/sodapoppin/2023-03/1756607650
+#   title: "Elden Ring Randomizer w/ Chat - Part 6 (sodapoppin) - March 5, 2023"
+#   description: "All drops, bosses and mobs are randomly placed.\nhttps://www.nexusmods.com/eldenring/mods/428"
+#   t_start: "00:11:32"
+#   t_end: "04:45:20"
+
+# - video: data/sodapoppin/2023-03/1757484297
+#   title: "Poker Tournament #ad w/ Chat - (sodapoppin) - March 6, 2023"
+#   t_start: "00:10:35,01:19:53"
+#   t_end: "00:20:15,03:55:48"
+
+# - video: data/sodapoppin/2023-03/1757484297
+#   title: "OTK The Place w/ Chat - (sodapoppin) - March 6, 2023"
+#   t_start: "00:20:15"
+#   t_end: "01:19:54"
+
+# - video: data/sodapoppin/2023-03/1757484297
+#   title: "Elden Ring Randomizer w/ Chat - Part 7 (sodapoppin) - March 6, 2023"
+#   description: "All drops, bosses and mobs are randomly placed.\nhttps://www.nexusmods.com/eldenring/mods/428"
+#   t_start: "03:56:45"
+#   t_end: "06:18:20"
+
+
+# - video: data/tectone/2023-02/1747061435
+#   title: "Soda and Veibae on Emote Only Episode 2 w/ Chat - February 23, 2023"
+#   t_start: "00:21:51"
+#   t_end: "01:51:39"
+
+
+
+
+# - video: data/sodapoppin/2023-03/1759308750
+#   title: "New Apartments w/ Chat - (sodapoppin) - March 8, 2023"
+#   t_start: "00:10:57,07:12:41"
+#   t_end: "00:55:36,07:20:10"
+
+# - video: data/sodapoppin/2023-03/1759308750
+#   title: "Elden Ring Randomizer w/ Chat - Part 8 (sodapoppin) - March 8, 2023"
+#   description: "All drops, bosses and mobs are randomly placed.\nhttps://www.nexusmods.com/eldenring/mods/428"
+#   t_start: "00:52:26"
+#   t_end: "07:20:10"
+
+
+
+# - video: data/sodapoppin/2023-03/1760231093
+#   title: "Elden Ring Randomizer w/ Chat - Part 9 (sodapoppin) - March 9, 2023"
+#   description: "All drops, bosses and mobs are randomly placed.\nhttps://www.nexusmods.com/eldenring/mods/428"
+#   t_start: "00:04:41"
+#   t_end: "06:05:11"
+
+# - video: data/sodapoppin/2023-03/1760231093
+#   title: "ExtraEmily on OTK Garage Sale of Soda's Stuff - March 9, 2023"
+#   t_start: "06:05:11"
+#   t_end: "06:56:20"
+
+# - video: data/sodapoppin/2023-03/1761194473
+#   title: "Elden Ring Randomizer w/ Chat - Part 10 (sodapoppin) - March 10, 2023"
+#   description: "All drops, bosses and mobs are randomly placed.\nhttps://www.nexusmods.com/eldenring/mods/428"
+#   t_start: "00:00:19"
+#   t_end: "04:14:50"
+
+
+
+# - video: data/sodapoppin/2023-03/1762238696
+#   title: "Bleak Faith: Forsaken w/ Chat - (sodapoppin) - March 11, 2023"
+#   t_start: "00:34:46"
+#   t_end: "01:20:37"
+
+# - video: data/sodapoppin/2023-03/1762238696
+#   title: "Punch A Bunch w/ Chat - (sodapoppin) - March 11, 2023"
+#   t_start: "01:22:06"
+#   t_end: "02:06:05"
+
+# - video: data/sodapoppin/2023-03/1762238696
+#   title: "Boneraiser Minions w/ Chat - (sodapoppin) - March 11, 2023"
+#   t_start: "02:06:49"
+#   t_end: "03:06:16"
+
+# - video: data/sodapoppin/2023-03/1762238696
+#   title: "Figment 2: Creed Valley w/ Chat - (sodapoppin) - March 11, 2023"
+#   t_start: "03:07:19"
+#   t_end: "04:07:17"
+
+
+# - video: data/sodapoppin/2023-03/1763307577
+#   title: "Elden Ring Randomizer w/ Chat - Part 11 (sodapoppin) - March 12, 2023"
+#   description: "All drops, bosses and mobs are randomly placed.\nhttps://www.nexusmods.com/eldenring/mods/428"
+#   t_start: "00:06:15"
+#   t_end: "07:31:10"
+
+
+# - video: data/skippypoppin/2023-01/1717432693
+#   title: "Who Wants to be a Millionaire w/ Veibae - (skippypoppin) - January 24, 2023"
+#   t_start: "00:00:01"
+#   t_end: "00:50:09"
+
+# - video: data/skippypoppin/2023-01/1717432693
+#   title: "For the King w/ Veibae - (skippypoppin) - January 24, 2023"
+#   t_start: "00:50:09"
+#   t_end: "03:39:18"
+
+
+# - video: data/skippypoppin/2023-03/1761666816
+#   title: "Roblox w/ Veibae - (skippypoppin) - March 10, 2023"
+#   t_start: "00:00:00"
+#   t_end: "02:42:45"
+
+# - video: data/skippypoppin/2023-03/1763770993
+#   title: "PlateUp! w/ Veibae - (skippypoppin) - March 12, 2023"
+#   t_start: "02:18:40"
+#   t_end: "03:04:18"
+
+
+# - video: data/sodapoppin/2023-03/1764151419
+#   title: "Chance Reacts to BadlandsChugs Fast Twitch Gatorade vs LiquidDeath - March 13, 2023"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=kGMY0pN4wxg"
+#   t_start: "00:13:38"
+#   t_end: "00:23:47"
+
+# - video: data/sodapoppin/2023-03/1764151419
+#   title: "Chance Reacts to VideogameDunkey Trailer vs Gameplay - March 13, 2023"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=Z0zxlh63RtQ"
+#   t_start: "00:23:45"
+#   t_end: "00:26:11"
+
+# - video: data/sodapoppin/2023-03/1764151419
+#   title: "Chance Reacts Dark Souls III in Unreal Engine 5 - March 13, 2023"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=U2A2vnuY2uk"
+#   t_start: "00:26:11"
+#   t_end: "00:29:31"
+
+# - video: data/sodapoppin/2023-03/1764151419
+#   title: "Chance Reacts DRUID in DIABLO 4: How GOOD is it? - March 13, 2023"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=MP4zKCK76hI"
+#   t_start: "00:29:34"
+#   t_end: "00:41:04"
+
+# - video: data/sodapoppin/2023-03/1764151419
+#   title: "Chance Reacts Fear& Streamer Awards Recap - March 13, 2023"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=sh7vnsJsoX8"
+#   t_start: "00:44:32"
+#   t_end: "00:49:27"
+
+# - video: data/sodapoppin/2023-03/1764151419
+#   title: "Chance Reacts to KOTSUMET Otters - March 13, 2023"
+#   description: "Original Videos:\nhttps://www.youtube.com/watch?v=8Bl58XnaBvA\nhttps://www.youtube.com/watch?v=ASLgtV8YQkA"
+#   t_start: "00:49:24,00:51:55,02:57:11,04:02:10"
+#   t_end: "00:51:39,01:07:44,03:03:19,04:05:56"
+
+# - video: data/sodapoppin/2023-03/1764151419
+#   title: "Poker Tournament #ad w/ Chat - (sodapoppin) - March 13, 2023"
+#   t_start: "01:07:36"
+#   t_end: "04:48:10"
+
+
+
+# - video: data/sodapoppin/2023-03/1766920330
+#   title: "Talking and Watching Game Trailers w/ Chat - (sodapoppin) - March 16, 2023"
+#   t_start: "00:06:46"
+#   t_end: "01:01:12"
+
+# - video: data/sodapoppin/2023-03/1766920330
+#   title: "Dead Cells w/ Chat - (sodapoppin) - March 16, 2023"
+#   t_start: "01:01:12"
+#   t_end: "05:05:59"
+
+# - video: data/sodapoppin/2023-03/1766920330
+#   title: "Warcraft III w/ Chat - (sodapoppin) - March 16, 2023"
+#   t_start: "05:13:56"
+#   t_end: "07:54:10"
+
+
+
+
+# - video: data/skippypoppin/2023-03/1765162108
+#   title: "Puzzeling w/ Veibae - (skippypoppin) - March 14, 2023"
+#   t_start: "00:00:00"
+#   t_end: "01:28:27"
+
+# - video: data/skippypoppin/2023-03/1765162108
+#   title: "Divinity II 2 Person Perma w/ Veibae - Part 1 (skippypoppin) - March 14, 2023"
+#   t_start: "02:02:45"
+#   t_end: "04:24:39"
+
+# - video: data/skippypoppin/2023-03/1765618718
+#   title: "Divinity II 2 Person Perma w/ Veibae - Part 2 (skippypoppin) - March 15, 2023"
+#   t_start: "00:00:00"
+#   t_end: "02:22:09"
+
+# - video: data/skippypoppin/2023-03/1766344491
+#   title: "Divinity II 2 Person Perma w/ Veibae - Part 3 (skippypoppin) - March 15, 2023"
+#   t_start: "00:00:00"
+#   t_end: "02:42:19"
+
+
+
+# - video: data/sodapoppin/2023-03/1767834924
+#   title: "Diablo IV w/ Chat - (sodapoppin) - March 17, 2023"
+#   t_start: "00:04:45,01:19:36"
+#   t_end: "00:20:12,06:11:27"
+
+# - video: data/sodapoppin/2023-03/1767834924
+#   title: "Nidhogg 2 w/ Chat - (sodapoppin) - March 17, 2023"
+#   t_start: "06:11:32"
+#   t_end: "06:59:21"
+
+# - video: data/sodapoppin/2023-03/1767834924
+#   title: "Warcraft III Tower Survivors w/ Chat - (sodapoppin) - March 17, 2023"
+#   t_start: "06:59:21"
+#   t_end: "07:41:30"
+
+
+# - video: data/nmplol/2023-03/1768935771
+#   title: "OTK Game Day: Football w/ Chat - (Nmplol) - March 18, 2023"
+#   t_start: "00:19:21"
+#   t_end: "03:07:59"
+
+
+# - video: data/sodapoppin/2023-03/1770008108
+#   title: "Trash Talk IRL w/ Chat - (sodapoppin) - March 19, 2023"
+#   t_start: "00:14:46"
+#   t_end: "05:25:59"
+
+
+# - video: data/sodapoppin/2023-03/1770726342
+#   title: "Watching Game Trailers for Next Trash Talk IRL w/ Chat - (sodapoppin) - March 20, 2023"
+#   t_start: "00:07:37"
+#   t_end: "01:27:34"
+
+# - video: data/sodapoppin/2023-03/1770726342
+#   title: "Poker #ad w/ Chat - (sodapoppin) - March 20, 2023"
+#   t_start: "01:28:29"
+#   t_end: "03:52:50"
+
+# - video: data/sodapoppin/2023-03/1770726342
+#   title: "Chance Reacts Asmongold I Played Diablo 4 Beta w/ Chat - March 20, 2023"
+#   t_start: "03:24:38"
+#   t_end: "03:27:52"
+
+# - video: data/sodapoppin/2023-03/1770726342
+#   title: "Pluto's Shower Diagram w/ Chat - (sodapoppin) - March 20, 2023"
+#   t_start: "03:53:44"
+#   t_end: "03:55:04"
+
+# - video: data/sodapoppin/2023-03/1770726342
+#   title: "Warcraft III Tower Survivors w/ Chat - (sodapoppin) - March 20, 2023"
+#   t_start: "03:56:16"
+#   t_end: "06:14:00"
+
+
+# - video: data/sodapoppin/2023-03/1772499484
+#   title: "Chance Reacts to Counter-Strike 2 w/ Chat - (sodapoppin) - March 22, 2023"
+#   t_start: "00:08:01"
+#   t_end: "00:21:20"
+
+# - video: data/sodapoppin/2023-03/1772499484
+#   title: "Random Updates and Talking w/ Chat - (sodapoppin) - March 22, 2023"
+#   t_start: "00:21:22"
+#   t_end: "00:37:46"
+
+# - video: data/sodapoppin/2023-03/1772499484
+#   title: "Warcraft III Tower Survivors New Update w/ Chat - (sodapoppin) - March 22, 2023"
+#   t_start: "00:37:12"
+#   t_end: "01:26:18"
+
+# - video: data/sodapoppin/2023-03/1772499484
+#   title: "Have a Nice Death w/ Chat - (sodapoppin) - March 22, 2023"
+#   t_start: "01:25:58"
+#   t_end: "04:04:46"
+
+# - video: data/sodapoppin/2023-03/1772499484
+#   title: "Spider Queen Cave w/ Chat - (sodapoppin) - March 22, 2023"
+#   t_start: "04:09:25"
+#   t_end: "06:12:30"
+
+
+
+
+# - video: data/sodapoppin/2023-03/1773475751
+#   title: "Chance Reacts to Lacari Seeing his Link w/ Chat - (sodapoppin) - March 23, 2023"
+#   t_start: "00:24:52"
+#   t_end: "00:27:47"
+
+# - video: data/sodapoppin/2023-03/1773475751
+#   title: "Silent Nights (indie horror) w/ Chat - (sodapoppin) - March 23, 2023"
+#   t_start: "00:39:55"
+#   t_end: "01:35:17"
+
+# - video: data/sodapoppin/2023-03/1773475751
+#   title: "Peter's Day Out (indie horror) w/ Chat - (sodapoppin) - March 23, 2023"
+#   t_start: "01:35:17"
+#   t_end: "01:48:41"
+
+# - video: data/sodapoppin/2023-03/1773475751
+#   title: "See No Evil (indie horror) w/ Chat - (sodapoppin) - March 23, 2023"
+#   t_start: "01:48:51"
+#   t_end: "01:57:52"
+
+# - video: data/sodapoppin/2023-03/1773475751
+#   title: "Squidward's Shadows (indie horror) w/ Chat - (sodapoppin) - March 23, 2023"
+#   t_start: "01:57:52"
+#   t_end: "02:18:02"
+
+# - video: data/sodapoppin/2023-03/1773475751
+#   title: "My Strange Attic (indie horror) w/ Chat - (sodapoppin) - March 23, 2023"
+#   t_start: "02:18:02"
+#   t_end: "02:27:31"
+
+# - video: data/sodapoppin/2023-03/1773475751
+#   title: "Spectral Filter (indie horror) w/ Chat - (sodapoppin) - March 23, 2023"
+#   t_start: "02:27:31"
+#   t_end: "02:58:16"
+
+# - video: data/sodapoppin/2023-03/1773475751
+#   title: "New Chair w/ Chat - (sodapoppin) - March 23, 2023"
+#   t_start: "02:58:35"
+#   t_end: "03:17:03"
+
+# - video: data/sodapoppin/2023-03/1773475751
+#   title: "Mortal Sin w/ Chat - (sodapoppin) - March 23, 2023"
+#   t_start: "03:17:59"
+#   t_end: "03:59:14"
+
+# - video: data/sodapoppin/2023-03/1773475751
+#   title: "Nightmare Swamp (indie horror) w/ Chat - (sodapoppin) - March 23, 2023"
+#   t_start: "03:59:41"
+#   t_end: "04:13:59"
+
+# - video: data/sodapoppin/2023-03/1773475751
+#   title: "AI Art Quiz w/ Chat - (sodapoppin) - March 23, 2023"
+#   t_start: "04:17:33"
+#   t_end: "04:24:17"
+
+# - video: data/sodapoppin/2023-03/1773475751
+#   title: "Last Epoch w/ Chat - (sodapoppin) - March 23, 2023"
+#   t_start: "04:25:28"
+#   t_end: "07:35:00"
+
+
+
+
+
+# - video: data/sodapoppin/2023-03/1774395480
+#   title: "Resident Evil 4 w/ Chat - Part 1 (sodapoppin) - March 24, 2023"
+#   t_start: "00:08:38"
+#   t_end: "07:57:30"
+
+
+# - video: data/sodapoppin/2023-03/1775440337
+#   title: "Chance Reacts to Dark and Darker Removed w/ Chat - (sodapoppin) - March 25, 2023"
+#   description: "Moist's Video:\nhttps://www.youtube.com/watch?v=C3cqMqUV4hg"
+#   t_start: "00:03:59"
+#   t_end: "00:23:00"
+
+# - video: data/sodapoppin/2023-03/1775440337
+#   title: "Metal Dogs w/ Chat - (sodapoppin) - March 25, 2023"
+#   t_start: "00:31:48"
+#   t_end: "01:13:14"
+
+# - video: data/sodapoppin/2023-03/1775440337
+#   title: "The PenguinGame Antarctic Savior w/ Chat - (sodapoppin) - March 25, 2023"
+#   t_start: "01:18:49"
+#   t_end: "01:32:26"
+
+# - video: data/sodapoppin/2023-03/1775440337
+#   title: "Flame Keeper w/ Chat - (sodapoppin) - March 25, 2023"
+#   t_start: "01:33:24"
+#   t_end: "01:46:39"
+
+# - video: data/sodapoppin/2023-03/1775440337
+#   title: "Deceive Inc. w/ Chat - (sodapoppin) - March 25, 2023"
+#   t_start: "01:47:13"
+#   t_end: "02:31:53"
+
+# - video: data/sodapoppin/2023-03/1775440337
+#   title: "Mr. Hopp's Playhouse 3 w/ Chat - (sodapoppin) - March 25, 2023"
+#   t_start: "02:34:54"
+#   t_end: "03:12:19"
+
+# - video: data/sodapoppin/2023-03/1775440337
+#   title: "Resident Evil 4 w/ Chat - Part 2 (sodapoppin) - March 25, 2023"
+#   t_start: "03:12:25"
+#   t_end: "06:39:50"
+
+
+# - video: data/sodapoppin/2023-03/1776506288
+#   title: "Chance Reacts to Ironmace DnD Response w/ Chat - (sodapoppin) - March 26, 2023"
+#   t_start: "00:06:48,07:11:51,07:40:42"
+#   t_end: "00:36:54,07:17:06,07:44:52"
+
+# - video: data/sodapoppin/2023-03/1776506288
+#   title: "Resident Evil 4 w/ Chat - Part 3 (sodapoppin) - March 26, 2023"
+#   t_start: "00:40:45"
+#   t_end: "07:11:51"
+
+# - video: data/sodapoppin/2023-03/1776506288
+#   title: "Reacting to Twitch Clips w/ Chat - (sodapoppin) - March 26, 2023"
+#   t_start: "07:11:51"
+#   t_end: "07:31:34"
+
+# - video: data/sodapoppin/2023-03/1776506288
+#   title: "Reacting to FTK New Video w/ Chat - (sodapoppin) - March 26, 2023"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=ApilVirAc90"
+#   t_start: "07:31:34"
+#   t_end: "07:39:51"
+
+
+
+
+# - video: data/lacari/2023-03/1777774748
+#   title: "Chance Plays Monopoly w/ Vei, Nyanners, Lacari, Quqco, Lord Aeth - March 27, 2023"
+#   description: "Originally streamed on Lacari's channel."
+#   t_start: "01:04:06"
+#   t_end: "02:46:17"
+
+# - video: data/lacari/2023-03/1777774748
+#   title: "Among Us w/ Vei and Friends - March 27, 2023"
+#   description: "Originally streamed on Lacari's channel."
+#   t_start: "03:14:15"
+#   t_end: "04:01:00"
+
+# - video: data/lacari/2023-03/1777774748
+#   title: "Codenames w/ Vei and Friends - March 27, 2023"
+#   description: "Originally streamed on Lacari's channel."
+#   t_start: "04:01:00"
+#   t_end: "04:23:43"
+
+
+
+# - video: data/lordaethelstan/2023-03/1780168199
+#   title: "Necesse w/ Vei and Friends - March 30, 2023"
+#   description: "Originally streamed on LordAethelstan's channel."
+#   t_start: "01:38:39"
+#   t_end: "05:04:25"
+
+# - video: data/lordaethelstan/2023-03/1780168199
+#   title: "Demonologist (horror) w/ Vei and Friends - March 30, 2023"
+#   description: "Originally streamed on LordAethelstan's channel."
+#   t_start: "05:07:17"
+#   t_end: "07:38:07"
+
+
+
+
+# # - video: data/sodapoppin/2023-03/1779070824
+# #   title: "Mole Removed w/ Chat - (sodapoppin) - March 29, 2023"
+# #   t_start: "00:06:09,03:11:00,03:13:16"
+# #   t_end: "00:11:18,03:11:29"
+
+# - video: data/sodapoppin/2023-03/1779070824
+#   title: "Chance Reacts to MeatCanyon w/ Chat - (sodapoppin) - March 29, 2023"
+#   description: "Channel:\nhttps://www.youtube.com/@MeatCanyon\n\nOriginal Videos:\nhttps://www.youtube.com/watch?v=S3UFYROnTbo\nhttps://www.youtube.com/watch?v=5eI82NoasTM\nhttps://www.youtube.com/watch?v=nEZgWEXWn4M\nhttps://www.youtube.com/watch?v=jQWZjVploT8\nhttps://www.youtube.com/watch?v=Nar5doQyu2M"
+#   t_start: "00:19:53"
+#   t_end: "01:24:36"
+
+# - video: data/sodapoppin/2023-03/1779070824
+#   title: "Chance Reacts to Tears of the Kingdom Gameplay Demo w/ Chat - (sodapoppin) - March 29, 2023"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=a6qna-ZCbxA"
+#   t_start: "01:25:44"
+#   t_end: "01:38:49"
+
+# - video: data/sodapoppin/2023-03/1779070824
+#   title: "Demonologist (horror) w/ Chat - (sodapoppin) - March 29, 2023"
+#   t_start: "01:38:46"
+#   t_end: "03:11:00"
+
+# - video: data/sodapoppin/2023-03/1779070824
+#   title: "League of Legends w/ Vei and Friends - (sodapoppin) - March 29, 2023"
+#   t_start: "03:14:32"
+#   t_end: "07:34:40"
+
+
+# - video: data/nmplol/2023-03/1780958593
+#   title: "OTK Game Day: Volleyball w/ Chat - (Nmplol) - March 31, 2023"
+#   t_start: "00:19:39"
+#   t_end: "02:39:36"
+
+
+
+# - video: data/sodapoppin/2023-03/1781136185
+#   title: "Chance Reacts to The Tragic Tale of Jackie Chan's Son - (sodapoppin) - March 31, 2023"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=xviKJbnSols"
+#   t_start: "00:23:33"
+#   t_end: "00:33:39"
+
+# - video: data/sodapoppin/2023-03/1781136185
+#   title: "Wild Hearts #ad w/ Chat - (sodapoppin) - March 31, 2023"
+#   t_start: "01:11:17"
+#   t_end: "03:24:00"
+
+
+
+
+
+# - video: data/sodapoppin/2023-04/1781863829
+#   title: "Landfall Archives w/ Chat - (sodapoppin) - April 1, 2023"
+#   t_start: "00:43:42"
+#   t_end: "02:21:35"
+
+# - video: data/sodapoppin/2023-04/1781863829
+#   title: "Wretched Depths (horror?) w/ Chat - (sodapoppin) - April 1, 2023"
+#   t_start: "02:21:35"
+#   t_end: "03:09:42"
+
+# - video: data/sodapoppin/2023-04/1781863829
+#   title: "Crab Champions w/ Chat - (sodapoppin) - April 1, 2023"
+#   t_start: "03:11:14"
+#   t_end: "03:58:17"
+
+# - video: data/sodapoppin/2023-04/1781863829
+#   title: "Boomerang X w/ Chat - (sodapoppin) - April 1, 2023"
+#   t_start: "03:59:45"
+#   t_end: "04:48:05"
+
+# - video: data/sodapoppin/2023-04/1781863829
+#   title: "Eggcelerate! to the Tropics w/ Chat - (sodapoppin) - April 1, 2023"
+#   t_start: "04:48:57"
+#   t_end: "04:58:02"
+
+# - video: data/sodapoppin/2023-04/1781863829
+#   title: "Emote Sounds w/ Chat - (sodapoppin) - April 1, 2023"
+#   t_start: "05:00:16,06:43:14"
+#   t_end: "05:05:51,06:46:56"
+
+# - video: data/sodapoppin/2023-04/1781863829
+#   title: "Family Curse (horror) w/ Chat - (sodapoppin) - April 1, 2023"
+#   t_start: "05:05:51"
+#   t_end: "06:25:15"
+
+# - video: data/sodapoppin/2023-04/1781863829
+#   title: "Demonologist (horror) w/ Vei - (sodapoppin) - April 1, 2023"
+#   t_start: "06:26:06"
+#   t_end: "06:57:56"
+
+# - video: data/sodapoppin/2023-04/1781863829
+#   title: "League of Legends w/ Vei - (sodapoppin) - April 1, 2023"
+#   t_start: "06:57:56"
+#   t_end: "08:48:50"
+
+
+
+- video: data/sodapoppin/2023-04/1783695564
+  title: "Reacting to OTK Game Day Volleyball w/ Chat - (sodapoppin) - April 3, 2023"
+  t_start: "00:14:08,00:28:05"
+  t_end: "00:17:01,01:29:21"
+
+- video: data/sodapoppin/2023-04/1783695564
+  title: "Dredge w/ Chat - (sodapoppin) - April 3, 2023"
+  t_start: "01:29:15"
+  t_end: "06:16:50"
+
+
+- video: data/sodapoppin/2023-04/1790896157
+  title: "Updates w/ Chat - (sodapoppin) - April 11, 2023"
+  t_start: "00:08:06"
+  t_end: "00:30:32"
+
+
+- video: data/sodapoppin/2023-04/1790896157
+  title: "Wall World w/ Chat - Part 1 (sodapoppin) - April 11, 2023"
+  t_start: "00:25:10"
+  t_end: "05:38:54"
+
+
+- video: data/sodapoppin/2023-04/1791167451
+  title: "Wall World w/ Chat - (sodapoppin) - Part 2 April 11, 2023"
+  t_start: "00:00:14"
+  t_end: "00:45:40"
+
+- video: data/sodapoppin/2023-04/1791881843
+  title: "Wildfrost w/ Chat - (sodapoppin) - April 12, 2023"
+  t_start: "00:12:12"
+  t_end: "03:45:00"
+
+
+- video: data/sodapoppin/2023-04/1792061802
+  title: "Wall World w/ Chat - (sodapoppin) - April 12, 2023"
+  t_start: "00:04:52"
+  t_end: "01:25:09"
+
+- video: data/sodapoppin/2023-04/1792061802
+  title: "Tiny Rogues w/ Chat - (sodapoppin) - April 12, 2023"
+  t_start: "01:25:10"
+  t_end: "02:26:10"
+
+
+
+
+- video: data/sodapoppin/2023-04/1792694456
+  title: "Brotato w/ Chat - (sodapoppin) - April 13, 2023"
+  t_start: "00:18:53"
+  t_end: "03:40:27"
+
+- video: data/sodapoppin/2023-04/1792694456
+  title: "Chance Reacts to Playstation State of Play w/ Chat - (sodapoppin) - April 13, 2023"
+  t_start: "03:41:00"
+  t_end: "03:50:52"
+
+- video: data/sodapoppin/2023-04/1792694456
+  title: "BombTag w/ Chat - (sodapoppin) - April 13, 2023"
+  t_start: "03:50:52"
+  t_end: "04:21:30"
+
+- video: data/sodapoppin/2023-04/1792694456
+  title: "Wildfrost w/ Chat - (sodapoppin) - April 13, 2023"
+  t_start: "04:21:30"
+  t_end: "05:08:16"
+
+
+
+- video: data/sodapoppin/2023-04/1793022437
+  title: "Clash of Clans #ad w/ Chat - (sodapoppin) - April 13, 2023"
+  t_start: "00:00:24"
+  t_end: "02:06:40"
+
+
+
+
+- video: data/sodapoppin/2023-04/1793561001
+  title: "Dark and Darker with Veibae w/ Chat - Part 1 (sodapoppin) - April 14, 2023"
+  t_start: "00:08:47"
+  t_end: "05:33:44"
+
+- video: data/sodapoppin/2023-04/1793561001
+  title: "Reacting to Trainwreck Painting w/ Chat - (sodapoppin) - April 14, 2023"
+  t_start: "03:05:28"
+  t_end: "03:13:05"
+
+- video: data/sodapoppin/2023-04/1793839542
+  title: "Dark and Darker with Veibae and Lacari w/ Chat - Part 2 (sodapoppin) - April 14, 2023"
+  t_start: "00:00:08"
+  t_end: "02:50:20"
+
+- video: data/sodapoppin/2023-04/1794001981
+  title: "Dark and Darker with Veibae and Lacari w/ Chat - Part 3 (sodapoppin) - April 14, 2023"
+  t_start: "00:00:13"
+  t_end: "07:02:00"
 
 
 
