@@ -17,8 +17,7 @@ config_file = path_base + "/config/soda_config_youtube.yaml"
 # config_file = path_base + "/config/clint_config_youtube.yaml"
 
 # paths of the cli and data
-# path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.51.2/TwitchDownloaderCLI"
-path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_7ce7382/TwitchDownloaderCLI"
+path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.53.0/TwitchDownloaderCLI"
 path_twitch_ffmpeg = path_base + "/thirdparty/ffmpeg-4.3.1-amd64-static/ffmpeg"
 path_root = path_base + "/../"
 path_render = path_base + "/../data_rendered/"
@@ -105,7 +104,7 @@ for video in data:
                     + ' -i ' + file_path_chat + ' -o ' + file_path_render_tmp \
                     + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
                     + ' -h 926 -w 274 --update-rate 0.1 --framerate 60 --font-size 15' \
-                    + ' --bttv true --ffz true --stv true --sub-messages true --badges true --sharpening true' \
+                    + ' --bttv true --ffz true --stv true --sub-messages true --badges true --sharpening true --dispersion true' \
                     + ' --temp-path "' + path_temp + '" '
                 subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
                 #subprocess.Popen(cmd, shell=True).wait()

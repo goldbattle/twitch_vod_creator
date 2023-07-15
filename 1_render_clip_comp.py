@@ -23,8 +23,8 @@ client_secret = auth["client_secret"]
 # parameters
 channel = 'sodapoppin'
 max_clips = 30
-date_start = '2023-03-01T00:00:00.00Z'
-date_end = '2023-03-31T00:00:00.00Z'
+date_start = '2023-05-01T00:00:00.00Z'
+date_end = '2023-05-31T00:00:00.00Z'
 min_views_required = 1000
 get_latest_from_twitch = True
 remove_rendered = True
@@ -37,8 +37,7 @@ clips_to_ignore = [
 # ================================================================
 
 # paths of the cli and data
-# path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.51.2/TwitchDownloaderCLI"
-path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_7ce7382/TwitchDownloaderCLI"
+path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.53.0/TwitchDownloaderCLI"
 path_twitch_ffmpeg = path_base + "/thirdparty/ffmpeg-4.3.1-amd64-static/ffmpeg"
 path_twitch_ffprob = path_base + "/thirdparty/ffmpeg-4.3.1-amd64-static/ffprobe"
 path_font = path_base.replace("\\", "/").replace(":", "\\\\:") + "/thirdparty/bebas_neue/BebasNeue-Regular.ttf"
@@ -327,7 +326,7 @@ for video in arr_clips:
                 + ' -i ' + file_path_chat + ' -o ' + file_path_render \
                 + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
                 + ' -h 926 -w 274 --update-rate 0.1 --framerate 60 --font-size 15' \
-                + ' --bttv true --ffz true --stv true --sub-messages true --badges true --sharpening true' \
+                + ' --bttv true --ffz true --stv true --sub-messages true --badges true --sharpening true --dispersion true' \
                 + ' --temp-path "' + path_temp + '" '
         subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
         # subprocess.Popen(cmd, shell=True).wait()

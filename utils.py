@@ -132,6 +132,7 @@ def get_clip_data(clip_id):
     try:
         gql_response = get_clip_graphql_info(clip_id)
         gql_obj = json.loads(gql_response)
+        #print(gql_obj)
         return {
             "vod_id": gql_obj["data"]["clip"]["video"]["id"],
             "offset": gql_obj["data"]["clip"]["videoOffsetSeconds"],
@@ -148,7 +149,9 @@ def get_clip_data(clip_id):
 def get_clip_graphql_info(clip_id):
     # seems to just be a default client id
     # https://dev.twitch.tv/docs/authentication
-    client_id = "kimne78kx3ncx6brgo4mv6wki5h1ko"
+    # desktop: kimne78kx3ncx6brgo4mv6wki5h1ko
+    # mobile: kd1unb4b3q4t58fwlpcbzcbnm76a8fp
+    client_id = "kd1unb4b3q4t58fwlpcbzcbnm76a8fp"
     # auth = "xxxxxx"
 
     # formulate the graphql query format
