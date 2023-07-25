@@ -6569,232 +6569,629 @@
 
 
 
-- video: data/sodapoppin/2023-06/1848790877
-  title: "Horror Stories Harvest Hunt w/ Chat - (sodapoppin) - June 17, 2023"
-  t_start: "00:12:35"
-  t_end: "00:43:37"
+# - video: data/sodapoppin/2023-06/1848790877
+#   title: "Horror Stories Harvest Hunt w/ Chat - (sodapoppin) - June 17, 2023"
+#   t_start: "00:12:35"
+#   t_end: "00:43:37"
 
-- video: data/sodapoppin/2023-06/1848790877
-  title: "Hellgrinder w/ Chat - (sodapoppin) - June 17, 2023"
-  t_start: "00:43:50"
-  t_end: "00:54:13"
+# - video: data/sodapoppin/2023-06/1848790877
+#   title: "Hellgrinder w/ Chat - (sodapoppin) - June 17, 2023"
+#   t_start: "00:43:50"
+#   t_end: "00:54:13"
 
-- video: data/sodapoppin/2023-06/1848790877
-  title: "Oblivion Override w/ Chat - (sodapoppin) - June 17, 2023"
-  t_start: "00:54:15"
-  t_end: "01:22:56"
+# - video: data/sodapoppin/2023-06/1848790877
+#   title: "Oblivion Override w/ Chat - (sodapoppin) - June 17, 2023"
+#   t_start: "00:54:15"
+#   t_end: "01:22:56"
 
-- video: data/sodapoppin/2023-06/1848790877
-  title: "BattleBit Remastered w/ Chat - (sodapoppin) - June 17, 2023"
-  t_start: "01:23:58"
-  t_end: "02:51:41"
+# - video: data/sodapoppin/2023-06/1848790877
+#   title: "BattleBit Remastered w/ Chat - (sodapoppin) - June 17, 2023"
+#   t_start: "01:23:58"
+#   t_end: "02:51:41"
 
-- video: data/sodapoppin/2023-06/1848790877
-  title: "Shrime 2 The genesis of Butteye w/ Chat - (sodapoppin) - June 17, 2023"
-  t_start: "02:51:48"
-  t_end: "03:10:46"
+# - video: data/sodapoppin/2023-06/1848790877
+#   title: "Shrime 2 The genesis of Butteye w/ Chat - (sodapoppin) - June 17, 2023"
+#   t_start: "02:51:48"
+#   t_end: "03:10:46"
 
-- video: data/sodapoppin/2023-06/1848790877
-  title: "Heavy Metal Titans w/ Chat - (sodapoppin) - June 17, 2023"
-  t_start: "03:10:47"
-  t_end: "03:23:00"
+# - video: data/sodapoppin/2023-06/1848790877
+#   title: "Heavy Metal Titans w/ Chat - (sodapoppin) - June 17, 2023"
+#   t_start: "03:10:47"
+#   t_end: "03:23:00"
 
-- video: data/sodapoppin/2023-06/1848790877
-  title: "Catventure MVP w/ Chat - (sodapoppin) - June 17, 2023"
-  t_start: "03:23:00"
-  t_end: "03:33:49"
+# - video: data/sodapoppin/2023-06/1848790877
+#   title: "Catventure MVP w/ Chat - (sodapoppin) - June 17, 2023"
+#   t_start: "03:23:00"
+#   t_end: "03:33:49"
 
-- video: data/sodapoppin/2023-06/1848790877
-  title: "Tear Factory w/ Chat - (sodapoppin) - June 17, 2023"
-  t_start: "03:33:39"
-  t_end: "03:51:57"
+# - video: data/sodapoppin/2023-06/1848790877
+#   title: "Tear Factory w/ Chat - (sodapoppin) - June 17, 2023"
+#   t_start: "03:33:39"
+#   t_end: "03:51:57"
 
-- video: data/sodapoppin/2023-06/1848790877
-  title: "Daydream Forgotten Sorrow w/ Chat - (sodapoppin) - June 17, 2023"
-  t_start: "03:51:57"
-  t_end: "04:55:58"
+# - video: data/sodapoppin/2023-06/1848790877
+#   title: "Daydream Forgotten Sorrow w/ Chat - (sodapoppin) - June 17, 2023"
+#   t_start: "03:51:57"
+#   t_end: "04:55:58"
 
-- video: data/sodapoppin/2023-06/1848790877
-  title: "Sparky Marky: Episode 2 w/ Chat - (sodapoppin) - June 17, 2023"
-  t_start: "04:58:36"
-  t_end: "05:26:40"
+# - video: data/sodapoppin/2023-06/1848790877
+#   title: "Sparky Marky: Episode 2 w/ Chat - (sodapoppin) - June 17, 2023"
+#   t_start: "04:58:36"
+#   t_end: "05:26:40"
 
-- video: data/sodapoppin/2023-06/1848790877
-  title: "Darkshire (horror?) w/ Chat - (sodapoppin) - June 17, 2023"
-  t_start: "05:29:08"
-  t_end: "06:10:21"
+# - video: data/sodapoppin/2023-06/1848790877
+#   title: "Darkshire (horror?) w/ Chat - (sodapoppin) - June 17, 2023"
+#   t_start: "05:29:08"
+#   t_end: "06:10:21"
 
-- video: data/sodapoppin/2023-06/1848790877
-  title: "Birds w/ Chat - (sodapoppin) - June 17, 2023"
-  t_start: "05:35:38,06:11:09,06:48:46"
-  t_end: "05:38:05,06:12:26,06:49:30"
+# - video: data/sodapoppin/2023-06/1848790877
+#   title: "Birds w/ Chat - (sodapoppin) - June 17, 2023"
+#   t_start: "05:35:38,06:11:09,06:48:46"
+#   t_end: "05:38:05,06:12:26,06:49:30"
 
-- video: data/sodapoppin/2023-06/1848790877
-  title: "Dino Trauma (indie horror) w/ Chat - (sodapoppin) - June 17, 2023"
-  t_start: "06:10:56"
-  t_end: "06:47:38"
+# - video: data/sodapoppin/2023-06/1848790877
+#   title: "Dino Trauma (indie horror) w/ Chat - (sodapoppin) - June 17, 2023"
+#   t_start: "06:10:56"
+#   t_end: "06:47:38"
 
-- video: data/sodapoppin/2023-06/1848790877
-  title: "Only Up! w/ Chat - (sodapoppin) - June 17, 2023"
-  t_start: "06:47:42"
-  t_end: "07:11:40"
-
-
-
-
-- video: data/sodapoppin/2023-06/1849662172
-  title: "Father's Day w/ Chat - (sodapoppin) - June 18, 2023"
-  t_start: "00:06:38"
-  t_end: "00:13:32"
-
-- video: data/sodapoppin/2023-06/1849662172
-  title: "Dizzy Rogues w/ Chat - (sodapoppin) - June 18, 2023"
-  t_start: "00:11:28"
-  t_end: "01:37:50"
-
-- video: data/sodapoppin/2023-06/1849662172
-  title: "Inkbound w/ Chat - Part 1 (sodapoppin) - June 18, 2023"
-  t_start: "01:37:50"
-  t_end: "06:17:47"
-
-- video: data/sodapoppin/2023-06/1849662172
-  title: "Inkbound w/ Chat - Part 2 (sodapoppin) - June 18, 2023"
-  t_start: "06:17:47"
-  t_end: "11:09:40"
-
-
-
-- video: data/sodapoppin/2023-06/1852136830
-  title: "Reacting to Nintendo Direct 6.21.2023 w/ Chat - (sodapoppin) - June 21, 2023"
-  description: "Original Video:\nhttps://www.youtube.com/watch?v=mrZtzGRAKrM"
-  t_start: "00:09:10"
-  t_end: "00:34:28"
-
-- video: data/sodapoppin/2023-06/1852136830
-  title: "Castle of Alchemists w/ Chat - (sodapoppin) - June 21, 2023"
-  t_start: "00:34:28"
-  t_end: "02:07:36"
-
-- video: data/sodapoppin/2023-06/1852136830
-  title: "Voidigo w/ Chat - (sodapoppin) - June 21, 2023"
-  t_start: "02:11:36"
-  t_end: "04:10:16"
-
-- video: data/sodapoppin/2023-06/1852136830
-  title: "HROT w/ Chat - (sodapoppin) - June 21, 2023"
-  t_start: "04:12:22"
-  t_end: "04:30:20"
-
-- video: data/sodapoppin/2023-06/1852136830
-  title: "Deadlink w/ Chat - (sodapoppin) - June 21, 2023"
-  t_start: "04:30:20"
-  t_end: "05:29:13"
-
-- video: data/sodapoppin/2023-06/1852136830
-  title: "Evercore Heroes #ad w/ Chat - (sodapoppin) - June 21, 2023"
-  t_start: "05:29:13"
-  t_end: "07:41:40"
-
-
-
-- video: data/sodapoppin/2023-06/1853029990
-  title: "Final Fantasy XVI #ad w/ Chat - (sodapoppin) - June 22, 2023"
-  t_start: "00:07:05"
-  t_end: "06:56:40"
-
-- video: data/sodapoppin/2023-06/1853029990
-  title: "Chance Reacts to John Souls: Now We Pray w/ Chat - (sodapoppin) - June 22, 2023"
-  description: "Original Video:\nhttps://www.youtube.com/watch?v=w1qXcgERKk4"
-  t_start: "00:18:40"
-  t_end: "00:25:04"
+# - video: data/sodapoppin/2023-06/1848790877
+#   title: "Only Up! w/ Chat - (sodapoppin) - June 17, 2023"
+#   t_start: "06:47:42"
+#   t_end: "07:11:40"
 
 
 
 
-- video: data/sodapoppin/2023-06/1853948842
-  title: "Dark Souls Race Trash Talk IRL w/ Chat - (sodapoppin) - June 23, 2023"
-  t_start: "00:19:54"
-  t_end: "04:48:17"
+# - video: data/sodapoppin/2023-06/1849662172
+#   title: "Father's Day w/ Chat - (sodapoppin) - June 18, 2023"
+#   t_start: "00:06:38"
+#   t_end: "00:13:32"
+
+# - video: data/sodapoppin/2023-06/1849662172
+#   title: "Dizzy Rogues w/ Chat - (sodapoppin) - June 18, 2023"
+#   t_start: "00:11:28"
+#   t_end: "01:37:50"
+
+# - video: data/sodapoppin/2023-06/1849662172
+#   title: "Inkbound w/ Chat - Part 1 (sodapoppin) - June 18, 2023"
+#   t_start: "01:37:50"
+#   t_end: "06:17:47"
+
+# - video: data/sodapoppin/2023-06/1849662172
+#   title: "Inkbound w/ Chat - Part 2 (sodapoppin) - June 18, 2023"
+#   t_start: "06:17:47"
+#   t_end: "11:09:40"
+
+
+
+# - video: data/sodapoppin/2023-06/1852136830
+#   title: "Reacting to Nintendo Direct 6.21.2023 w/ Chat - (sodapoppin) - June 21, 2023"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=mrZtzGRAKrM"
+#   t_start: "00:09:10"
+#   t_end: "00:34:28"
+
+# - video: data/sodapoppin/2023-06/1852136830
+#   title: "Castle of Alchemists w/ Chat - (sodapoppin) - June 21, 2023"
+#   t_start: "00:34:28"
+#   t_end: "02:07:36"
+
+# - video: data/sodapoppin/2023-06/1852136830
+#   title: "Voidigo w/ Chat - (sodapoppin) - June 21, 2023"
+#   t_start: "02:11:36"
+#   t_end: "04:10:16"
+
+# - video: data/sodapoppin/2023-06/1852136830
+#   title: "HROT w/ Chat - (sodapoppin) - June 21, 2023"
+#   t_start: "04:12:22"
+#   t_end: "04:30:20"
+
+# - video: data/sodapoppin/2023-06/1852136830
+#   title: "Deadlink w/ Chat - (sodapoppin) - June 21, 2023"
+#   t_start: "04:30:20"
+#   t_end: "05:29:13"
+
+# - video: data/sodapoppin/2023-06/1852136830
+#   title: "Evercore Heroes #ad w/ Chat - (sodapoppin) - June 21, 2023"
+#   t_start: "05:29:13"
+#   t_end: "07:41:40"
+
+
+
+# - video: data/sodapoppin/2023-06/1853029990
+#   title: "Final Fantasy XVI #ad w/ Chat - (sodapoppin) - June 22, 2023"
+#   t_start: "00:07:05"
+#   t_end: "06:56:40"
+
+# - video: data/sodapoppin/2023-06/1853029990
+#   title: "Chance Reacts to John Souls: Now We Pray w/ Chat - (sodapoppin) - June 22, 2023"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=w1qXcgERKk4"
+#   t_start: "00:18:40"
+#   t_end: "00:25:04"
 
 
 
 
-- video: data/sodapoppin/2023-06/1855701431
-  title: "Amnesia: The Bunker w/ Chat - (sodapoppin) - June 25, 2023"
-  t_start: "00:12:56"
-  t_end: "05:55:20"
+# - video: data/sodapoppin/2023-06/1853948842
+#   title: "Dark Souls Race Trash Talk IRL w/ Chat - (sodapoppin) - June 23, 2023"
+#   t_start: "00:19:54"
+#   t_end: "04:48:17"
 
 
 
-- video: data/sodapoppin/2023-06/1856517801
-  title: "Weather, Birds, and UK Visit w/ Chat - (sodapoppin) - June 26, 2023"
-  t_start: "00:05:12"
-  t_end: "00:56:09"
 
-- video: data/sodapoppin/2023-06/1856517801
-  title: "Chance Reacts to Sseth Outward Review w/ Chat - (sodapoppin) - June 26, 2023"
-  description: "Original Video:\nhttps://www.youtube.com/watch?v=mUnSJjnrcQs"
-  t_start: "00:58:29"
-  t_end: "01:19:51"
-
-- video: data/sodapoppin/2023-06/1856517801
-  title: "Bramble: The Mountain King w/ Chat - (sodapoppin) - June 26, 2023"
-  t_start: "01:25:11"
-  t_end: "05:11:26"
-
-- video: data/sodapoppin/2023-06/1856517801
-  title: "Brotato w/ Chat - (sodapoppin) - June 26, 2023"
-  t_start: "05:15:30"
-  t_end: "07:04:10"
+# - video: data/sodapoppin/2023-06/1855701431
+#   title: "Amnesia: The Bunker w/ Chat - (sodapoppin) - June 25, 2023"
+#   t_start: "00:12:56"
+#   t_end: "05:55:20"
 
 
 
-- video: data/sodapoppin/2023-06/1857401849
-  title: "20 Minutes Till Dawn w/ Chat - (sodapoppin) - June 27, 2023"
-  t_start: "00:31:58"
-  t_end: "03:03:36"
+# - video: data/sodapoppin/2023-06/1856517801
+#   title: "Weather, Birds, and UK Visit w/ Chat - (sodapoppin) - June 26, 2023"
+#   t_start: "00:05:12"
+#   t_end: "00:56:09"
 
-- video: data/sodapoppin/2023-06/1857401849
-  title: "Latenight Bread & Fred w/ Vei - (sodapoppin) - June 27, 2023"
-  t_start: "03:03:36"
-  t_end: "03:55:10"
+# - video: data/sodapoppin/2023-06/1856517801
+#   title: "Chance Reacts to Sseth Outward Review w/ Chat - (sodapoppin) - June 26, 2023"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=mUnSJjnrcQs"
+#   t_start: "00:58:29"
+#   t_end: "01:19:51"
 
-- video: data/sodapoppin/2023-06/1857585115
-  title: "Latenight VR Grimlord w/ Vei - (sodapoppin) - June 27, 2023"
-  t_start: "00:00:11"
-  t_end: "01:40:45"
+# - video: data/sodapoppin/2023-06/1856517801
+#   title: "Bramble: The Mountain King w/ Chat - (sodapoppin) - June 26, 2023"
+#   t_start: "01:25:11"
+#   t_end: "05:11:26"
 
-- video: data/sodapoppin/2023-06/1857669332
-  title: "Latenight VR Games w/ Vei - (sodapoppin) - June 27, 2023"
-  t_start: "00:00:02"
-  t_end: "00:52:14"
+# - video: data/sodapoppin/2023-06/1856517801
+#   title: "Brotato w/ Chat - (sodapoppin) - June 26, 2023"
+#   t_start: "05:15:30"
+#   t_end: "07:04:10"
 
 
 
-- video:  data/sodapoppin/2023-06/1857401849
-  title: "Keep Talking and Nobody Explodes w/ Vei - (sodapoppin) - June 27, 2023"
-  t_start: "00:00:01"
-  t_end: "02:22:09"
+# - video: data/sodapoppin/2023-06/1857401849
+#   title: "20 Minutes Till Dawn w/ Chat - (sodapoppin) - June 27, 2023"
+#   t_start: "00:31:58"
+#   t_end: "03:03:36"
 
-- video:  data/sodapoppin/2023-06/1857401849
-  title: "Reacting to Youtube Shorts w/ Vei - (sodapoppin) - June 27, 2023"
-  t_start: "02:22:09"
-  t_end: "03:07:11"
+# - video: data/sodapoppin/2023-06/1857401849
+#   title: "Latenight Bread & Fred w/ Vei - (sodapoppin) - June 27, 2023"
+#   t_start: "03:03:36"
+#   t_end: "03:55:10"
 
-- video:  data/sodapoppin/2023-06/1857401849
-  title: "Chance Shows of Dancing Skills w/ Vei - (sodapoppin) - June 27, 2023"
-  t_start: "02:50:07"
-  t_end: "02:58:21"
+# - video: data/sodapoppin/2023-06/1857585115
+#   title: "Latenight VR Grimlord w/ Vei - (sodapoppin) - June 27, 2023"
+#   t_start: "00:00:11"
+#   t_end: "01:40:45"
 
-- video:  data/sodapoppin/2023-06/1857401849
-  title: "."
-  t_start: "02:58:27"
-  t_end: "03:08:57"
+# - video: data/sodapoppin/2023-06/1857669332
+#   title: "Latenight VR Games w/ Vei - (sodapoppin) - June 27, 2023"
+#   t_start: "00:00:02"
+#   t_end: "00:52:14"
 
-- video:  data/sodapoppin/2023-06/1857401849
-  title: "BattleBit Remastered w/ Vei - (sodapoppin) - June 27, 2023"
-  t_start: "03:06:06"
-  t_end: "03:57:10"
+
+
+# - video:  data/sodapoppin/2023-06/1857707616
+#   title: "Keep Talking and Nobody Explodes w/ Vei - (sodapoppin) - June 27, 2023"
+#   t_start: "00:00:01"
+#   t_end: "02:22:09"
+
+# - video:  data/sodapoppin/2023-06/1857707616
+#   title: "Reacting to Youtube Shorts w/ Vei - (sodapoppin) - June 27, 2023"
+#   t_start: "02:22:09"
+#   t_end: "03:07:11"
+
+# - video:  data/sodapoppin/2023-06/1857707616
+#   title: "Chance Shows of Dancing Skills w/ Vei - (sodapoppin) - June 27, 2023"
+#   t_start: "02:50:07"
+#   t_end: "02:58:21"
+
+# - video:  data/sodapoppin/2023-06/1857707616
+#   title: "."
+#   t_start: "02:58:27"
+#   t_end: "03:08:57"
+
+# - video:  data/sodapoppin/2023-06/1857707616
+#   title: "BattleBit Remastered w/ Vei - (sodapoppin) - June 27, 2023"
+#   t_start: "03:06:06"
+#   t_end: "03:57:10"
+
+
+
+
+
+
+# - video: data/sodapoppin/2023-07/1864064403
+#   title: "I'm in the UK Bruv w/ Chat - (sodapoppin) - July 5, 2023"
+#   t_start: "00:11:54,01:13:32"
+#   t_end: "00:46:38,01:20:08"
+
+# - video: data/sodapoppin/2023-07/1864064403
+#   title: "Talking About Hardcore WoW w/ Chat - (sodapoppin) - July 5, 2023"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=HvjYudOKQOg"
+#   t_start: "00:51:15"
+#   t_end: "01:06:36"
+
+# - video: data/sodapoppin/2023-07/1864064403
+#   title: "Reacting to Mountain Survival & Bushcraft w/ Chat - (sodapoppin) - July 5, 2023"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=YFy2KbsM4ys"
+#   t_start: "01:22:27"
+#   t_end: "01:43:31"
+
+# - video: data/sodapoppin/2023-07/1864064403
+#   title: "Reacting for Crane Game Technique w/ Chat - (sodapoppin) - July 5, 2023"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=fhUjXTkcXoE"
+#   t_start: "01:43:31"
+#   t_end: "01:55:30"
+
+# - video: data/sodapoppin/2023-07/1864064403
+#   title: "Chance Reacts to Daily Dose Cat Has Existential Crisis w/ Chat - (sodapoppin) - July 5, 2023"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=PCajG16Fryo"
+#   t_start: "01:55:30"
+#   t_end: "02:05:38"
+
+# - video: data/sodapoppin/2023-07/1864064403
+#   title: "Neodash w/ Chat - (sodapoppin) - July 5, 2023"
+#   t_start: "02:50:50"
+#   t_end: "03:14:33"
+
+# - video: data/sodapoppin/2023-07/1864064403
+#   title: "The Isle with Vei w/ Chat - (sodapoppin) - July 5, 2023"
+#   t_start: "03:14:25"
+#   t_end: "08:49:23"
+
+
+# - video: data/sodapoppin/2023-07/1865880243
+#   title: "Level 30 Duels WoW Tournament w/ Chat - (sodapoppin) - July 7, 2023"
+#   t_start: "00:09:14"
+#   t_end: "01:15:07"
+
+# - video: data/sodapoppin/2023-07/1865880243
+#   title: "Chance Reacts to Panel From Hell: Release Showcase w/ Chat - (sodapoppin) - July 7, 2023"
+#   description: "Original Video:\nhttps://www.youtube.com/live/MW846h6FyU4?feature=share&t=14372"
+#   t_start: "01:15:10"
+#   t_end: "04:19:31"
+
+
+
+
+
+# - video: data/sodapoppin/2023-07/1866659797
+#   title: "Talking about HasanAbi and TwitchCon w/ Chat - (sodapoppin) - July 8, 2023"
+#   t_start: "00:05:23"
+#   t_end: "00:17:14"
+
+# - video: data/sodapoppin/2023-07/1866659797
+#   title: "GYLT w/ Chat - (sodapoppin) - July 8, 2023"
+#   t_start: "00:30:40"
+#   t_end: "01:58:39"
+
+# - video: data/sodapoppin/2023-07/1866659797
+#   title: "Fishgun w/ Chat - (sodapoppin) - July 8, 2023"
+#   t_start: "01:58:39"
+#   t_end: "02:11:39"
+
+# - video: data/sodapoppin/2023-07/1866659797
+#   title: "On Dark Terms w/ Chat - (sodapoppin) - July 8, 2023"
+#   t_start: "02:11:39"
+#   t_end: "02:28:59"
+
+# - video: data/sodapoppin/2023-07/1866659797
+#   title: "Shogun Showdown w/ Chat - (sodapoppin) - July 8, 2023"
+#   t_start: "02:30:06"
+#   t_end: "03:54:21"
+
+# - video: data/sodapoppin/2023-07/1866659797
+#   title: "They Are Here: Alien Abduction (horror) w/ Chat - (sodapoppin) - July 8, 2023"
+#   t_start: "03:54:21"
+#   t_end: "04:13:59"
+
+# - video: data/sodapoppin/2023-07/1866659797
+#   title: "Starforge Announcement w/ Chat - (sodapoppin) - July 8, 2023"
+#   t_start: "04:14:23"
+#   t_end: "04:18:28"
+
+# - video: data/sodapoppin/2023-07/1866659797
+#   title: "Blood Field (horror) w/ Chat - (sodapoppin) - July 8, 2023"
+#   t_start: "04:18:28"
+#   t_end: "04:30:10"
+
+# - video: data/sodapoppin/2023-07/1866659797
+#   title: "That Which Game Chase (horror) w/ Chat - (sodapoppin) - July 8, 2023"
+#   t_start: "04:30:10"
+#   t_end: "05:25:02"
+
+# - video: data/sodapoppin/2023-07/1866659797
+#   title: "Grimace's Basement (indie horror) w/ Chat - (sodapoppin) - July 8, 2023"
+#   t_start: "05:28:09"
+#   t_end: "05:35:22"
+
+# - video: data/sodapoppin/2023-07/1866659797
+#   title: "Ned Flander Kills (indie horror) w/ Chat - (sodapoppin) - July 8, 2023"
+#   t_start: "05:35:22"
+#   t_end: "05:41:40"
+
+# - video: data/sodapoppin/2023-07/1866659797
+#   title: "The Pizza (indie horror) w/ Chat - (sodapoppin) - July 8, 2023"
+#   t_start: "05:41:40"
+#   t_end: "05:45:41"
+
+# - video: data/sodapoppin/2023-07/1866659797
+#   title: "Meatly Storage (indie horror) w/ Chat - (sodapoppin) - July 8, 2023"
+#   t_start: "05:45:41"
+#   t_end: "05:47:41"
+
+# - video: data/sodapoppin/2023-07/1866659797
+#   title: "Moth House (indie horror) w/ Chat - (sodapoppin) - July 8, 2023"
+#   t_start: "05:47:41"
+#   t_end: "06:06:12"
+
+# - video: data/sodapoppin/2023-07/1866659797
+#   title: "Replace the Lamp (indie horror) w/ Chat - (sodapoppin) - July 8, 2023"
+#   t_start: "06:06:12"
+#   t_end: "06:18:14"
+
+
+
+
+# - video: data/sodapoppin/2023-07/1867524049
+#   title: "Reacting to Nmplol Eating a Snail w/ Chat - (sodapoppin) - July 9, 2023"
+#   t_start: "00:03:11"
+#   t_end: "00:09:50"
+
+# - video: data/sodapoppin/2023-07/1867524049
+#   title: "Reacting to Joe is Hungry Papa Johns Boneless Wings w/ Chat - (sodapoppin) - July 9, 2023"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=O5613ASINd0"
+#   t_start: "00:24:16"
+#   t_end: "00:33:28"
+
+# - video: data/sodapoppin/2023-07/1867524049
+#   title: "Depart Prototype (indie horror) w/ Chat - (sodapoppin) - July 9, 2023"
+#   t_start: "00:33:28"
+#   t_end: "00:49:24"
+
+# - video: data/sodapoppin/2023-07/1867524049
+#   title: "Elevatd Dread (indie horror) w/ Chat - (sodapoppin) - July 9, 2023"
+#   t_start: "00:48:54"
+#   t_end: "01:10:38"
+
+# - video: data/sodapoppin/2023-07/1867524049
+#   title: "Feet in the Snow (point and click) w/ Chat - (sodapoppin) - July 9, 2023"
+#   t_start: "01:10:38"
+#   t_end: "01:23:53"
+
+# - video: data/sodapoppin/2023-07/1867524049
+#   title: "Funny Park v1 (indie horror) w/ Chat - (sodapoppin) - July 9, 2023"
+#   t_start: "01:23:53"
+#   t_end: "01:30:59"
+
+# - video: data/sodapoppin/2023-07/1867524049
+#   title: "I Can See you Demo (indie horror) w/ Chat - (sodapoppin) - July 9, 2023"
+#   t_start: "01:30:59"
+#   t_end: "01:49:07"
+
+# - video: data/sodapoppin/2023-07/1867524049
+#   title: "Negative One (indie horror) w/ Chat - (sodapoppin) - July 9, 2023"
+#   t_start: "01:51:28"
+#   t_end: "01:58:16"
+
+# - video: data/sodapoppin/2023-07/1867524049
+#   title: "Roots (indie horror) w/ Chat - (sodapoppin) - July 9, 2023"
+#   t_start: "01:58:16"
+#   t_end: "02:03:08"
+
+# - video: data/sodapoppin/2023-07/1867524049
+#   title: "The Keeper (indie horror) w/ Chat - (sodapoppin) - July 9, 2023"
+#   t_start: "02:03:08"
+#   t_end: "02:16:07"
+
+# - video: data/sodapoppin/2023-07/1867524049
+#   title: "The Last Monday (indie horror) w/ Chat - (sodapoppin) - July 9, 2023"
+#   t_start: "02:16:07"
+#   t_end: "02:32:15"
+
+# - video: data/sodapoppin/2023-07/1867524049
+#   title: "The Roach Appartment (indie horror) w/ Chat - (sodapoppin) - July 9, 2023"
+#   t_start: "02:32:15"
+#   t_end: "02:37:08"
+
+# - video: data/sodapoppin/2023-07/1867524049
+#   title: "Snotty's Sewer w/ Chat - (sodapoppin) - July 9, 2023"
+#   t_start: "02:37:41"
+#   t_end: "02:44:32"
+
+# - video: data/sodapoppin/2023-07/1867524049
+#   title: "Night Security (indie horror) w/ Chat - (sodapoppin) - July 9, 2023"
+#   t_start: "02:45:00"
+#   t_end: "02:48:05"
+
+# - video: data/sodapoppin/2023-07/1867524049
+#   title: "Haunted Investigation w/ Chat - (sodapoppin) - July 9, 2023"
+#   t_start: "02:48:10"
+#   t_end: "03:19:25"
+
+# - video: data/sodapoppin/2023-07/1867524049
+#   title: "Urbex Night Security (indie horro) w/ Chat - (sodapoppin) - July 9, 2023"
+#   t_start: "03:19:35"
+#   t_end: "04:35:29"
+
+# - video: data/sodapoppin/2023-07/1867524049
+#   title: "Canine (indie horror) w/ Chat - (sodapoppin) - July 9, 2023"
+#   t_start: "04:35:29"
+#   t_end: "05:09:45"
+
+
+
+
+
+# - video: data/sodapoppin/2023-07/1868338392
+#   title: "Reacting to Dark and Darker Warlock w/ Chat - (sodapoppin) - July 10, 2023"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=rTjXz_VCxog"
+#   t_start: "00:06:35"
+#   t_end: "00:20:55"
+
+# - video: data/sodapoppin/2023-07/1868338392
+#   title: "Reacting to Interview with Riot MMO Devs w/ Chat - (sodapoppin) - July 10, 2023"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=mkyjsM31Epk"
+#   t_start: "00:21:10"
+#   t_end: "00:41:19"
+
+# - video: data/sodapoppin/2023-07/1868338392
+#   title: "Mizkif Stream w/ Chat - (sodapoppin) - July 10, 2023"
+#   t_start: "00:45:02"
+#   t_end: "00:55:07"
+
+# - video: data/sodapoppin/2023-07/1868338392
+#   title: "Dating Simulator w/ Chat - (sodapoppin) - July 10, 2023"
+#   t_start: "00:57:58"
+#   t_end: "01:38:08"
+
+# - video: data/sodapoppin/2023-07/1868338392
+#   title: "Elden Ring Convergence Mod w/ Chat - (sodapoppin) - July 10, 2023"
+#   t_start: "01:46:41,02:15:32,03:55:01"
+#   t_end: "01:52:59,02:20:42,05:14:48"
+
+# - video: data/sodapoppin/2023-07/1868338392
+#   title: "Watching Youtube Shorts w/ Chat - (sodapoppin) - July 10, 2023"
+#   t_start: "02:23:50"
+#   t_end: "03:17:53"
+
+# - video: data/sodapoppin/2023-07/1868338392
+#   title: "Halls of Torment w/ Chat - (sodapoppin) - July 10, 2023"
+#   t_start: "03:21:00"
+#   t_end: "03:54:31"
+
+
+
+# # - video: data/sodapoppin/2023-07/1870937171
+# #   title: "Update on Gamer Supps w/ Chat - (sodapoppin) - July 13, 2023"
+# #   t_start: "00:09:41"
+# #   t_end: "00:23:56"
+
+# - video: data/sodapoppin/2023-07/1870937171
+#   title: "Elden Ring Convergence Mod w/ Chat - (sodapoppin) - July 13, 2023"
+#   t_start: "00:23:57"
+#   t_end: "07:40:35"
+
+
+
+
+
+
+# # - video: data/sodapoppin/2023-07/1871799460
+# #   title: "Baldur's Gate 3 w/ Chat - (sodapoppin) - July 14, 2023"
+# #   t_start: "00:14:00"
+# #   t_end: "00:21:36"
+
+# - video: data/sodapoppin/2023-07/1871799460
+#   title: "IGN Xbox Showcase 2023 w/ Chat - (sodapoppin) - July 14, 2023"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=55xNYlTU0Fo"
+#   t_start: "00:30:36"
+#   t_end: "00:52:17"
+
+# - video: data/sodapoppin/2023-07/1871799460
+#   title: "Reacting to Whataburger Joe Is Hungry w/ Chat - (sodapoppin) - July 14, 2023"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=jXVUY-Kbf0w"
+#   t_start: "00:53:13"
+#   t_end: "01:03:10"
+
+# - video: data/sodapoppin/2023-07/1871799460
+#   title: "Reacting to Fulcrum w/ Chat - (sodapoppin) - July 14, 2023"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=ZAjgXg6M61o"
+#   t_start: "01:03:10"
+#   t_end: "01:14:36"
+
+# - video: data/sodapoppin/2023-07/1871799460
+#   title: "Reacting to Post 10 Triangle Tash Rack w/ Chat - (sodapoppin) - July 14, 2023"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=PdeMbXqYMfM"
+#   t_start: "01:14:38"
+#   t_end: "01:31:47"
+
+# - video: data/sodapoppin/2023-07/1871799460
+#   title: "GamerSups Art Competition w/ Chat - (sodapoppin) - July 14, 2023"
+#   t_start: "01:31:47"
+#   t_end: "02:45:42"
+
+- video: data/sodapoppin/2023-07/1871799460
+  title: "WoW Classic PTR w/ Chat - (sodapoppin) - July 14, 2023"
+  t_start: "02:45:44"
+  t_end: "07:19:12"
+  t_youtube_mute: "0:53:25 - 0:56:24,0:56:27 - 1:02:20,1:02:25 - 1:06:51,1:06:57 - 1:10:57,1:41:04 - 1:45:47,1:19:10 - 1:22:53,1:23:18 - 1:26:24,1:26:28 - 1:30:12,1:30:15 - 1:32:16,1:35:18 - 1:40:04,1:48:48 - 1:52:21,1:52:28 - 1:55:42,1:55:48 - 2:00:47,2:00:47 - 2:04:03,2:04:08 - 2:06:02,2:18:19 - 2:21:50,2:25:33 - 2:26:16,2:36:08 - 2:36:25,2:54:49 - 2:55:01,2:55:00 - 2:55:11"
+
+
+
+# - video: data/sodapoppin/2023-07/1871799460
+#   title: "Reacting to Checkers New Chedda Joe Is Hungry w/ Chat - (sodapoppin) - July 14, 2023"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=gYVl5gKOvV8"
+#   t_start: "07:19:12"
+#   t_end: "07:21:41"
+
+
+
+# - video: data/sodapoppin/2023-07/1872590235
+#   title: "Baldurs Gate 3 with Vei w/ Chat - (sodapoppin) - July 15, 2023"
+#   description: "Overview Video:\nhttps://www.youtube.com/watch?v=5OEIosyLymw"
+#   t_start: "00:10:16"
+#   t_end: "03:50:46"
+
+# - video: data/sodapoppin/2023-07/1872590235
+#   title: "Decadence (horror) w/ Chat - (sodapoppin) - July 15, 2023"
+#   t_start: "04:02:44"
+#   t_end: "04:13:09"
+
+# - video: data/sodapoppin/2023-07/1872590235
+#   title: "Touhou New World w/ Chat - (sodapoppin) - July 15, 2023"
+#   t_start: "04:13:09"
+#   t_end: "04:49:55"
+
+# - video: data/sodapoppin/2023-07/1872590235
+#   title: "Catch and Cook w/ Chat - (sodapoppin) - July 15, 2023"
+#   t_start: "04:49:55"
+#   t_end: "05:05:28"
+
+# - video: data/sodapoppin/2023-07/1872590235
+#   title: "Trepang 2 w/ Chat - (sodapoppin) - July 15, 2023"
+#   t_start: "05:05:28"
+#   t_end: "06:05:55"
+
+# - video: data/sodapoppin/2023-07/1872590235
+#   title: "Honey are you there? (indie horror) w/ Chat - (sodapoppin) - July 15, 2023"
+#   t_start: "06:05:55"
+#   t_end: "06:34:46"
+
+# - video: data/sodapoppin/2023-07/1872590235
+#   title: "Reacting to BadlandsChugs Hottest Chicken Sandwich w/ Chat - (sodapoppin) - July 15, 2023"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=l4vcxTOHyMI"
+#   t_start: "06:34:53"
+#   t_end: "06:50:39"
+
+# - video: data/sodapoppin/2023-07/1872590235
+#   title: "Reacting to Checkers New Chedda Joe Is Hungry w/ Chat - (sodapoppin) - July 15, 2023"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=gYVl5gKOvV8"
+#   t_start: "06:50:42"
+#   t_end: "06:58:17"
+
+# - video: data/sodapoppin/2023-07/1872590235
+#   title: "Abandoned Souls (indie horror) w/ Chat - (sodapoppin) - July 15, 2023"
+#   t_start: "07:00:06"
+#   t_end: "07:35:26"
+
+
+
+
+# - video: data/sodapoppin/2023-07/1872590235
+#   title: "test cutting"
+#   t_start: "01:01:00,01:03:00"
+#   t_end: "01:02:00,01:06:00"
+#   t_youtube_mute: "0:01:45 - 0:02:15,0:03:00 - 0:04:00"
+
+
+
+
+
+
+
+
 
 
 
