@@ -18,7 +18,7 @@ Example channels with these video renders:
 We leverage [python-twitch-client](https://github.com/tsifrer/python-twitch-client) library which recently added oauth support.
 You will need at least version 0.7.1 installed to have the correct api support functions.
 
-```
+```bash
 pip install python-twitch-client
 pip install PyYAML
 pip install youtube-video-upload
@@ -38,7 +38,7 @@ From there, ensure you have Python 3.6 installed, and that you have correct path
 See the commented out examples in the top of each script file.
 Additionally, one can use the `crontab_script_launcher.sh` script to run script automatically on a cronjob.
 
-```
+```bash
 sudo crontab -e
 */25 * * * * /path/to/repo/crontab_script_launcher.sh 0_main_videos.py
 */15 * * * * /path/to/repo/crontab_script_launcher.sh 1_render_segments.py
@@ -53,7 +53,7 @@ A video is defined by the vod which it is cut from and the unique youtube video 
 A user can cut multiple segments from a single vod into a video render, but cannot combine multi-vod segments into a single video currently.
 The timestamps are specified using `HH:MM:SS` (see ffmpeg docs [here](https://ffmpeg.org/ffmpeg-utils.html#time-duration-syntax)), and are comma separated.
 
-```
+```yaml
 - video: sodapoppin/2020-11/804430123
   title:  "Example Video"
   with_chat: false // (option to disable / enable chat)
