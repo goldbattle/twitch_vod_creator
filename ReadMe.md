@@ -60,6 +60,7 @@ The timestamps are specified using `HH:MM:SS` (see ffmpeg docs [here](https://ff
   description: "This will be in the top of the youtube description" // (optional)
   t_start: "00:00:00,01:00:00"
   t_end: "00:10:00,02:00:00"
+  t_youtube_mute: "0:01:00 - 0:02:00,0:10:00 - 0:11:00" // (optional)
   tags: // (optional)
     - "tag 1" // (optional)
     - "tag 2" // (optional)
@@ -70,13 +71,26 @@ The first 10 minutes will be rendered, after which the video will cut to the 1 h
 Note that while here we can have as long as possible video, youtube has a max upload length of 12 hours.
 
 
-### Creating Segment Config Files
 
+### Muting Segments
+
+There is some support to mute an already rendered video.
+A use case is if Youtube has blocked the video from being shared due to copyrighted music.
+One can specify the range that should be muted with the `t_youtube_mute` parameter.
+
+![](./docs/example_mute.png)
+
+You should be able to directly copy the segments over from the Youtube UI.
+In the future this could be extended to use [spleeter](https://github.com/deezer/spleeter).
+
+
+### Creating Segment Config Files
 
 See the below [website](./website/) directory for a small local interface for generating these files.
 Otherwise one can use VLC and [VLC Get Timestamp.ahk](./docs/VLC%20Get%20Timestamp.ahk) autohotkey script.
 
-![](./docs/website_example.png)
+![](./docs/example_website.png)
+
 
 
 ### Known Issues

@@ -19,6 +19,7 @@ config_file = path_base + "/config/soda_config_youtube.yaml"
 # paths of the cli and data
 path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.53.0/TwitchDownloaderCLI"
 path_twitch_ffmpeg = path_base + "/thirdparty/ffmpeg-4.3.1-amd64-static/ffmpeg"
+path_twitch_ffprob = path_base + "/thirdparty/ffmpeg-4.3.1-amd64-static/ffprobe"
 path_root = path_base + "/../"
 path_render = path_base + "/../data_rendered/"
 # path_temp = path_base + "/../data_temp/render_segments/"
@@ -239,6 +240,120 @@ for video in data:
             tmp = tmp.replace("$recorded", video_info["recorded_at"])
             tmp = tmp.replace("$file", video["video"] + ".mp4")
             tmp = tmp.replace("$url", video_info["url"])
+            if "description" in video:
+                tmp = video["description"] + "\n\n" + tmp
+            tmp = video["title"] + "\n\n" + tmp
+            with open(file_path_desc, "w", encoding="utf-8") as text_file:
+                text_file.write(tmp)
+
+        # MUTED COMPOSITE: render the composite image
+        # if the user has now added details on segments of the vod should be muted then we will
+        # these can be copyrited segments that block the video from being viewed
+        # this will extra the audio from the existing video, mute it, then re-encode it
+        # https://superuser.com/a/1752409
+        # https://superuser.com/a/1256052
+        file_path_composite_muted = path_render + video["video"] + "_" + clean_video_title + "_muted.mp4"
+        file_path_composite_muted_tmp = path_temp + clean_video_title + "_muted.tmp.mp4"
+        if not utils.terminated_requested and not os.path.exists(file_path_composite_muted) and os.path.exists(file_path_composite) and "t_youtube_mute" in video:
+        
+            # get each segment from the list
+            seg_to_cut = video["t_youtube_mute"].split(",")
+            seg_mute_start = []
+            seg_mute_end = []
+
+            # all the youtube times are relative to the start time of the video
+            for idx1 in range(0, len(seg_to_cut)):
+                segment = seg_to_cut[idx1].split(" - ")
+                assert(len(segment) % 2 == 0)
+                h2, m2, s2 = segment[0].split(':')
+                time2_s = 3600 * int(h2) + 60 * int(m2) + int(s2)
+                seg_mute_start.append(time2_s)
+                h2, m2, s2 = segment[1].split(':')
+                time2_e = 3600 * int(h2) + 60 * int(m2) + int(s2)
+                seg_mute_end.append(time2_e)
+
+            # audio output
+            file_path_audio = path_temp + clean_video_title + "_audio.aac"
+            file_path_audio_muted = path_temp + clean_video_title + "_audio_muted.aac"
+            if os.path.exists(file_path_audio):
+                print("\t- deleting temp file: " + file_path_audio)
+                os.remove(file_path_audio)
+            if os.path.exists(file_path_audio_muted):
+                print("\t- deleting temp file: " + file_path_audio_muted)
+                os.remove(file_path_audio_muted)
+
+            # step 1. extract audio
+            if not utils.terminated_requested:
+                print("\t- extracting: " + file_path_audio)
+                cmd = path_twitch_ffmpeg + ' -hide_banner -loglevel quiet -stats ' \
+                    + ' -i ' + file_path_composite \
+                    + ' -vn -acodec copy ' + file_path_audio
+                subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
+
+            # step 2. mute audio
+            if not utils.terminated_requested:
+                
+                print("\t- muting: " + file_path_audio_muted)
+
+                # how long this video is
+                # https://superuser.com/a/945604
+                cmd = path_twitch_ffprob \
+                    + " -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 " \
+                    + file_path_composite
+                pipe = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+                vid_length = float(pipe.communicate()[0])
+
+                # generate mute command
+                # we seem to need to record the non-muted segments
+                cmd = path_twitch_ffmpeg + ' -hide_banner -loglevel quiet -stats ' \
+                    + ' -i ' + file_path_audio \
+                    + ' -af "volume=0:enable=\''
+                for idx1 in range(0, len(seg_mute_start)):
+                    cmd = cmd + 'between(t,'+str(seg_mute_start[idx1])+','+str(seg_mute_end[idx1])+')'
+                    if idx1 < len(seg_mute_start) - 1:
+                        cmd = cmd + "+"
+                cmd = cmd + '\'" ' + file_path_audio_muted
+                subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
+
+            # step 3. re-encode video
+            if not utils.terminated_requested:
+                print("\t- rendering: " + file_path_composite_muted)
+                cmd = path_twitch_ffmpeg + ' -hide_banner -loglevel quiet -stats ' \
+                    + ' -i ' + file_path_composite \
+                    + ' -i ' + file_path_audio_muted \
+                    + ' -c:v copy -c:a aac -map 0:v:0 -map 1:a:0 ' + file_path_composite_muted_tmp
+                subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
+
+            # step 4. done, copy it over!
+            if not utils.terminated_requested and os.path.exists(file_path_composite_muted_tmp):
+                shutil.move(file_path_composite_muted_tmp, file_path_composite_muted)
+
+            # delete old files
+            if os.path.exists(file_path_audio):
+                os.remove(file_path_audio)
+            if os.path.exists(file_path_audio_muted):
+                os.remove(file_path_audio_muted)
+
+        # DESC: description file
+        file_path_desc = path_render + video["video"] + "_" + clean_video_title + "_muted_desc.txt"
+        if not utils.terminated_requested and not os.path.exists(file_path_desc)and "t_youtube_mute" in video:
+            print("\t- writting info: " + file_path_desc)
+            tmp = str(template)
+            tmp = tmp.replace("$id", video_info["id"])
+            tmp = tmp.replace("$title", video_info["title"])
+            # tmp = tmp.replace("$game", video_info["game"])
+            tmp = tmp.replace("$views", str(video_info["views"]))
+            tmp = tmp.replace("$t_start", video["t_start"])
+            tmp = tmp.replace("$t_end", video["t_end"])
+            tmp = tmp.replace("$recorded", video_info["recorded_at"])
+            tmp = tmp.replace("$file", video["video"] + ".mp4")
+            tmp = tmp.replace("$url", video_info["url"])
+
+            muted_txt = "Sections of this video has been muted:\n"
+            seg_to_cut = video["t_youtube_mute"].split(",")
+            for idx1 in range(0, len(seg_to_cut)):
+                muted_txt = muted_txt + seg_to_cut[idx1] + "\n"
+            tmp = muted_txt + "\n\n" + tmp
             if "description" in video:
                 tmp = video["description"] + "\n\n" + tmp
             tmp = video["title"] + "\n\n" + tmp

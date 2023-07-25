@@ -26,6 +26,7 @@ channels = [
     'sodapoppin', 'nmplol', 'skippypoppin',
     'moonmoon', 'clintstevens', 'sevadus',
     'jerma985', 'heydoubleu', 'vei', 'squeex',
+    'goldbattle',
     # 'mindcrack'
 ]
 max_videos = 60
@@ -33,12 +34,14 @@ render_chat = [
     True, False, False,
     False, True, False,
     False, False, False, False,
+    False,
     # False
 ]
 render_webvtt = [
     True, False, False,
     False, True, False,
     False, False, True, False,
+    False,
     # False
 ]
 
