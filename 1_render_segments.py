@@ -222,9 +222,12 @@ for video in data:
                 print("\t- realtime factor: " + str(dur_segment_total / dur_render))
             
             # finally copy temp file to new location
-            print("\t- renaming temp export file to final filename")
             if not utils.terminated_requested and os.path.exists(file_path_composite_tmp):
+                print("\t- renaming temp export file to final filename")
                 shutil.move(file_path_composite_tmp, file_path_composite)
+            if utils.terminated_requested and os.path.exists(file_path_composite_tmp):
+                print("\t- removing half rendered temp file")
+                os.remove(file_path_composite_tmp)
 
         # DESC: description file
         file_path_desc = path_render + video["video"] + "_" + clean_video_title + "_desc.txt"
@@ -265,6 +268,8 @@ for video in data:
             for idx1 in range(0, len(seg_to_cut)):
                 segment = seg_to_cut[idx1].split(" - ")
                 assert(len(segment) % 2 == 0)
+                assert(len(segment[0].split(':')) == 3)
+                assert(len(segment[1].split(':')) == 3)
                 h2, m2, s2 = segment[0].split(':')
                 time2_s = 3600 * int(h2) + 60 * int(m2) + int(s2)
                 seg_mute_start.append(time2_s)

@@ -51,7 +51,7 @@ render_webvtt = [
 # ================================================================
 
 # paths of the cli and data
-path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.53.0/TwitchDownloaderCLI"
+path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.53.2/TwitchDownloaderCLI"
 path_twitch_ffmpeg = path_base + "/thirdparty/ffmpeg-4.3.1-amd64-static/ffmpeg"
 path_root = path_base + "/../data/"
 # path_temp = path_base + "/../data_temp/main_videos/"
@@ -219,7 +219,7 @@ for idx, user in enumerate(users):
             t0 = time.time()
             cmd = path_twitch_cli + ' chatdownload' \
                 + ' --id ' + str(video['helix']['id']) \
-                + ' --embed-images --chat-connections 6' \
+                + ' --embed-images true --chat-connections 6' \
                 + ' --bttv true --ffz true --stv true' \
                 + ' -o ' + file_path_chat_tmp
             #subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()

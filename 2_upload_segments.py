@@ -106,7 +106,7 @@ for video in data:
     print("\t- starting video upload...")
     try:
         t0 = time.time()
-        upload_video.MAX_RETRIES = 20
+        upload_video.MAX_RETRIES = 2
         new_options = upload_from_options(options)
         t1 = time.time()
         print("\t- done performing video upload!")

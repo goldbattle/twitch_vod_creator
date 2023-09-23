@@ -39,7 +39,7 @@ print("End Day: "+date_end)
 # ================================================================
 
 # paths of the cli and data
-path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.53.0/TwitchDownloaderCLI"
+path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.53.2/TwitchDownloaderCLI"
 path_twitch_ffmpeg = path_base + "/thirdparty/ffmpeg-4.3.1-amd64-static/ffmpeg"
 path_root = path_base + "/../data_clips_new/"
 path_temp = "/tmp/tvc_main_clips/"
@@ -191,12 +191,16 @@ for idx, user in enumerate(users):
             if not utils.terminated_requested and not os.path.exists(file_path):
                 print("\t- download clip: " + str(video['id']))
                 cmd = path_twitch_cli + ' clipdownload' \
-                      + ' --id https://clips.twitch.tv/' + str(video['id']) \
+                      + ' --id ' + str(video['id']) \
+                      + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
                       + ' -o ' + file_path_tmp
                 subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
                 #subprocess.Popen(cmd, shell=True).wait()
-                shutil.move(file_path_tmp, file_path) 
-                count_total_clips_downloaded = count_total_clips_downloaded + 1
+                if os.path.exists(file_path_tmp):
+                    shutil.move(file_path_tmp, file_path)
+                    count_total_clips_downloaded = count_total_clips_downloaded + 1
+                else:
+                    print("\t- VIDEO DOWNLOAD FAILED!!!!")
 
             # CHAT: check if the file exists
             try:
@@ -206,12 +210,15 @@ for idx, user in enumerate(users):
                     print("\t- download chat: " + str(video['id']) + "_chat.json")
                     cmd = path_twitch_cli + ' chatdownload' \
                         + ' --id ' + str(video['id']) \
-                        + ' --embed-images --chat-connections 6' \
+                        + ' --embed-images true --chat-connections 6' \
                         + ' --bttv true --ffz true --stv true' \
                         + ' -o ' + file_path_chat_tmp
                     subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
                     #subprocess.Popen(cmd, shell=True).wait()
-                    shutil.move(file_path_chat_tmp, file_path_chat) 
+                    if os.path.exists(file_path_chat_tmp):
+                        shutil.move(file_path_chat_tmp, file_path_chat)
+                    else:
+                        print("\t- not able to download any chat...")
             except Exception as e:
                 print(e)
 

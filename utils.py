@@ -132,14 +132,21 @@ def get_clip_data(clip_id):
     try:
         gql_response = get_clip_graphql_info(clip_id)
         gql_obj = json.loads(gql_response)
-        #print(gql_obj)
+        if  gql_obj["data"]["clip"]["videoOffsetSeconds"] == None:
+            print("\t- clip's VOD was deleted, unable to find offset...")
+            return {
+                "vod_id": -1,
+                "offset": -1,
+                "duration": gql_obj["data"]["clip"]["durationSeconds"],
+            }
+        # print(gql_obj)
         return {
             "vod_id": gql_obj["data"]["clip"]["video"]["id"],
             "offset": gql_obj["data"]["clip"]["videoOffsetSeconds"],
             "duration": gql_obj["data"]["clip"]["durationSeconds"],
         }
     except Exception as e:
-        print(e)
+        # print(e)
         return {
             "vod_id": -1,
             "offset": -1,
