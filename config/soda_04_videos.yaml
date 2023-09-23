@@ -7112,12 +7112,11 @@
 #   t_start: "01:31:47"
 #   t_end: "02:45:42"
 
-- video: data/sodapoppin/2023-07/1871799460
-  title: "WoW Classic PTR w/ Chat - (sodapoppin) - July 14, 2023"
-  t_start: "02:45:44"
-  t_end: "07:19:12"
-  t_youtube_mute: "0:53:25 - 0:56:24,0:56:27 - 1:02:20,1:02:25 - 1:06:51,1:06:57 - 1:10:57,1:41:04 - 1:45:47,1:19:10 - 1:22:53,1:23:18 - 1:26:24,1:26:28 - 1:30:12,1:30:15 - 1:32:16,1:35:18 - 1:40:04,1:48:48 - 1:52:21,1:52:28 - 1:55:42,1:55:48 - 2:00:47,2:00:47 - 2:04:03,2:04:08 - 2:06:02,2:18:19 - 2:21:50,2:25:33 - 2:26:16,2:36:08 - 2:36:25,2:54:49 - 2:55:01,2:55:00 - 2:55:11"
-
+# - video: data/sodapoppin/2023-07/1871799460
+#   title: "WoW Classic PTR w/ Chat - (sodapoppin) - July 14, 2023"
+#   t_start: "02:45:44"
+#   t_end: "07:19:12"
+#   t_youtube_mute: "0:53:25 - 0:56:24,0:56:27 - 1:02:20,1:02:25 - 1:06:51,1:06:57 - 1:10:57,1:41:04 - 1:45:47,1:19:10 - 1:22:53,1:23:18 - 1:26:24,1:26:28 - 1:30:12,1:30:15 - 1:32:16,1:35:18 - 1:40:04,1:48:48 - 1:52:21,1:52:28 - 1:55:42,1:55:48 - 2:00:47,2:00:47 - 2:04:03,2:04:08 - 2:06:02,2:18:19 - 2:21:50,2:25:33 - 2:26:16,2:36:08 - 2:36:25,2:54:49 - 2:55:01,2:55:00 - 2:55:11"
 
 
 # - video: data/sodapoppin/2023-07/1871799460
@@ -7178,16 +7177,760 @@
 
 
 
+# - video: data/sodapoppin/2023-07/1873553194
+#   title: "Baldurs Gate 3 with Vei w/ Chat - Part 2 (sodapoppin) - July 16, 2023"
+#   t_start: "00:09:14,01:10:45"
+#   t_end: "01:03:02,06:17:41"
 
-# - video: data/sodapoppin/2023-07/1872590235
-#   title: "test cutting"
-#   t_start: "01:01:00,01:03:00"
-#   t_end: "01:02:00,01:06:00"
-#   t_youtube_mute: "0:01:45 - 0:02:15,0:03:00 - 0:04:00"
+# - video: data/sodapoppin/2023-07/1873553194
+#   title: "Reacting to New Doritos Cool Ranch Joe is Hungry w/ Chat - (sodapoppin) - July 16, 2023"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=ziNbpB4hr2o"
+#   t_start: "03:16:18"
+#   t_end: "03:26:09"
 
 
 
 
+# - video: data/sodapoppin/2023-07/1874403953
+#   title: "Talking about Baldurs Gate 3 w/ Chat - (sodapoppin) - July 17, 2023"
+#   t_start: "00:09:47"
+#   t_end: "00:29:37"
+
+# - video: data/sodapoppin/2023-07/1874403953
+#   title: "Dead by Daylight w/ Chat - (sodapoppin) - July 17, 2023"
+#   t_start: "00:29:24"
+#   t_end: "03:05:57"
+
+
+
+
+# - video: data/sodapoppin/2023-07/1878832853
+#   title: "Reddit Place? w/ Chat - (sodapoppin) - July 22, 2023"
+#   t_start: "00:06:29"
+#   t_end: "00:26:32"
+
+# - video: data/sodapoppin/2023-07/1878832853
+#   title: "Amongus TD 2 Defense of the Sus w/ Chat - (sodapoppin) - July 22, 2023"
+#   t_start: "00:26:32"
+#   t_end: "01:47:05"
+
+# - video: data/sodapoppin/2023-07/1878832853
+#   title: "UEBS II w/ Chat - (sodapoppin) - July 22, 2023"
+#   t_start: "01:47:05"
+#   t_end: "04:07:38"
+
+# - video: data/sodapoppin/2023-07/1878832853
+#   title: "God of Weapons w/ Chat - (sodapoppin) - July 22, 2023"
+#   t_start: "04:07:38"
+#   t_end: "05:51:59"
+
+# - video: data/sodapoppin/2023-07/1878832853
+#   title: "Doomsday Hunters w/ Chat - (sodapoppin) - July 22, 2023"
+#   t_start: "05:56:03"
+#   t_end: "06:27:29"
+
+# - video: data/sodapoppin/2023-07/1878832853
+#   title: "Oaken w/ Chat - (sodapoppin) - July 22, 2023"
+#   t_start: "06:27:29"
+#   t_end: "06:42:43"
+
+# - video: data/sodapoppin/2023-07/1878832853
+#   title: "Stolen Realm w/ Chat - (sodapoppin) - July 22, 2023"
+#   t_start: "06:43:53"
+#   t_end: "08:26:13"
+
+# - video: data/sodapoppin/2023-07/1878832853
+#   title: "Autism Test w/ Chat - (sodapoppin) - July 22, 2023"
+#   t_start: "08:26:13"
+#   t_end: "08:47:08"
+
+# - video: data/sodapoppin/2023-07/1878832853
+#   title: "Baldurs Gate 3 with Vei w/ Chat - Part 3 (sodapoppin) - July 22, 2023"
+#   t_start: "08:47:08"
+#   t_end: "12:35:07"
+
+
+
+
+# - video: data/sodapoppin/2023-07/1879719693
+#   title: "Warcraft III w/ Chat - (sodapoppin) - July 23, 2023"
+#   t_start: "00:15:20"
+#   t_end: "03:28:27"
+
+# - video: data/sodapoppin/2023-07/1879719693
+#   title: "Balder's Gate 3 CohhCarnage Announcement w/ Chat - (sodapoppin) - July 23, 2023"
+#   t_start: "03:33:00"
+#   t_end: "03:36:44"
+
+# - video: data/sodapoppin/2023-07/1879719693
+#   title: "Open Fishing XL w/ Chat - (sodapoppin) - July 23, 2023"
+#   t_start: "03:36:44,04:14:58"
+#   t_end: "03:39:43,04:38:33"
+
+# - video: data/sodapoppin/2023-07/1879719693
+#   title: "Reacting to itmeJP Why is Everyone a Druid w/ Chat - (sodapoppin) - July 23, 2023"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=LOqmFYDoTUc"
+#   t_start: "03:39:43"
+#   t_end: "04:15:02"
+
+# - video: data/sodapoppin/2023-07/1879719693
+#   title: "Granny Remake (indie horror) w/ Chat - (sodapoppin) - July 23, 2023"
+#   t_start: "04:41:15"
+#   t_end: "04:48:17"
+
+# - video: data/sodapoppin/2023-07/1879719693
+#   title: "Froggy's Battle w/ Chat - (sodapoppin) - July 23, 2023"
+#   t_start: "04:49:07"
+#   t_end: "05:39:50"
+
+# - video: data/sodapoppin/2023-07/1879719693
+#   title: "Patrick's Revenge (indie horror) w/ Chat - (sodapoppin) - July 23, 2023"
+#   t_start: "05:43:21"
+#   t_end: "05:55:14"
+
+# - video: data/sodapoppin/2023-07/1879719693
+#   title: "The Complex: Expedition w/ Chat - (sodapoppin) - July 23, 2023"
+#   t_start: "05:59:31"
+#   t_end: "06:27:03"
+
+
+
+
+
+# - video: data/sodapoppin/2023-07/1880549185
+#   title: "Smash Dungeon w/ Chat - (sodapoppin) - July 24, 2023"
+#   t_start: "00:15:11"
+#   t_end: "01:06:08"
+
+# - video: data/sodapoppin/2023-07/1880549185
+#   title: "Warcraft III w/ Chat - (sodapoppin) - July 24, 2023"
+#   t_start: "01:06:00"
+#   t_end: "06:01:48"
+
+
+
+
+
+# - video: data/sodapoppin/2023-07/1881442131
+#   title: "Hellcard w/ Chat - (sodapoppin) - July 25, 2023"
+#   t_start: "00:37:46"
+#   t_end: "02:19:34"
+
+# - video: data/sodapoppin/2023-07/1881442131
+#   title: "Remnant II #ad w/ Chat - (sodapoppin) - July 25, 2023"
+#   t_start: "02:19:21"
+#   t_end: "05:26:57"
+
+
+
+# - video: data/sodapoppin/2023-07/1881762605
+#   title: "Attempting Duo Remnant with Vei w/ Chat - (sodapoppin) - July 25, 2023"
+#   t_start: "00:00:00"
+#   t_end: "06:07:05"
+
+
+
+
+
+# - video: data/sodapoppin/2023-07/1883295613
+#   title: "Death Must Die Demo w/ Chat - (sodapoppin) - July 27, 2023"
+#   t_start: "00:25:13"
+#   t_end: "01:14:57"
+
+# - video: data/sodapoppin/2023-07/1883295613
+#   title: "Reacting to DailyDose Delivery Guy w/ Chat - (sodapoppin) - July 27, 2023"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=jN5Z3wJMatU"
+#   t_start: "01:15:14"
+#   t_end: "01:20:25"
+
+# - video: data/sodapoppin/2023-07/1883295613
+#   title: "Reacting to UAP Hearing w/ Chat - (sodapoppin) - July 27, 2023"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=yJ9OIZybHJg"
+#   t_start: "01:22:11"
+#   t_end: "01:27:26"
+
+# - video: data/sodapoppin/2023-07/1883295613
+#   title: "Tape to Tape w/ Chat - (sodapoppin) - July 27, 2023"
+#   t_start: "01:29:20"
+#   t_end: "02:32:28"
+
+# - video: data/sodapoppin/2023-07/1883295613
+#   title: "Yeah You Want Those Games Right? So Here You Go! - (sodapoppin) - July 27, 2023"
+#   t_start: "02:32:31"
+#   t_end: "02:40:50"
+
+# - video: data/sodapoppin/2023-07/1883295613
+#   title: "Reacting to LTT Review of Starforge Whale PC w/ Chat - (sodapoppin) - July 27, 2023"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=De0-ySS87jw"
+#   t_start: "02:41:44"
+#   t_end: "02:51:42"
+
+# - video: data/sodapoppin/2023-07/1883295613
+#   title: "Viewfinder (puzzel) w/ Chat - (sodapoppin) - July 27, 2023"
+#   t_start: "02:51:42"
+#   t_end: "04:25:05"
+
+# - video: data/sodapoppin/2023-07/1883295613
+#   title: "Warcraft III w/ Chat - (sodapoppin) - July 27, 2023"
+#   t_start: "04:28:58,05:07:59"
+#   t_end: "04:33:16,07:33:44"
+
+# - video: data/sodapoppin/2023-07/1883295613
+#   title: "Reating to SteveMRE 1945 K Ration w/ Chat - (sodapoppin) - July 27, 2023"
+#   description: "Original Video:\nhttps://www.youtube.com/watch?v=GHSjp_JYBcw"
+#   t_start: "04:36:16"
+#   t_end: "05:08:03"
+
+
+
+
+
+# - video: data/sodapoppin/2023-07/1884836655
+#   title: "Try Again w/ Chat - (sodapoppin) - July 29, 2023"
+#   t_start: "00:35:20"
+#   t_end: "00:48:26"
+
+# - video: data/sodapoppin/2023-07/1884836655
+#   title: "Chester: Into the Light (horror) w/ Chat - (sodapoppin) - July 29, 2023"
+#   t_start: "00:48:49"
+#   t_end: "01:14:36"
+
+# - video: data/sodapoppin/2023-07/1884836655
+#   title: "Mega City Police w/ Chat - (sodapoppin) - July 29, 2023"
+#   t_start: "01:14:36"
+#   t_end: "02:25:59"
+
+# - video: data/sodapoppin/2023-07/1884836655
+#   title: "Stone Story RPG w/ Chat - (sodapoppin) - July 29, 2023"
+#   t_start: "02:25:59"
+#   t_end: "02:42:46"
+
+# - video: data/sodapoppin/2023-07/1884836655
+#   title: "Portal Dungeon w/ Chat - (sodapoppin) - July 29, 2023"
+#   t_start: "02:42:49"
+#   t_end: "02:53:40"
+
+# - video: data/sodapoppin/2023-07/1884836655
+#   title: "Arms Evolution: Zombie Destroyer w/ Chat - (sodapoppin) - July 29, 2023"
+#   t_start: "02:53:40"
+#   t_end: "02:58:35"
+
+# - video: data/sodapoppin/2023-07/1884836655
+#   title: "Roto Force w/ Chat - (sodapoppin) - July 29, 2023"
+#   t_start: "02:58:35"
+#   t_end: "03:08:18"
+
+
+
+
+# - video: data/sodapoppin/2023-08/1887510092
+#   title: "Home from UK w/ Chat - (sodapoppin) - August 1, 2023"
+#   t_start: "00:12:28"
+#   t_end: "00:40:46"
+
+# - video: data/sodapoppin/2023-08/1887510092
+#   title: "Moral Alignment Test w/ Chat - (sodapoppin) - August 1, 2023"
+#   t_start: "00:27:30"
+#   t_end: "00:40:46"
+
+# - video: data/sodapoppin/2023-08/1887510092
+#   title: "Disfigure w/ Chat - (sodapoppin) - August 1, 2023"
+#   t_start: "00:47:36"
+#   t_end: "02:07:32"
+
+# - video: data/sodapoppin/2023-08/1887510092
+#   title: "Dead by Daylight w/ Chat - (sodapoppin) - August 1, 2023"
+#   t_start: "02:07:32"
+#   t_end: "05:01:15"
+
+# - video: data/sodapoppin/2023-08/1887510092
+#   title: "Portal Dungeon w/ Chat - (sodapoppin) - August 1, 2023"
+#   t_start: "05:01:15"
+#   t_end: "06:53:50"
+
+
+
+# - video: data/sodapoppin/2023-08/1888358029
+#   title: "Birds and Talking w/ Chat - (sodapoppin) - August 2, 2023"
+#   t_start: "00:05:07"
+#   t_end: "00:13:55"
+
+# - video: data/sodapoppin/2023-08/1888358029
+#   title: "Thronefall w/ Chat - (sodapoppin) - August 2, 2023"
+#   t_start: "00:13:55"
+#   t_end: "06:02:21"
+
+
+
+# - video: data/sodapoppin/2023-08/1889032432
+#   title: "Baldur's Gate 3 w/ Vei and Willneff - Part 1 (sodapoppin) - August 3, 2023"
+#   t_start: "01:05:38"
+#   t_end: "06:37:49"
+
+# - video: data/sodapoppin/2023-08/1889032432
+#   title: "Baldur's Gate 3 w/ Vei and Willneff - Part 2 (sodapoppin) - August 3, 2023"
+#   t_start: "06:37:49"
+#   t_end: "12:18:06"
+
+# - video: data/sodapoppin/2023-08/1889032432
+#   title: "Baldur's Gate 3 w/ Vei and Willneff - Part 3 (sodapoppin) - August 3, 2023"
+#   t_start: "12:18:06"
+#   t_end: "17:35:40"
+
+
+# - video: data/sodapoppin/2023-08/1890222559
+#   title: "Baldur's Gate 3 w/ Vei - Part 1 (sodapoppin) - August 4, 2023"
+#   t_start: "00:07:59"
+#   t_end: "06:13:29"
+
+# - video: data/sodapoppin/2023-08/1890222559
+#   title: "Baldur's Gate 3 w/ Vei - Part 2 (sodapoppin) - August 4, 2023"
+#   t_start: "06:13:29"
+#   t_end: "11:03:29"
+
+# - video: data/sodapoppin/2023-08/1890222559
+#   title: "Baldur's Gate 3 w/ Vei - Part 3 (sodapoppin) - August 4, 2023"
+#   t_start: "11:03:29"
+#   t_end: "15:14:00"
+
+
+# - video: data/sodapoppin/2023-08/1891125951
+#   title: "Baldur's Gate 3 w/ Vei - (sodapoppin) - August 5, 2023"
+#   t_start: "00:05:29"
+#   t_end: "06:06:46"
+
+# - video: data/sodapoppin/2023-08/1891125951
+#   title: "Reacting to TT's Pool Repair w/ Chat - (sodapoppin) - August 5, 2023"
+#   description: "Original Video: https://www.youtube.com/watch?v=ypd5HwYpuIg"
+#   t_start: "06:54:16"
+#   t_end: "06:57:36"
+
+# - video: data/sodapoppin/2023-08/1891125951
+#   title: "Reacting to Moist Huge Streamer Event Disaster w/ Chat - (sodapoppin) - August 5, 2023"
+#   description: "Original Video: https://www.youtube.com/watch?v=qmOZFvVxeZc"
+#   t_start: "06:57:36"
+#   t_end: "07:08:49"
+
+
+
+
+# - video: data/sodapoppin/2023-08/1891951010
+#   title: "Dew Singing w/ Chat - (sodapoppin) - August 6, 2023"
+#   t_start: "00:21:23"
+#   t_end: "00:29:55"
+
+# - video: data/sodapoppin/2023-08/1891951010
+#   title: "Baldur's Gate 3 w/ Vei - Part 1 (sodapoppin) - August 6, 2023"
+#   t_start: "00:29:55"
+#   t_end: "06:45:57"
+
+# - video: data/sodapoppin/2023-08/1891951010
+#   title: "Baldur's Gate 3 w/ Vei - Part 2 (sodapoppin) - August 6, 2023"
+#   t_start: "06:45:57,08:38:52"
+#   t_end: "08:10:48,13:32:00"
+
+
+# - video: data/sodapoppin/2023-08/1892759139
+#   title: "Baldur's Gate 3 w/ Vei - (sodapoppin) - August 7, 2023"
+#   t_start: "00:09:07"
+#   t_end: "07:54:10"
+
+
+
+
+# - video: data/sodapoppin/2023-08/1893753786
+#   title: "CohhCarnage's Thoughts on Baldur's Gate III w/ Chat - (sodapoppin) - August 8, 2023"
+#   description: "Original Video: https://www.youtube.com/watch?v=SOvPtQllTw8"
+#   t_start: "00:21:30"
+#   t_end: "00:40:31"
+
+# - video: data/sodapoppin/2023-08/1893753786
+#   title: "Baldur's Gate 3 w/ Vei - (sodapoppin) - August 8, 2023"
+#   description: "Cohh's Video: https://www.youtube.com/watch?v=SOvPtQllTw8"
+#   t_start: "00:21:40"
+#   t_end: "05:43:20"
+
+
+# - video: data/sodapoppin/2023-08/1894450493
+#   title: "Dark and Darker w/ Chat - (sodapoppin) - August 9, 2023"
+#   t_start: "00:11:40"
+#   t_end: "04:53:19"
+
+# - video: data/sodapoppin/2023-08/1894450493
+#   title: "Baldur's Gate 3 w/ Vei - (sodapoppin) - August 9, 2023"
+#   t_start: "04:53:19"
+#   t_end: "09:43:10"
+
+
+# - video: data/sodapoppin/2023-08/1895431624
+#   title: "Dark and Darker w/ Vei - (sodapoppin) - August 10, 2023"
+#   description: "Vei joins about 4hrs in"
+#   t_start: "00:01:54"
+#   t_end: "07:22:26"
+
+# - video: data/sodapoppin/2023-08/1895431624
+#   title: "Dark and Darker w/ Vei and Rob - (sodapoppin) - August 10, 2023"
+#   t_start: "07:22:26"
+#   t_end: "14:32:10"
+
+
+# - video: data/sodapoppin/2023-08/1897044675
+#   title: "Dark and Darker w/ Chat - (sodapoppin) - August 12, 2023"
+#   t_start: "00:09:15"
+#   t_end: "04:10:30"
+
+
+
+# - video: data/sodapoppin/2023-08/1897904935
+#   title: "Dark and Darker w/ Vei - (sodapoppin) - August 13, 2023"
+#   description: "Vei joins about 2hrs in"
+#   t_start: "00:07:01,07:46:07"
+#   t_end: "06:32:31,08:19:51"
+
+# - video: data/sodapoppin/2023-08/1897904935
+#   title: "Waifu Cup Results w/ Chat - (sodapoppin) - August 13, 2023"
+#   t_start: "06:32:31"
+#   t_end: "07:45:36"
+
+# - video: data/sodapoppin/2023-08/1897904935
+#   title: "Baldur's Gate 3 w/ Vei - (sodapoppin) - August 13, 2023"
+#   t_start: "08:19:52"
+#   t_end: "11:08:40"
+
+
+
+# - video: data/sodapoppin/2023-08/1898723498
+#   title: "Dark and Darker w/ Chat - (sodapoppin) - August 14, 2023"
+#   t_start: "00:04:25,00:53:07"
+#   t_end: "00:24:38,03:42:40"
+
+# - video: data/sodapoppin/2023-08/1898723498
+#   title: "Reacting to Joel Haver Animations w/ Chat - (sodapoppin) - August 14, 2023"
+#   description: "Original Videos:\nhttps://www.youtube.com/watch?v=tg0bGUdJ9hg\nhttps://www.youtube.com/watch?v=PugcxQYJGjs\nhttps://www.youtube.com/watch?v=IMKW-ifxikE\nhttps://www.youtube.com/watch?v=UulEsFPhIjY\nhttps://www.youtube.com/watch?v=S7M24KrqhBw"
+#   t_start: "00:24:44"
+#   t_end: "00:53:07"
+
+
+# - video: data/sodapoppin/2023-08/1899660361
+#   title: "Dark and Darker w/ Chat - (sodapoppin) - August 15, 2023"
+#   t_start: "00:05:29"
+#   t_end: "07:40:20"
+
+
+
+# - video: data/sodapoppin/2023-08/1900548185
+#   title: "Dark and Darker w/ Chat - (sodapoppin) - August 16, 2023"
+#   t_start: "00:00:57"
+#   t_end: "04:37:39"
+
+# - video: data/sodapoppin/2023-08/1900548185
+#   title: "Genshin Impact #ad w/ Chat - (sodapoppin) - August 16, 2023"
+#   t_start: "04:36:54"
+#   t_end: "06:37:20"
+
+
+# - video: data/sodapoppin/2023-08/1901428465
+#   title: "Dark and Darker w/ Chat - (sodapoppin) - August 17, 2023"
+#   t_start: "00:01:01"
+#   t_end: "06:40:20"
+
+
+# - video: data/sodapoppin/2023-08/1902209518
+#   title: "Dark and Darker w/ Chat - (sodapoppin) - August 18, 2023"
+#   t_start: "00:03:02"
+#   t_end: "01:08:30"
+
+
+# - video: data/sodapoppin/2023-08/1903165271
+#   title: "Dark and Darker w/ Chat - (sodapoppin) - August 19, 2023"
+#   t_start: "00:04:30"
+#   t_end: "08:25:30"
+
+# - video: data/sodapoppin/2023-08/1903165271
+#   title: "Pushups w/ Chat - (sodapoppin) - August 19, 2023"
+#   t_start: "07:30:05"
+#   t_end: "07:38:15"
+
+
+
+# - video: data/sodapoppin/2023-08/1904040229
+#   title: "Dark and Darker w/ Chat - (sodapoppin) - August 20, 2023"
+#   t_start: "00:08:13"
+#   t_end: "09:24:30"
+
+
+# - video: data/sodapoppin/2023-08/1904946925
+#   title: "Reacting to DaD How to Fight Every Enemy w/ Chat - (sodapoppin) - August 21, 2023"
+#   description: "Original Videos:\nhttps://www.youtube.com/watch?v=9QV11Au-fME\nhttps://www.youtube.com/watch?v=UjgT9sbK_Fs\nhttps://www.youtube.com/watch?v=WQHGBmcssOk\nhttps://www.youtube.com/watch?v=KWQcBrZ0lx8"
+#   t_start: "00:04:51"
+#   t_end: "00:25:59"
+
+# - video: data/sodapoppin/2023-08/1904946925
+#   title: "Dark and Darker w/ Chat - (sodapoppin) - August 21, 2023"
+#   t_start: "00:22:58"
+#   t_end: "10:35:01"
+
+
+
+
+# - video: data/sodapoppin/2023-08/1905749757
+#   title: "Reacting to Gamescom 2023 w/ Chat - (sodapoppin) - August 22, 2023"
+#   description: "Original Video: https://www.youtube.com/watch?v=pgXYNiWPa0M"
+#   t_youtube_mute: "00:46:00 - 00:46:59,00:51:29 - 00:52:54"
+#   t_start: "00:21:38"
+#   t_end: "01:20:07"
+
+# - video: data/sodapoppin/2023-08/1905749757
+#   title: "Reacting to Dark and Darker Hotfix #6 w/ Chat - (sodapoppin) - August 22, 2023"
+#   t_start: "01:20:07"
+#   t_end: "01:28:35"
+
+# - video: data/sodapoppin/2023-08/1905749757
+#   title: "Baldur's Gate 3 w/ Chat - (sodapoppin) - August 22, 2023"
+#   t_start: "01:28:35"
+#   t_end: "05:59:48"
+
+# - video: data/sodapoppin/2023-08/1905749757
+#   title: "Dark and Darker w/ Chat - (sodapoppin) - August 22, 2023"
+#   t_start: "05:59:48"
+#   t_end: "07:53:01"
+
+
+
+# - video: data/sodapoppin/2023-08/1906655766
+#   title: "Watching Game Trailers w/ Chat - (sodapoppin) - August 23, 2023"
+#   t_start: "00:06:25"
+#   t_end: "00:29:51"
+
+# - video: data/sodapoppin/2023-08/1906655766
+#   title: "Dark and Darker w/ Chat - (sodapoppin) - August 23, 2023"
+#   t_start: "00:29:14"
+#   t_end: "05:39:20"
+
+
+# - video: data/sodapoppin/2023-08/1907500768
+#   title: "Dark and Darker w/ Chat - (sodapoppin) - August 24, 2023"
+#   t_start: "00:04:47"
+#   t_end: "05:38:40"
+
+
+#=============================================================
+#=============================================================
+#=============================================================
+
+
+- video: data/sodapoppin/2023-08/1908417783
+  title: "Dark and Darker w/ Chat - (sodapoppin) - August 25, 2023"
+  t_start: "00:06:29"
+  t_end: "08:02:00"
+
+- video: data/sodapoppin/2023-08/1909322195
+  title: "Reacting to Random Videos w/ Chat - (sodapoppin) - August 26, 2023"
+  t_start: "00:12:32"
+  t_end: "00:27:52"
+
+- video: data/sodapoppin/2023-08/1909322195
+  title: "Dark and Darker w/ Chat - (sodapoppin) - August 26, 2023"
+  t_start: "00:27:52"
+  t_end: "09:18:10"
+
+
+- video: data/sodapoppin/2023-08/1910276317
+  title: "Dark and Darker w/ Chat - (sodapoppin) - August 27, 2023"
+  t_start: "00:01:57"
+  t_end: "04:58:30"
+
+
+- video: data/sodapoppin/2023-08/1911104516
+  title: "Dark and Darker w/ Chat - Part 1 (sodapoppin) - August 28, 2023"
+  t_start: "00:06:38"
+  t_end: "09:00:51"
+
+- video: data/sodapoppin/2023-08/1911468587
+  title: "Dark and Darker w/ Chat - Part 2 (sodapoppin) - August 28, 2023"
+  t_start: "00:00:00"
+  t_end: "01:37:10"
+
+- video: data/sodapoppin/2023-08/1913573025
+  title: "Dark and Darker w/ Chat - (sodapoppin) - August 31, 2023"
+  t_start: "00:04:36"
+  t_end: "06:42:30"
+
+- video: data/sodapoppin/2023-09/1914374677
+  title: "Party Animals w/ Chat - (sodapoppin) - September 1, 2023"
+  t_start: "00:08:33"
+  t_end: "01:05:54"
+
+- video: data/sodapoppin/2023-09/1914374677
+  title: "Dark and Darker w/ Chat - (sodapoppin) - September 1, 2023"
+  t_start: "01:05:45"
+  t_end: "08:10:30"
+
+
+- video: data/sodapoppin/2023-09/1915393033
+  title: "Dark and Darker w/ Chat - (sodapoppin) - September 2, 2023"
+  t_start: "00:04:46,06:34:07"
+  t_end: "03:13:52,08:59:20"
+
+- video: data/sodapoppin/2023-09/1915393033
+  title: "Baldurs Gate 3 with Vei w/ Chat - (sodapoppin) - September 2, 2023"
+  t_start: "03:13:52"
+  t_end: "06:34:07"
+
+
+- video: data/sodapoppin/2023-09/1916246134
+  title: "Dark and Darker w/ Chat - (sodapoppin) - September 3, 2023"
+  t_start: "00:02:35"
+  t_end: "08:55:40"
+
+
+- video: data/sodapoppin/2023-09/1917992574
+  title: "Dark and Darker w/ Chat - (sodapoppin) - September 5, 2023"
+  t_start: "00:04:06,00:18:03"
+  t_end: "00:14:19,06:15:20"
+
+#=============================================================
+#=============================================================
+#=============================================================
+
+# - video: data/sodapoppin/2023-08/1908417783
+#   title: "Example Video Upload - (sodapoppin) - September 5, 2023"
+#   description: "This video is an example upload using the youtube API."
+#   t_start: "00:00:00"
+#   t_end: "00:01:00"
+
+
+- video: data/sodapoppin/2023-09/1918739761
+  title: "Classic WoW Tournament w/ Chat - (sodapoppin) - September 6, 2023"
+  t_start: "00:05:31"
+  t_end: "06:05:20"
+
+- video: data/sodapoppin/2023-09/1919721982
+  title: "Dark and Darker w/ Chat - (sodapoppin) - September 7, 2023"
+  t_start: "00:02:05"
+  t_end: "06:35:10"
+
+
+- video: data/sodapoppin/2023-09/1920363391
+  title: "Reacting to WoW Videos w/ Chat - (sodapoppin) - September 8, 2023"
+  description: "Original Videos:\nhttps://www.youtube.com/watch?v=xfPBc4giAjM\nhttps://www.youtube.com/watch?v=kLujPRQjH7c"
+  t_start: "00:03:22"
+  t_end: "00:30:01"
+
+- video: data/sodapoppin/2023-09/1920363391
+  title: "Dark and Darker w/ Chat - (sodapoppin) - September 8, 2023"
+  t_start: "00:30:01"
+  t_end: "06:43:30"
+
+
+
+- video: data/sodapoppin/2023-09/1921257094
+  title: "Password Game (puzzel) w/ Chat - (sodapoppin) - September 9, 2023"
+  t_start: "00:55:29"
+  t_end: "01:42:01"
+
+- video: data/sodapoppin/2023-09/1921257094
+  title: "Party Animals w/ Chat - (sodapoppin) - September 9, 2023"
+  t_start: "01:49:01"
+  t_end: "04:48:16"
+
+- video: data/sodapoppin/2023-09/1921257094
+  title: "Whisker Squadron: Survivor w/ Chat - (sodapoppin) - September 9, 2023"
+  t_start: "04:49:39"
+  t_end: "05:05:17"
+
+- video: data/sodapoppin/2023-09/1921257094
+  title: "Kill The Crows w/ Chat - (sodapoppin) - September 9, 2023"
+  t_start: "05:05:17"
+  t_end: "05:57:47"
+
+- video: data/sodapoppin/2023-09/1921257094
+  title: "Snake Farm w/ Chat - (sodapoppin) - September 9, 2023"
+  t_start: "05:57:47"
+  t_end: "06:34:10"
+
+- video: data/sodapoppin/2023-09/1921257094
+  title: "Bee Island w/ Chat - (sodapoppin) - September 9, 2023"
+  t_start: "06:34:24"
+  t_end: "07:07:50"
+
+
+
+- video: data/sodapoppin/2023-09/1922294291
+  title: "Voidborn w/ Chat - (sodapoppin) - September 10, 2023"
+  t_start: "00:07:28"
+  t_end: "01:23:54"
+
+- video: data/sodapoppin/2023-09/1922294291
+  title: "Halls of Torment w/ Chat - (sodapoppin) - September 10, 2023"
+  t_start: "01:23:36"
+  t_end: "03:34:14"
+
+- video: data/sodapoppin/2023-09/1922294291
+  title: "Terror in the Kitchen (indie horror) w/ Chat - (sodapoppin) - September 10, 2023"
+  t_start: "03:34:21"
+  t_end: "04:09:18"
+
+- video: data/sodapoppin/2023-09/1922294291
+  title: "TED by Level (indie horror) w/ Chat - (sodapoppin) - September 10, 2023"
+  t_start: "04:09:18"
+  t_end: "04:16:11"
+
+- video: data/sodapoppin/2023-09/1922294291
+  title: "Laughter in the Forest (indie horror) w/ Chat - (sodapoppin) - September 10, 2023"
+  t_start: "04:16:31"
+  t_end: "04:30:06"
+
+- video: data/sodapoppin/2023-09/1922294291
+  title: "An Ankou w/ Chat - (sodapoppin) - September 10, 2023"
+  t_start: "04:31:06"
+  t_end: "06:55:40"
+
+
+
+
+- video: data/sodapoppin/2023-09/1922943180
+  title: "An Ankou w/ Chat - (sodapoppin) - September 11, 2023"
+  t_start: "00:09:11"
+  t_end: "01:27:41"
+
+- video: data/sodapoppin/2023-09/1922943180
+  title: "Kill The Crows w/ Chat - (sodapoppin) - September 11, 2023"
+  t_start: "01:27:41"
+  t_end: "01:50:02"
+
+- video: data/sodapoppin/2023-09/1922943180
+  title: "Star of Providence w/ Chat - (sodapoppin) - September 11, 2023"
+  t_start: "01:50:02"
+  t_end: "02:25:59"
+
+- video: data/sodapoppin/2023-09/1922943180
+  title: "The Texas Chain Saw Massacre w/ Chat - (sodapoppin) - September 11, 2023"
+  t_start: "02:26:32"
+  t_end: "05:53:10"
+
+
+
+
+- video: data/sodapoppin/2023-09/1924620684
+  title: "God of Weapons w/ Chat - (sodapoppin) - September 13, 2023"
+  t_start: "00:10:03"
+  t_end: "02:08:10"
+
+- video: data/sodapoppin/2023-09/1924620684
+  title: "Heretic's Fork w/ Chat - (sodapoppin) - September 13, 2023"
+  t_start: "02:08:10"
+  t_end: "04:31:31"
+
+- video: data/sodapoppin/2023-09/1924620684
+  title: "Parasocial w/ Chat - (sodapoppin) - September 13, 2023"
+  t_start: "04:35:48"
+  t_end: "05:44:25"
+
+- video: data/sodapoppin/2023-09/1924620684
+  title: "Town of Salem II w/ Friends - (sodapoppin) - September 13, 2023"
+  t_start: "05:44:25"
+  t_end: "07:23:40"
 
 
 
