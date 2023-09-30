@@ -154,17 +154,27 @@ for video in data:
                 t0 = time.time()
                 if should_render_chat and os.path.exists(file_path_render):
                     print("\t- rendering with chat overlay " + seg_start[idx] + " to " + seg_end[idx])
+                    # get a chat time offset if we have it
+                    h1, m1, s1 = seg_start[idx].split(':')
+                    time1_s = 3600 * int(h1) + 60 * int(m1) + int(s1)
+                    if "t_chat_offset" in video:
+                        time1_s = time1_s + int(video["t_chat_offset"])
+                        print("\t- chat has offset of "+str(int(video["t_chat_offset"])) + " seconds")
+                    m, s = divmod(time1_s, 60)
+                    h, m = divmod(m, 60)
+                    seg_start_chat = format(h, '02') + ':' + format(m, '02') + ':' + format(s, '02')
+                    # finally render!
                     cmd = path_twitch_ffmpeg + '  ' \
                         + ' -ss ' + seg_start[idx] + ' -i ' + file_path_video + ' -to ' + seg_end[idx] \
-                        + ' -ss ' + seg_start[idx] + ' -i ' + file_path_render \
+                        + ' -ss ' + seg_start_chat + ' -i ' + file_path_render \
                         + ' -filter_complex "[0:v] scale=1646x926 [tmp1];' \
                         + ' [tmp1][1:v]hstack=inputs=2:shortest=1[stack]" -shortest -map "[stack]" -map 0:a ' \
                         + ' -vcodec libx264 -crf 10 -preset veryfast -avoid_negative_ts make_zero -framerate 60 -vsync 2 -map_chapters -1 ' \
                         + ' -c:a aac ' \
                         + tmp_output_file
-                    #print(cmd)
+                    # print(cmd)
                     subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
-                    #subprocess.Popen(cmd, shell=True).wait()
+                    # subprocess.Popen(cmd, shell=True).wait()
                 else:
                     print("\t- rendering *without* chat overlay " + seg_start[idx] + " to " + seg_end[idx])
                     h1, m1, s1 = seg_start[idx].split(':')

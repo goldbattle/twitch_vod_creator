@@ -60,6 +60,7 @@ The timestamps are specified using `HH:MM:SS` (see ffmpeg docs [here](https://ff
   description: "This will be in the top of the youtube description" // (optional)
   t_start: "00:00:00,01:00:00"
   t_end: "00:10:00,02:00:00"
+  t_chat_offset: "20" // number of seconds the chat is offset from the video (for stream disconnects)
   t_youtube_mute: "0:01:00 - 0:02:00,0:10:00 - 0:11:00" // (optional)
   tags: // (optional)
     - "tag 1" // (optional)
