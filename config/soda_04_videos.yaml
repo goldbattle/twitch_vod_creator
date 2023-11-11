@@ -8023,9 +8023,10 @@
 
 
 # - video: data/sodapoppin/2023-09/1932343146
-#   title: "Twitch Rivals Party Animals w/ Chat - (sodapoppin) - September 22, 2023"
-#   t_start: "00:08:30,04:16:35"
-#   t_end: "04:12:35,07:07:20"
+#   title: "Twitch Rivals Party Animals w/ Chat (reupload2) - (sodapoppin) - September 22, 2023"
+#   description: "Had to cut quite a few parts as they watched a bunch of copyrighted videos."
+#   t_start: "00:08:30,03:51:34,04:05:11,04:16:49,04:22:43,04:55:11"
+#   t_end: "03:47:57,04:02:43,04:12:24,04:17:21,04:49:02,07:07:20"
 
 
 
@@ -8036,11 +8037,8 @@
 
 # - video: data/nmplol/2023-09/1932275909
 #   title: "Most Capable Streamer (part 2) w/ Chat - (Nmplol) - September 22, 2023"
-#   t_start: "00:00:00,01:06:47"
-#   t_end: "01:06:29"
-
-
-
+#   t_start: "00:00:00"
+#   t_end: "01:06:47"
 
 
 # - video: data/sodapoppin/2023-09/1933246970
@@ -8067,6 +8065,389 @@
 #   title: "77p egg: Eggwife (horror??) w/ Chat - (sodapoppin) - September 23, 2023"
 #   t_start: "06:10:01"
 #   t_end: "07:51:20"
+
+
+# - video: data/sodapoppin/2023-09/1936179137
+#   title: "Party Animals w/ Chat - (sodapoppin) - September 26, 2023"
+#   t_start: "00:01:06,02:58:50"
+#   t_end: "00:22:22,03:37:14"
+
+# - video: data/sodapoppin/2023-09/1936179137
+#   title: "PlateUp! w/ Chat - (sodapoppin) - September 26, 2023"
+#   t_start: "00:21:15,02:58:30"
+#   t_end: "02:38:32,03:03:29"
+
+# - video: data/sodapoppin/2023-09/1936179137
+#   title: "Dark and Darker w/ Chat - (sodapoppin) - September 26, 2023"
+#   t_start: "03:54:10"
+#   t_end: "05:31:10"
+
+
+# - video: data/sodapoppin/2023-09/1936648481
+#   title: "Dark and Darker w/ Chat - (sodapoppin) - September 27, 2023"
+#   t_start: "00:08:24"
+#   t_end: "06:24:00"
+
+# - video: data/sodapoppin/2023-09/1938288767
+#   title: "Dark and Darker w/ Chat - (sodapoppin) - September 29, 2023"
+#   t_start: "00:04:59"
+#   t_end: "05:34:50"
+
+
+# - video: data/sodapoppin/2023-10/1940191668
+#   title: "Party Animals Stream Present w/ Chat - (sodapoppin) - October 1, 2023"
+#   t_start: "00:04:29"
+#   t_end: "00:12:09"
+
+# - video: data/sodapoppin/2023-10/1940191668
+#   title: "Hardcore WoW w/ Chat - (sodapoppin) - October 1, 2023"
+#   t_start: "00:12:09"
+#   t_end: "07:41:40"
+
+
+# - video: data/sodapoppin/2023-10/1940981975
+#   title: "Hardcore WoW w/ Chat - (sodapoppin) - October 2, 2023"
+#   t_start: "00:04:29,03:15:56"
+#   t_end: "03:13:28,06:46:40"
+
+# - video: data/sodapoppin/2023-10/1941863035
+#   title: "Hardcore WoW w/ Chat - (sodapoppin) - October 3, 2023"
+#   t_start: "00:06:15"
+#   t_end: "05:52:24"
+
+
+# - video: data/sodapoppin/2023-10/1942622324
+#   title: "Hardcore WoW w/ Chat - (sodapoppin) - October 4, 2023"
+#   t_start: "00:07:36"
+#   t_end: "05:48:40"
+
+# - video: data/sodapoppin/2023-10/1943459854
+#   title: "Hardcore WoW w/ Chat - (sodapoppin) - October 5, 2023"
+#   t_start: "00:04:31"
+#   t_end: "06:09:20"
+
+
+- video: data/sodapoppin/2023-10/1945170994
+  title: "Noch w/ Chat - (sodapoppin) - October 7, 2023"
+  t_start: "00:25:32"
+  t_end: "00:54:01"
+
+- video: data/sodapoppin/2023-10/1945170994
+  title: "Bang-On Balls: Chronicles w/ Chat - (sodapoppin) - October 7, 2023"
+  t_start: "00:54:01"
+  t_end: "01:29:47"
+
+- video: data/sodapoppin/2023-10/1945170994
+  title: "Another Crab's Treasure w/ Chat - (sodapoppin) - October 7, 2023"
+  t_start: "01:31:35"
+  t_end: "02:02:36"
+
+- video: data/sodapoppin/2023-10/1945170994
+  title: "Thief Simulator 2 w/ Chat - (sodapoppin) - October 7, 2023"
+  t_start: "02:02:51"
+  t_end: "03:36:07"
+
+- video: data/sodapoppin/2023-10/1945170994
+  title: "Jackbox Party Pack 10 w/ Chat - (sodapoppin) - October 7, 2023"
+  t_start: "03:37:55"
+  t_end: "04:44:33"
+
+
+- video: data/sodapoppin/2023-10/1946074454
+  title: "Hardcore WoW w/ Chat - (sodapoppin) - October 8, 2023"
+  t_start: "00:12:27"
+  t_end: "06:57:50"
+
+
+- video: data/sodapoppin/2023-10/1946835531
+  title: "Hardcore WoW w/ Chat - (sodapoppin) - October 9, 2023"
+  t_start: "00:13:30"
+  t_end: "05:51:30"
+
+
+
+- video: data/sodapoppin/2023-10/1948510224
+  title: "Backpack Battles Demo w/ Chat - (sodapoppin) - October 11, 2023"
+  t_start: "00:02:59,03:34:12"
+  t_end: "01:19:08,06:17:16"
+
+- video: data/sodapoppin/2023-10/1948510224
+  title: "Dome Keeper w/ Chat - (sodapoppin) - October 11, 2023"
+  t_start: "01:19:08"
+  t_end: "03:34:11"
+
+- video: data/sodapoppin/2023-10/1948510224
+  title: "Warcraft III CHS 2.3.2 w/ Chat - (sodapoppin) - October 11, 2023"
+  t_start: "06:17:16"
+  t_end: "08:13:20"
+
+
+
+- video: data/sodapoppin/2023-10/1949244519
+  title: "Dark and Darker w/ Chat - (sodapoppin) - October 12, 2023"
+  t_start: "00:07:32"
+  t_end: "03:33:50"
+
+
+
+- video: data/sodapoppin/2023-10/1950074243
+  title: "Vanilla Hardcore WoW Streamer Guild: Day 1 w/ Chat - (sodapoppin) - October 13, 2023"
+  t_start: "00:06:58"
+  t_end: "08:47:00"
+
+
+- video: data/sodapoppin/2023-10/1951021244
+  title: "Vanilla Hardcore WoW Streamer Guild: Day 2 w/ Chat - (sodapoppin) - October 14, 2023"
+  t_start: "00:04:36"
+  t_end: "05:37:50"
+
+- video: data/sodapoppin/2023-10/1951021244
+  title: "Lords of the Fallen #ad w/ Chat - (sodapoppin) - October 14, 2023"
+  t_start: "05:37:26"
+  t_end: "07:48:50"
+
+
+- video: data/sodapoppin/2023-10/1951930260
+  title: "Vanilla Hardcore WoW Streamer Guild: Day 3 w/ Chat - (sodapoppin) - October 15, 2023"
+  t_start: "00:04:09,03:42:29"
+  t_end: "03:39:29,06:50:20"
+
+
+
+- video: data/sodapoppin/2023-10/1952692458
+  title: "Some Announcements w/ Chat - (sodapoppin) - October 16, 2023"
+  t_start: "00:07:52"
+  t_end: "00:14:48"
+
+- video: data/sodapoppin/2023-10/1952692458
+  title: "Vanilla Hardcore WoW Streamer Guild: Day 4 w/ Chat - (sodapoppin) - October 16, 2023"
+  t_start: "00:07:27"
+  t_end: "05:51:30"
+
+
+- video: data/sodapoppin/2023-10/1954197291
+  title: "Vanilla Hardcore WoW Streamer Guild: Day 5 w/ Chat - (sodapoppin) - October 18, 2023"
+  t_start: "00:03:36,02:28:39"
+  t_end: "01:55:54,07:56:40"
+
+- video: data/sodapoppin/2023-10/1954197291
+  title: "OTK VGA Annoucncement w/ Chat - (sodapoppin) - October 18, 2023"
+  t_start: "01:49:58"
+  t_end: "02:29:38"
+
+
+- video: data/sodapoppin/2023-10/1955148552
+  title: "Vanilla Hardcore WoW Streamer Guild: Day 6 w/ Chat - (sodapoppin) - October 19, 2023"
+  t_start: "00:04:55"
+  t_end: "06:32:00"
+
+
+
+- video: data/sodapoppin/2023-10/1955939136
+  title: "Vanilla Hardcore WoW Streamer Guild: Day 7 w/ Chat - (sodapoppin) - October 20, 2023"
+  t_start: "00:08:35"
+  t_end: "06:13:10"
+
+
+
+- video: data/sodapoppin/2023-10/1956784134
+  title: "Vanilla Hardcore WoW Streamer Guild: Day 8 w/ Chat - (sodapoppin) - October 21, 2023"
+  t_start: "00:07:23,03:45:19"
+  t_end: "03:43:58,07:38:10"
+
+
+
+- video: data/sodapoppin/2023-10/1958550253
+  title: "Vanilla Hardcore WoW Streamer Guild: Day 9 w/ Chat - (sodapoppin) - October 23, 2023"
+  t_start: "00:12:19"
+  t_end: "08:48:10"
+
+
+- video: data/sodapoppin/2023-10/1959411384
+  title: "Vanilla Hardcore WoW Streamer Guild: Day 10 w/ Chat - (sodapoppin) - October 24, 2023"
+  t_start: "00:09:21"
+  t_end: "06:29:00"
+
+- video: data/sodapoppin/2023-10/1959411384
+  title: "Vei WoW Quiz Time w/ Chat - (sodapoppin) - October 24, 2023"
+  t_start: "01:28:29"
+  t_end: "02:18:31"
+
+
+
+- video: data/sodapoppin/2023-10/1960166027
+  title: "Vanilla Hardcore WoW Streamer Guild: Day 11 w/ Chat - (sodapoppin) - October 25, 2023"
+  t_start: "00:07:59,07:14:04"
+  t_end: "04:52:42,07:33:10"
+
+- video: data/sodapoppin/2023-10/1960166027
+  title: "Battle Crush #ad w/ Chat - (sodapoppin) - October 25, 2023"
+  t_start: "04:52:57"
+  t_end: "07:14:00"
+
+
+
+- video: data/sodapoppin/2023-10/1960981404
+  title: "Vanilla Hardcore WoW Streamer Guild: Day 12 w/ Chat - (sodapoppin) - October 26, 2023"
+  t_start: "00:15:22"
+  t_end: "01:23:40"
+
+
+- video: data/sodapoppin/2023-10/1961717606
+  title: "Vanilla Hardcore WoW Streamer Guild: Day 13 w/ Chat - (sodapoppin) - October 27, 2023"
+  t_start: "00:11:37"
+  t_end: "06:26:40"
+
+
+
+- video: data/sodapoppin/2023-10/1962662056
+  title: "Vanilla Hardcore WoW Streamer Guild: Day 14 w/ Chat - (sodapoppin) - October 28, 2023"
+  t_start: "00:09:07"
+  t_end: "04:49:10"
+
+
+- video: data/sodapoppin/2023-10/1963533675
+  title: "Vanilla Hardcore WoW Streamer Guild: Day 15 w/ Chat - (sodapoppin) - October 29, 2023"
+  t_start: "00:00:00"
+  t_end: "07:18:04"
+
+- video: data/sodapoppin/2023-10/1963533675
+  title: "Warhaven #ad w/ Chat - (sodapoppin) - October 29, 2023"
+  t_start: "07:18:04"
+  t_end: "08:31:20"
+
+
+
+- video: data/sodapoppin/2023-10/1965175706
+  title: "OTK Hardcore Mak'gora Qualifiers w/ Chat - (sodapoppin) - October 31, 2023"
+  t_start: "00:10:54,25:21:24"
+  t_end: "08:16:08"
+
+- video: data/sodapoppin/2023-10/1965175706
+  title: "Voices of the Void (horror) w/ Chat - (sodapoppin) - October 31, 2023"
+  t_start: "08:17:50"
+  t_end: "09:53:43"
+
+- video: data/sodapoppin/2023-10/1965175706
+  title: "Slay the Princess w/ Chat - (sodapoppin) - October 31, 2023"
+  t_start: "09:55:03"
+  t_end: "13:11:24"
+
+- video: data/sodapoppin/2023-10/1965175706
+  title: "Amanda the Adventurer (horror?) w/ Chat - (sodapoppin) - October 31, 2023"
+  with_chat: false
+  t_start: "13:13:25"
+  t_end: "14:38:25"
+
+- video: data/sodapoppin/2023-10/1965175706
+  title: "Don't Scream (horror) w/ Chat - (sodapoppin) - October 31, 2023"
+  with_chat: false
+  t_start: "14:39:49"
+  t_end: "15:31:55"
+
+- video: data/sodapoppin/2023-10/1965175706
+  title: "Liminal Gallery w/ Chat - (sodapoppin) - October 31, 2023"
+  with_chat: false
+  t_start: "15:32:59"
+  t_end: "15:53:13"
+
+- video: data/sodapoppin/2023-10/1965175706
+  title: "Poop Killer w/ Chat - (sodapoppin) - October 31, 2023"
+  with_chat: false
+  t_start: "15:58:02"
+  t_end: "17:37:09"
+
+- video: data/sodapoppin/2023-10/1965175706
+  title: "Vanilla Hardcore WoW Streamer Guild: Day 16 w/ Chat - (sodapoppin) - October 31, 2023"
+  with_chat: false
+  t_start: "17:38:05"
+  t_end: "18:32:39"
+
+- video: data/sodapoppin/2023-10/1965175706
+  title: "Lethal Company w/ Chat - (sodapoppin) - October 31, 2023"
+  with_chat: false
+  t_start: "18:34:25"
+  t_end: "25:21:21"
+
+
+
+
+- video: data/sodapoppin/2023-11/1966095989
+  title: "OTK Hardcore Mak'gora Championship w/ Chat - (sodapoppin) - November 1, 2023"
+  t_start: "00:05:09"
+  t_end: "03:12:44"
+
+- video: data/sodapoppin/2023-11/1966095989
+  title: "Vanilla Hardcore WoW Streamer Guild: Day 17 w/ Chat - (sodapoppin) - November 1, 2023"
+  t_start: "03:12:44"
+  t_end: "07:45:20"
+
+
+
+- video: data/sodapoppin/2023-11/1967610635
+  title: "Vanilla Hardcore WoW Streamer Guild: Day 18 w/ Chat - (sodapoppin) - November 3, 2023"
+  t_start: "00:13:00,06:28:18"
+  t_end: "01:15:42,09:26:30"
+
+- video: data/sodapoppin/2023-11/1967610635
+  title: "Reacting to Blizzcon w/ Chat - (sodapoppin) - November 3, 2023"
+  description: "Original Video: https://www.youtube.com/watch?v=3Zvapa98JgM"
+  t_start: "00:36:31,05:47:03"
+  t_end: "05:26:08,06:28:30"
+
+- video: data/sodapoppin/2023-11/1967610635
+  title: "Reacting to Ziqo strategy to beat Snutz w/ Chat - (sodapoppin) - November 3, 2023"
+  description: "Original Video: https://www.youtube.com/watch?v=7x9kIgAfLWE"
+  t_start: "05:26:08"
+  t_end: "05:47:03"
+
+
+- video: data/sodapoppin/2023-11/1968711949
+  title: "Reacting to Blizzcon 2023 Deep Dive w/ Chat - (sodapoppin) - November 4, 2023"
+  t_start: "00:04:41"
+  t_end: "00:40:27"
+
+- video: data/sodapoppin/2023-11/1968711949
+  title: "Vanilla Hardcore WoW Streamer Guild: Day 19 w/ Chat - (sodapoppin) - November 4, 2023"
+  t_start: "00:32:58"
+  t_end: "06:40:10"
+
+
+- video: data/skippypoppin/2023-11/1969157870
+  title: "Lethal Company with Vei w/ Chat - (skippypoppin) - November 4, 2023"
+  t_start: "00:00:00"
+  t_end: "02:23:22"
+
+
+
+- video: data/sodapoppin/2023-11/1969648064
+  title: "Vanilla Hardcore WoW Streamer Guild: Day 20 w/ Chat - (sodapoppin) - November 5, 2023"
+  t_start: "00:07:15,07:49:56"
+  t_end: "07:09:01,07:52:46"
+
+- video: data/sodapoppin/2023-11/1969648064
+  title: "Lethal Company with Vei w/ Chat - (sodapoppin) - November 5, 2023"
+  t_start: "07:08:59,07:52:45"
+  t_end: "07:40:46,08:56:30"
+
+
+
+- video: data/sodapoppin/2023-11/1970382888
+  title: "Vanilla Hardcore WoW Streamer Guild: Day 21 w/ Chat - (sodapoppin) - November 6, 2023"
+  t_start: "00:04:44"
+  t_end: "05:13:40"
+
+
+
+- video: data/sodapoppin/2023-11/1972117984
+  title: "Vanilla Hardcore WoW Streamer Guild: Day 22 w/ Chat - (sodapoppin) - November 8, 2023"
+  t_start: "00:15:05"
+  t_end: "08:35:30"
+
+
+
+
+
 
 
 

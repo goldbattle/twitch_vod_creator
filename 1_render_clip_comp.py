@@ -23,8 +23,8 @@ client_secret = auth["client_secret"]
 # parameters
 channel = 'sodapoppin'
 max_clips = 30
-date_start = '2023-08-01T00:00:00.00Z'
-date_end = '2023-08-31T00:00:00.00Z'
+date_start = '2023-10-01T00:00:00.00Z'
+date_end = '2023-10-31T00:00:00.00Z'
 min_views_required = 500
 get_latest_from_twitch = True
 remove_rendered = True
