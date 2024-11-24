@@ -24,11 +24,11 @@ client_secret = auth["client_secret"]
 # channels = ['xqc', 'moonmoon', 'sodapoppin', 'clintstevens', 'pokelawls', 'forsen', 'nmplol']
 # min_view_counts = [5000, 2000, 2000, 500, 1000, 5000, 2000]
 channels = ['xqc', 'moonmoon', 'sodapoppin', 'clintstevens', 'pokelawls', 'forsen', 'nmplol', 'jerma985', 'vei']
-min_view_counts = [6000, 2000, 1000, 500, 1000, 5000, 2000, 500, 500]
+min_view_counts = [6000, 1000, 300, 100, 1000, 5000, 100, 500, 500]
 
 
 # number of days to try to request
-num_days_to_query = 60
+num_days_to_query = 120
 date_start = (datetime.datetime.now()-datetime.timedelta(days=num_days_to_query)).strftime('%Y-%m-%dT%H:%M:%SZ')
 date_end = datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ')
 print("Start Day: "+date_start)
@@ -39,7 +39,7 @@ print("End Day: "+date_end)
 # ================================================================
 
 # paths of the cli and data
-path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.53.2/TwitchDownloaderCLI"
+path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.54.0/TwitchDownloaderCLI"
 path_twitch_ffmpeg = path_base + "/thirdparty/ffmpeg-4.3.1-amd64-static/ffmpeg"
 path_root = path_base + "/../data_clips_new/"
 path_temp = "/tmp/tvc_main_clips/"

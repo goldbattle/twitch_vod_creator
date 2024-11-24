@@ -21,7 +21,7 @@ if len(sys.argv) != 2:
     exit(-1)
 vod_id_to_download = int(sys.argv[1])
 render_chat = True
-transcribe = True
+transcribe = False
 
 # authentication information
 path_base = os.path.dirname(os.path.abspath(__file__))
@@ -35,7 +35,7 @@ client_secret = auth["client_secret"]
 # ================================================================
 
 # paths of the cli and data
-path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.53.0/TwitchDownloaderCLI"
+path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.54.0/TwitchDownloaderCLI"
 path_twitch_ffmpeg = path_base + "/thirdparty/ffmpeg-4.3.1-amd64-static/ffmpeg"
 path_root = path_base + "/../data/"
 path_temp = "/tmp/tvc_single_video/"

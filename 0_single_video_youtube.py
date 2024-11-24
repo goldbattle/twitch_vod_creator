@@ -1,7 +1,10 @@
 # !/usr/bin/env python3
 
 import yaml  # pip install PyYAML
-from youtube_dl import YoutubeDL # pip install youtube_dl
+
+# pip install youtube_dl
+# pip3 install -U git+https://github.com/ytdl-org/youtube-dl
+from youtube_dl import YoutubeDL 
 
 import os
 import sys

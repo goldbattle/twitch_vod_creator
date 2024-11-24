@@ -23,27 +23,28 @@ client_secret = auth["client_secret"]
 
 # parameters
 channels = [
-    'sodapoppin', 'nmplol', 'skippypoppin',
+    'sodapoppin', 'skippypoppin', 'nmplol',
     'moonmoon', 'clintstevens', 'sevadus',
     'jerma985', 'heydoubleu', 'vei', 'squeex',
-    'goldbattle',
+    'goldbattle', 'j_blow'
     # 'mindcrack'
 ]
-max_videos = 60
+max_videos = 120
 render_chat = [
     True, False, False,
     False, True, False,
     False, False, False, False,
-    False,
+    False, False,
     # False
 ]
 render_webvtt = [
-    True, False, False,
+    True, True, True,
     False, True, False,
     False, False, True, False,
-    False,
+    False, False,
     # False
 ]
+
 
 
 
@@ -51,7 +52,7 @@ render_webvtt = [
 # ================================================================
 
 # paths of the cli and data
-path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.53.2/TwitchDownloaderCLI"
+path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.54.3/TwitchDownloaderCLI"
 path_twitch_ffmpeg = path_base + "/thirdparty/ffmpeg-4.3.1-amd64-static/ffmpeg"
 path_root = path_base + "/../data/"
 # path_temp = path_base + "/../data_temp/main_videos/"
@@ -207,8 +208,8 @@ for idx, user in enumerate(users):
             cmd = path_twitch_cli + ' videodownload' \
                 + ' --id ' + str(video['helix']['id']) + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
                 + ' --temp-path "' + path_temp + '" --quality 1080p60 -o ' + file_path
-            #subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
-            subprocess.Popen(cmd, shell=True).wait()
+            subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
+            #subprocess.Popen(cmd, shell=True).wait()
             print("\t- done in " + str(time.time() - t0) + " seconds")
 
         # CHAT: check if the file exists
@@ -222,8 +223,8 @@ for idx, user in enumerate(users):
                 + ' --embed-images true --chat-connections 6' \
                 + ' --bttv true --ffz true --stv true' \
                 + ' -o ' + file_path_chat_tmp
-            #subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
-            subprocess.Popen(cmd, shell=True).wait()
+            subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
+            #subprocess.Popen(cmd, shell=True).wait()
             if os.path.exists(file_path_chat_tmp):
                 shutil.move(file_path_chat_tmp, file_path_chat) 
             print("\t- done in " + str(time.time() - t0) + " seconds")
