@@ -1,6 +1,8 @@
 
-yt_creds: 'sevadus_creds.json'
-yt_secrets: 'sevadus_secrets.json'
+# yt_creds: 'sevadus_creds.json'
+# yt_secrets: 'sevadus_secrets.json'
+
+yt_template: 'sevadus_template.txt'
 
 tags:
   - 'sevadus'
