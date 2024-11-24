@@ -23,13 +23,16 @@ client_secret = auth["client_secret"]
 # parameters
 channel = 'sodapoppin'
 max_clips = 30
-date_start = '2023-10-01T00:00:00.00Z'
-date_end = '2023-10-31T00:00:00.00Z'
+date_start = '2024-09-01T00:00:00.00Z'
+date_end = '2024-09-30T00:00:00.00Z'
 min_views_required = 500
 get_latest_from_twitch = True
 remove_rendered = True
 clips_to_ignore = [
+    "ScaryBrainyEyeballArsonNoSexy-0Jn0wz5mZ1bRMyGk",
     "EasyFairLlamaHoneyBadger-rxZed8PoO1MR3PgL",
+    "ShinyDependableSharkKappaPride-Qjf4VS7pe6TumUY6",
+    "MoralSaltyHabaneroDatSheffy-3uKETXph5PWyF8w6",
 ]
 
 
@@ -37,7 +40,7 @@ clips_to_ignore = [
 # ================================================================
 
 # paths of the cli and data
-path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.53.2/TwitchDownloaderCLI"
+path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.54.3/TwitchDownloaderCLI"
 path_twitch_ffmpeg = path_base + "/thirdparty/ffmpeg-4.3.1-amd64-static/ffmpeg"
 path_twitch_ffprob = path_base + "/thirdparty/ffmpeg-4.3.1-amd64-static/ffprobe"
 path_font = path_base.replace("\\", "/").replace(":", "\\\\:") + "/thirdparty/bebas_neue/BebasNeue-Regular.ttf"
@@ -359,6 +362,8 @@ for video in arr_clips:
         title_clean = re.sub(r'www\S+', '', title_clean)
         title_clean = re.sub(r"[^a-zA-Z0-9'.?: ]", '', title_clean)
         title_clean = title_clean.replace("'", "\u2019")
+        if len(title_clean.split()) > 8:
+            title_clean = ""
         if os.path.exists(file_path_render):
             print("\t- rendering *with* chat overlay")
             cmd = path_twitch_ffmpeg + ' -hide_banner -loglevel quiet -stats ' \

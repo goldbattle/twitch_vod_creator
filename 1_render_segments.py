@@ -11,13 +11,13 @@ import shutil
 
 # video file we wish to render
 path_base = os.path.dirname(os.path.abspath(__file__))
-video_file = path_base + "/config/soda_04_videos.yaml"
+video_file = path_base + "/config/soda_2024_videos.yaml"
 config_file = path_base + "/config/soda_config_youtube.yaml"
 # video_file = path_base + "/config/clint_01_videos.yaml"
 # config_file = path_base + "/config/clint_config_youtube.yaml"
 
 # paths of the cli and data
-path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.53.0/TwitchDownloaderCLI"
+path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.54.3/TwitchDownloaderCLI"
 path_twitch_ffmpeg = path_base + "/thirdparty/ffmpeg-4.3.1-amd64-static/ffmpeg"
 path_twitch_ffprob = path_base + "/thirdparty/ffmpeg-4.3.1-amd64-static/ffprobe"
 path_root = path_base + "/../"
@@ -127,6 +127,7 @@ for video in data:
             # here we will render each
             seg_start = video["t_start"].split(",")
             seg_end = video["t_end"].split(",")
+            assert(len(seg_start) == len(seg_end))
             dur_segment_total = 0
             t0_big = time.time()
             for idx in range(len(seg_start)):
@@ -261,7 +262,7 @@ for video in data:
 
         # MUTED COMPOSITE: render the composite image
         # if the user has now added details on segments of the vod should be muted then we will
-        # these can be copyrited segments that block the video from being viewed
+        # these can be copywrited segments that block the video from being viewed
         # this will extra the audio from the existing video, mute it, then re-encode it
         # https://superuser.com/a/1752409
         # https://superuser.com/a/1256052
