@@ -22,9 +22,9 @@ client_secret = auth["client_secret"]
 
 # parameters
 channel = 'sodapoppin'
-max_clips = 30
-date_start = '2024-09-01T00:00:00.00Z'
-date_end = '2024-09-30T00:00:00.00Z'
+max_clips = 100
+date_start = '2024-01-01T00:00:00.00Z'
+date_end = '2024-12-31T00:00:00.00Z'
 min_views_required = 500
 get_latest_from_twitch = True
 remove_rendered = True
@@ -33,6 +33,8 @@ clips_to_ignore = [
     "EasyFairLlamaHoneyBadger-rxZed8PoO1MR3PgL",
     "ShinyDependableSharkKappaPride-Qjf4VS7pe6TumUY6",
     "MoralSaltyHabaneroDatSheffy-3uKETXph5PWyF8w6",
+    "PricklyCheerfulShallotKeyboardCat-h8Knl5UZGEphTpn7",
+    "BoredHedonisticMilkCorgiDerp-kzChRQAEuGS0xNcM",
 ]
 
 

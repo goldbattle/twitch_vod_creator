@@ -11,8 +11,8 @@ import utils
 
 # video file we wish to render
 path_base = os.path.dirname(os.path.abspath(__file__))
-video_file = path_base + "/config/soda_2024_videos.yaml"
-history_file = path_base + "/config/soda_2024_uploads.yaml"
+video_file = path_base + "/config/soda_2025_videos.yaml"
+history_file = path_base + "/config/soda_2025_uploads.yaml"
 config_file = path_base + "/config/soda_config_youtube.yaml"
 
 display_missing = False

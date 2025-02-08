@@ -11,7 +11,7 @@ import shutil
 
 # video file we wish to render
 path_base = os.path.dirname(os.path.abspath(__file__))
-video_file = path_base + "/config/soda_2024_videos.yaml"
+video_file = path_base + "/config/soda_2025_videos.yaml"
 config_file = path_base + "/config/soda_config_youtube.yaml"
 # video_file = path_base + "/config/clint_01_videos.yaml"
 # config_file = path_base + "/config/clint_config_youtube.yaml"
