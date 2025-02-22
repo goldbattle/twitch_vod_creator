@@ -17,13 +17,13 @@ config_file = path_base + "/config/soda_config_youtube.yaml"
 # config_file = path_base + "/config/clint_config_youtube.yaml"
 
 # paths of the cli and data
-path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.54.3/TwitchDownloaderCLI"
+path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.55.2/TwitchDownloaderCLI"
 path_twitch_ffmpeg = path_base + "/thirdparty/ffmpeg-4.3.1-amd64-static/ffmpeg"
 path_twitch_ffprob = path_base + "/thirdparty/ffmpeg-4.3.1-amd64-static/ffprobe"
 path_root = path_base + "/../"
 path_render = path_base + "/../data_rendered/"
 # path_temp = path_base + "/../data_temp/render_segments/"
-path_temp = "/tmp/tvc_render_segments/"
+path_temp = "/tmp/tvc_render_segments/"2
 
 # ================================================================
 # ================================================================

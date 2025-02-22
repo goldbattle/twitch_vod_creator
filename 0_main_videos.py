@@ -52,7 +52,7 @@ render_webvtt = [
 # ================================================================
 
 # paths of the cli and data
-path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.54.3/TwitchDownloaderCLI"
+path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.55.2/TwitchDownloaderCLI"
 path_twitch_ffmpeg = path_base + "/thirdparty/ffmpeg-4.3.1-amd64-static/ffmpeg"
 path_root = path_base + "/../data/"
 # path_temp = path_base + "/../data_temp/main_videos/"
