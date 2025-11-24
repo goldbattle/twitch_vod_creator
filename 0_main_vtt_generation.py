@@ -1,117 +1,74 @@
 # !/usr/bin/env python3
 
-import yaml  # pip install PyYAML
-
+import argparse
 import os
-import json
 import time
-import subprocess
-import utils
-import datetime
-import shutil
-from webvtt import WebVTT, Caption  # pip install webvtt-py
-from vosk import Model, KaldiRecognizer, SetLogLevel  # pip install vosk
+import utilities_extra
+from utilities_config import load_config, get_temp_path
+from utilities_audio_transcription import transcribe_video
 
-
-# authentication information
-path_base = os.path.dirname(os.path.abspath(__file__))
-auth_config = path_base + "/config/auth.yaml"
-with open(auth_config) as f:
-    auth = yaml.load(f, Loader=yaml.FullLoader)
-client_id = auth["client_id"]
-client_secret = auth["client_secret"]
-
-
-
-# ================================================================
-# ================================================================
-
-# paths of the cli and data
-path_twitch_ffmpeg = path_base + "/thirdparty/ffmpeg-4.3.1-amd64-static/ffmpeg"
-path_root = path_base + "/../data/"
-path_model = path_base + "/thirdparty/vosk-model-small-en-us-0.15/"
-
-# ================================================================
-# ================================================================
-
-# setup control+c handler
-utils.setup_signal_handle()
-
-
+# parameters
 channel = "sodapoppin"
+min_age_seconds = 60
 
+# ================================================================
 
-# find the live video files
-files_names = []
-files_out = []
-for subdir, dirs, files in os.walk(path_root + "/" + channel + "/"):
-    for file in files:
-        if utils.terminated_requested:
-            break
-        ext = file.split(os.extsep)
-        if len(ext) != 2:
-            continue
-        if ext[1] == "mp4" and "_" not in file:
-            files_out.append(os.path.join(subdir, ext[0]+".vtt"))
-            files_names.append(os.path.join(subdir, file))
-            print(os.path.join(subdir, ext[0]+".vtt"))
-    if utils.terminated_requested:
-        break
-print("found "+str(len(files_out))+" videos found to process")
-
-# loop through each video and convert it using ffmpeg
-for ct in range(len(files_names)):
-
-    # check if we should download any more
-    if utils.terminated_requested:
-        print('terminate requested, not downloading any more..')
-        break
-
-    # check if old enough to process
-    oldness = time.time()-os.path.getmtime(files_names[ct])
-    if oldness < 60:
-        print("skipping "+files_names[ct]+" since it is only "+str(oldness)+" sec old")
-        continue
+def main():
+    parser = argparse.ArgumentParser(description='Generate WebVTT transcriptions for videos')
+    parser.add_argument('--channel', default=channel, help='Channel name to process')
+    parser.add_argument('--min-age', type=int, default=min_age_seconds, help='Minimum file age in seconds')
+    parser.add_argument('--temp-dir', default=get_temp_path("vtt_generation"), help='Temporary directory for downloads (default: /tmp/tvc_vtt_generation)')
+    args = parser.parse_args()
     
-    # AUDIO-TO-TEXT: check if file exists
-    file_path_webvtt = files_out[ct]
-    print("transcribing: " + file_path_webvtt)
-    if not utils.terminated_requested and os.path.exists(files_names[ct]) and not os.path.exists(file_path_webvtt):
-        t0 = time.time()
-
-        # open the model
-        SetLogLevel(-1)
-        sample_rate = 16000
-        model = Model(path_model)
-        rec = KaldiRecognizer(model, sample_rate)
-        rec.SetWords(True)
-
-        # open ffmpeg pipe stream of the audio file (from video)
-        command = [path_twitch_ffmpeg, '-nostdin', '-loglevel', 'quiet', '-i', files_names[ct],
-                   '-ar', str(sample_rate), '-ac', '1', '-f', 's16le', '-']
-        # process = subprocess.Popen(command, stdout=subprocess.PIPE)
-        process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
-        results = []
-        while True:
-            data = process.stdout.read(4000)
-            if len(data) == 0:
+    config = load_config()
+    config['temp_path'] = args.temp_dir
+    path_root = config['data_root']
+    
+    utilities_extra.setup_signal_handle()
+    
+    # Find video files
+    files_to_process = []
+    channel_path = os.path.join(path_root, args.channel)
+    
+    if not os.path.exists(channel_path):
+        print(f"Channel directory not found: {channel_path}")
+        return
+    
+    for subdir, dirs, files in os.walk(channel_path):
+        if utilities_extra.terminated_requested:
+            break
+        for file in files:
+            if utilities_extra.terminated_requested:
                 break
-            if rec.AcceptWaveform(data):
-                text = rec.Result()
-                results.append(text)
-        results.append(rec.FinalResult())
-
-        # convert to standard format
-        vtt = WebVTT()
-        for i, res in enumerate(results):
-            words = json.loads(res).get('result')
-            if not words:
+            ext = file.split(os.extsep)
+            if len(ext) != 2:
                 continue
-            for word in words:
-                start = utils.webvtt_time_string(word['start'])
-                end = utils.webvtt_time_string(word['end'])
-                vtt.captions.append(Caption(start, end, word['word']))
-        vtt.save(file_path_webvtt)
-        print("done in " + str(time.time() - t0) + " seconds\n")
+            if ext[1] == "mp4" and "_" not in file:
+                video_path = os.path.join(subdir, file)
+                vtt_path = os.path.join(subdir, ext[0] + ".vtt")
+                files_to_process.append((video_path, vtt_path))
+    
+    print(f"found {len(files_to_process)} videos to process")
+    
+    # Process each video
+    for video_path, vtt_path in files_to_process:
+        if utilities_extra.terminated_requested:
+            print('terminate requested, not processing any more..')
+            break
+        
+        # Check if old enough to process
+        oldness = time.time() - os.path.getmtime(video_path)
+        if oldness < args.min_age:
+            print(f"skipping {video_path} since it is only {oldness:.1f} sec old")
+            continue
+        
+        # Transcribe if not exists
+        if os.path.exists(video_path) and not os.path.exists(vtt_path):
+            print(f"transcribing: {vtt_path}")
+            t0 = time.time()
+            transcribe_video(config, video_path, vtt_path)
+            print(f"done in {time.time() - t0:.1f} seconds\n")
 
 
+if __name__ == "__main__":
+    main()

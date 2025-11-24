@@ -1,196 +1,95 @@
 # !/usr/bin/env python3
 
-import twitch  # pip install python-twitch-client
-import yaml  # pip install PyYAML
-from webvtt import WebVTT, Caption  # pip install webvtt-py
-from vosk import Model, KaldiRecognizer, SetLogLevel  # pip install vosk
-
-import os
-import sys
+import argparse
 import json
-import subprocess
-import shutil
-from datetime import datetime
-import utils
-import time
-
-
-# the vod which we wish to download
-if len(sys.argv) != 2:
-    print("please pass at least a single vod id to download...")
-    exit(-1)
-vod_id_to_download = int(sys.argv[1])
-render_chat = True
-transcribe = False
-
-# authentication information
-path_base = os.path.dirname(os.path.abspath(__file__))
-auth_config = path_base + "/config/auth.yaml"
-with open(auth_config) as f:
-    auth = yaml.load(f, Loader=yaml.FullLoader)
-client_id = auth["client_id"]
-client_secret = auth["client_secret"]
+import os
+import utilities_extra
+from utilities_config import load_config, get_temp_path
+from utilities_twitch_api import get_videos, create_video_data
+from utilities_video_download import download_vod
+from utilities_chat import download_chat, render_chat
+from utilities_audio_transcription import transcribe_video
+from utilities_file import get_date_folder, ensure_directory
 
 # ================================================================
-# ================================================================
 
-# paths of the cli and data
-path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.55.9/TwitchDownloaderCLI"
-path_twitch_ffmpeg = path_base + "/thirdparty/ffmpeg-4.3.1-amd64-static/ffmpeg"
-path_root = path_base + "/../data/"
-path_temp = "/tmp/tvc_single_video/"
-path_model = path_base + "/thirdparty/vosk-model-small-en-us-0.15/"
-
-# ================================================================
-# ================================================================
-
-# setup control+c handler
-utils.setup_signal_handle()
-
-# create our twitch api python objects for query
-client_helix = twitch.TwitchHelix(client_id=client_id, client_secret=client_secret)
-client_helix.get_oauth()
-
-print("trying to pull api info for vod " + str(vod_id_to_download))
-videos = client_helix.get_videos(video_ids=[vod_id_to_download])
-assert (len(videos) == 1)
-
-# create the video object with all our information
-video = {
-    'helix': videos[0],
-}
-
-# DATA: api data of this vod
-video_data = {
-    'id': video['helix']['id'],
-    'user_id': video['helix']['user_id'],
-    'user_name': video['helix']['user_name'],
-    'title': video['helix']['title'],
-    'duration': video['helix']['duration'],
-    'url': video['helix']['url'],
-    'views': video['helix']['view_count'],
-    'moments': utils.get_vod_moments(video['helix']['id']),
-    'muted_segments': (video['helix']['muted_segments'] if video['helix']['muted_segments'] != None else []),
-    'recorded_at': video['helix']['created_at'].strftime('%Y-%m-%dT%H:%M:%SZ'),
-}
-
-# check if the directory is created
-path_data = path_root + "/" + video_data['user_name'].lower() + "/"
-if not os.path.exists(path_data):
-    os.makedirs(path_data)
-if not os.path.exists(path_temp):
-    os.makedirs(path_temp)
-print("saving into " + video_data['user_name'].lower() + " user folder")
-
-# extract what folder we should save into
-# create the folder if it isn't created already
-try:
-    date = datetime.strptime(video_data['recorded_at'], '%Y-%m-%dT%H:%M:%SZ')
-    export_folder = format(date.year, '02') + "-" + format(date.month, '02') + "/"
-except:
-    export_folder = "unknown/"
-if not os.path.exists(path_data + export_folder):
-    os.makedirs(path_data + export_folder)
-
-# VIDEO: check if the file exists
-file_path_info = path_data + export_folder + str(video['helix']['id']) + "_info.json"
-print("saving video info: " + file_path_info)
-if not utils.terminated_requested and not os.path.exists(file_path_info):
-    with open(file_path_info, 'w', encoding="utf-8") as file:
-        json.dump(video_data, file, indent=4)
-
-# VIDEO: check if the file exists
-file_path = path_data + export_folder + str(video['helix']['id']) + ".mp4"
-print("download video: " + file_path)
-if not utils.terminated_requested and not os.path.exists(file_path):
-    cmd = path_twitch_cli + ' videodownload' \
-          + ' --id ' + str(video['helix']['id']) + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
-          + ' --temp-path "' + path_temp + '" --quality 1080p60 -o ' + file_path
-    print(cmd)
-    # subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
-    subprocess.Popen(cmd, shell=True).wait()
-
-# CHAT: check if the file exists
-file_path_chat = path_data + export_folder + str(video['helix']['id']) + "_chat.json"
-file_path_chat_tmp = path_temp + str(video['helix']['id']) + "_chat.json"
-print("download chat: " + file_path_chat)
-if not utils.terminated_requested and not os.path.exists(file_path_chat):
-    cmd = path_twitch_cli + ' chatdownload' \
-          + ' --id ' + str(video['helix']['id']) \
-          + ' --embed-images --chat-connections 6' \
-          + ' --bttv true --ffz true --stv true' \
-          + ' -o ' + file_path_chat_tmp
-    #print(cmd)
-    subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
-    #subprocess.Popen(cmd, shell=True).wait()
-    if os.path.exists(file_path_chat_tmp):
-        shutil.move(file_path_chat_tmp, file_path_chat)
-    else:
-        print("Warning: Chat file was not created, download may have failed") 
-
-# AUDIO-TO-TEXT: check if file exists
-if transcribe:
-    file_path_webvtt = path_data + export_folder + str(video['helix']['id']) + ".vtt"
-    if not utils.terminated_requested and os.path.exists(file_path) and not os.path.exists(file_path_webvtt):
-        print("transcribing: " + file_path_webvtt)
-        t0 = time.time()
-
-        # open the model
-        SetLogLevel(-1)
-        sample_rate = 16000
-        model = Model(path_model)
-        rec = KaldiRecognizer(model, sample_rate)
-        rec.SetWords(True)
-
-        # open ffmpeg pipe stream of the audio file (from video)
-        command = [path_twitch_ffmpeg, '-nostdin', '-loglevel', 'quiet', '-i', file_path,
-                '-ar', str(sample_rate), '-ac', '1', '-f', 's16le', '-']
-        # process = subprocess.Popen(command, stdout=subprocess.PIPE)
-        process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
-        results = []
-        while True:
-            data = process.stdout.read(4000)
-            if len(data) == 0:
-                break
-            if rec.AcceptWaveform(data):
-                text = rec.Result()
-                results.append(text)
-        results.append(rec.FinalResult())
-
-        # convert to standard format
-        vtt = WebVTT()
-        for i, res in enumerate(results):
-            words = json.loads(res).get('result')
-            if not words:
-                continue
-            for word in words:
-                start = utils.webvtt_time_string(word['start'])
-                end = utils.webvtt_time_string(word['end'])
-                vtt.captions.append(Caption(start, end, word['word']))
-        vtt.save(file_path_webvtt)
-        print("done in " + str(time.time() - t0) + " seconds")
-
-# RENDER: check if the file exists
-if render_chat:
-    file_path_chat = path_data + export_folder + str(video['helix']['id']) + "_chat.json"
-    file_path_render = path_data + export_folder + str(video['helix']['id']) + "_chat.mp4"
-    file_path_render_tmp = path_temp + str(video['helix']['id']) + "_chat.mp4"
-    if os.path.exists(file_path_chat) and not os.path.exists(file_path_render):
-        print("rendering chat: " + file_path_render)
-        cmd = path_twitch_cli + ' chatrender' \
-                + ' -i ' + file_path_chat + ' -o ' + file_path_render_tmp \
-                + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
-                + ' -h 926 -w 274 --update-rate 0.1 --framerate 60 --font-size 15' \
-                + ' --bttv true --ffz true --stv true --sub-messages true --badges true --sharpening true --dispersion true' \
-                + ' --temp-path "' + path_temp + '" '
-                # + ' --background-color #111111 --message-color #ffffff' \
-        #print(cmd)
-        subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
-        #subprocess.Popen(cmd, shell=True).wait()
-        if os.path.exists(file_path_render_tmp):
-            shutil.move(file_path_render_tmp, file_path_render)
-        else:
-            print("Warning: Render file was not created, render may have failed") 
+def main():
+    parser = argparse.ArgumentParser(description='Download a single Twitch VOD')
+    parser.add_argument('vod_id', type=int, help='VOD ID to download')
+    parser.add_argument('--no-chat', action='store_true', help='Skip chat rendering')
+    parser.add_argument('--no-transcribe', action='store_true', help='Skip audio transcription')
+    parser.add_argument('--verbose', action='store_true', help='Show verbose output from download operations')
+    parser.add_argument('--temp-dir', default=get_temp_path("single_video"), help='Temporary directory for downloads (default: /tmp/tvc_single_video)')
+    args = parser.parse_args()
+    
+    vod_id = args.vod_id
+    should_render_chat = not args.no_chat
+    should_transcribe = not args.no_transcribe
+    
+    config = load_config()
+    config['temp_path'] = args.temp_dir
+    auth = config['auth']
+    path_root = config['data_root']
+    
+    utilities_extra.setup_signal_handle()
+    
+    # Get video info
+    print(f"trying to pull api info for vod {vod_id}")
+    videos = list(get_videos(auth["client_id"], auth["client_secret"], video_ids=[vod_id]))
+    if len(videos) != 1:
+        print(f"Error: Found {len(videos)} videos for ID {vod_id}")
+        exit(1)
+    
+    video_helix = videos[0]
+    video_data = create_video_data(auth["client_id"], auth["client_secret"], video_helix)
+    
+    # Setup paths
+    path_data = os.path.join(path_root, video_data['user_name'].lower())
+    ensure_directory(path_data)
+    ensure_directory(config['temp_path'])
+    print(f"saving into {video_data['user_name'].lower()} user folder")
+    
+    export_folder = get_date_folder(video_data['recorded_at'])
+    path_data_folder = os.path.join(path_data, export_folder)
+    ensure_directory(path_data_folder)
+    
+    file_path_info = os.path.join(path_data_folder, f"{vod_id}_info.json")
+    file_path = os.path.join(path_data_folder, f"{vod_id}.mp4")
+    file_path_chat = os.path.join(path_data_folder, f"{vod_id}_chat.json")
+    file_path_chat_mp4 = os.path.join(path_data_folder, f"{vod_id}_chat.mp4")
+    file_path_webvtt = os.path.join(path_data_folder, f"{vod_id}.vtt")
+    
+    # Save video info
+    print(f"saving video info: {file_path_info}")
+    if not utilities_extra.terminated_requested and not os.path.exists(file_path_info):
+        with open(file_path_info, 'w', encoding="utf-8") as f:
+            json.dump(video_data, f, indent=4)
+    
+    # Download video
+    print(f"download video: {file_path}")
+    if not utilities_extra.terminated_requested:
+        download_vod(config, vod_id, file_path, verbose=args.verbose)
+    
+    # Download chat
+    print(f"download chat: {file_path_chat}")
+    if not utilities_extra.terminated_requested:
+        download_chat(config, vod_id, file_path_chat, is_clip=False, verbose=args.verbose)
+    
+    # Transcribe audio
+    if should_transcribe and not utilities_extra.terminated_requested:
+        if os.path.exists(file_path) and not os.path.exists(file_path_webvtt):
+            print(f"transcribing: {file_path_webvtt}")
+            transcribe_video(config, file_path, file_path_webvtt, quiet=False)
+            print("done")
+    
+    # Render chat
+    if should_render_chat and not utilities_extra.terminated_requested:
+        if os.path.exists(file_path_chat) and not os.path.exists(file_path_chat_mp4):
+            print(f"rendering chat: {file_path_chat_mp4}")
+            render_chat(config, file_path_chat, file_path_chat_mp4, verbose=args.verbose)
+            if not os.path.exists(file_path_chat_mp4):
+                print("Warning: Render file was not created, render may have failed")
 
 
-
+if __name__ == "__main__":
+    main()

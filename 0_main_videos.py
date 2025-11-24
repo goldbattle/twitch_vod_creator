@@ -1,307 +1,195 @@
 # !/usr/bin/env python3
 
-import twitch  # pip install python-twitch-client
-import yaml  # pip install PyYAML
-from webvtt import WebVTT, Caption  # pip install webvtt-py
-from vosk import Model, KaldiRecognizer, SetLogLevel  # pip install vosk
-
-import os
+import argparse
 import json
-import subprocess
-from datetime import datetime
-import utils
+import os
 import time
-import shutil
-
-# authentication information
-path_base = os.path.dirname(os.path.abspath(__file__))
-auth_config = path_base + "/config/auth.yaml"
-with open(auth_config) as f:
-    auth = yaml.load(f, Loader=yaml.FullLoader)
-client_id = auth["client_id"]
-client_secret = auth["client_secret"]
+import utilities_extra
+from utilities_config import load_config, get_temp_path
+from utilities_twitch_api import get_users_by_login, is_user_live, get_videos, create_video_data, get_vod_moments
+from utilities_video_download import download_vod
+from utilities_chat import download_chat, render_chat
+from utilities_audio_transcription import transcribe_video
+from utilities_file import get_date_folder, ensure_directory
 
 # parameters
 channels = [
-    'sodapoppin', 'skippypoppin', 'nmplol',
-    'moonmoon', 'clintstevens', 'sevadus',
-    'jerma985', 'heydoubleu', 'vei', 'squeex',
-    'goldbattle', 'j_blow'
+    'sodapoppin'#, 'skippypoppin', 'nmplol',
+    # 'moonmoon', 'clintstevens', 'sevadus',
+    # 'jerma985', 'heydoubleu', 'vei', 'squeex',
+    # 'goldbattle', 'j_blow'
     # 'mindcrack'
 ]
-max_videos = 120
-render_chat = [
-    True, False, False,
-    False, True, False,
-    False, False, False, False,
-    False, False,
+max_videos = 1
+render_chat_flags = [
+    True#, False, False,
+    # False, True, False,
+    # False, False, False, False,
+    # False, False,
     # False
 ]
 render_webvtt = [
-    True, True, True,
-    False, True, False,
-    False, False, True, False,
-    False, False,
+    True#, True, True,
+    # False, True, False,
+    # False, False, True, False,
+    # False, False,
     # False
 ]
 
-
-
-
-# ================================================================
 # ================================================================
 
-# paths of the cli and data
-path_twitch_cli = path_base + "/thirdparty/Twitch_Downloader_1.55.9/TwitchDownloaderCLI"
-path_twitch_ffmpeg = path_base + "/thirdparty/ffmpeg-4.3.1-amd64-static/ffmpeg"
-path_root = path_base + "/../data/"
-# path_temp = path_base + "/../data_temp/main_videos/"
-path_temp = "/tmp/tvc_main_videos/"
-path_model = path_base + "/thirdparty/vosk-model-small-en-us-0.15/"
-
-# ================================================================
-# ================================================================
-
-# setup control+c handler
-utils.setup_signal_handle()
-
-if len(channels) != len(render_chat) or len(channels) != len(render_webvtt):
-    print('number of channels and chat render settings do not match!!')
-    print('\tlen(channels) = %d' % len(channels))
-    print('\tlen(users) = %d' % len(users))
-    print('\tlen(render_chat) = %d' % len(render_chat))
-    print('\tlen(render_webvtt) = %d' % len(render_webvtt))
-    exit(-1)
-
-# convert the usernames to ids (sort so the are in the same order)
-client_helix = twitch.TwitchHelix(client_id=client_id, client_secret=client_secret)
-client_helix.get_oauth()
-users_tmp = client_helix.get_users(login_names=channels)
-users = []
-render_chat_tmp = []
-render_webvtt_tmp = []
-for idx, channel in enumerate(channels):
-    found = False
-    for user in users_tmp:
-        if user["login"].lower() == channel.lower():
-            users.append(user)
-            render_chat_tmp.append(render_chat[idx])
-            render_webvtt_tmp.append(render_webvtt[idx])
-            found = True
+def main():
+    parser = argparse.ArgumentParser(description='Download and process Twitch VODs')
+    parser.add_argument('--verbose', action='store_true', help='Show verbose output from download operations')
+    parser.add_argument('--temp-dir', default=get_temp_path("main_videos"), help='Temporary directory for downloads (default: /tmp/tvc_main_videos)')
+    args = parser.parse_args()
+    
+    config = load_config()
+    config['temp_path'] = args.temp_dir
+    auth = config['auth']
+    path_root = config['data_root']
+    
+    utilities_extra.setup_signal_handle()
+    
+    if len(channels) != len(render_chat_flags) or len(channels) != len(render_webvtt):
+        print('number of channels and render settings do not match!!')
+        exit(-1)
+    
+    # Get users
+    users_tmp = get_users_by_login(auth["client_id"], auth["client_secret"], channels)
+    users = []
+    render_chat_flags_filtered = []
+    render_webvtt_filtered = []
+    for idx, channel in enumerate(channels):
+        found = False
+        for user in users_tmp:
+            if user["login"].lower() == channel.lower():
+                users.append(user)
+                render_chat_flags_filtered.append(render_chat_flags[idx])
+                render_webvtt_filtered.append(render_webvtt[idx])
+                found = True
+                break
+        if not found:
+            print(f"streamer {channel} wasn't found, are they banned???")
+    
+    # Process each user
+    for idx, user in enumerate(users):
+        if utilities_extra.terminated_requested:
+            print('terminate requested, not looking at any more users...')
             break
-    if not found:
-        print("streamer %s wasn't found, are they banned???" % channel)
-render_chat = render_chat_tmp
-render_webvtt = render_webvtt_tmp
-
-# now lets loop through each user and make sure we have downloaded
-# their most recent VODs and if we have not, we should download them!
-for idx, user in enumerate(users):
-
-    # check if we should download any more
-    if utils.terminated_requested:
-        print('terminate requested, not looking at any more users...')
-        break
-
-    # check if the directory is created
-    path_data = path_root + "/" + user["login"].lower() + "/"
-    if not os.path.exists(path_data):
-        os.makedirs(path_data)
-    if not os.path.exists(path_temp):
-        os.makedirs(path_temp)
-
-    # get this stream object, it will have something if the stream is live
-    client_helix = twitch.TwitchHelix(client_id=client_id, client_secret=client_secret)
-    client_helix.get_oauth()
-    stream = client_helix.get_streams(user_ids=[user["id"]])
-    stream_is_live = (len(stream) == 1)
-
-    # get the videos for this specific user
-    print("getting videos for -> " + user["login"].lower() + " (id " + str(user["id"]) + ")")
-    vid_iter = client_helix.get_videos(user_id=user["id"], page_size=100)
-    arr_archive = []
-    arr_highlight = []
-    arr_upload = []
-    ct_added = [0, 0, 0]
-    seen_first_video = False
-    for video in vid_iter:
-        # skip the first VOD is they are live
-        if not seen_first_video and stream_is_live:
-            print("skipping video " + video['id'] + " since stream is live...")
+        
+        path_data = os.path.join(path_root, user["login"].lower())
+        ensure_directory(path_data)
+        ensure_directory(config['temp_path'])
+        
+        # Check if live
+        stream_is_live = is_user_live(auth["client_id"], auth["client_secret"], user["id"])
+        
+        # Get videos
+        print(f"getting videos for -> {user['login'].lower()} (id {user['id']})")
+        vid_iter = get_videos(auth["client_id"], auth["client_secret"], user_id=user["id"], page_size=100)
+        arr_archive = []
+        arr_highlight = []
+        arr_upload = []
+        ct_added = [0, 0, 0]
+        seen_first_video = False
+        
+        for video in vid_iter:
+            if not seen_first_video and stream_is_live:
+                print(f"skipping video {video['id']} since stream is live...")
+                seen_first_video = True
+                continue
             seen_first_video = True
-            continue
-        seen_first_video = True
-        # else lets process
-        # "all", "upload", "archive", "highlight"
-        if video['type'] == 'archive' and ct_added[0] < max_videos:
-            arr_archive.append({'helix': video})
-            ct_added[0] = ct_added[0] + 1
-        elif video['type'] == 'highlight' and ct_added[1] < max_videos:
-            arr_highlight.append({'helix': video})
-            ct_added[1] = ct_added[1] + 1
-        elif video['type'] == 'upload' and ct_added[2] < max_videos:
-            arr_upload.append({'helix': video})
-            ct_added[2] = ct_added[2] + 1
+            
+            if video['type'] == 'archive' and ct_added[0] < max_videos:
+                arr_archive.append({'helix': video})
+                ct_added[0] += 1
+            elif video['type'] == 'highlight' and ct_added[1] < max_videos:
+                arr_highlight.append({'helix': video})
+                ct_added[1] += 1
+            elif video['type'] == 'upload' and ct_added[2] < max_videos:
+                arr_upload.append({'helix': video})
+                ct_added[2] += 1
+        
+        print(f"\t- found {len(arr_archive)} archives")
+        print(f"\t- found {len(arr_highlight)} highlights")
+        print(f"\t- found {len(arr_upload)} uploads")
+        
+        # Process each archive video
+        for video in arr_archive:
+            if utilities_extra.terminated_requested:
+                print('terminate requested, not downloading any more..')
+                break
+            
+            t0_start = time.time()
+            video_data = create_video_data(auth["client_id"], auth["client_secret"], video['helix'])
+            
+            # Get file paths
+            export_folder = get_date_folder(video_data['recorded_at'])
+            path_data_folder = os.path.join(path_data, export_folder)
+            ensure_directory(path_data_folder)
+            
+            file_path_info = os.path.join(path_data_folder, f"{video['helix']['id']}_info.json")
+            file_path = os.path.join(path_data_folder, f"{video['helix']['id']}.mp4")
+            file_path_chat = os.path.join(path_data_folder, f"{video['helix']['id']}_chat.json")
+            file_path_chat_mp4 = os.path.join(path_data_folder, f"{video['helix']['id']}_chat.mp4")
+            file_path_webvtt = os.path.join(path_data_folder, f"{video['helix']['id']}.vtt")
+            
+            # Save/update video info
+            print(f"\t- saving video info: {file_path_info}")
+            if not utilities_extra.terminated_requested:
+                if not os.path.exists(file_path_info):
+                    with open(file_path_info, 'w', encoding="utf-8") as f:
+                        json.dump(video_data, f, indent=4)
+                else:
+                    print(f"\t- updating video info: {file_path_info}")
+                    with open(file_path_info) as f:
+                        video_info = json.load(f)
+                    if len(video_info.get("moments", [])) == 0:
+                        moments = get_vod_moments(video['helix']['id'])
+                        if len(moments) != 0:
+                            video_info["moments"] = moments
+                    with open(file_path_info, 'w', encoding="utf-8") as f:
+                        json.dump(video_info, f, indent=4)
+            
+            # Download video
+            print(f"\t- download video: {file_path}")
+            if not utilities_extra.terminated_requested and not os.path.exists(file_path):
+                t0 = time.time()
+                success = download_vod(config, video['helix']['id'], file_path, verbose=args.verbose)
+                if success:
+                    print(f"\t- done in {time.time() - t0:.1f} seconds")
+                else:
+                    print(f"\t- ERROR: Video download failed!")
+            
+            # Download chat
+            print(f"\t- download chat: {file_path_chat}")
+            if not utilities_extra.terminated_requested and not os.path.exists(file_path_chat):
+                t0 = time.time()
+                download_chat(config, video['helix']['id'], file_path_chat, is_clip=False, verbose=args.verbose)
+                print(f"\t- done in {time.time() - t0:.1f} seconds")
+            
+            # Transcribe audio
+            if render_webvtt_filtered[idx] and not utilities_extra.terminated_requested:
+                if os.path.exists(file_path) and not os.path.exists(file_path_webvtt):
+                    print(f"\t- transcribing: {file_path_webvtt}")
+                    t0 = time.time()
+                    transcribe_video(config, file_path, file_path_webvtt)
+                    print(f"\t- done in {time.time() - t0:.1f} seconds")
+            
+            # Render chat
+            if render_chat_flags_filtered[idx] and not utilities_extra.terminated_requested:
+                if os.path.exists(file_path_chat) and not os.path.exists(file_path_chat_mp4):
+                    print(f"\t- rendering chat: {file_path_chat_mp4}")
+                    t0 = time.time()
+                    render_chat(config, file_path_chat, file_path_chat_mp4, verbose=args.verbose)
+                    print(f"\t- done in {time.time() - t0:.1f} seconds")
+                    
+                    # Send pushover notification
+                    text = (f"{video['helix']['user_name']} vod {video['helix']['id']} "
+                           f"ready to edit ({int((time.time() - t0_start)/60.0)} min to prepare)")
+                    utilities_extra.send_pushover_message(auth, text)
 
-    # nice debug print
-    print("\t- found " + str(len(arr_archive)) + " archives")
-    print("\t- found " + str(len(arr_highlight)) + " highlights")
-    print("\t- found " + str(len(arr_upload)) + " uploads")
 
-    # loop through each and download
-    for video in arr_archive:
-
-        # check if we should download any more
-        if utils.terminated_requested:
-            print('terminate requested, not downloading any more..')
-            break
-
-        # DATA: api data of this vod
-        t0_start = time.time()
-        video_data = {
-            'id': video['helix']['id'],
-            'user_id': video['helix']['user_id'],
-            'user_name': video['helix']['user_name'],
-            'title': video['helix']['title'],
-            'duration': video['helix']['duration'],
-            'url': video['helix']['url'],
-            'views': video['helix']['view_count'],
-            'moments': utils.get_vod_moments(video['helix']['id']),
-            'muted_segments': (video['helix']['muted_segments'] if video['helix']['muted_segments'] != None else []),
-            'recorded_at': video['helix']['created_at'].strftime('%Y-%m-%dT%H:%M:%SZ'),
-        }
-
-        # extract what folder we should save into
-        # create the folder if it isn't created already
-        try:
-            date = datetime.strptime(video_data['recorded_at'], '%Y-%m-%dT%H:%M:%SZ')
-            export_folder = format(date.year, '02') + "-" + format(date.month, '02') + "/"
-        except:
-            export_folder = "unknown/"
-        if not os.path.exists(path_data + export_folder):
-            os.makedirs(path_data + export_folder)
-
-        # VIDEO: check if the file exists
-        file_path_info = path_data + export_folder + str(video['helix']['id']) + "_info.json"
-        print("\t- saving video info: " + file_path_info)
-        if not utils.terminated_requested and not os.path.exists(file_path_info):
-            with open(file_path_info, 'w', encoding="utf-8") as file:
-                json.dump(video_data, file, indent=4)
-        elif not utils.terminated_requested:
-            print("\t- updating video info: " + file_path_info)
-            with open(file_path_info) as f:
-                video_info = json.load(f)
-            # update moments if failed before
-            if len(video_info["moments"]) == 0:
-                moments = utils.get_vod_moments(video['helix']['id'])
-                if len(moments) != 0:
-                    video_info["moments"] = moments
-            # finally write to file
-            with open(file_path_info, 'w', encoding="utf-8") as file:
-                json.dump(video_info, file, indent=4)
-
-        # VIDEO: check if the file exists
-        file_path = path_data + export_folder + str(video['helix']['id']) + ".mp4"
-        print("\t- download video: " + file_path)
-        if not utils.terminated_requested and not os.path.exists(file_path):
-            t0 = time.time()
-            cmd = path_twitch_cli + ' videodownload' \
-                + ' --id ' + str(video['helix']['id']) + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
-                + ' --temp-path "' + path_temp + '" --quality 1080p60 -o ' + file_path
-            subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
-            #subprocess.Popen(cmd, shell=True).wait()
-            print("\t- done in " + str(time.time() - t0) + " seconds")
-
-        # CHAT: check if the file exists
-        file_path_chat = path_data + export_folder + str(video['helix']['id']) + "_chat.json"
-        file_path_chat_tmp = path_temp + str(video['helix']['id']) + "_chat.json"
-        print("\t- download chat: " + file_path_chat)
-        if not utils.terminated_requested and not os.path.exists(file_path_chat):
-            t0 = time.time()
-            cmd = path_twitch_cli + ' chatdownload' \
-                + ' --id ' + str(video['helix']['id']) \
-                + ' --embed-images true --chat-connections 6' \
-                + ' --bttv true --ffz true --stv true' \
-                + ' -o ' + file_path_chat_tmp
-            subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
-            #subprocess.Popen(cmd, shell=True).wait()
-            if os.path.exists(file_path_chat_tmp):
-                shutil.move(file_path_chat_tmp, file_path_chat) 
-            print("\t- done in " + str(time.time() - t0) + " seconds")
-
-        # RENDER: also render downscaled video for quick scrubbing....
-        # file_path_render = path_data + export_folder + str(video['helix']['id']) + "_downscaled.mp4"
-        # file_path_render_tmp = path_temp + str(video['helix']['id']) + "_downscaled.mp4"
-        # if os.path.exists(file_path) and not os.path.exists(file_path_render) and render_chat[idx]:
-        #     print("\t- rendering downscaled: " + file_path_render)
-        #     cmd = path_twitch_ffmpeg + ' -i ' + file_path \
-        #           + ' -vf scale="480:270" -c:a copy ' + file_path_render_tmp
-        #     subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
-        #     # subprocess.Popen(cmd, shell=True).wait()
-        #     shutil.move(file_path_render_tmp, file_path_render) 
-
-        # AUDIO-TO-TEXT: check if file exists
-        file_path_webvtt = path_data + export_folder + str(video['helix']['id']) + ".vtt"
-        if not utils.terminated_requested and os.path.exists(file_path) and not os.path.exists(file_path_webvtt) and render_webvtt[idx]:
-            print("\t- transcribing: " + file_path_webvtt)
-            t0 = time.time()
-
-            # open the model
-            SetLogLevel(-1)
-            sample_rate = 16000
-            model = Model(path_model)
-            rec = KaldiRecognizer(model, sample_rate)
-            rec.SetWords(True)
-
-            # open ffmpeg pipe stream of the audio file (from video)
-            command = [path_twitch_ffmpeg, '-nostdin', '-loglevel', 'quiet', '-i', file_path,
-                       '-ar', str(sample_rate), '-ac', '1', '-f', 's16le', '-']
-            # process = subprocess.Popen(command, stdout=subprocess.PIPE)
-            process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
-            results = []
-            while True:
-                data = process.stdout.read(4000)
-                if len(data) == 0:
-                    break
-                if rec.AcceptWaveform(data):
-                    text = rec.Result()
-                    results.append(text)
-            results.append(rec.FinalResult())
-
-            # convert to standard format
-            vtt = WebVTT()
-            for i, res in enumerate(results):
-                words = json.loads(res).get('result')
-                if not words:
-                    continue
-                for word in words:
-                    start = utils.webvtt_time_string(word['start'])
-                    end = utils.webvtt_time_string(word['end'])
-                    vtt.captions.append(Caption(start, end, word['word']))
-            vtt.save(file_path_webvtt)
-            print("\t- done in " + str(time.time() - t0) + " seconds")
-
-        # RENDER: check if the file exists
-        file_path_chat = path_data + export_folder + str(video['helix']['id']) + "_chat.json"
-        file_path_render = path_data + export_folder + str(video['helix']['id']) + "_chat.mp4"
-        file_path_render_tmp = path_temp + str(video['helix']['id']) + "_chat.mp4"
-        if not utils.terminated_requested and os.path.exists(file_path_chat) and not os.path.exists(file_path_render) and render_chat[idx]:
-            print("\t- rendering chat: " + file_path_render)
-            t0 = time.time()
-            cmd = path_twitch_cli + ' chatrender' \
-                + ' -i ' + file_path_chat + ' -o ' + file_path_render_tmp \
-                + ' --ffmpeg-path "' + path_twitch_ffmpeg + '"' \
-                + ' -h 926 -w 274 --update-rate 0.1 --framerate 60 --font-size 15' \
-                + ' --bttv true --ffz true --stv true --sub-messages true --badges true --sharpening true --dispersion true' \
-                + ' --temp-path "' + path_temp + '" '
-                # + ' --background-color #111111 --message-color #ffffff' \
-            subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
-            #subprocess.Popen(cmd, shell=True).wait()
-            if os.path.exists(file_path_render_tmp):
-                shutil.move(file_path_render_tmp, file_path_render) 
-            print("\t- done in " + str(time.time() - t0) + " seconds")
-
-            # send pushover that this twitch vod is ready to edit
-            text = video['helix']['user_name'] + " vod " + str(video['helix']['id']) \
-                    + " ready to edit (" + str(int((time.time() - t0_start)/60.0)) + " min to prepare)"
-            utils.send_pushover_message(auth, text)
+if __name__ == "__main__":
+    main()

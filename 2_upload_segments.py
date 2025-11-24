@@ -7,7 +7,8 @@ from youtube_video_upload import upload_from_options, upload_video
 
 import os
 import time
-import utils
+import utilities_extra
+from utilities_file import get_valid_filename
 
 # video file we wish to render
 path_base = os.path.dirname(os.path.abspath(__file__))
@@ -34,7 +35,7 @@ path_yt_secrets = path_base + "/../profiles/" + config["yt_secrets"]
 # ================================================================
 
 # setup control+c handler
-utils.setup_signal_handle()
+utilities_extra.setup_signal_handle()
 
 # load the yaml from file
 with open(video_file) as f:
@@ -54,7 +55,7 @@ for suffix in ["", "_muted"]:
     for video in data:
 
         # check if we should download any more
-        if utils.terminated_requested:
+        if utilities_extra.terminated_requested:
             print('terminate requested, not downloading any more..')
             break
 
@@ -62,7 +63,7 @@ for suffix in ["", "_muted"]:
         print("processing " + video["video"] + ", suffix = \"" + suffix + "\"")
 
         # check if the files are there
-        clean_video_title = utils.get_valid_filename(video["title"])
+        clean_video_title = get_valid_filename(video["title"])
         file_path_composite = path_render + video["video"] + "_" + clean_video_title + suffix + ".mp4"
         file_path_desc = path_render + video["video"] + "_" + clean_video_title + suffix + "_desc.txt"
         if not os.path.exists(file_path_composite) or not os.path.exists(file_path_desc):
