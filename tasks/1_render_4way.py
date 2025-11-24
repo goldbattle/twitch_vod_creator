@@ -1,24 +1,23 @@
 # !/usr/bin/env python3
 
-import argparse
-import yaml  # pip install PyYAML
-
+import sys
 import os
-import re
-import json
-import time
+import argparse
 import subprocess
 import shutil
-import datetime
+import time
 import logging
 import coloredlogs
-import utilities_extra
-from utilities_config import load_config, get_temp_path
-from utilities_file import get_valid_filename
+from typing import List
+
+# Add parent directory to path so we can import utilities
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+from utilities import extra, config, file
 
 # ================================================================
 
-def main():
+def parse_args() -> argparse.Namespace:
+    """Parse command line arguments."""
     parser = argparse.ArgumentParser(description='Render 4-way video composite')
     parser.add_argument('--title', required=True, help='Video title')
     parser.add_argument('--sync-offset', required=True, help='Sync offset time (HH:MM:SS)')
@@ -32,19 +31,22 @@ def main():
     parser.add_argument('--video3', required=True, help='Path to fourth video (relative to data root, without .mp4)')
     parser.add_argument('--starttime3', required=True, help='Start time for video3 (HH:MM:SS)')
     parser.add_argument('--verbose', action='store_true', help='Show verbose output from operations')
-    parser.add_argument('--temp-dir', default=get_temp_path("render_4way"), help='Temporary directory for downloads (default: /tmp/tvc_render_4way)')
-    args = parser.parse_args()
-    
+    parser.add_argument('--temp-dir', default=config.get_temp_path("render_4way"), help='Temporary directory for downloads (default: /tmp/tvc_render_4way)')
+    return parser.parse_args()
+
+
+def run_task(args: argparse.Namespace) -> None:
+    """Render 4-way video composite based on provided arguments."""
     # Setup logging
     log_level = logging.DEBUG if args.verbose else logging.INFO
     coloredlogs.install(level=log_level, fmt='%(asctime)s %(levelname)s %(message)s')
     logger = logging.getLogger(__name__)
     
-    config = load_config()
-    config['temp_path'] = args.temp_dir
-    path_root = config['data_root']
-    path_render = config['render_root']
-    path_temp = config['temp_path']
+    config_dict = config.load_config()
+    config_dict['temp_path'] = args.temp_dir
+    path_root = config_dict['data_root']
+    path_render = config_dict['render_root']
+    path_temp = config_dict['temp_path']
     
     title = args.title
     syncoffset = args.sync_offset
@@ -59,14 +61,14 @@ def main():
     starttime3 = args.starttime3
     
     # setup control+c handler
-    utilities_extra.setup_signal_handle()
+    extra.setup_signal_handle()
     
     if not os.path.exists(path_temp):
         os.makedirs(path_temp)
 
     # VIDEO: check that we have the video
     videos = [video0, video1, video2, video3]
-    videopaths = []
+    videopaths: List[str] = []
     for video in videos:
         file_path_video = os.path.join(path_root, video + ".mp4")
         videopaths.append(file_path_video)
@@ -87,9 +89,9 @@ def main():
         logger.info("starting rendering chat...")
         logger.debug(f"  - {file_path_chat}")
         t0 = time.time()
-        cmd = config['twitch_cli'] + ' chatrender' \
+        cmd = config_dict['twitch_cli'] + ' chatrender' \
             + ' -i ' + file_path_chat + ' -o ' + file_path_render_tmp \
-            + ' --ffmpeg-path "' + config['ffmpeg'] + '"' \
+            + ' --ffmpeg-path "' + config_dict['ffmpeg'] + '"' \
             + ' -h 926 -w 274 --update-rate 0.1 --framerate 60 --font-size 15' \
             + ' --bttv true --ffz true --stv true --sub-messages true --badges true' \
             + ' --temp-path "' + path_temp + '" '
@@ -100,7 +102,7 @@ def main():
         logger.info(f"rendering chat took {dur_min:.2f} min")
 
     # COMPOSITE: render the composite image
-    clean_video_title = get_valid_filename(title)
+    clean_video_title = file.get_valid_filename(title)
     file_path_composite = os.path.join(path_render, "4WAY", clean_video_title + ".mp4")
     file_path_composite_tmp = os.path.join(path_render, "4WAY", clean_video_title + ".tmp.mp4")
 
@@ -114,8 +116,8 @@ def main():
 
     # for each video construct the start / end times
     synctimes = [starttime0, starttime1, starttime2, starttime3]
-    starttimes = []
-    endtimes = []
+    starttimes: List[str] = []
+    endtimes: List[str] = []
     for synctime in synctimes:
         h0, m0, s0 = syncoffset.split(':')
         h1, m1, s1 = synctime.split(':')
@@ -139,7 +141,7 @@ def main():
     #   - chat render is 274x926
     logger.info("starting rendering composite...")
     logger.debug(f"  - {file_path_composite}")
-    cmd = config['ffmpeg'] + ' -hide_banner -loglevel quiet -stats ' \
+    cmd = config_dict['ffmpeg'] + ' -hide_banner -loglevel quiet -stats ' \
           + ' -ss ' + starttimes[0] + ' -to ' + endtimes[0] + ' -i ' + videopaths[0] \
           + ' -ss ' + starttimes[1] + ' -to ' + endtimes[1] + ' -i ' + videopaths[1] \
           + ' -ss ' + starttimes[2] + ' -to ' + endtimes[2] + ' -i ' + videopaths[2] \
@@ -164,11 +166,15 @@ def main():
 
     # finally copy temp file to new location
     logger.debug("renaming temp export file to final filename")
-    if not utilities_extra.terminated_requested and os.path.exists(file_path_composite_tmp):
+    if not extra.terminated_requested and os.path.exists(file_path_composite_tmp):
         os.rename(file_path_composite_tmp, file_path_composite)
+
+
+def main() -> None:
+    """Main entry point."""
+    args = parse_args()
+    run_task(args)
 
 
 if __name__ == "__main__":
     main()
-
-

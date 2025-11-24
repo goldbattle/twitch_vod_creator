@@ -1,39 +1,44 @@
 # !/usr/bin/env python3
 
+import sys
+import os
 import argparse
 import yaml
-import os
 import time
 import json
 import shutil
 import logging
 import coloredlogs
-import utilities_extra
-from utilities_config import load_config, get_temp_path
-from utilities_video_editing import render_segment_with_chat, render_segment_without_chat, combine_videos, mute_audio_segments, time_string_to_seconds
-from utilities_chat import render_chat
-from utilities_file import get_valid_filename
+from typing import List, Tuple, Dict, Any, Optional
+
+# Add parent directory to path so we can import utilities
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+from utilities import extra, config, video_editing, chat, file
 
 # ================================================================
 
-def main():
+def parse_args() -> argparse.Namespace:
+    """Parse command line arguments."""
     parser = argparse.ArgumentParser(description='Render video segments')
-    parser.add_argument('--video-file', required=True, help='Video YAML file (relative to config directory)')
-    parser.add_argument('--config-file', required=True, help='Config YAML file (relative to config directory)')
+    parser.add_argument('--file-segments', required=True, help='YAML file with all video segments (relative to config directory)')
+    parser.add_argument('--file-config', required=True, help='Config YAML file (relative to config directory)')
     parser.add_argument('--verbose', action='store_true', help='Show verbose output from operations')
-    parser.add_argument('--temp-dir', default=get_temp_path("render_segments"), help='Temporary directory for downloads (default: /tmp/tvc_render_segments)')
-    args = parser.parse_args()
-    
+    parser.add_argument('--temp-dir', default=config.get_temp_path("render_segments"), help='Temporary directory for downloads (default: /tmp/tvc_render_segments)')
+    return parser.parse_args()
+
+
+def run_task(args: argparse.Namespace) -> None:
+    """Render video segments based on provided arguments."""
     # Setup logging
     log_level = logging.DEBUG if args.verbose else logging.INFO
     coloredlogs.install(level=log_level, fmt='%(asctime)s %(levelname)s %(message)s')
     logger = logging.getLogger(__name__)
     
-    config = load_config()
-    config['temp_path'] = args.temp_dir
+    config_dict = config.load_config()
+    config_dict['temp_path'] = args.temp_dir
     
-    video_file_path = os.path.join(config['base_path'], args.video_file)
-    config_file_path = os.path.join(config['base_path'], args.config_file)
+    video_file_path = os.path.join(config_dict['base_path'], args.file_segments)
+    config_file_path = os.path.join(config_dict['base_path'], args.file_config)
     
     # Load config
     with open(config_file_path) as f:
@@ -41,12 +46,12 @@ def main():
     logger.debug(f"loaded config file: {config_file_path}")
     
     # Load template
-    template_file = os.path.join(config['base_path'], "config", yaml_config["yt_template"])
+    template_file = os.path.join(config_dict['base_path'], "config", yaml_config["yt_template"])
     with open(template_file, "r") as f:
         template = f.read()
     logger.debug(f"loaded template file: {template_file}")
     
-    utilities_extra.setup_signal_handle()
+    extra.setup_signal_handle()
     
     # Load videos
     with open(video_file_path) as f:
@@ -54,12 +59,12 @@ def main():
     logger.info(f"loaded {len(data)} videos to render")
     
     # Setup paths
-    path_root = os.path.dirname(config['base_path'])
+    path_root = os.path.dirname(config_dict['base_path'])
     path_render = os.path.join(path_root, "data_rendered")
     
     # Process each video
     for video in data:
-        if utilities_extra.terminated_requested:
+        if extra.terminated_requested:
             logger.info('terminate requested, not downloading any more..')
             break
         
@@ -77,8 +82,8 @@ def main():
             video_info = json.load(f)
         
         # Setup paths
-        clean_video_title = get_valid_filename(video["title"])
-        path_temp_parts = os.path.join(config['temp_path'], "parts", clean_video_title)
+        clean_video_title = file.get_valid_filename(video["title"])
+        path_temp_parts = os.path.join(config_dict['temp_path'], "parts", clean_video_title)
         if os.path.exists(path_temp_parts):
             shutil.rmtree(path_temp_parts)
         os.makedirs(path_temp_parts, exist_ok=True)
@@ -86,9 +91,9 @@ def main():
         try:
             # Composite video
             file_path_composite = os.path.join(path_render, f"{video['video']}_{clean_video_title}.mp4")
-            file_path_composite_tmp = os.path.join(config['temp_path'], f"{clean_video_title}.tmp.mp4")
+            file_path_composite_tmp = os.path.join(config_dict['temp_path'], f"{clean_video_title}.tmp.mp4")
             
-            if not utilities_extra.terminated_requested and not os.path.exists(file_path_composite):
+            if not extra.terminated_requested and not os.path.exists(file_path_composite):
                 should_render_chat = video.get("with_chat", True)
                 
                 # Render chat if needed
@@ -99,7 +104,7 @@ def main():
                     logger.info("  - starting rendering chat...")
                     logger.debug(f"  - {file_path_chat_mp4}")
                     t0 = time.time()
-                    render_chat(config, file_path_chat, file_path_chat_mp4, verbose=args.verbose)
+                    chat.render_chat(config_dict, file_path_chat, file_path_chat_mp4, verbose=args.verbose)
                     dur_min = (time.time() - t0) / 60.0
                     logger.info(f"  - rendering chat took {dur_min:.2f} min")
                 
@@ -117,11 +122,11 @@ def main():
                 
                 dur_segment_total = 0
                 t0_big = time.time()
-                segment_files = []
+                segment_files: List[str] = []
                 
                 logger.info("  - starting rendering segments...")
                 for idx in range(len(seg_start)):
-                    if utilities_extra.terminated_requested:
+                    if extra.terminated_requested:
                         logger.info('terminate requested, not rendering more segments..')
                         break
                     
@@ -137,8 +142,8 @@ def main():
                         logger.debug(f"  - {tmp_output_file}")
                         if chat_offset != 0:
                             logger.debug(f"  - chat offset: {chat_offset} seconds")
-                        success = render_segment_with_chat(
-                            config, file_path_video, file_path_chat_mp4, tmp_output_file,
+                        success = video_editing.render_segment_with_chat(
+                            config_dict, file_path_video, file_path_chat_mp4, tmp_output_file,
                             seg_start[idx], seg_end[idx], chat_offset, verbose=args.verbose
                         )
                         if not success:
@@ -147,8 +152,8 @@ def main():
                     else:
                         logger.info(f"  - starting rendering segment {seg_start[idx]} to {seg_end[idx]}...")
                         logger.debug(f"  - {tmp_output_file}")
-                        success = render_segment_without_chat(
-                            config, file_path_video, tmp_output_file,
+                        success = video_editing.render_segment_without_chat(
+                            config_dict, file_path_video, tmp_output_file,
                             seg_start[idx], seg_end[idx], verbose=args.verbose
                         )
                         if not success:
@@ -177,10 +182,10 @@ def main():
                         segment_files.append(tmp_output_file)
                 
                 # Combine segments if multiple
-                if not utilities_extra.terminated_requested and len(seg_start) != 1:
+                if not extra.terminated_requested and len(seg_start) != 1:
                     logger.info("  - starting merging segments...")
                     logger.debug(f"  - {file_path_composite_tmp}")
-                    combine_videos(config, segment_files, file_path_composite_tmp)
+                    video_editing.combine_videos(config_dict, segment_files, file_path_composite_tmp)
                     
                     dur_min = (time.time() - t0_big) / 60.0
                     logger.info(f"  - merging segments took {dur_min:.2f} min")
@@ -189,16 +194,16 @@ def main():
                     logger.debug(f"  - realtime factor: {dur_segment_total / dur_render_total:.2f}")
                 
                 # Move temp to final
-                if not utilities_extra.terminated_requested and os.path.exists(file_path_composite_tmp):
+                if not extra.terminated_requested and os.path.exists(file_path_composite_tmp):
                     logger.debug("  - renaming temp export file to final filename")
                     shutil.move(file_path_composite_tmp, file_path_composite)
-                elif utilities_extra.terminated_requested and os.path.exists(file_path_composite_tmp):
+                elif extra.terminated_requested and os.path.exists(file_path_composite_tmp):
                     logger.debug("  - removing half rendered temp file")
                     os.remove(file_path_composite_tmp)
             
             # Description file
             file_path_desc = os.path.join(path_render, f"{video['video']}_{clean_video_title}_desc.txt")
-            if not utilities_extra.terminated_requested and not os.path.exists(file_path_desc):
+            if not extra.terminated_requested and not os.path.exists(file_path_desc):
                 tmp = str(template)
                 tmp = tmp.replace("$id", video_info["id"])
                 tmp = tmp.replace("$title", video_info["title"])
@@ -218,32 +223,32 @@ def main():
             
             # Muted composite
             file_path_composite_muted = os.path.join(path_render, f"{video['video']}_{clean_video_title}_muted.mp4")
-            seg_to_cut = None
+            seg_to_cut: Optional[List[str]] = None
             if "t_youtube_mute" in video:
                 seg_to_cut = video["t_youtube_mute"].split(",")
             
-            if (not utilities_extra.terminated_requested and not os.path.exists(file_path_composite_muted) and
+            if (not extra.terminated_requested and not os.path.exists(file_path_composite_muted) and
                 os.path.exists(file_path_composite) and seg_to_cut is not None):
                 
                 # Parse mute segments
-                mute_segments = []
+                mute_segments: List[Tuple[float, float]] = []
                 for seg in seg_to_cut:
                     parts = seg.split(" - ")
                     assert len(parts) == 2
-                    start_seconds = time_string_to_seconds(parts[0])
-                    end_seconds = time_string_to_seconds(parts[1])
+                    start_seconds = video_editing.time_string_to_seconds(parts[0])
+                    end_seconds = video_editing.time_string_to_seconds(parts[1])
                     mute_segments.append((start_seconds, end_seconds))
                 
                 logger.info("  - starting muting audio segments...")
                 logger.debug(f"  - {file_path_composite_muted}")
                 t0 = time.time()
-                mute_audio_segments(config, file_path_composite, file_path_composite_muted, mute_segments)
+                video_editing.mute_audio_segments(config_dict, file_path_composite, file_path_composite_muted, mute_segments)
                 dur_min = (time.time() - t0) / 60.0
                 logger.info(f"  - muting audio segments took {dur_min:.2f} min")
             
             # Muted description file
             file_path_desc_muted = os.path.join(path_render, f"{video['video']}_{clean_video_title}_muted_desc.txt")
-            if not utilities_extra.terminated_requested and not os.path.exists(file_path_desc_muted) and seg_to_cut is not None:
+            if not extra.terminated_requested and not os.path.exists(file_path_desc_muted) and seg_to_cut is not None:
                 tmp = str(template)
                 tmp = tmp.replace("$id", video_info["id"])
                 tmp = tmp.replace("$title", video_info["title"])
@@ -272,6 +277,12 @@ def main():
         # Cleanup
         if os.path.exists(path_temp_parts):
             shutil.rmtree(path_temp_parts)
+
+
+def main() -> None:
+    """Main entry point."""
+    args = parse_args()
+    run_task(args)
 
 
 if __name__ == "__main__":

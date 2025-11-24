@@ -1,32 +1,32 @@
 # !/usr/bin/env python3
 
 """
-Video download operations module.
-Handles downloading videos and clips from Twitch.
+Chat operations module.
+Handles chat downloading and rendering.
 """
 
 import os
 import subprocess
 import shutil
-import utilities_extra
+from . import utilities_extra
 
 
-def download_vod(config, vod_id, output_path, quality="1080p60", verbose=False):
-    """Download a VOD video."""
+def download_chat(config, content_id, output_path, is_clip=False, verbose=False):
+    """Download chat for a VOD or clip."""
     if os.path.exists(output_path):
         return True
     
     if utilities_extra.terminated_requested:
         return False
     
-    temp_output = os.path.join(config.get('temp_path', '/tmp'), os.path.basename(output_path))
+    temp_path = config.get('temp_path', '/tmp')
+    temp_output = os.path.join(temp_path, os.path.basename(output_path))
     
     cmd = (
-        f'{config["twitch_cli"]} videodownload'
-        f' --id {vod_id}'
-        f' --ffmpeg-path "{config["ffmpeg"]}"'
-        f' --temp-path "{config.get("temp_path", "/tmp")}"'
-        f' --quality {quality}'
+        f'{config["twitch_cli"]} chatdownload'
+        f' --id {content_id}'
+        f' --embed-images true --threads 6'
+        f' --bttv true --ffz true --stv true'
         f' --collision Overwrite --banner false'
         f' -o {temp_output}'
     )
@@ -39,7 +39,7 @@ def download_vod(config, vod_id, output_path, quality="1080p60", verbose=False):
     
     if return_code != 0:
         if verbose:
-            print(f"Error: TwitchDownloaderCLI returned exit code {return_code}")
+            print(f"Error: TwitchDownloaderCLI chatdownload returned exit code {return_code}")
         return False
     
     if os.path.exists(temp_output):
@@ -49,22 +49,28 @@ def download_vod(config, vod_id, output_path, quality="1080p60", verbose=False):
     return False
 
 
-def download_clip(config, clip_id, output_path, verbose=False):
-    """Download a clip video."""
+def render_chat(config, chat_json_path, output_path, 
+                height=926, width=274, update_rate=0.1, framerate=60,
+                font_size=15, verbose=False):
+    """Render chat JSON to video."""
     if os.path.exists(output_path):
         return True
     
     if utilities_extra.terminated_requested:
         return False
     
-    temp_output = os.path.join(config.get('temp_path', '/tmp'), os.path.basename(output_path))
+    temp_path = config.get('temp_path', '/tmp')
+    temp_output = os.path.join(temp_path, os.path.basename(output_path))
     
     cmd = (
-        f'{config["twitch_cli"]} clipdownload'
-        f' --id {clip_id}'
+        f'{config["twitch_cli"]} chatrender'
+        f' -i {chat_json_path} -o {temp_output}'
         f' --ffmpeg-path "{config["ffmpeg"]}"'
-        f' --collision Overwrite --banner false'
-        f' -o {temp_output}'
+        f' -h {height} -w {width}'
+        f' --update-rate {update_rate} --framerate {framerate} --font-size {font_size}'
+        f' --bttv true --ffz true --stv true'
+        f' --sub-messages true --badges true --sharpening true --dispersion true'
+        f' --temp-path "{temp_path}"'
     )
     
     stdout = None if verbose else subprocess.DEVNULL
@@ -75,7 +81,7 @@ def download_clip(config, clip_id, output_path, verbose=False):
     
     if return_code != 0:
         if verbose:
-            print(f"Error: TwitchDownloaderCLI returned exit code {return_code}")
+            print(f"Error: TwitchDownloaderCLI chatrender returned exit code {return_code}")
         return False
     
     if os.path.exists(temp_output):

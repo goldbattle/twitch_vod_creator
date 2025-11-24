@@ -20,7 +20,8 @@ def load_config(base_path=None):
         Dictionary with all configuration paths and auth info
     """
     if base_path is None:
-        base_path = os.path.dirname(os.path.abspath(__file__))
+        # Get project root (parent of utilities directory)
+        base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     
     auth_config = os.path.join(base_path, "config", "auth.yaml")
     with open(auth_config) as f:

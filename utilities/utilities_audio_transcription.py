@@ -10,7 +10,7 @@ import json
 import subprocess
 from webvtt import WebVTT, Caption
 from vosk import Model, KaldiRecognizer, SetLogLevel
-import utilities_extra
+from . import utilities_extra
 
 # Global model cache
 _model_cache = None

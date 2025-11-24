@@ -8,7 +8,7 @@ Handles video rendering, muting, combining, and other editing operations.
 import os
 import subprocess
 import shutil
-import utilities_extra
+from . import utilities_extra
 
 
 def time_string_to_seconds(time_str):
