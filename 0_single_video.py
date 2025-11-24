@@ -3,6 +3,8 @@
 import argparse
 import json
 import os
+import logging
+import coloredlogs
 import utilities_extra
 from utilities_config import load_config, get_temp_path
 from utilities_twitch_api import get_videos, create_video_data
@@ -22,6 +24,11 @@ def main():
     parser.add_argument('--temp-dir', default=get_temp_path("single_video"), help='Temporary directory for downloads (default: /tmp/tvc_single_video)')
     args = parser.parse_args()
     
+    # Setup logging
+    log_level = logging.DEBUG if args.verbose else logging.INFO
+    coloredlogs.install(level=log_level, fmt='%(asctime)s %(levelname)s %(message)s')
+    logger = logging.getLogger(__name__)
+    
     vod_id = args.vod_id
     should_render_chat = not args.no_chat
     should_transcribe = not args.no_transcribe
@@ -34,10 +41,10 @@ def main():
     utilities_extra.setup_signal_handle()
     
     # Get video info
-    print(f"trying to pull api info for vod {vod_id}")
+    logger.debug(f"trying to pull api info for vod {vod_id}")
     videos = list(get_videos(auth["client_id"], auth["client_secret"], video_ids=[vod_id]))
     if len(videos) != 1:
-        print(f"Error: Found {len(videos)} videos for ID {vod_id}")
+        logger.error(f"Found {len(videos)} videos for ID {vod_id}")
         exit(1)
     
     video_helix = videos[0]
@@ -47,7 +54,7 @@ def main():
     path_data = os.path.join(path_root, video_data['user_name'].lower())
     ensure_directory(path_data)
     ensure_directory(config['temp_path'])
-    print(f"saving into {video_data['user_name'].lower()} user folder")
+    logger.info(f"saving into {video_data['user_name'].lower()} user folder")
     
     export_folder = get_date_folder(video_data['recorded_at'])
     path_data_folder = os.path.join(path_data, export_folder)
@@ -60,35 +67,52 @@ def main():
     file_path_webvtt = os.path.join(path_data_folder, f"{vod_id}.vtt")
     
     # Save video info
-    print(f"saving video info: {file_path_info}")
     if not utilities_extra.terminated_requested and not os.path.exists(file_path_info):
         with open(file_path_info, 'w', encoding="utf-8") as f:
             json.dump(video_data, f, indent=4)
+        logger.info("saved video info")
+        logger.debug(f"  - {file_path_info}")
     
     # Download video
-    print(f"download video: {file_path}")
     if not utilities_extra.terminated_requested:
+        logger.info("starting download video...")
+        logger.debug(f"  - {file_path}")
+        t0 = time.time()
         download_vod(config, vod_id, file_path, verbose=args.verbose)
+        dur_min = (time.time() - t0) / 60.0
+        logger.info(f"download video took {dur_min:.2f} min")
     
     # Download chat
-    print(f"download chat: {file_path_chat}")
     if not utilities_extra.terminated_requested:
+        logger.info("starting download chat...")
+        logger.debug(f"  - {file_path_chat}")
+        t0 = time.time()
         download_chat(config, vod_id, file_path_chat, is_clip=False, verbose=args.verbose)
+        dur_min = (time.time() - t0) / 60.0
+        logger.info(f"download chat took {dur_min:.2f} min")
     
     # Transcribe audio
     if should_transcribe and not utilities_extra.terminated_requested:
         if os.path.exists(file_path) and not os.path.exists(file_path_webvtt):
-            print(f"transcribing: {file_path_webvtt}")
+            logger.info("starting transcribing...")
+            logger.debug(f"  - {file_path_webvtt}")
+            t0 = time.time()
             transcribe_video(config, file_path, file_path_webvtt, quiet=False)
-            print("done")
+            dur_min = (time.time() - t0) / 60.0
+            logger.info(f"transcribing took {dur_min:.2f} min")
     
     # Render chat
     if should_render_chat and not utilities_extra.terminated_requested:
         if os.path.exists(file_path_chat) and not os.path.exists(file_path_chat_mp4):
-            print(f"rendering chat: {file_path_chat_mp4}")
+            logger.info("starting rendering chat...")
+            logger.debug(f"  - {file_path_chat_mp4}")
+            t0 = time.time()
             render_chat(config, file_path_chat, file_path_chat_mp4, verbose=args.verbose)
             if not os.path.exists(file_path_chat_mp4):
-                print("Warning: Render file was not created, render may have failed")
+                logger.warning("Warning: Render file was not created, render may have failed")
+            else:
+                dur_min = (time.time() - t0) / 60.0
+                logger.info(f"rendering chat took {dur_min:.2f} min")
 
 
 if __name__ == "__main__":

@@ -4,6 +4,8 @@ import argparse
 import json
 import os
 import time
+import logging
+import coloredlogs
 import utilities_extra
 from utilities_config import load_config, get_temp_path
 from utilities_twitch_api import get_users_by_login, is_user_live, get_videos, create_video_data, get_vod_moments
@@ -12,37 +14,27 @@ from utilities_chat import download_chat, render_chat
 from utilities_audio_transcription import transcribe_video
 from utilities_file import get_date_folder, ensure_directory
 
-# parameters
-channels = [
-    'sodapoppin'#, 'skippypoppin', 'nmplol',
-    # 'moonmoon', 'clintstevens', 'sevadus',
-    # 'jerma985', 'heydoubleu', 'vei', 'squeex',
-    # 'goldbattle', 'j_blow'
-    # 'mindcrack'
-]
-max_videos = 1
-render_chat_flags = [
-    True#, False, False,
-    # False, True, False,
-    # False, False, False, False,
-    # False, False,
-    # False
-]
-render_webvtt = [
-    True#, True, True,
-    # False, True, False,
-    # False, False, True, False,
-    # False, False,
-    # False
-]
-
 # ================================================================
 
 def main():
     parser = argparse.ArgumentParser(description='Download and process Twitch VODs')
+    parser.add_argument('--channels', required=True, nargs='+', help='List of channel names to download videos from')
+    parser.add_argument('--max-videos', required=True, type=int, help='Maximum number of videos to download per type (archive/highlight/upload)')
+    parser.add_argument('--render-chat', required=True, nargs='+', help='Whether to render chat for each channel (true/false, must match number of channels)')
+    parser.add_argument('--render-webvtt', required=True, nargs='+', help='Whether to generate WebVTT transcriptions for each channel (true/false, must match number of channels)')
     parser.add_argument('--verbose', action='store_true', help='Show verbose output from download operations')
     parser.add_argument('--temp-dir', default=get_temp_path("main_videos"), help='Temporary directory for downloads (default: /tmp/tvc_main_videos)')
     args = parser.parse_args()
+    
+    # Setup logging
+    log_level = logging.DEBUG if args.verbose else logging.INFO
+    coloredlogs.install(level=log_level, fmt='%(asctime)s %(levelname)s %(message)s')
+    logger = logging.getLogger(__name__)
+    
+    channels = args.channels
+    max_videos = args.max_videos
+    render_chat_flags = [x.lower() in ('true', '1', 'yes') for x in args.render_chat]
+    render_webvtt = [x.lower() in ('true', '1', 'yes') for x in args.render_webvtt]
     
     config = load_config()
     config['temp_path'] = args.temp_dir
@@ -52,10 +44,11 @@ def main():
     utilities_extra.setup_signal_handle()
     
     if len(channels) != len(render_chat_flags) or len(channels) != len(render_webvtt):
-        print('number of channels and render settings do not match!!')
+        logger.error(f'Number of channels ({len(channels)}) must match number of render-chat ({len(render_chat_flags)}) and render-webvtt ({len(render_webvtt)}) flags')
         exit(-1)
     
     # Get users
+    logger.debug(f"Fetching user info for channels: {channels}")
     users_tmp = get_users_by_login(auth["client_id"], auth["client_secret"], channels)
     users = []
     render_chat_flags_filtered = []
@@ -70,12 +63,12 @@ def main():
                 found = True
                 break
         if not found:
-            print(f"streamer {channel} wasn't found, are they banned???")
+            logger.warning(f"streamer {channel} wasn't found, are they banned???")
     
     # Process each user
     for idx, user in enumerate(users):
         if utilities_extra.terminated_requested:
-            print('terminate requested, not looking at any more users...')
+            logger.info('terminate requested, not looking at any more users...')
             break
         
         path_data = os.path.join(path_root, user["login"].lower())
@@ -86,7 +79,8 @@ def main():
         stream_is_live = is_user_live(auth["client_id"], auth["client_secret"], user["id"])
         
         # Get videos
-        print(f"getting videos for -> {user['login'].lower()} (id {user['id']})")
+        logger.info(f"getting videos for -> {user['login'].lower()}")
+        logger.info(f"  - Id {user['id']}")
         vid_iter = get_videos(auth["client_id"], auth["client_secret"], user_id=user["id"], page_size=100)
         arr_archive = []
         arr_highlight = []
@@ -96,7 +90,7 @@ def main():
         
         for video in vid_iter:
             if not seen_first_video and stream_is_live:
-                print(f"skipping video {video['id']} since stream is live...")
+                logger.debug(f"skipping video {video['id']} since stream is live...")
                 seen_first_video = True
                 continue
             seen_first_video = True
@@ -111,16 +105,15 @@ def main():
                 arr_upload.append({'helix': video})
                 ct_added[2] += 1
         
-        print(f"\t- found {len(arr_archive)} archives")
-        print(f"\t- found {len(arr_highlight)} highlights")
-        print(f"\t- found {len(arr_upload)} uploads")
+        logger.info(f"  - found {len(arr_archive)} archives, {len(arr_highlight)} highlights, {len(arr_upload)} uploads")
         
         # Process each archive video
         for video in arr_archive:
             if utilities_extra.terminated_requested:
-                print('terminate requested, not downloading any more..')
+                logger.info('terminate requested, not downloading any more..')
                 break
             
+            logger.info(f"processing video {video['helix']['id']}")
             t0_start = time.time()
             video_data = create_video_data(auth["client_id"], auth["client_secret"], video['helix'])
             
@@ -136,13 +129,15 @@ def main():
             file_path_webvtt = os.path.join(path_data_folder, f"{video['helix']['id']}.vtt")
             
             # Save/update video info
-            print(f"\t- saving video info: {file_path_info}")
             if not utilities_extra.terminated_requested:
                 if not os.path.exists(file_path_info):
                     with open(file_path_info, 'w', encoding="utf-8") as f:
                         json.dump(video_data, f, indent=4)
+                    logger.info("  - saved video info")
+                    logger.debug(f"  - {file_path_info}")
                 else:
-                    print(f"\t- updating video info: {file_path_info}")
+                    logger.info("  - updated video info")
+                    logger.debug(f"  - {file_path_info}")
                     with open(file_path_info) as f:
                         video_info = json.load(f)
                     if len(video_info.get("moments", [])) == 0:
@@ -153,37 +148,45 @@ def main():
                         json.dump(video_info, f, indent=4)
             
             # Download video
-            print(f"\t- download video: {file_path}")
             if not utilities_extra.terminated_requested and not os.path.exists(file_path):
+                logger.info("  - starting download video...")
+                logger.debug(f"  - {file_path}")
                 t0 = time.time()
                 success = download_vod(config, video['helix']['id'], file_path, verbose=args.verbose)
                 if success:
-                    print(f"\t- done in {time.time() - t0:.1f} seconds")
+                    dur_min = (time.time() - t0) / 60.0
+                    logger.info(f"  - download video took {dur_min:.2f} min")
                 else:
-                    print(f"\t- ERROR: Video download failed!")
+                    logger.error("  - ERROR: Video download failed!")
             
             # Download chat
-            print(f"\t- download chat: {file_path_chat}")
             if not utilities_extra.terminated_requested and not os.path.exists(file_path_chat):
+                logger.info("  - starting download chat...")
+                logger.debug(f"  - {file_path_chat}")
                 t0 = time.time()
                 download_chat(config, video['helix']['id'], file_path_chat, is_clip=False, verbose=args.verbose)
-                print(f"\t- done in {time.time() - t0:.1f} seconds")
+                dur_min = (time.time() - t0) / 60.0
+                logger.info(f"  - download chat took {dur_min:.2f} min")
             
             # Transcribe audio
             if render_webvtt_filtered[idx] and not utilities_extra.terminated_requested:
                 if os.path.exists(file_path) and not os.path.exists(file_path_webvtt):
-                    print(f"\t- transcribing: {file_path_webvtt}")
+                    logger.info("  - starting transcribing...")
+                    logger.debug(f"  - {file_path_webvtt}")
                     t0 = time.time()
                     transcribe_video(config, file_path, file_path_webvtt)
-                    print(f"\t- done in {time.time() - t0:.1f} seconds")
+                    dur_min = (time.time() - t0) / 60.0
+                    logger.info(f"  - transcribing took {dur_min:.2f} min")
             
             # Render chat
             if render_chat_flags_filtered[idx] and not utilities_extra.terminated_requested:
                 if os.path.exists(file_path_chat) and not os.path.exists(file_path_chat_mp4):
-                    print(f"\t- rendering chat: {file_path_chat_mp4}")
+                    logger.info("  - starting rendering chat...")
+                    logger.debug(f"  - {file_path_chat_mp4}")
                     t0 = time.time()
                     render_chat(config, file_path_chat, file_path_chat_mp4, verbose=args.verbose)
-                    print(f"\t- done in {time.time() - t0:.1f} seconds")
+                    dur_min = (time.time() - t0) / 60.0
+                    logger.info(f"  - rendering chat took {dur_min:.2f} min")
                     
                     # Send pushover notification
                     text = (f"{video['helix']['user_name']} vod {video['helix']['id']} "

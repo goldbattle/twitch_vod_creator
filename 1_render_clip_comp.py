@@ -7,6 +7,8 @@ import json
 import time
 import datetime
 import subprocess
+import logging
+import coloredlogs
 import utilities_extra
 from utilities_config import load_config, get_temp_path
 from utilities_twitch_api import get_user_by_login, get_clips, create_clip_data, get_clip_data
@@ -15,54 +17,62 @@ from utilities_chat import download_chat, render_chat
 from utilities_video_editing import render_clip_with_title, combine_videos, get_video_duration
 from utilities_file import get_date_folder
 
-# parameters
-channel = 'sodapoppin'
-max_clips = 10
-date_start = '2024-12-01T00:00:00Z'
-date_end = '2024-12-31T00:00:00Z'
-min_views_required = 500
-get_latest_from_twitch = True
-remove_rendered = True
-clips_to_ignore = [
-    "ScaryBrainyEyeballArsonNoSexy-0Jn0wz5mZ1bRMyGk",
-    "EasyFairLlamaHoneyBadger-rxZed8PoO1MR3PgL",
-    "ShinyDependableSharkKappaPride-Qjf4VS7pe6TumUY6",
-    "MoralSaltyHabaneroDatSheffy-3uKETXph5PWyF8w6",
-    "PricklyCheerfulShallotKeyboardCat-h8Knl5UZGEphTpn7",
-    "BoredHedonisticMilkCorgiDerp-kzChRQAEuGS0xNcM",
-]
-
 # ================================================================
 
 def main():
     parser = argparse.ArgumentParser(description='Download and render clip compilation')
-    parser.add_argument('--channel', default=channel, help='Channel name')
-    parser.add_argument('--max-clips', type=int, default=max_clips, help='Maximum number of clips')
-    parser.add_argument('--date-start', default=date_start, help=f'Start date (ISO format, default: {date_start})')
-    parser.add_argument('--date-end', default=date_end, help=f'End date (ISO format, default: {date_end})')
-    parser.add_argument('--min-views', type=int, default=min_views_required, help='Minimum view count')
+    parser.add_argument('--channel', required=True, help='Channel name')
+    parser.add_argument('--max-clips', required=True, type=int, help='Maximum number of clips')
+    parser.add_argument('--date-start', required=True, help='Start date (ISO format: YYYY-MM-DDTHH:MM:SSZ)')
+    parser.add_argument('--date-end', required=True, help='End date (ISO format: YYYY-MM-DDTHH:MM:SSZ)')
+    parser.add_argument('--min-view-counts', type=int, default=500, help='Minimum view count (default: 500)')
+    parser.add_argument('--clips-to-ignore', nargs='*', default=[], help='List of clip IDs to ignore, or a path to a text file with one ID per line')
     parser.add_argument('--no-download', action='store_true', help='Skip downloading from Twitch')
     parser.add_argument('--no-remove', action='store_true', help='Keep rendered files')
     parser.add_argument('--verbose', action='store_true', help='Show verbose output from download operations')
     parser.add_argument('--temp-dir', default=get_temp_path("render_clip_comp"), help='Temporary directory for downloads (default: /tmp/tvc_render_clip_comp)')
     args = parser.parse_args()
     
+    # Setup logging
+    log_level = logging.DEBUG if args.verbose else logging.INFO
+    coloredlogs.install(level=log_level, fmt='%(asctime)s %(levelname)s %(message)s')
+    logger = logging.getLogger(__name__)
+    
+    get_latest_from_twitch = not args.no_download
+    remove_rendered = not args.no_remove
+    
+    # Handle clips-to-ignore: if single argument and it's a file, read from file; otherwise use as list
+    clips_to_ignore = []
+    if args.clips_to_ignore:
+        if len(args.clips_to_ignore) == 1 and os.path.isfile(args.clips_to_ignore[0]):
+            # Single argument is a file path - read IDs from file
+            try:
+                with open(args.clips_to_ignore[0], 'r') as f:
+                    clips_to_ignore = [line.strip() for line in f if line.strip()]
+                logger.debug(f"Loaded {len(clips_to_ignore)} clip IDs to ignore from {args.clips_to_ignore[0]}")
+            except Exception as e:
+                logger.error(f"Could not read clips-to-ignore file {args.clips_to_ignore[0]}: {e}")
+                exit(1)
+        else:
+            # Multiple arguments or single non-file argument - treat as list of IDs
+            clips_to_ignore = args.clips_to_ignore
+    
     # Validate date formats before proceeding
     try:
         datetime_start = datetime.datetime.strptime(args.date_start, "%Y-%m-%dT%H:%M:%SZ")
-    except ValueError as e:
-        print(f"Error: Invalid date format for --date-start: {args.date_start}")
-        print(f"Expected format: YYYY-MM-DDTHH:MM:SSZ (e.g., 2024-01-01T00:00:00Z)")
+    except ValueError:
+        logger.error(f"Invalid date format for --date-start: {args.date_start}")
+        logger.error(f"Expected format: YYYY-MM-DDTHH:MM:SSZ (e.g., 2024-01-01T00:00:00Z)")
         exit(1)
     try:
         datetime_end = datetime.datetime.strptime(args.date_end, "%Y-%m-%dT%H:%M:%SZ")
-    except ValueError as e:
-        print(f"Error: Invalid date format for --date-end: {args.date_end}")
-        print(f"Expected format: YYYY-MM-DDTHH:MM:SSZ (e.g., 2024-12-31T00:00:00Z)")
+    except ValueError:
+        logger.error(f"Invalid date format for --date-end: {args.date_end}")
+        logger.error(f"Expected format: YYYY-MM-DDTHH:MM:SSZ (e.g., 2024-12-31T00:00:00Z)")
         exit(1)
     
     if datetime_start >= datetime_end:
-        print(f"Error: --date-start ({args.date_start}) must be before --date-end ({args.date_end})")
+        logger.error(f"--date-start ({args.date_start}) must be before --date-end ({args.date_end})")
         exit(1)
     
     config = load_config()
@@ -81,25 +91,27 @@ def main():
     if not args.no_download and get_latest_from_twitch:
         user = get_user_by_login(auth["client_id"], auth["client_secret"], args.channel)
         if not user:
-            print(f"Error: User {args.channel} not found")
+            logger.error(f"User {args.channel} not found")
             exit(1)
         
         game_cache = {}
-        print(f"getting clips for -> {user['login']} (id {user['id']})")
+        logger.info(f"getting clips for -> {user['login']}")
+        logger.info(f"  - Id {user['id']}")
         vid_iter = get_clips(auth["client_id"], auth["client_secret"], user["id"],
                             started_at=args.date_start, ended_at=args.date_end, page_size=100)
         try:
             for video in vid_iter:
                 if utilities_extra.terminated_requested:
-                    print('terminate requested, not looking at any more clips...')
+                    logger.info('terminate requested, not looking at any more clips...')
                     exit(-1)
                 
-                if video['view_count'] < args.min_views:
-                    print(f"skipping {video['url']} (only {video['view_count']} views)")
+                if video['view_count'] < args.min_view_counts:
+                    logger.debug(f"skipping {video['url']} (only {video['view_count']} views)")
                     break
                 
                 created_date = video['created_at'].strftime('%Y-%m-%d')
-                print(f"clip {video['url']} ({video['view_count']} views, created: {created_date})")
+                logger.info(f"clip {video['url']}")
+                logger.info(f"  - {video['view_count']} views, created: {created_date}")
                 
                 # Setup paths
                 export_folder = get_date_folder(video['created_at'].strftime('%Y-%m-%dT%H:%M:%SZ'))
@@ -113,12 +125,12 @@ def main():
                 # Save/update clip info
                 if not utilities_extra.terminated_requested:
                     if not os.path.exists(file_path_info):
-                        print(f"\t- saving clip info: {video['id']}")
                         clip_data = create_clip_data(auth["client_id"], auth["client_secret"], video, game_cache)
                         with open(file_path_info, 'w', encoding="utf-8") as f:
                             json.dump(clip_data, f, indent=4)
+                        logger.info(f"  - saved clip info: {video['id']}")
+                        logger.debug(f"  - {file_path_info}")
                     else:
-                        print("\t- updating clip info!")
                         with open(file_path_info) as f:
                             video_info = json.load(f)
                         video_info["view_count"] = video['view_count']
@@ -129,25 +141,36 @@ def main():
                                 video_info["duration"] = clip_data['duration']
                         with open(file_path_info, 'w', encoding="utf-8") as f:
                             json.dump(video_info, f, indent=4)
+                        logger.info("  - updated clip info")
+                        logger.debug(f"  - {file_path_info}")
                 
                 # Download clip
                 if not utilities_extra.terminated_requested and not os.path.exists(file_path):
-                    print(f"\t- download clip: {video['id']}")
+                    logger.info("  - starting download clip...")
+                    logger.debug(f"  - {file_path}")
+                    t0 = time.time()
                     download_clip(config, video['id'], file_path, verbose=args.verbose)
                     if not os.path.exists(file_path):
-                        print("\t- VIDEO DOWNLOAD FAILED!!!!")
+                        logger.error("  - VIDEO DOWNLOAD FAILED!!!!")
+                    else:
+                        dur_min = (time.time() - t0) / 60.0
+                        logger.info(f"  - download clip took {dur_min:.2f} min")
                 
                 # Download chat
                 try:
                     if not utilities_extra.terminated_requested and not os.path.exists(file_path_chat):
-                        print(f"\t- download chat: {video['id']}")
+                        logger.info("  - starting download chat...")
+                        logger.debug(f"  - {file_path_chat}")
+                        t0 = time.time()
                         download_chat(config, video['id'], file_path_chat, is_clip=True, verbose=args.verbose)
+                        dur_min = (time.time() - t0) / 60.0
+                        logger.info(f"  - download chat took {dur_min:.2f} min")
                 except Exception as e:
-                    print(f"\t- not able to download any chat... {e}")
+                    logger.warning(f"  - not able to download any chat... {e}")
         
         except Exception as e:
-            print("twitch api failure.... stopping querying....")
-            print(e)
+            logger.error("twitch api failure.... stopping querying....")
+            logger.error(f"{e}")
             exit(-1)
     
     # Load clips from disk
@@ -165,19 +188,19 @@ def main():
             file_path = os.path.join(path_data, export_folder, f"{video_info['id']}.mp4")
             
             if not os.path.exists(file_path):
-                print(f"WARNING: {video_info['id']} is missing its main video file!!!!")
+                logger.warning(f"{video_info['id']} is missing its main video file!!!!")
                 continue
             
             filesize = os.path.getsize(file_path)
             if filesize < 1:
-                print(f"WARNING: {video_info['id']} clip is invalid!!!!")
+                logger.warning(f"{video_info['id']} clip is invalid!!!!")
                 continue
             
             if datetime_created < datetime_start or datetime_created > datetime_end:
                 continue
             
             if video_info["id"] in clips_to_ignore:
-                print(f"WARNING: {video_info['id']} clip has been IGNORED!!!!")
+                logger.debug(f"{video_info['id']} clip has been IGNORED!!!!")
                 continue
             
             arr_clips.append(video_info)
@@ -227,23 +250,22 @@ def main():
     arr_clips = [arr_clips[id1] for id1 in arr_clips_no_common]
     
     # Sort by view count, then by date
-    print(f"sorting {len(arr_clips)} clips by viewcount")
+    logger.debug(f"sorting {len(arr_clips)} clips by viewcount")
     arr_clips.sort(key=lambda x: x['view_count'])
     start_id = max(0, len(arr_clips) - args.max_clips)
     arr_clips = arr_clips[start_id:]
-    print(f"sorting {len(arr_clips)} clips by date")
+    logger.debug(f"sorting {len(arr_clips)} clips by date")
     arr_clips.sort(key=lambda x: x['created_at'])
     
     if len(arr_clips) < args.max_clips:
-        print("ERROR: unable to find enough requested clips....")
-        print("ERROR: either decrease the min view count or number of requested clips..")
+        logger.error("unable to find enough requested clips....")
+        logger.error("either decrease the min view count or number of requested clips..")
         exit(-1)
-    print("")
     
     # Render individual clips
     for video in arr_clips:
-        print(f"clip has {video['view_count']} views (clipped at {video['created_at']})")
-        print(f"\t- {video['url']}")
+        logger.info(f"clip {video['url']}")
+        logger.info(f"  - {video['view_count']} views, clipped at {video['created_at']}")
         
         datetime_created = datetime.datetime.strptime(video['created_at'], "%Y-%m-%d %H:%M:%SZ")
         export_folder = f"{datetime_created.year:02d}-{datetime_created.month:02d}/"
@@ -252,30 +274,33 @@ def main():
         file_path_chat_mp4 = os.path.join(path_data, export_folder, f"{video['id']}_chat.mp4")
         
         if not utilities_extra.terminated_requested and os.path.exists(file_path_chat) and not os.path.exists(file_path_chat_mp4):
-            print(f"\t- rendering chat: {export_folder}{video['id']}_chat.mp4")
+            logger.info("  - starting rendering chat...")
+            logger.debug(f"  - {file_path_chat_mp4}")
+            t0 = time.time()
             render_chat(config, file_path_chat, file_path_chat_mp4, verbose=args.verbose)
+            dur_min = (time.time() - t0) / 60.0
+            logger.info(f"  - rendering chat took {dur_min:.2f} min")
         
         file_path = os.path.join(path_data, export_folder, f"{video['id']}.mp4")
         file_path_composite = os.path.join(path_data, export_folder, f"{video['id']}_rendered.mp4")
         
         if not utilities_extra.terminated_requested and not os.path.exists(file_path_composite):
-            print(f"\t- rendering composite: {export_folder}{video['id']}_rendered.mp4")
             os.makedirs(os.path.dirname(file_path_composite), exist_ok=True)
             
+            logger.info("  - starting rendering composite...")
+            logger.debug(f"  - {file_path_composite}")
             t0 = time.time()
             render_clip_with_title(config, file_path, file_path_chat_mp4 if os.path.exists(file_path_chat_mp4) else None,
                                   file_path_composite, video["title"])
             
-            t1 = time.time()
-            dur_render = t1 - t0 + 1e-6
-            print(f"\t- time to render: {dur_render:.1f}")
-            print()
+            dur_min = (time.time() - t0) / 60.0
+            logger.info(f"  - rendering composite took {dur_min:.2f} min")
     
     # Combine all clips
     text_file_temp_videos = os.path.join(path_render, "CLIPS", f"{args.channel}_{args.date_start[:10]}_{args.date_end[:10]}.txt")
     file_path_composite = os.path.join(path_render, "CLIPS", f"{args.channel}_{args.date_start[:10]}_{args.date_end[:10]}.mp4")
     
-    print("starting to render the composite video (will take a while)...")
+    logger.info("starting to render the composite video (will take a while)...")
     if not utilities_extra.terminated_requested and not os.path.exists(file_path_composite):
         os.makedirs(os.path.dirname(file_path_composite), exist_ok=True)
         
@@ -288,11 +313,12 @@ def main():
                 if os.path.exists(tmp_output_file):
                     f.write(f"file '{os.path.abspath(tmp_output_file)}'\n")
                 else:
-                    print(f"\t- WARNING: skipping {os.path.abspath(tmp_output_file)}")
+                    logger.warning(f"  - WARNING: skipping {os.path.abspath(tmp_output_file)}")
         
         # Combine videos
+        logger.info("  - starting merging videos...")
+        logger.debug(f"  - {file_path_composite}")
         t0_big = time.time()
-        print("\t- combining all videos into a single segment!")
         video_paths = []
         with open(text_file_temp_videos) as f:
             for line in f:
@@ -301,14 +327,12 @@ def main():
         combine_videos(config, video_paths, file_path_composite)
         os.remove(text_file_temp_videos)
         
-        t1_big = time.time()
-        dur_render = t1_big - t0_big + 1e-6
-        print(f"\t- time to render: {dur_render:.1f}")
+        dur_min = (time.time() - t0_big) / 60.0
+        logger.info(f"  - merging videos took {dur_min:.2f} min")
     
     # Create description file
     file_path_desc = os.path.join(path_render, "CLIPS", f"{args.channel}_{args.date_start[:10]}_{args.date_end[:10]}_desc.txt")
     if not utilities_extra.terminated_requested and not os.path.exists(file_path_desc):
-        print(f"\t- writting info: {file_path_desc}")
         tmp = f"Top {args.max_clips} Between {args.date_start[:10]} to {args.date_end[:10]}\n\n"
         
         num_second_into_video = 0
@@ -319,7 +343,7 @@ def main():
             file_path_info = os.path.join(path_data, export_folder, f"{video['id']}_info.json")
             tmp_output_file = os.path.join(path_data, export_folder, f"{video['id']}_rendered.mp4")
             if not os.path.exists(tmp_output_file):
-                print(f"\t- WARNING: skipping {tmp_output_file}")
+                logger.warning(f"skipping {tmp_output_file}")
                 continue
             
             with open(file_path_info) as f:
@@ -333,9 +357,9 @@ def main():
             title_clean = title_clean.replace("\\\\", "\\\\\\\\").replace("'", "\u2019")
             tmp += f"{timestamp} \"{title_clean}\" clipped by {video_info['creator_name']}\n"
             
-            print("=============================")
-            print(f"  {timestamp} - {video_info['id']}")
-            print(f"  {title_clean}")
+            logger.debug("=============================")
+            logger.debug(f"  {timestamp} - {video_info['id']}")
+            logger.debug(f"  {title_clean}")
             
             vid_length = get_video_duration(config, tmp_output_file)
             if vid_length:
@@ -343,6 +367,8 @@ def main():
         
         with open(file_path_desc, "w", encoding="utf-8") as f:
             f.write(tmp)
+        logger.info("  - created description file")
+        logger.debug(f"  - {file_path_desc}")
     
     # Remove rendered files if requested
     if not utilities_extra.terminated_requested and not args.no_remove and remove_rendered:

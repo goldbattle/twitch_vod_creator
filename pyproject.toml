@@ -2,6 +2,7 @@
 name = "twitch_vod_creator"
 version = "1.0.0"
 dependencies = [
+    "coloredlogs>=15.0.1",
     "drivedl>=1.2",
     "python-twitch-client>=0.7.1",
     "pyyaml>=6.0.3",

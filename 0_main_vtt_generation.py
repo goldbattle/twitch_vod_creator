@@ -3,6 +3,8 @@
 import argparse
 import os
 import time
+import logging
+import coloredlogs
 import utilities_extra
 from utilities_config import load_config, get_temp_path
 from utilities_audio_transcription import transcribe_video
@@ -17,8 +19,14 @@ def main():
     parser = argparse.ArgumentParser(description='Generate WebVTT transcriptions for videos')
     parser.add_argument('--channel', default=channel, help='Channel name to process')
     parser.add_argument('--min-age', type=int, default=min_age_seconds, help='Minimum file age in seconds')
+    parser.add_argument('--verbose', action='store_true', help='Show verbose output from operations')
     parser.add_argument('--temp-dir', default=get_temp_path("vtt_generation"), help='Temporary directory for downloads (default: /tmp/tvc_vtt_generation)')
     args = parser.parse_args()
+    
+    # Setup logging
+    log_level = logging.DEBUG if args.verbose else logging.INFO
+    coloredlogs.install(level=log_level, fmt='%(asctime)s %(levelname)s %(message)s')
+    logger = logging.getLogger(__name__)
     
     config = load_config()
     config['temp_path'] = args.temp_dir
@@ -31,9 +39,10 @@ def main():
     channel_path = os.path.join(path_root, args.channel)
     
     if not os.path.exists(channel_path):
-        print(f"Channel directory not found: {channel_path}")
+        logger.error(f"Channel directory not found: {channel_path}")
         return
     
+    logger.debug(f"Scanning channel directory: {channel_path}")
     for subdir, dirs, files in os.walk(channel_path):
         if utilities_extra.terminated_requested:
             break
@@ -48,26 +57,28 @@ def main():
                 vtt_path = os.path.join(subdir, ext[0] + ".vtt")
                 files_to_process.append((video_path, vtt_path))
     
-    print(f"found {len(files_to_process)} videos to process")
+    logger.info(f"found {len(files_to_process)} videos to process")
     
     # Process each video
     for video_path, vtt_path in files_to_process:
         if utilities_extra.terminated_requested:
-            print('terminate requested, not processing any more..')
+            logger.info('terminate requested, not processing any more..')
             break
         
         # Check if old enough to process
         oldness = time.time() - os.path.getmtime(video_path)
         if oldness < args.min_age:
-            print(f"skipping {video_path} since it is only {oldness:.1f} sec old")
+            logger.debug(f"skipping {video_path} since it is only {oldness:.1f} sec old")
             continue
         
         # Transcribe if not exists
         if os.path.exists(video_path) and not os.path.exists(vtt_path):
-            print(f"transcribing: {vtt_path}")
+            logger.info("starting transcribing...")
+            logger.debug(f"  - {vtt_path}")
             t0 = time.time()
             transcribe_video(config, video_path, vtt_path)
-            print(f"done in {time.time() - t0:.1f} seconds\n")
+            dur_min = (time.time() - t0) / 60.0
+            logger.info(f"transcribing took {dur_min:.2f} min")
 
 
 if __name__ == "__main__":

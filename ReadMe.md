@@ -26,7 +26,7 @@ cd twitch_vod_creator/
 Then you will need to ensure all the binaries we have can be executable on your system.
 
 ```bash
-./make_thirdparty_executable.sh
+./run_fix_thirdparty.sh
 ```
 
 We leverage [python-twitch-client](https://github.com/tsifrer/python-twitch-client) library which recently added oauth support.
