@@ -15,6 +15,20 @@ Example channels with these video renders:
 
 ### Dependencies & Config
 
+First ensure you have git LFS installed and enabled.
+
+```bash
+git lfs install
+git clone git@github.com:goldbattle/twitch_vod_creator.git
+cd twitch_vod_creator/
+```
+
+Then you will need to ensure all the binaries we have can be executable on your system.
+
+```bash
+./make_thirdparty_executable.sh
+```
+
 We leverage [python-twitch-client](https://github.com/tsifrer/python-twitch-client) library which recently added oauth support.
 You will need at least version 0.7.1 installed to have the correct api support functions.
 
@@ -22,12 +36,15 @@ You will need at least version 0.7.1 installed to have the correct api support f
 curl -LsSf https://astral.sh/uv/install.sh | sh
 uv venv --python 3.8
 source .venv/bin/activate
+uv sync
 ```
 
 You will need to make a copy of *[config/auth_example.yaml](config/auth_example.yaml)* and rename it to `config/auth.yaml`.
 This should be fill out with a twitch app client information which can be generated from the twitch [developer center](https://dev.twitch.tv/console/apps).
 For youtube uploads you will need to generate a oauth json file after you enable Youtube API V3 access in the Google developer console.
 Please take a look at the original [youtube-video-upload](https://github.com/remorses/youtube-video-upload) repository for those details if you want to try this.
+
+
 
 If you are running this on a linux machine, you will need the ffmpeg binary for your system.
 Try to download from the official website as your machine repositories will be too far out of date.
