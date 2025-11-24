@@ -19,12 +19,9 @@ We leverage [python-twitch-client](https://github.com/tsifrer/python-twitch-clie
 You will need at least version 0.7.1 installed to have the correct api support functions.
 
 ```bash
-pip install python-twitch-client
-pip install PyYAML
-pip install youtube-video-upload
-pip install drivedl
-pip install webvtt-py
-pip install vosk
+curl -LsSf https://astral.sh/uv/install.sh | sh
+uv venv --python 3.8
+source .venv/bin/activate
 ```
 
 You will need to make a copy of *[config/auth_example.yaml](config/auth_example.yaml)* and rename it to `config/auth.yaml`.

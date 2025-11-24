@@ -1,0 +1,13 @@
+[project]
+name = "twitch_vod_creator"
+version = "1.0.0"
+dependencies = [
+    "drivedl>=1.2",
+    "python-twitch-client>=0.7.1",
+    "pyyaml>=6.0.3",
+    "vosk>=0.3.45",
+    "webvtt-py>=0.5.1",
+    "youtube-video-upload>=0.2.0",
+]
+
+

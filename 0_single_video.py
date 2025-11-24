@@ -123,7 +123,10 @@ if not utils.terminated_requested and not os.path.exists(file_path_chat):
     #print(cmd)
     subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
     #subprocess.Popen(cmd, shell=True).wait()
-    shutil.move(file_path_chat_tmp, file_path_chat) 
+    if os.path.exists(file_path_chat_tmp):
+        shutil.move(file_path_chat_tmp, file_path_chat)
+    else:
+        print("Warning: Chat file was not created, download may have failed") 
 
 # AUDIO-TO-TEXT: check if file exists
 if transcribe:
@@ -184,7 +187,10 @@ if render_chat:
         #print(cmd)
         subprocess.Popen(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
         #subprocess.Popen(cmd, shell=True).wait()
-        shutil.move(file_path_render_tmp, file_path_render) 
+        if os.path.exists(file_path_render_tmp):
+            shutil.move(file_path_render_tmp, file_path_render)
+        else:
+            print("Warning: Render file was not created, render may have failed") 
 
 
 
