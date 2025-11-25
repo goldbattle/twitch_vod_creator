@@ -56,7 +56,50 @@
     #segments-panel {
       display: flex;
       flex-direction: column;
+      overflow: hidden;
+    }
+
+    #segments {
+      flex: 1;
+      min-height: 0;
+    }
+
+    #segments-editable {
+      flex: 1;
+      min-height: 0;
+      padding: 1rem;
+      font-family: monospace;
+      font-size: 0.9em;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      overflow-x: hidden;
       overflow-y: auto;
+      border: 1px solid #ced4da;
+      border-radius: 0.25rem;
+      outline: none;
+    }
+
+    #segments-editable:focus {
+      border-color: #86b7fe;
+      box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    }
+
+    .segment-highlight-line {
+      background-color: #fff3cd;
+      display: block;
+      margin: 0;
+      padding: 2px 0;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      #segments-editable {
+        border-color: #495057;
+      }
+
+      .segment-highlight-line {
+        background-color: #664d03;
+      }
     }
 
     .segment-highlight {
@@ -103,6 +146,7 @@
   <script type="text/javascript" src="js/bootstrap.bundle.min.js"></script>
   <script type="text/javascript" src="js/clipboard.min.js"></script>
   <script type="text/javascript" src="js/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
 
 </head>
 
@@ -149,8 +193,17 @@
 
     <!-- rendered segments panel -->
     <div class="resizable-panel" id="segments-panel">
-      <a class="btn btn-primary d-grid mb-2" id="copybutton" style="margin: 1rem;">COPY TEXT</a>
-      <code id="segments" class="text-body" style="padding: 1rem; display: block;">Add segments with "A"!</code>
+      <div style="display: flex; gap: 0.5rem; margin: 1rem;">
+        <a class="btn btn-primary flex-fill" id="copy-segments-button" style="cursor: pointer;"
+          onclick="copySegmentsText(); return false;">
+          <span style="margin-right: 0.25rem;">📋</span>Copy
+        </a>
+        <a class="btn btn-secondary flex-fill" id="complete-editing-button" style="cursor: not-allowed; opacity: 0.6;"
+          onclick="return false;">
+          <span style="margin-right: 0.25rem;">✓</span>Complete
+        </a>
+      </div>
+      <div id="segments-editable" contenteditable="true" spellcheck="false">Add segments with "A"!</div>
     </div>
 
     <!-- error alert -->
@@ -183,6 +236,9 @@
     var transcriptWindowEnd = 0;    // End index of visible window
     var BUFFER_WINDOW_SECONDS = 15 * 60;  // 15 minutes in seconds
     var GAP_THRESHOLD_SECONDS = 2.0;  // Gap threshold in seconds for grouping items
+    var isUpdatingSegments = false;  // Flag to prevent recursive updates when parsing YAML
+    var isEditingSegments = false;  // Flag to track if user is editing segments
+    var hasParseError = false;  // Flag to track if there's a YAML parse error
 
     // Panel resizing functionality
     function initResizablePanels() {
@@ -657,27 +713,51 @@
 
 
     function updateSegmentYaml() {
-      var text = updateSegmentYamlGenerate(false, "<br/>", "&nbsp;", true);
-      $("#segments").html(text);
-      var text2 = updateSegmentYamlGenerate(true, "\n", " ");
-      $('#copybutton').attr('data-clipboard-text', text2)
+      if (isUpdatingSegments) {
+        return; // Prevent recursive updates
+      }
+      isUpdatingSegments = true;
 
-      // Auto-scroll to current segment within segments panel
-      setTimeout(function () {
-        var currentSegmentId = segmentCurrent == -1 ? segments.length - 1 : segmentCurrent;
-        var segmentElement = document.getElementById('segment_' + currentSegmentId);
-        var segmentsPanel = document.getElementById('segments-panel');
-        if (segmentElement && segmentsPanel) {
-          var segmentTop = segmentElement.offsetTop;
-          var segmentHeight = segmentElement.offsetHeight;
-          var panelHeight = segmentsPanel.clientHeight;
-          var scrollTop = segmentTop - (panelHeight / 2) + (segmentHeight / 2);
-          segmentsPanel.scrollTo({
-            top: scrollTop,
-            behavior: 'smooth'
-          });
+      var segmentsDiv = document.getElementById('segments-editable');
+      var html = "";
+      if (segments.length === 0) {
+        html = "Add segments with \"A\"!";
+      } else {
+        html = updateSegmentYamlGenerate(true, "<br/>", "&nbsp;", true);
+      }
+      var currentScrollTop = segmentsDiv.scrollTop;
+      var hadFocus = (document.activeElement === segmentsDiv);
+      var selection = window.getSelection();
+      var range = null;
+
+      // Only save selection if the element has focus
+      if (hadFocus && selection.rangeCount > 0) {
+        try {
+          range = selection.getRangeAt(0).cloneRange();
+        } catch (e) {
+          // Failed to clone range, ignore
         }
-      }, 100);
+      }
+
+      segmentsDiv.innerHTML = html;
+
+      // Restore scroll position
+      segmentsDiv.scrollTop = currentScrollTop;
+
+      // Only restore selection if the element still has focus (or had focus)
+      if (hadFocus && range) {
+        try {
+          // Check if element still has focus before restoring selection
+          if (document.activeElement === segmentsDiv || segmentsDiv.contains(document.activeElement)) {
+            selection.removeAllRanges();
+            selection.addRange(range);
+          }
+        } catch (e) {
+          // Selection restoration failed, ignore
+        }
+      }
+
+      isUpdatingSegments = false;
     }
 
     function updateSegmentYamlGenerate(reverse, lineending, space, highlight = false) {
@@ -686,13 +766,21 @@
         segments.reverse();
       }
       for (var i = segments.length - 1; i >= 0; i--) {
-        var segmentId = 'segment_' + i;
-        var segmentClass = highlight && (i == segmentCurrent || (segmentCurrent == -1 && i == segments.length - 1))
-          ? 'segment-highlight' : '';
-        text += "<div id=\"" + segmentId + "\" class=\"" + segmentClass + "\">";
-        if (highlight && (i == segmentCurrent || (segmentCurrent == -1 && i == segments.length - 1))) {
-          text += "<span class=\"text-warning\" style=\"font-weight: bold;\">"
+        // Map display index to original array index (accounting for reverse)
+        var originalIndex = reverse ? (segments.length - 1 - i) : i;
+        var currentIndex = (segmentCurrent === -1) ? (segments.length - 1) : segmentCurrent;
+        var isCurrentSegment = highlight && (originalIndex === currentIndex);
+
+        // Only add HTML tags when generating HTML (highlight mode)
+        if (highlight) {
+          var segmentId = 'segment_' + i;
+          var segmentClass = isCurrentSegment ? 'segment-highlight' : '';
+          text += "<div id=\"" + segmentId + "\" class=\"" + segmentClass + "\">";
+          if (isCurrentSegment) {
+            text += "<span class=\"text-warning\" style=\"font-weight: bold;\">"
+          }
         }
+
         text += "- video: " + document.querySelector('#datapath').value + lineending
         text += space + space + "title: \"" + segments[i]["title"] + "\"" + lineending
         text += space + space + "t_start: \""
@@ -711,15 +799,237 @@
           }
         }
         text += "\"" + lineending + lineending
-        if (highlight && (i == segmentCurrent || (segmentCurrent == -1 && i == segments.length - 1))) {
-          text += "</span>"
+
+        // Close HTML tags only when generating HTML
+        if (highlight) {
+          if (isCurrentSegment) {
+            text += "</span>"
+          }
+          text += "</div>";
         }
-        text += "</div>";
       }
       if (reverse) {
         segments.reverse();
       }
       return text;
+    }
+
+
+    // Parse time string (HH:MM:SS or comma-separated list) to seconds
+    function parseTimeString(timeStr) {
+      var parts = timeStr.split(',');
+      var times = [];
+      for (var i = 0; i < parts.length; i++) {
+        var timePart = parts[i].trim();
+        var timeParts = timePart.split(':');
+        if (timeParts.length === 3) {
+          var hours = parseInt(timeParts[0], 10);
+          var minutes = parseInt(timeParts[1], 10);
+          var seconds = parseInt(timeParts[2], 10);
+          if (!isNaN(hours) && !isNaN(minutes) && !isNaN(seconds)) {
+            times.push(hours * 3600 + minutes * 60 + seconds);
+          }
+        }
+      }
+      return times;
+    }
+
+    // Helper to extract and unquote field values
+    function extractFieldValue(line, fieldName) {
+      var match = line.match(new RegExp('^' + fieldName + ':\\s*(.*)$'));
+      if (!match) return '';
+      var value = match[1].trim();
+      if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
+        return value.slice(1, -1);
+      }
+      return value;
+    }
+
+    // Simple field-based parser that extracts segments by looking for field patterns
+    function parseSegmentsFromText(text) {
+      try {
+        // Clean up HTML entities
+        text = text.replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&lt;/g, '<')
+          .replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+
+        var newSegments = [];
+        var lines = text.split(/\r?\n/);
+        var currentSegment = null;
+        var segmentIndex = 0;
+
+        function validateAndSaveSegment() {
+          if (currentSegment === null) return;
+          var missingFields = [];
+          // Check if fields were found (null means not found, empty string means found but empty)
+          if (currentSegment.title === null || currentSegment.title === undefined) missingFields.push('title');
+          if (currentSegment.t_start === null || currentSegment.t_start === undefined) missingFields.push('t_start');
+          if (currentSegment.t_end === null || currentSegment.t_end === undefined) missingFields.push('t_end');
+          if (missingFields.length > 0) {
+            throw new Error("Segment " + (segmentIndex + 1) + " is missing required fields: " + missingFields.join(', '));
+          }
+          newSegments.push(currentSegment);
+          segmentIndex++;
+        }
+
+        for (var i = 0; i < lines.length; i++) {
+          var line = lines[i].trim();
+          if (line === '') continue;
+
+          if (line.match(/^[-]?\s*video:\s*(.+)$/)) {
+            validateAndSaveSegment();
+            var videoMatch = line.match(/video:\s*(.+)$/);
+            currentSegment = {
+              video: videoMatch ? videoMatch[1].trim() : '',
+              title: null,  // null means not found yet
+              t_start: null,
+              t_end: null
+            };
+          } else if (line.match(/^title:\s*(.*)$/)) {
+            if (currentSegment === null) throw new Error("Found 'title:' field before 'video:' field at line " + (i + 1));
+            currentSegment.title = extractFieldValue(line, 'title');
+          } else if (line.match(/^t_start:\s*(.*)$/)) {
+            if (currentSegment === null) throw new Error("Found 't_start:' field before 'video:' field at line " + (i + 1));
+            currentSegment.t_start = extractFieldValue(line, 't_start');
+          } else if (line.match(/^t_end:\s*(.*)$/)) {
+            if (currentSegment === null) throw new Error("Found 't_end:' field before 'video:' field at line " + (i + 1));
+            currentSegment.t_end = extractFieldValue(line, 't_end');
+          }
+        }
+
+        validateAndSaveSegment(); // Save the last segment
+
+        if (newSegments.length === 0) {
+          throw new Error("No segments found in text");
+        }
+
+        // Convert to segments array format
+        var convertedSegments = [];
+        for (var j = 0; j < newSegments.length; j++) {
+          var seg = newSegments[j];
+          // Handle empty strings - empty t_start/t_end become empty arrays
+          var tStartValue = (seg.t_start === '') ? undefined : seg.t_start;
+          var tEndValue = (seg.t_end === '') ? undefined : seg.t_end;
+
+          var startTimes = tStartValue ? parseTimeString(tStartValue) : [];
+          var endTimes = tEndValue ? parseTimeString(tEndValue) : [];
+
+          convertedSegments.push({
+            start: startTimes.length > 0 ? startTimes : [0], // Default to 0 if empty
+            end: endTimes,
+            title: seg.title || '' // Allow empty title
+          });
+        }
+
+        // Preserve current segment selection
+        var oldSegmentCurrent = segmentCurrent;
+        segments = convertedSegments;
+
+        // Keep same index if still valid, otherwise set to newest
+        if (oldSegmentCurrent >= 0 && oldSegmentCurrent < segments.length) {
+          segmentCurrent = oldSegmentCurrent;
+        } else if (segments.length > 0) {
+          segmentCurrent = segments.length - 1;
+        } else {
+          segmentCurrent = -1;
+        }
+
+        return { success: true, error: null };
+      } catch (error) {
+        return { success: false, error: error.message || String(error) };
+      }
+    }
+
+    // Handle YAML editing and validation
+    function handleSegmentYamlEdit() {
+      if (isUpdatingSegments) {
+        return; // Don't validate while we're updating
+      }
+
+      var segmentsDiv = document.getElementById('segments-editable');
+      // Extract text and replace <br> tags with newlines
+      var yamlText = segmentsDiv.innerText || segmentsDiv.textContent || '';
+      // Also handle cases where <br> might still be in the text
+      yamlText = yamlText.replace(/<br\s*\/?>/gi, '\n');
+      yamlText = yamlText.trim();
+
+      if (!yamlText || yamlText === "Add segments with \"A\"!") {
+        // Empty or placeholder - hide complete button
+        hideCompleteButton();
+        return;
+      }
+
+      var result = parseSegmentsFromText(yamlText);
+
+      if (!result.success) {
+        // Show error but keep the user's text
+        hasParseError = true;
+        $("#error-toast-body").html("<h2>YAML Parse Error</h2><p>" + result.error + "</p>");
+        (new bootstrap.Toast(document.getElementById('error-toast'), { delay: 3000 })).show();
+        // Keep complete button visible
+        showCompleteButton();
+      } else {
+        // Successfully parsed - regenerate YAML with highlighting and update display
+        hasParseError = false;
+        updateSegmentYaml();
+        // Hide complete button
+        hideCompleteButton();
+      }
+    }
+
+    // Enable/disable complete editing button
+    function showCompleteButton() {
+      var btn = document.getElementById('complete-editing-button');
+      btn.className = 'btn btn-success flex-fill';
+      btn.style.cssText = 'cursor: pointer; opacity: 1;';
+      btn.setAttribute('onclick', 'handleSegmentYamlEdit(); return false;');
+      isEditingSegments = true;
+    }
+
+    function hideCompleteButton() {
+      var btn = document.getElementById('complete-editing-button');
+      btn.className = 'btn btn-secondary flex-fill';
+      btn.style.cssText = 'cursor: not-allowed; opacity: 0.6;';
+      btn.setAttribute('onclick', 'return false;');
+      isEditingSegments = false;
+    }
+
+    // Copy segments text to clipboard
+    function showCopyFeedback() {
+      var btn = document.getElementById('copy-segments-button');
+      var originalHTML = btn.innerHTML;
+      btn.innerHTML = '<span style="margin-right: 0.25rem;">✓</span>Copied!';
+      btn.className = 'btn btn-success flex-fill';
+      setTimeout(function () {
+        btn.innerHTML = originalHTML;
+        btn.className = 'btn btn-primary flex-fill';
+      }, 1000);
+    }
+
+    function copySegmentsText() {
+      var textForCopy = updateSegmentYamlGenerate(true, "\n", " ");
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(textForCopy).then(showCopyFeedback).catch(function (err) {
+          console.error('Failed to copy:', err);
+          fallbackCopyTextToClipboard(textForCopy);
+        });
+      } else {
+        fallbackCopyTextToClipboard(textForCopy);
+      }
+    }
+
+    function fallbackCopyTextToClipboard(text) {
+      var textArea = document.createElement("textarea");
+      textArea.value = text;
+      textArea.style.cssText = 'position: fixed; left: -999999px; top: -999999px;';
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      try {
+        if (document.execCommand('copy')) showCopyFeedback();
+      } catch (err) {
+        console.error('Fallback copy failed:', err);
+      }
+      document.body.removeChild(textArea);
     }
 
     //===========================================
@@ -749,8 +1059,17 @@
     var theVideo = document.querySelector('#video-active');
     document.onkeydown = function (event) {
 
-      // Don't do key events if we are in a form input
-      if (document.activeElement.tagName === "INPUT") {
+      // Don't do key events if we are in a form input, textarea, or contenteditable div
+      var activeElement = document.activeElement;
+      if (activeElement.tagName === "INPUT" ||
+        activeElement.tagName === "TEXTAREA" ||
+        activeElement.id === "segments-editable" ||
+        activeElement.isContentEditable) {
+        return
+      }
+
+      // Don't do key events if there's a parse error (user must fix YAML first)
+      if (hasParseError) {
         return
       }
 
@@ -758,9 +1077,13 @@
       if (event.keyCode == 84) {
         event.preventDefault();
         if (segments.length > 0) {
-          var title = prompt("Current Segment Title", segments.at(segmentCurrent)["title"]);
-          segments.at(segmentCurrent)["title"] = title;
-          updateSegmentYaml();
+          // segmentCurrent = -1 means newest (last in array)
+          var currentIndex = segmentCurrent === -1 ? segments.length - 1 : segmentCurrent;
+          if (currentIndex >= 0 && currentIndex < segments.length) {
+            var title = prompt("Current Segment Title", segments[currentIndex]["title"]);
+            segments[currentIndex]["title"] = title;
+            updateSegmentYaml();
+          }
         }
       }
 
@@ -827,28 +1150,42 @@
         updateSegmentYaml();
       }
 
-      // up arrow
+      // up arrow (moves down visually on page, which is to older segment in array - lower index)
       if (event.keyCode == 38) {
         event.preventDefault();
-        if (segmentCurrent != -1) {
-          segmentCurrent = segmentCurrent + 1;
-          if (segmentCurrent >= segments.length) {
-            segmentCurrent = -1;
-          }
-          updateSegmentYaml();
-        }
-      }
-
-      // down arrow
-      if (event.keyCode == 40) {
-        event.preventDefault();
-        if (segmentCurrent != -1) {
-          segmentCurrent = segmentCurrent - 1;
-          if (segmentCurrent < 0) {
+        if (segmentCurrent === -1) {
+          // Currently at newest (top), move to second newest
+          if (segments.length > 1) {
+            segmentCurrent = segments.length - 2;
+          } else {
             segmentCurrent = 0;
           }
-        } else if (segments.length > 1) {
-          segmentCurrent = segments.length - 2
+        } else if (segmentCurrent > 0) {
+          // Move to older segment (lower index, appears below on page)
+          segmentCurrent = segmentCurrent - 1;
+        } else {
+          // Already at oldest (bottom), stay at 0
+          segmentCurrent = 0;
+        }
+        updateSegmentYaml();
+      }
+
+      // down arrow (moves up visually on page, which is to newer segment in array - higher index)
+      if (event.keyCode == 40) {
+        event.preventDefault();
+        if (segmentCurrent === -1) {
+          // Already at newest (top), stay at -1
+          segmentCurrent = -1;
+        } else if (segmentCurrent < segments.length - 1) {
+          // Move to newer segment (higher index, appears above on page)
+          segmentCurrent = segmentCurrent + 1;
+          // If we reached the newest, set to -1
+          if (segmentCurrent === segments.length - 1) {
+            segmentCurrent = -1;
+          }
+        } else {
+          // Shouldn't happen, but if at newest, set to -1
+          segmentCurrent = -1;
         }
         updateSegmentYaml();
       }
@@ -930,9 +1267,26 @@
       // Initialize resizable panels
       initResizablePanels();
 
-      // Create clipboard object
-      // https://clipboardjs.com/
-      var clipboard = new ClipboardJS('#copybutton');
+      // Set up YAML editor event handlers
+      var segmentsDiv = document.getElementById('segments-editable');
+
+      // When user clicks into the editor, enable COMPLETE button
+      segmentsDiv.addEventListener('focus', function () {
+        showCompleteButton();
+      });
+
+      // When user clicks out, try to parse YAML
+      // Use a small delay to ensure blur completes before parsing
+      segmentsDiv.addEventListener('blur', function (event) {
+        // Allow the blur to complete first
+        setTimeout(function () {
+          // Check if focus actually left (not just moved to a child element)
+          var activeElement = document.activeElement;
+          if (activeElement !== segmentsDiv && !segmentsDiv.contains(activeElement)) {
+            handleSegmentYamlEdit();
+          }
+        }, 10);
+      });
 
       // Get what video we are currently loading!
       const urlParams = new URLSearchParams(window.location.search);
