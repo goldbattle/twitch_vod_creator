@@ -26,19 +26,20 @@ def load_config(base_path=None):
     auth_config = os.path.join(base_path, "config", "auth.yaml")
     with open(auth_config) as f:
         auth = yaml.load(f, Loader=yaml.FullLoader)
-    
-    font_path = os.path.join(base_path, "thirdparty", "bebas_neue", "BebasNeue-Regular.ttf")
+
     # Windows path escaping for ffmpeg
+    font_path = os.path.join(base_path, "thirdparty", "bebas_neue", "BebasNeue-Regular.ttf")
     font_path_escaped = font_path.replace("\\", "/").replace(":", "\\\\:")
     
     return {
         'base_path': base_path,
         'auth': auth,
         'twitch_cli': os.path.join(base_path, "thirdparty", "Twitch_Downloader_1.56.2", "TwitchDownloaderCLI"),
-        # 'ffmpeg': os.path.join(base_path, "thirdparty", "ffmpeg-4.3.1-amd64-static", "ffmpeg"),
-        # 'ffprobe': os.path.join(base_path, "thirdparty", "ffmpeg-4.3.1-amd64-static", "ffprobe"),
-        'ffmpeg': os.path.join(base_path, "thirdparty", "ffmpeg-sr", "bin", "ffmpeg.wrapper"),
-        'ffprobe': os.path.join(base_path, "thirdparty", "ffmpeg-sr", "bin", "ffprobe.wrapper"),
+        'ffmpeg': os.path.join(base_path, "thirdparty", "ffmpeg-4.3.1-amd64-static", "ffmpeg"),
+        'ffprobe': os.path.join(base_path, "thirdparty", "ffmpeg-4.3.1-amd64-static", "ffprobe"),
+        # 'ffmpeg': os.path.join(base_path, "thirdparty", "ffmpeg-sr", "bin", "ffmpeg.wrapper"),
+        # 'ffprobe': os.path.join(base_path, "thirdparty", "ffmpeg-sr", "bin", "ffprobe.wrapper"),
+        # 'superres_model': os.path.join(base_path, "thirdparty", "ffmpeg-sr", "sr", "espcn.pb"),
         'vosk_model': os.path.join(base_path, "thirdparty", "vosk-model-small-en-us-0.15"),
         'font': font_path_escaped,
         'data_root': os.path.join(os.path.dirname(base_path), "data"),

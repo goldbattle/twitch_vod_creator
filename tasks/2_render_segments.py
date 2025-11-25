@@ -170,10 +170,7 @@ def run_task(args: argparse.Namespace) -> None:
         
         try:
             # Composite video - use 4K temp folder if enabled
-            if args.do_4k:
-                file_path_composite = os.path.join(path_render, f"{video['video']}_{clean_video_title}_4k.mp4")
-            else:
-                file_path_composite = os.path.join(path_render, f"{video['video']}_{clean_video_title}.mp4")
+            file_path_composite = os.path.join(path_render, f"{video['video']}_{clean_video_title}.mp4")
             file_path_composite_tmp = os.path.join(config_dict['temp_path'], f"{clean_video_title}.tmp.mp4")
             
             should_render_chat = video.get("with_chat", True)

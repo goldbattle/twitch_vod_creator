@@ -14,6 +14,7 @@ python3 tvc.py download_clips \
     --min-view-counts 6000 1000 300 100 1000 5000 100 500 500 \
     --num-days 120
 
+
 # Example with fewer channels:
 # python3 tvc.py download_clips \
 #     --channels sodapoppin xqc \
@@ -42,11 +43,13 @@ python3 tvc.py download_videos \
 #     --render-webvtt true true true
 
 # Example with more channels (all previously commented out):
-# python3 tvc.py download_videos \
-#     --channels sodapoppin moonmoon clintstevens sevadus jerma985 heydoubleu vei squeex goldbattle j_blow mindcrack \
-#     --max-videos 1 \
-#     --render-chat true false false false false false false false false false false false \
-#     --render-webvtt true true true false true false false false true false false false
+python3 tvc.py download_videos \
+    --channels sodapoppin moonmoon clintstevens sevadus jerma985 heydoubleu vei squeex goldbattle j_blow mindcrack \
+    --max-videos 120 \
+    --render-chat true false false false false false false false false false false \
+    --render-webvtt true true true false true false false false true false false
+
+
 
 # ================================================================
 # render_clip_comp
@@ -227,13 +230,13 @@ python3 tvc.py generate_vtt \
 #     --min-age 120
 
 # ================================================================
-# download_single_video
+# download_videos_single
 # ================================================================
 # Downloads a single VOD by ID
-python3 tvc.py download_single_video 1234567890
+python3 tvc.py download_videos_single 1234567890
 
 # To skip chat rendering:
-# python3 tvc.py download_single_video 1234567890 --no-chat
+# python3 tvc.py download_videos_single 1234567890 --no-chat
 
 # To skip transcription:
-# python3 tvc.py download_single_video 1234567890 --no-transcribe
+# python3 tvc.py download_videos_single 1234567890 --no-transcribe

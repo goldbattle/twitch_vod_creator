@@ -327,49 +327,7 @@ def get_video_duration(config, video_path):
 
 
 def upscale_video_to_4k(config, video_path, output_path, verbose=False):
-    """
-    Upscale a video to 4K (3840x2160) with CRF 15.
-    
-    Upscaling method selection (change UPSCALE_METHOD constant):
-    0 = Lanczos scaling (default, high quality)
-    1 = DNN processing (AI upscaling)
-    2 = Super resolution filter
-    
-    Example model paths:
-    - ESPCN (2x upscale): "models/espcn.pb" or "models/ESPCN_x2.pb"
-    - EDSR (2x upscale): "models/EDSR_x2.pb" or "models/EDSR_x4.pb"
-    - Real-ESRGAN: "models/RealESRGAN_x4plus.pb"
-    - SRCNN: "models/srcnn.pb"
-    
-    Args:
-        config: Configuration dictionary
-        video_path: Input video path
-        output_path: Output video path
-        verbose: Enable verbose output
-    """
-    
-    # ============================================================
-    # UPSCALING METHOD CONFIGURATION
-    # ============================================================
-    # 0 = Lanczos scaling (default, high quality, no model needed)
-    # 1 = DNN processing (requires dnn_model path)
-    # 2 = Super resolution filter (requires superres_model path)
-    UPSCALE_METHOD = 1
-    
-    # Model paths (only used if UPSCALE_METHOD is 1 or 2)
-    # Example paths - adjust to your actual model locations:
-    # DNN models (for method 1):
-    #   - ESPCN: "models/espcn.pb" or "thirdparty/models/ESPCN_x2.pb"
-    #   - EDSR: "models/EDSR_x2.pb" or "models/EDSR_x4.pb"
-    #   - Real-ESRGAN: "models/RealESRGAN_x4plus.pb"
-    #   - SRCNN: "models/srcnn.pb"
-    DNN_MODEL = "/home/patrick/Work/twitch_vod_creator/thirdparty/ffmpeg-sr/sr/espcn.pb"
-    
-    # Super resolution models (for method 2):
-    #   - libplacebo models: "models/superres_model.pb"
-    SUPERRES_MODEL = "models/superres_model.pb"  # Example path
-    # ============================================================
-    
+    """Upscale a video to 4K (3840x2160) with CRF 15."""
     if os.path.exists(output_path) or utilities_extra.terminated_requested:
         return False
     
@@ -379,23 +337,27 @@ def upscale_video_to_4k(config, video_path, output_path, verbose=False):
     loglevel = "error" if verbose else "quiet"
     codec, encoder_params = get_video_encoder_params(config, preset="slow")
     
-    # Build video filter chain based on selected method
+    # Build video filter chain
+    # https://ffmpeg.org/ffmpeg-filters.html#sr-1
+    # https://ffmpeg.org/ffmpeg-filters.html#dnn_005fprocessing
+    USE_SR_UPSCALE = False
     vf_parts = []
-    if UPSCALE_METHOD == 1 and os.path.exists(DNN_MODEL):
-        # dnn_processing filter - adjust input/output names based on your model
-        # Common: input=x, output=y or input=0, output=0
-        vf_parts.append(f'dnn_processing=dnn_backend=tensorflow:model={DNN_MODEL}:input=x:output=y')
     
-    elif UPSCALE_METHOD == 2 and os.path.exists(SUPERRES_MODEL):
-        # sr filter (libplacebo super resolution)
-        vf_parts.append(f'sr=dnn_backend=tensorflow:model={SUPERRES_MODEL}:scale_factor=2')
+    # Add light temporal noise reduction (hqdn3d: spatial_luma, spatial_chroma, temporal_luma, temporal_chroma)
+    # Light setting (default is 4), lets ffmpeg solve for the remaining terms via its defaults
+    vf_parts.append('hqdn3d=luma_spatial=2')
+    
+    superres_model = config.get('superres_model')
+    if USE_SR_UPSCALE and superres_model and os.path.exists(superres_model):
+        # sr filter (libplacebo super resolution) with TensorFlow backend
+        vf_parts.append(f'sr=dnn_backend=tensorflow:model={superres_model}:scale_factor=2:input=x:output=y')
 
     # Always final step is Lanczos scaling
     # accurate_rnd: accurate rounding
     # full_chroma_int: full chroma interpolation
     vf_parts.append('scale=3840:2160:flags=lanczos+accurate_rnd+full_chroma_int')
     vf_string = ','.join(vf_parts) if len(vf_parts) > 1 else vf_parts[0]
-    logger.debug(f"Upscaling method: {UPSCALE_METHOD}, filter: {vf_string}")
+    logger.debug(f"Upscaling: SR={USE_SR_UPSCALE}, filter: {vf_string}")
     
     cmd = (
         f'{config["ffmpeg"]} -hide_banner -loglevel {loglevel} -stats'
