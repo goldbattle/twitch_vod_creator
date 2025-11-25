@@ -53,13 +53,20 @@ def download_chat(config, content_id, output_path, is_clip=False, verbose=False)
 
 def render_chat(config, chat_json_path, output_path, 
                 height=926, width=274, update_rate=0.1, framerate=60,
-                font_size=15, verbose=False):
+                font_size=15, verbose=False, is_4k=False):
     """Render chat JSON to video."""
     if os.path.exists(output_path):
         return True
     
     if utilities_extra.terminated_requested:
         return False
+    
+    # For 4K, scale chat proportionally: 274x926 -> 548x2160
+    if is_4k:
+        height = 2160
+        width = 548
+        # Scale font size proportionally: 15 * (2160/926) ≈ 35
+        font_size = int(font_size * (2160 / 926))
     
     temp_path = config.get('temp_path', '/tmp')
     temp_output = os.path.join(temp_path, os.path.basename(output_path))

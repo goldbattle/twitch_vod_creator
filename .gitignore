@@ -9,6 +9,9 @@ config/auth.yaml
 logs
 logs_old
 
+# ffmpeg builds
+thirdparty/ffmpeg-sr-build/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

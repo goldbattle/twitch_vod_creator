@@ -28,7 +28,7 @@ def load_task_module(module_name: str):
 TASK_MODULE_MAP = {
     'download_clips': '0_main_clips',
     'download_videos': '0_main_videos',
-    'download_single_video': '0_single_video',
+    'download_videos_single': '0_single_video',
     'generate_vtt': '0_main_vtt_generation',
     'web': '1_editor_website',
     'render_clip_comp': '2_render_clip_comp',
@@ -41,7 +41,7 @@ TASK_MODULE_MAP = {
 COMMAND_DESCRIPTIONS = {
     'download_clips': 'Download Twitch clips (video+chat)from a given set of channels',
     'download_videos': 'Download Twitch VODs (video+chat) for a given set of channels, optionally rendering chat and WebVTT transcriptions',
-    'download_single_video': 'Download a single Twitch VOD (video+chat) by ID',
+    'download_videos_single': 'Download a single Twitch VOD (video+chat) by ID',
     'generate_vtt': 'Generate any missing WebVTT transcriptions for videos for a given channel',
     'render_clip_comp': 'Download and render clip compilation into single video',
     'render_4way': 'Render 4-way video composite into single video',
@@ -78,8 +78,8 @@ def create_parser() -> argparse.ArgumentParser:
     )
     
     subparsers.add_parser(
-        'download_single_video',
-        help=COMMAND_DESCRIPTIONS['download_single_video'],
+        'download_videos_single',
+        help=COMMAND_DESCRIPTIONS['download_videos_single'],
         description='Download a single Twitch VOD by its ID'
     )
     

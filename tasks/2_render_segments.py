@@ -50,6 +50,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument('--file-history', help='History YAML file (relative to config directory)')
     parser.add_argument('--verbose', action='store_true', help='Show verbose output from operations')
     parser.add_argument('--temp-dir', default=config.get_temp_path("render_segments"), help='Temporary directory for downloads (default: /tmp/tvc_render_segments)')
+    parser.add_argument('--do-4k', action='store_true', help='Upscale videos to 4K (3840x2160) with 25Mbps bitrate and re-render chat at 4K')
     return parser.parse_args()
 
 
@@ -168,24 +169,74 @@ def run_task(args: argparse.Namespace) -> None:
         os.makedirs(path_temp_parts, exist_ok=True)
         
         try:
-            # Composite video
-            file_path_composite = os.path.join(path_render, f"{video['video']}_{clean_video_title}.mp4")
+            # Composite video - use 4K temp folder if enabled
+            if args.do_4k:
+                file_path_composite = os.path.join(path_render, f"{video['video']}_{clean_video_title}_4k.mp4")
+            else:
+                file_path_composite = os.path.join(path_render, f"{video['video']}_{clean_video_title}.mp4")
             file_path_composite_tmp = os.path.join(config_dict['temp_path'], f"{clean_video_title}.tmp.mp4")
             
+            should_render_chat = video.get("with_chat", True)
             if not extra.terminated_requested:
-                should_render_chat = video.get("with_chat", True)
+                # Render chat if needed (only if with_chat is True)
+                file_path_chat_mp4 = None
+                if should_render_chat:
+                    file_path_chat = os.path.join(path_root, video["video"] + "_chat.json")
+                    file_path_chat_mp4 = os.path.join(path_root, video["video"] + "_chat.mp4")
+                    
+                    # For 4K mode, we need to re-render chat at 4K resolution
+                    if args.do_4k and os.path.exists(file_path_chat):
+                        file_path_chat_mp4_4k = os.path.join(path_root, video["video"] + "_chat_4k.mp4")
+                        if not os.path.exists(file_path_chat_mp4_4k):
+                            # Render to temp first, then copy to data directory
+                            file_path_chat_mp4_4k_temp = os.path.join(config_dict['temp_path'], video["video"] + "_chat_4k_temp.mp4")
+                            logger.info("  - starting rendering chat at 4K...")
+                            logger.debug(f"  - {file_path_chat_mp4_4k}")
+                            t0 = time.time()
+                            chat.render_chat(config_dict, file_path_chat, file_path_chat_mp4_4k_temp, verbose=args.verbose, is_4k=True)
+                            dur_min = (time.time() - t0) / 60.0
+                            if os.path.exists(file_path_chat_mp4_4k_temp):
+                                # Copy to data directory
+                                shutil.copy2(file_path_chat_mp4_4k_temp, file_path_chat_mp4_4k)
+                                os.remove(file_path_chat_mp4_4k_temp)
+                                logger.info(f"  - rendering chat at 4K took {dur_min:.2f} min")
+                            else:
+                                logger.error("  - ERROR: Failed to render chat at 4K!")
+                                continue
+                        file_path_chat_mp4 = file_path_chat_mp4_4k
+                    elif os.path.exists(file_path_chat) and not os.path.exists(file_path_chat_mp4):
+                        logger.info("  - starting rendering chat...")
+                        logger.debug(f"  - {file_path_chat_mp4}")
+                        t0 = time.time()
+                        chat.render_chat(config_dict, file_path_chat, file_path_chat_mp4, verbose=args.verbose)
+                        dur_min = (time.time() - t0) / 60.0
+                        logger.info(f"  - rendering chat took {dur_min:.2f} min")
                 
-                # Render chat if needed
-                file_path_chat = os.path.join(path_root, video["video"] + "_chat.json")
-                file_path_chat_mp4 = os.path.join(path_root, video["video"] + "_chat.mp4")
-                
-                if should_render_chat and os.path.exists(file_path_chat) and not os.path.exists(file_path_chat_mp4):
-                    logger.info("  - starting rendering chat...")
-                    logger.debug(f"  - {file_path_chat_mp4}")
-                    t0 = time.time()
-                    chat.render_chat(config_dict, file_path_chat, file_path_chat_mp4, verbose=args.verbose)
-                    dur_min = (time.time() - t0) / 60.0
-                    logger.info(f"  - rendering chat took {dur_min:.2f} min")
+                # Upscale video to 4K if enabled
+                if args.do_4k:
+                    file_path_video_4k = os.path.join(path_root, video["video"] + "_4k.mp4")
+                    if not os.path.exists(file_path_video_4k):
+                        # Upscale to temp first, then copy to data directory
+                        file_path_video_4k_temp = os.path.join(config_dict['temp_path'], video["video"] + "_4k_temp.mp4")
+                        logger.info("  - starting upscaling video to 4K...")
+                        logger.debug(f"  - {file_path_video_4k}")
+                        t0 = time.time()
+                        success = video_editing.upscale_video_to_4k(config_dict, file_path_video, file_path_video_4k_temp, verbose=args.verbose)
+                        dur_min = (time.time() - t0) / 60.0
+                        if success and os.path.exists(file_path_video_4k_temp):
+                            # Copy to data directory
+                            shutil.copy2(file_path_video_4k_temp, file_path_video_4k)
+                            os.remove(file_path_video_4k_temp)
+                            logger.info(f"  - upscaling video to 4K took {dur_min:.2f} min")
+                            file_path_video = file_path_video_4k
+                        else:
+                            logger.error("  - ERROR: Failed to upscale video to 4K! Skipping this video.")
+                            logger.error("  - Check if input file exists and run with --verbose for details.")
+                            if os.path.exists(file_path_video_4k_temp):
+                                os.remove(file_path_video_4k_temp)
+                            continue  # Skip this video entirely
+                    else:
+                        file_path_video = file_path_video_4k
                 
                 # Render composite
                 os.makedirs(os.path.dirname(file_path_composite), exist_ok=True)
@@ -214,16 +265,16 @@ def run_task(args: argparse.Namespace) -> None:
                         tmp_output_file = file_path_composite_tmp
                     
                     t0 = time.time()
-                    chat_offset = int(video.get("t_chat_offset", 0))
                     
-                    if should_render_chat and os.path.exists(file_path_chat_mp4):
+                    if should_render_chat and file_path_chat_mp4 and os.path.exists(file_path_chat_mp4):
+                        chat_offset = int(video.get("t_chat_offset", 0))
                         logger.info(f"  - starting rendering segment {seg_start[idx]} to {seg_end[idx]}...")
                         logger.debug(f"  - {tmp_output_file}")
                         if chat_offset != 0:
                             logger.debug(f"  - chat offset: {chat_offset} seconds")
                         success = video_editing.render_segment_with_chat(
                             config_dict, file_path_video, file_path_chat_mp4, tmp_output_file,
-                            seg_start[idx], seg_end[idx], chat_offset, verbose=args.verbose
+                            seg_start[idx], seg_end[idx], chat_offset, verbose=args.verbose, is_4k=args.do_4k
                         )
                         if not success:
                             logger.error("  - ERROR: Failed to render segment! Check if input files exist and run with --verbose for details.")
@@ -233,7 +284,7 @@ def run_task(args: argparse.Namespace) -> None:
                         logger.debug(f"  - {tmp_output_file}")
                         success = video_editing.render_segment_without_chat(
                             config_dict, file_path_video, tmp_output_file,
-                            seg_start[idx], seg_end[idx], verbose=args.verbose
+                            seg_start[idx], seg_end[idx], verbose=args.verbose, is_4k=args.do_4k
                         )
                         if not success:
                             logger.error("  - ERROR: Failed to render segment! Check if input files exist and run with --verbose for details.")
@@ -280,8 +331,8 @@ def run_task(args: argparse.Namespace) -> None:
                     logger.debug("  - removing half rendered temp file")
                     os.remove(file_path_composite_tmp)
             
-            # Description file
-            if not extra.terminated_requested and not os.path.exists(file_path_desc):
+            # Description file - only create if video was successfully rendered
+            if not extra.terminated_requested and not os.path.exists(file_path_desc) and os.path.exists(file_path_composite):
                 tmp = str(template)
                 tmp = tmp.replace("$id", video_info["id"])
                 tmp = tmp.replace("$title", video_info["title"])

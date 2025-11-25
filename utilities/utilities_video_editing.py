@@ -14,6 +14,91 @@ from . import utilities_extra
 logger = logging.getLogger(__name__)
 
 
+def has_nvenc_support(config):
+    """Check if ffmpeg supports NVENC encoding and GPU is available."""
+    # First check if ffmpeg has NVENC encoder compiled in
+    # Note: ffmpeg sends encoder list to stderr, not stdout
+    has_encoder = False
+    try:
+        ffmpeg_path = config.get('ffmpeg', 'ffmpeg')
+        result = subprocess.run(
+            [ffmpeg_path, '-encoders'],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            timeout=5
+        )
+        if result.returncode != 0:
+            logger.debug("GPU support: ffmpeg -encoders command failed")
+            return False
+        
+        # Check both stdout and stderr (ffmpeg behavior can vary)
+        # Search in both outputs - Python's 'in' operator handles multi-line strings correctly
+        output = result.stdout.decode('utf-8', errors='ignore') + result.stderr.decode('utf-8', errors='ignore')
+        if 'h264_nvenc' not in output:
+            logger.debug("GPU support: h264_nvenc encoder not found in ffmpeg output")
+            return False
+        has_encoder = True
+        logger.debug("GPU support: h264_nvenc encoder found in ffmpeg")
+    except (subprocess.TimeoutExpired, FileNotFoundError, Exception) as e:
+        logger.debug(f"GPU support: Error checking ffmpeg encoders: {e}")
+        return False
+    
+    # Also check if GPU is actually available
+    try:
+        result = subprocess.run(
+            ['nvidia-smi', '--query-gpu=name', '--format=csv,noheader'],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            timeout=5
+        )
+        if result.returncode == 0 and len(result.stdout.strip()) > 0:
+            gpu_name = result.stdout.decode('utf-8', errors='ignore').strip().split('\n')[0]
+            logger.debug(f"GPU support: NVIDIA GPU detected - {gpu_name}")
+            return True
+        else:
+            logger.debug("GPU support: nvidia-smi returned no GPU")
+            return False
+    except (subprocess.TimeoutExpired, FileNotFoundError, Exception) as e:
+        # If nvidia-smi is not available, we can't verify GPU presence
+        # Return False to fall back to software encoding
+        logger.debug(f"GPU support: nvidia-smi not available or failed: {e}")
+        if has_encoder:
+            logger.debug("GPU support: Encoder present but GPU not verified, falling back to software encoding")
+        return False
+
+
+def get_video_encoder_params(config, preset="slow", use_gpu=None):
+    """
+    Get video encoder parameters, using NVENC if supported.
+    
+    Args:
+        config: Configuration dictionary with ffmpeg path
+        preset: Encoding preset ('slow', 'fast', 'veryfast')
+        use_gpu: Force GPU usage (True/False). If None, auto-detect.
+    
+    Returns:
+        Tuple of (codec, encoding_params_string)
+    """
+    if use_gpu is None:
+        use_gpu = has_nvenc_support(config)
+    
+    if use_gpu:
+        logger.debug(f"GPU support: Using NVENC (h264_nvenc) with preset {preset}")
+        # NVENC preset mapping: slow -> p7 (best quality), fast -> p4, veryfast -> p1
+        nvenc_presets = {
+            'slow': 'p7',
+            'fast': 'p4',
+            'veryfast': 'p1'
+        }
+        nvenc_preset = nvenc_presets.get(preset, 'p4')
+        # NVENC uses -cq for constant quality (similar to CRF)
+        # -rc vbr for variable bitrate, -cq sets the quality level
+        return 'h264_nvenc', f'-rc vbr -cq 15 -qmin 15 -qmax 15 -preset {nvenc_preset}'
+    else:
+        logger.debug(f"GPU support: Using software encoding (libx264) with preset {preset}")
+        return 'libx264', f'-crf 15 -preset {preset}'
+
+
 def time_string_to_seconds(time_str):
     """Convert time string (HH:MM:SS) to seconds."""
     h, m, s = time_str.split(':')
@@ -22,7 +107,7 @@ def time_string_to_seconds(time_str):
 
 def render_segment_with_chat(config, video_path, chat_path, output_path,
                               start_time, end_time, chat_offset=0,
-                              video_scale="1646x926", verbose=False):
+                              video_scale="1646x926", verbose=False, is_4k=False):
     """Render a video segment with chat overlay."""
     if os.path.exists(output_path) or utilities_extra.terminated_requested:
         return False
@@ -34,18 +119,37 @@ def render_segment_with_chat(config, video_path, chat_path, output_path,
     h, m = divmod(m, 60)
     seg_start_chat = f"{h:02d}:{m:02d}:{s:02d}"
     
-    cmd = (
-        f'{config["ffmpeg"]} '
-        f' -ss {start_time} -i {video_path} -to {end_time}'
-        f' -ss {seg_start_chat} -i {chat_path}'
-        f' -filter_complex "[0:v] scale={video_scale} [tmp1];'
-        f' [tmp1][1:v]hstack=inputs=2:shortest=1[stack]"'
-        f' -shortest -map "[stack]" -map 0:a'
-        f' -vcodec libx264 -crf 10 -preset veryfast'
-        f' -avoid_negative_ts make_zero -framerate 60 -vsync 2'
-        f' -map_chapters -1 -c:a aac'
-        f' {output_path}'
-    )
+    # Get encoder parameters (NVENC if GPU available, otherwise libx264)
+    if is_4k:
+        codec, encoder_params = get_video_encoder_params(config, preset="slow")
+        # For 4K: video 3292x2160, chat 548x2160, total 3840x2160
+        cmd = (
+            f'{config["ffmpeg"]} '
+            f' -ss {start_time} -i {video_path} -to {end_time}'
+            f' -ss {seg_start_chat} -i {chat_path}'
+            f' -filter_complex "[0:v] scale=3292:2160 [tmp1];'
+            f' [1:v] scale=548:2160 [tmp2];'
+            f' [tmp1][tmp2]hstack=inputs=2:shortest=1[stack]"'
+            f' -shortest -map "[stack]" -map 0:a'
+            f' -vcodec {codec} {encoder_params}'
+            f' -avoid_negative_ts make_zero -framerate 60 -vsync 2'
+            f' -map_chapters -1 -c:a aac'
+            f' {output_path}'
+        )
+    else:
+        codec, encoder_params = get_video_encoder_params(config, preset="slow")
+        cmd = (
+            f'{config["ffmpeg"]} '
+            f' -ss {start_time} -i {video_path} -to {end_time}'
+            f' -ss {seg_start_chat} -i {chat_path}'
+            f' -filter_complex "[0:v] scale={video_scale} [tmp1];'
+            f' [tmp1][1:v]hstack=inputs=2:shortest=1[stack]"'
+            f' -shortest -map "[stack]" -map 0:a'
+            f' -vcodec {codec} {encoder_params}'
+            f' -avoid_negative_ts make_zero -framerate 60 -vsync 2'
+            f' -map_chapters -1 -c:a aac'
+            f' {output_path}'
+        )
     
     stdout = None if verbose else subprocess.DEVNULL
     stderr = None if verbose else subprocess.DEVNULL
@@ -61,7 +165,7 @@ def render_segment_with_chat(config, video_path, chat_path, output_path,
 
 
 def render_segment_without_chat(config, video_path, output_path,
-                                 start_time, end_time, scale="1920:1080", verbose=False):
+                                 start_time, end_time, scale="1920:1080", verbose=False, is_4k=False):
     """Render a video segment without chat overlay."""
     if os.path.exists(output_path) or utilities_extra.terminated_requested:
         return False
@@ -76,14 +180,27 @@ def render_segment_without_chat(config, video_path, output_path,
     seg_length = f"{h:02d}:{m:02d}:{s:02d}"
     
     loglevel = "error" if verbose else "quiet"
-    cmd = (
-        f'{config["ffmpeg"]} -hide_banner -loglevel {loglevel} -stats'
-        f' -ss {start_time} -i {video_path} -t {seg_length}'
-        f' -vf scale=w={scale.split(":")[0]}:h={scale.split(":")[1]}'
-        f' -c:a aac -vcodec libx264 -crf 10 -preset fast'
-        f' -avoid_negative_ts make_zero -vsync 2 -map_chapters -1'
-        f' {output_path}'
-    )
+    if is_4k:
+        # For 4K: 3840x2160 with CRF 15
+        codec, encoder_params = get_video_encoder_params(config, preset="slow")
+        cmd = (
+            f'{config["ffmpeg"]} -hide_banner -loglevel {loglevel} -stats'
+            f' -ss {start_time} -i {video_path} -t {seg_length}'
+            f' -vf scale=3840:2160'
+            f' -c:a aac -vcodec {codec} {encoder_params}'
+            f' -avoid_negative_ts make_zero -vsync 2 -map_chapters -1'
+            f' {output_path}'
+        )
+    else:
+        codec, encoder_params = get_video_encoder_params(config, preset="slow")
+        cmd = (
+            f'{config["ffmpeg"]} -hide_banner -loglevel {loglevel} -stats'
+            f' -ss {start_time} -i {video_path} -t {seg_length}'
+            f' -vf scale=w={scale.split(":")[0]}:h={scale.split(":")[1]}'
+            f' -c:a aac -vcodec {codec} {encoder_params}'
+            f' -avoid_negative_ts make_zero -vsync 2 -map_chapters -1'
+            f' {output_path}'
+        )
     
     stdout = None if verbose else subprocess.DEVNULL
     stderr = None if verbose else subprocess.DEVNULL
@@ -209,6 +326,100 @@ def get_video_duration(config, video_path):
         return None
 
 
+def upscale_video_to_4k(config, video_path, output_path, verbose=False):
+    """
+    Upscale a video to 4K (3840x2160) with CRF 15.
+    
+    Upscaling method selection (change UPSCALE_METHOD constant):
+    0 = Lanczos scaling (default, high quality)
+    1 = DNN processing (AI upscaling)
+    2 = Super resolution filter
+    
+    Example model paths:
+    - ESPCN (2x upscale): "models/espcn.pb" or "models/ESPCN_x2.pb"
+    - EDSR (2x upscale): "models/EDSR_x2.pb" or "models/EDSR_x4.pb"
+    - Real-ESRGAN: "models/RealESRGAN_x4plus.pb"
+    - SRCNN: "models/srcnn.pb"
+    
+    Args:
+        config: Configuration dictionary
+        video_path: Input video path
+        output_path: Output video path
+        verbose: Enable verbose output
+    """
+    
+    # ============================================================
+    # UPSCALING METHOD CONFIGURATION
+    # ============================================================
+    # 0 = Lanczos scaling (default, high quality, no model needed)
+    # 1 = DNN processing (requires dnn_model path)
+    # 2 = Super resolution filter (requires superres_model path)
+    UPSCALE_METHOD = 1
+    
+    # Model paths (only used if UPSCALE_METHOD is 1 or 2)
+    # Example paths - adjust to your actual model locations:
+    # DNN models (for method 1):
+    #   - ESPCN: "models/espcn.pb" or "thirdparty/models/ESPCN_x2.pb"
+    #   - EDSR: "models/EDSR_x2.pb" or "models/EDSR_x4.pb"
+    #   - Real-ESRGAN: "models/RealESRGAN_x4plus.pb"
+    #   - SRCNN: "models/srcnn.pb"
+    DNN_MODEL = "/home/patrick/Work/twitch_vod_creator/thirdparty/ffmpeg-sr/sr/espcn.pb"
+    
+    # Super resolution models (for method 2):
+    #   - libplacebo models: "models/superres_model.pb"
+    SUPERRES_MODEL = "models/superres_model.pb"  # Example path
+    # ============================================================
+    
+    if os.path.exists(output_path) or utilities_extra.terminated_requested:
+        return False
+    
+    # Create output directory if it doesn't exist
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    
+    loglevel = "error" if verbose else "quiet"
+    codec, encoder_params = get_video_encoder_params(config, preset="slow")
+    
+    # Build video filter chain based on selected method
+    vf_parts = []
+    if UPSCALE_METHOD == 1 and os.path.exists(DNN_MODEL):
+        # dnn_processing filter - adjust input/output names based on your model
+        # Common: input=x, output=y or input=0, output=0
+        vf_parts.append(f'dnn_processing=dnn_backend=tensorflow:model={DNN_MODEL}:input=x:output=y')
+    
+    elif UPSCALE_METHOD == 2 and os.path.exists(SUPERRES_MODEL):
+        # sr filter (libplacebo super resolution)
+        vf_parts.append(f'sr=dnn_backend=tensorflow:model={SUPERRES_MODEL}:scale_factor=2')
+
+    # Always final step is Lanczos scaling
+    # accurate_rnd: accurate rounding
+    # full_chroma_int: full chroma interpolation
+    vf_parts.append('scale=3840:2160:flags=lanczos+accurate_rnd+full_chroma_int')
+    vf_string = ','.join(vf_parts) if len(vf_parts) > 1 else vf_parts[0]
+    logger.debug(f"Upscaling method: {UPSCALE_METHOD}, filter: {vf_string}")
+    
+    cmd = (
+        f'{config["ffmpeg"]} -hide_banner -loglevel {loglevel} -stats'
+        f' -i {video_path}'
+        f' -vf {vf_string}'
+        f' -c:a copy'
+        f' -vcodec {codec} {encoder_params}'
+        f' -avoid_negative_ts make_zero -vsync 2 -map_chapters -1'
+        f' {output_path}'
+    )
+    
+    stdout = None if verbose else subprocess.DEVNULL
+    stderr = None if verbose else subprocess.DEVNULL
+    
+    process = subprocess.Popen(cmd, shell=True, stdout=stdout, stderr=stderr)
+    return_code = process.wait()
+    
+    if return_code != 0:
+        logger.error(f"Error: ffmpeg returned exit code {return_code}")
+        return False
+    
+    return os.path.exists(output_path)
+
+
 def render_clip_with_title(config, video_path, chat_path, output_path, title_text, quiet=True):
     """Render a clip with title overlay and optional chat."""
     if os.path.exists(output_path) or utilities_extra.terminated_requested:
@@ -226,6 +437,7 @@ def render_clip_with_title(config, video_path, chat_path, output_path, title_tex
     stdout = subprocess.DEVNULL if quiet else None
     stderr = subprocess.DEVNULL if quiet else None
     
+    codec, encoder_params = get_video_encoder_params(config, preset="fast")
     if chat_path and os.path.exists(chat_path):
         cmd = (
             f'{config["ffmpeg"]} -hide_banner -loglevel quiet -stats '
@@ -235,7 +447,7 @@ def render_clip_with_title(config, video_path, chat_path, output_path, title_tex
             f' [tmp0]drawtext=text=\'{title_clean}\':x=25:y=25:fontfile={config["font"]}:fontsize=85:fontcolor=white:bordercolor=black:borderw=5'
             f':alpha=\'if(lt(t,0),0,if(lt(t,0),(t-0)/0,if(lt(t,4),1,if(lt(t,4.5),(0.5-(t-4))/0.5,0))))\'[tmp1]; '
             f' [tmp1][1:v] overlay=shortest=0:x=1646:y=0:eof_action=endall" -shortest '
-            f' -c:a aac -ar 48k -ac 2 -vcodec libx264 -crf 19 -preset fast '
+            f' -c:a aac -ar 48k -ac 2 -vcodec {codec} {encoder_params.replace("-cq 15", "-cq 19").replace("-crf 15", "-crf 19")} '
             f' -video_track_timescale 90000 -avoid_negative_ts make_zero -map_chapters -1 -fflags +genpts -framerate 60 '
             f' {output_path}'
         )
@@ -246,7 +458,7 @@ def render_clip_with_title(config, video_path, chat_path, output_path, title_tex
             f' -vf "scale=1646x926,pad=1920:926:0:90:black,'
             f'drawtext=text=\'{title_clean}\':x=25:y=25:fontfile={config["font"]}:fontsize=85:fontcolor=white:bordercolor=black:borderw=5'
             f':alpha=\'if(lt(t,0),0,if(lt(t,0),(t-0)/0,if(lt(t,4),1,if(lt(t,4.5),(0.5-(t-4))/0.5,0))))\' "'
-            f' -c:a aac -ar 48k -ac 2 -vcodec libx264 -crf 19 -preset fast '
+            f' -c:a aac -ar 48k -ac 2 -vcodec {codec} {encoder_params.replace("-cq 15", "-cq 19").replace("-crf 15", "-crf 19")} '
             f' -video_track_timescale 90000 -avoid_negative_ts make_zero -map_chapters -1 -fflags +genpts -framerate 60 '
             f' {output_path}'
         )
