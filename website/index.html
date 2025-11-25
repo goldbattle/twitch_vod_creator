@@ -92,16 +92,106 @@
     var segmentCurrent = 1;
     var playedGameItems = [];
     var extraTitleStuff = "";
+    var transcriptWindowStart = 0;  // Start index of visible window
+    var transcriptWindowEnd = 0;    // End index of visible window
+    var BUFFER_WINDOW_SECONDS = 15 * 60;  // 15 minutes in seconds
+    var GAP_THRESHOLD_SECONDS = 2.0;  // Gap threshold in seconds for grouping items
+
+    function createTimestampSpan(time) {
+      // Create a clickable timestamp span in gray text
+      return "<span onclick=\"document.querySelector('#video-active').currentTime = " + time + "; onTrackedVideoFrame(" + time + ", document.querySelector('#video-active').duration);\" style=\"color: #6c757d; cursor: pointer; margin-right: 0.5em;\" title=\"Seek to " + toHHMMSS(time) + "\">[" + toHHMMSS(time) + "]</span>";
+    }
+
+    function updateTranscriptWindow(currentTime) {
+      // Calculate window bounds: 15 minutes before and after current time
+      var windowStart = Math.max(0, currentTime - BUFFER_WINDOW_SECONDS);
+      var windowEnd = currentTime + BUFFER_WINDOW_SECONDS;
+
+      // Find the indices that fall within this window
+      var newStart = 0;
+      var newEnd = transcriptItems.length - 1;
+
+      // Find first item that ends at or after windowStart
+      for (var i = 0; i < transcriptItems.length; i++) {
+        if (transcriptItems[i]["endTime"] >= windowStart) {
+          newStart = i;
+          break;
+        }
+      }
+
+      // Find last item that starts before or at windowEnd
+      for (var i = transcriptItems.length - 1; i >= 0; i--) {
+        if (transcriptItems[i]["startTime"] <= windowEnd) {
+          newEnd = i;
+          break;
+        }
+      }
+
+      // Only update if the window has changed (we've moved outside current bounds)
+      var needsUpdate = false;
+
+      if (transcriptWindowStart === 0 && transcriptWindowEnd === 0) {
+        // Initial load - always update
+        needsUpdate = true;
+      } else if (newStart < transcriptWindowStart || newEnd > transcriptWindowEnd) {
+        // We've moved outside the current window - need to update
+        needsUpdate = true;
+      }
+
+      if (needsUpdate) {
+        // Clear existing transcript
+        $("#transcript").empty();
+
+        // Render items within the window
+        var currentPlayedGame = 0;
+        var last_timestamp = 0.0;
+        for (var i = newStart; i <= newEnd && i < transcriptItems.length; i++) {
+          // Add game headers that fall within or before this window
+          while (currentPlayedGame < playedGameItems.length &&
+            playedGameItems[currentPlayedGame]["startTime"] <= transcriptItems[i]["startTime"]) {
+            // Only add if it's within or just before the window (within 1 minute before)
+            if (playedGameItems[currentPlayedGame]["startTime"] >= windowStart - 60) {
+              var gameTime = playedGameItems[currentPlayedGame]["startTime"];
+              $("#transcript").append("<h4 id=\"game_" + currentPlayedGame + "\" style=\"margin-top:1rem;cursor:pointer;text-decoration:underline;\" class=\"fw-bold text-warning\" onclick=\"onGamePlayedSeekClick(" + gameTime + ",'game_" + currentPlayedGame + "');\">" + createTimestampSpan(gameTime) + playedGameItems[currentPlayedGame]["text"] + '</h4>');
+            }
+            currentPlayedGame = currentPlayedGame + 1;
+          }
+
+          // Check if this is the start of a new line grouping
+          var isNewGroup = (i == newStart) || (last_timestamp > 0.0 && transcriptItems[i]["startTime"] - last_timestamp > GAP_THRESHOLD_SECONDS);
+
+          // Add spacing if there's a gap
+          if (last_timestamp > 0.0 && transcriptItems[i]["startTime"] - last_timestamp > GAP_THRESHOLD_SECONDS) {
+            $("#transcript").append("<br/><br/>");
+          }
+
+          // Add the transcript item with timestamp only at the start of a new group
+          var timestampHtml = isNewGroup ? createTimestampSpan(transcriptItems[i]["startTime"]) : "";
+          $("#transcript").append(timestampHtml + "<span id=\"item_" + i + "\" onclick=\"onWordSeekClick(" + i + ");\" style=\"cursor:pointer;\">" + transcriptItems[i]["text"] + '</span> ');
+          last_timestamp = transcriptItems[i]["endTime"];
+        }
+
+        transcriptWindowStart = newStart;
+        transcriptWindowEnd = newEnd;
+      }
+    }
 
     function updateTranscript(index, force = false) {
+      // Update the visible window if needed
+      if (transcriptItems.length > 0 && index < transcriptItems.length) {
+        var currentTime = transcriptItems[index]["startTime"];
+        updateTranscriptWindow(currentTime);
+      }
 
       if (transcriptLast != index || force) {
 
         // Remove old transcript if needed, add new highlight
-        if ($("#item_" + transcriptLast).hasClass("text-info")) {
+        if ($("#item_" + transcriptLast).length > 0 && $("#item_" + transcriptLast).hasClass("text-info")) {
           $("#item_" + transcriptLast).removeClass("text-info")
         }
-        $("#item_" + index).addClass("text-info")
+        if ($("#item_" + index).length > 0) {
+          $("#item_" + index).addClass("text-info")
+        }
 
         // https://stackoverflow.com/q/40243455/7718197
         //var codeElement = document.querySelector("#item_" + index);
@@ -111,7 +201,7 @@
         //var diff = offsetTop - scrollableContainerHeight;
         //targetScrollTop = diff + (scrollableContainerHeight / 2);
         // https://stackoverflow.com/a/62044232/7718197
-        if (transcriptScoll) {
+        if (transcriptScoll && $("#item_" + index).length > 0) {
           lastScrollTime = new Date();
           //$('#transcript').animate({scrollTop: targetScrollTop}, 100, 'swing');
           document.getElementById("item_" + index).scrollIntoView({
@@ -148,12 +238,14 @@
       //   }
       // }
       // https://stackoverflow.com/a/57411916/7718197
-      const getClosest = (data, target) =>
-        data.reduce((acc, obj) =>
-          Math.abs(target - obj["startTime"]) < Math.abs(target - acc["startTime"]) ? obj : acc
-        );
-      //console.log("new -> "+ getClosest(transcriptItems, currentTime)["index"]);
-      updateTranscript(getClosest(transcriptItems, currentTime)["index"]);
+      if (transcriptItems.length > 0) {
+        const getClosest = (data, target) =>
+          data.reduce((acc, obj) =>
+            Math.abs(target - obj["startTime"]) < Math.abs(target - acc["startTime"]) ? obj : acc
+          );
+        //console.log("new -> "+ getClosest(transcriptItems, currentTime)["index"]);
+        updateTranscript(getClosest(transcriptItems, currentTime)["index"]);
+      }
 
     }
 
@@ -518,24 +610,16 @@
               }
               transcriptItems = items;
 
-              // insert into transcript
-              //$('#transcript').height($('#video').height());
-              var currentPlayedGame = 0;
-              var last_timestamp = 0.0;
-              for (var i = 0; i < transcriptItems.length; i++) {
-                if (currentPlayedGame < playedGameItems.length && playedGameItems[currentPlayedGame]["startTime"] <= last_timestamp) {
-                  $("#transcript").append("<h4 id=\"game_" + currentPlayedGame + "\" style=\"margin-top:1rem;cursor:pointer;text-decoration:underline;\" class=\"fw-bold text-warning\" onclick=\"onGamePlayedSeekClick(" + playedGameItems[currentPlayedGame]["startTime"] + ",'game_" + currentPlayedGame + "');\">" + playedGameItems[currentPlayedGame]["text"] + '</h4>');
-                  currentPlayedGame = currentPlayedGame + 1;
-                } else if (last_timestamp > 0.0 && transcriptItems[i]["startTime"] - last_timestamp > 2.0) {
-                  $("#transcript").append("<br/><br/>");
-                }
-                $("#transcript").append("<span id=\"item_" + i + "\" onclick=\"onWordSeekClick(" + i + ");\" style=\"cursor:pointer;\">" + transcriptItems[i]["text"] + '</span> ');
-                last_timestamp = transcriptItems[i]["endTime"]
+              // Initialize transcript window with first item (or time 0)
+              if (transcriptItems.length > 0) {
+                var initialTime = transcriptItems[0]["startTime"];
+                updateTranscriptWindow(initialTime);
               }
             },
             error: function () {
               for (var i = 0; i < playedGameItems.length; i++) {
-                $("#transcript").append("<h4 id=\"game_" + i + "\" style=\"margin-top:1rem;cursor:pointer;text-decoration:underline;\" class=\"fw-bold text-warning\" onclick=\"onGamePlayedSeekClick(" + playedGameItems[i]["startTime"] + ",'game_" + i + "');\">" + playedGameItems[i]["text"] + '</h4>');
+                var gameTime = playedGameItems[i]["startTime"];
+                $("#transcript").append("<h4 id=\"game_" + i + "\" style=\"margin-top:1rem;cursor:pointer;text-decoration:underline;\" class=\"fw-bold text-warning\" onclick=\"onGamePlayedSeekClick(" + gameTime + ",'game_" + i + "');\">" + createTimestampSpan(gameTime) + playedGameItems[i]["text"] + '</h4>');
               }
 
             }
