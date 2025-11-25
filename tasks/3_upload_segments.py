@@ -11,6 +11,7 @@ from youtube_video_upload import upload_from_options, upload_video
 import time
 import logging
 import coloredlogs
+import glob
 from typing import Dict, Any, List
 
 # Add parent directory to path so we can import utilities
@@ -19,12 +20,36 @@ from utilities import extra, config, file
 
 # ================================================================
 
+def find_segments_files(directory: str) -> List[str]:
+    """Recursively find all *_segments.yaml files in the given directory."""
+    pattern = os.path.join(directory, '**', '*_segments.yaml')
+    files = glob.glob(pattern, recursive=True)
+    return sorted(files)
+
+
+def load_all_segments(segments_files: List[str], logger: logging.Logger) -> List[Dict[str, Any]]:
+    """Load all segments from multiple YAML files and combine them into a single list."""
+    all_segments = []
+    for file_path in segments_files:
+        try:
+            with open(file_path) as f:
+                data = yaml.load(f, Loader=yaml.FullLoader)
+                if data:
+                    all_segments.extend(data)
+                    logger.debug(f"Loaded {len(data)} segments from {file_path}")
+        except Exception as e:
+            logger.error(f"Error loading segments from {file_path}: {e}")
+    return all_segments
+
+
 def parse_args() -> argparse.Namespace:
     """Parse command line arguments."""
     parser = argparse.ArgumentParser(description='Upload video segments to YouTube')
-    parser.add_argument('--video-file', required=True, help='Video YAML file (relative to config directory)')
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument('--file-segments', help='YAML file with all video segments (relative to config directory)')
+    group.add_argument('--dir-segments', help='Directory to recursively scan for *_segments.yaml files')
     parser.add_argument('--history-file', required=True, help='History YAML file (relative to config directory)')
-    parser.add_argument('--config-file', required=True, help='Config YAML file (relative to config directory)')
+    parser.add_argument('--file-config', required=True, help='Config YAML file (relative to config directory)')
     parser.add_argument('--display-missing', action='store_true', help='Display missing video files')
     parser.add_argument('--verbose', action='store_true', help='Show verbose output from operations')
     return parser.parse_args()
@@ -40,9 +65,8 @@ def run_task(args: argparse.Namespace) -> None:
     config_base = config.load_config()
     path_base = config_base['base_path']
     
-    video_file = os.path.join(path_base, "config", args.video_file)
     history_file = os.path.join(path_base, "config", args.history_file)
-    config_file = os.path.join(path_base, "config", args.config_file)
+    config_file = os.path.join(path_base, "config", args.file_config)
     display_missing = args.display_missing
     
     # load the yaml from file
@@ -61,10 +85,32 @@ def run_task(args: argparse.Namespace) -> None:
     # setup control+c handler
     extra.setup_signal_handle()
     
-    # load the yaml from file
-    with open(video_file) as f:
-        data = yaml.load(f, Loader=yaml.FullLoader)
-    logger.info(f"loaded {len(data)} videos to upload")
+    # Load segments from either a single file or directory scan
+    if args.file_segments:
+        # Single file mode
+        video_file = os.path.join(path_base, "config", args.file_segments)
+        with open(video_file) as f:
+            data = yaml.load(f, Loader=yaml.FullLoader)
+        logger.info(f"loaded {len(data)} videos to upload from {args.file_segments}")
+    else:
+        # Directory scan mode
+        segments_dir = args.dir_segments
+        if not os.path.isabs(segments_dir):
+            segments_dir = os.path.join(path_base, segments_dir)
+        
+        # Find and load all segments files
+        segments_files = find_segments_files(segments_dir)
+        if not segments_files:
+            logger.warning(f"No *_segments.yaml files found in {segments_dir}")
+            return
+        
+        logger.info(f"Found {len(segments_files)} segments file(s):")
+        for file_path in segments_files:
+            logger.info(f"  - {file_path}")
+        
+        # Load all segments from all files
+        data = load_all_segments(segments_files, logger)
+        logger.info(f"Loaded {len(data)} total segments to upload")
 
     # load our historical uploads file
     hist_uploads: Dict[str, Any] = {}
@@ -84,7 +130,7 @@ def run_task(args: argparse.Namespace) -> None:
                 break
 
             # nice debug print
-            logger.info(f"processing {video['video']}")
+            logger.info(f"processing {video['video']} - '{video['title']}'")
             logger.info(f"  - Suffix: \"{suffix}\"")
 
             # check if the files are there
@@ -140,17 +186,19 @@ def run_task(args: argparse.Namespace) -> None:
                 logger.info("done performing video upload!")
                 logger.info(f"link: {new_options}")
                 logger.debug(f"upload time: {t1 - t0 + 1e-6}")
-                hist_uploads[video_id] = {
+                entry = {
                     'title': video["title"],
                     'file': file_path_composite,
+                    'uploaded_at': time.strftime('%Y-%m-%d %H:%M:%S'),
                     'link': new_options
                 }
-
-                # finally write the updated history file
-                if not os.path.exists(os.path.dirname(history_file)):
-                    os.makedirs(os.path.dirname(history_file))
-                with open(history_file, 'w') as yaml_file:
-                    yaml.dump(hist_uploads, yaml_file)
+                
+                # finally write the updated history file with locking
+                extra.update_history_file(history_file, video_id, entry, logger)
+                # Update in-memory copy as well (merge with existing if any)
+                if video_id not in hist_uploads:
+                    hist_uploads[video_id] = {}
+                hist_uploads[video_id].update(entry)
 
             except Exception as e:
                 logger.error("unable to complete the upload!")

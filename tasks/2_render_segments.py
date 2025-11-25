@@ -45,8 +45,9 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description='Render video segments')
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument('--file-segments', help='YAML file with all video segments (relative to config directory)')
-    group.add_argument('--segments-directory', help='Directory to recursively scan for *_segments.yaml files')
+    group.add_argument('--dir-segments', help='Directory to recursively scan for *_segments.yaml files')
     parser.add_argument('--file-config', required=True, help='Config YAML file (relative to config directory)')
+    parser.add_argument('--file-history', help='History YAML file (relative to config directory)')
     parser.add_argument('--verbose', action='store_true', help='Show verbose output from operations')
     parser.add_argument('--temp-dir', default=config.get_temp_path("render_segments"), help='Temporary directory for downloads (default: /tmp/tvc_render_segments)')
     return parser.parse_args()
@@ -69,6 +70,17 @@ def run_task(args: argparse.Namespace) -> None:
         yaml_config = yaml.load(f, Loader=yaml.FullLoader)
     logger.debug(f"loaded config file: {config_file_path}")
     
+    # Load history file if provided
+    hist_renders: Dict[str, Any] = {}
+    if args.file_history:
+        history_file = os.path.join(config_dict['base_path'], args.file_history)
+        if os.path.exists(history_file):
+            with open(history_file) as f:
+                hist_renders = yaml.load(f, Loader=yaml.FullLoader)
+            logger.debug(f"loaded history file: {history_file}")
+        else:
+            logger.debug(f"history file does not exist, will create: {history_file}")
+    
     # Load template
     template_file = os.path.join(config_dict['base_path'], "config", yaml_config["yt_template"])
     with open(template_file, "r") as f:
@@ -86,7 +98,7 @@ def run_task(args: argparse.Namespace) -> None:
         logger.info(f"loaded {len(data)} videos to render from {args.file_segments}")
     else:
         # Directory scan mode
-        segments_dir = args.segments_directory
+        segments_dir = args.dir_segments
         if not os.path.isabs(segments_dir):
             segments_dir = os.path.join(config_dict['base_path'], segments_dir)
         
@@ -119,6 +131,15 @@ def run_task(args: argparse.Namespace) -> None:
         file_path_desc = os.path.join(path_render, f"{video['video']}_{clean_video_title}_desc.txt")
         
         logger.info(f"processing {video['video']} - '{video['title']}'")
+        
+        # Check if video is in history file - if so, skip rendering
+        # Only skip if it has "rendered_at" field (added by this script, not other scripts)
+        if args.file_history:
+            video_id = video["video"].replace(' ', '_') + "_" + video["title"].lower().replace(' ', '_')
+            if video_id in hist_renders and "rendered_at" in hist_renders[video_id]:
+                logger.info(f"  - video already in history file, was rendered at: {hist_renders[video_id]['rendered_at']}")
+                logger.debug(f"  - video_id: {video_id}")
+                continue
         
         # Check if description file exists - if so, skip rendering
         if os.path.exists(file_path_desc):
@@ -277,6 +298,22 @@ def run_task(args: argparse.Namespace) -> None:
                     f.write(tmp)
                 logger.info("  - created description file")
                 logger.debug(f"  - {file_path_desc}")
+                
+                # Update history file if provided
+                if args.file_history:
+                    history_file = os.path.join(config_dict['base_path'], args.file_history)
+                    video_id = video["video"].replace(' ', '_') + "_" + video["title"].lower().replace(' ', '_')
+                    entry = {
+                        'title': video["title"],
+                        'file': file_path_composite,
+                        'rendered_at': time.strftime('%Y-%m-%d %H:%M:%S')
+                    }
+                    extra.update_history_file(history_file, video_id, entry, logger)
+                    # Update in-memory copy as well (merge with existing if any)
+                    if video_id not in hist_renders:
+                        hist_renders[video_id] = {}
+                    hist_renders[video_id].update(entry)
+                    logger.debug(f"  - updated history file: {history_file}")
             
             # Muted composite
             file_path_composite_muted = os.path.join(path_render, f"{video['video']}_{clean_video_title}_muted.mp4")

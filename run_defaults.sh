@@ -140,6 +140,7 @@ python3 tvc.py render_4way \
 # Renders video segments from a YAML configuration file
 # Default file-segments: config/soda_2025_videos.yaml
 # Default file-config: config/soda_config_youtube.yaml
+# Option 1: Single file mode
 python3 tvc.py render_segments \
     --file-segments config/soda_2025_videos.yaml \
     --file-config config/soda_config_youtube.yaml
@@ -149,30 +150,65 @@ python3 tvc.py render_segments \
 #     --file-segments config/sevadus_2024_videos.yaml \
 #     --file-config config/sevadus_config_youtube.yaml
 
+# Option 2: Directory scan mode (recursively finds all *_segments.yaml files)
+# python3 tvc.py render_segments \
+#     --dir-segments ~/Work/data/ \
+#     --file-config config/soda_config_youtube.yaml
+
+# Example with relative path:
+# python3 tvc.py render_segments \
+#     --dir-segments data/sodapoppin/2025-11 \
+#     --file-config config/soda_config_youtube.yaml
+
+# With history file tracking (optional):
+# python3 tvc.py render_segments \
+#     --file-segments config/soda_2025_videos.yaml \
+#     --file-config config/soda_config_youtube.yaml \
+#     --file-history config/soda_2025_renders.yaml
+
+# Directory scan with history file:
+# python3 tvc.py render_segments \
+#     --dir-segments ~/Work/data/ \
+#     --file-config config/soda_config_youtube.yaml \
+#     --file-history config/soda_2025_renders.yaml
+
 # ================================================================
 # upload_segments
 # ================================================================
 # Uploads video segments to YouTube
-# Default video-file: config/soda_2025_videos.yaml
+# Default file-segments: config/soda_2025_videos.yaml
 # Default history-file: config/soda_2025_uploads.yaml
-# Default config-file: config/soda_config_youtube.yaml
+# Default file-config: config/soda_config_youtube.yaml
 # Default display-missing: false
+# Option 1: Single file mode
 python3 tvc.py upload_segments \
-    --video-file config/soda_2025_videos.yaml \
+    --file-segments config/soda_2025_videos.yaml \
     --history-file config/soda_2025_uploads.yaml \
-    --config-file config/soda_config_youtube.yaml
+    --file-config config/soda_config_youtube.yaml
 
 # Example with different config files:
 # python3 tvc.py upload_segments \
-#     --video-file config/sevadus_2024_videos.yaml \
+#     --file-segments config/sevadus_2024_videos.yaml \
 #     --history-file config/sevadus_2024_uploads.yaml \
-#     --config-file config/sevadus_config_youtube.yaml
+#     --file-config config/sevadus_config_youtube.yaml
+
+# Option 2: Directory scan mode (recursively finds all *_segments.yaml files)
+# python3 tvc.py upload_segments \
+#     --dir-segments ~/Work/data/ \
+#     --history-file config/soda_2025_uploads.yaml \
+#     --file-config config/soda_config_youtube.yaml
+
+# Example with relative path:
+# python3 tvc.py upload_segments \
+#     --dir-segments data/sodapoppin/2025-11 \
+#     --history-file config/soda_2025_uploads.yaml \
+#     --file-config config/soda_config_youtube.yaml
 
 # To display missing video files:
 # python3 tvc.py upload_segments \
-#     --video-file config/soda_2025_videos.yaml \
+#     --file-segments config/soda_2025_videos.yaml \
 #     --history-file config/soda_2025_uploads.yaml \
-#     --config-file config/soda_config_youtube.yaml \
+#     --file-config config/soda_config_youtube.yaml \
 #     --display-missing
 
 # ================================================================
