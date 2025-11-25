@@ -5,10 +5,13 @@ Chat operations module.
 Handles chat downloading and rendering.
 """
 
+import logging
 import os
 import subprocess
 import shutil
 from . import utilities_extra
+
+logger = logging.getLogger(__name__)
 
 
 def download_chat(config, content_id, output_path, is_clip=False, verbose=False):
@@ -38,8 +41,7 @@ def download_chat(config, content_id, output_path, is_clip=False, verbose=False)
     return_code = process.wait()
     
     if return_code != 0:
-        if verbose:
-            print(f"Error: TwitchDownloaderCLI chatdownload returned exit code {return_code}")
+        logger.error(f"Error: TwitchDownloaderCLI chatdownload returned exit code {return_code}")
         return False
     
     if os.path.exists(temp_output):
@@ -81,8 +83,7 @@ def render_chat(config, chat_json_path, output_path,
     return_code = process.wait()
     
     if return_code != 0:
-        if verbose:
-            print(f"Error: TwitchDownloaderCLI chatrender returned exit code {return_code}")
+        logger.error(f"Error: TwitchDownloaderCLI chatrender returned exit code {return_code}")
         return False
     
     if os.path.exists(temp_output):

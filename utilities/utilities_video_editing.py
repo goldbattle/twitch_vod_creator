@@ -5,10 +5,13 @@ Video editing operations module.
 Handles video rendering, muting, combining, and other editing operations.
 """
 
+import logging
 import os
 import subprocess
 import shutil
 from . import utilities_extra
+
+logger = logging.getLogger(__name__)
 
 
 def time_string_to_seconds(time_str):
@@ -51,8 +54,7 @@ def render_segment_with_chat(config, video_path, chat_path, output_path,
     return_code = process.wait()
     
     if return_code != 0:
-        if verbose:
-            print(f"Error: ffmpeg returned exit code {return_code}")
+        logger.error(f"Error: ffmpeg returned exit code {return_code}")
         return False
     
     return os.path.exists(output_path)
@@ -90,8 +92,7 @@ def render_segment_without_chat(config, video_path, output_path,
     return_code = process.wait()
     
     if return_code != 0:
-        if verbose:
-            print(f"Error: ffmpeg returned exit code {return_code}")
+        logger.error(f"Error: ffmpeg returned exit code {return_code}")
         return False
     
     return os.path.exists(output_path)

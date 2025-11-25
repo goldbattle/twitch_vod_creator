@@ -6,8 +6,11 @@ Centralizes all Twitch API interactions including users, videos, clips, games, a
 """
 
 import json
+import logging
 import requests
 import twitch
+
+logger = logging.getLogger(__name__)
 
 
 def get_client(client_id, client_secret):
@@ -134,7 +137,7 @@ def get_vod_moments(vod_id):
             moments.append(data)
         return moments
     except Exception as e:
-        print(e)
+        logger.error(f"Error getting VOD moments: {e}")
         return []
 
 
@@ -159,7 +162,7 @@ def get_vod_moments_from_twitcharchive_string(data):
             moments.append(data)
         return moments
     except Exception as e:
-        print(e)
+        logger.error(f"Error parsing VOD moments from string: {e}")
         return []
 
 
@@ -194,7 +197,7 @@ def get_clip_data(clip_id):
         gql_response = _get_clip_graphql_info(clip_id)
         gql_obj = json.loads(gql_response)
         if gql_obj["data"]["clip"]["videoOffsetSeconds"] == None:
-            print("\t- clip's VOD was deleted, unable to find offset...")
+            logger.warning("clip's VOD was deleted, unable to find offset...")
             return {
                 "vod_id": -1,
                 "offset": -1,

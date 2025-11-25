@@ -5,10 +5,13 @@ Video download operations module.
 Handles downloading videos and clips from Twitch.
 """
 
+import logging
 import os
 import subprocess
 import shutil
 from . import utilities_extra
+
+logger = logging.getLogger(__name__)
 
 
 def download_vod(config, vod_id, output_path, quality="1080p60", verbose=False):
@@ -38,8 +41,7 @@ def download_vod(config, vod_id, output_path, quality="1080p60", verbose=False):
     return_code = process.wait()
     
     if return_code != 0:
-        if verbose:
-            print(f"Error: TwitchDownloaderCLI returned exit code {return_code}")
+        logger.error(f"Error: TwitchDownloaderCLI returned exit code {return_code}")
         return False
     
     if os.path.exists(temp_output):
@@ -74,8 +76,7 @@ def download_clip(config, clip_id, output_path, verbose=False):
     return_code = process.wait()
     
     if return_code != 0:
-        if verbose:
-            print(f"Error: TwitchDownloaderCLI returned exit code {return_code}")
+        logger.error(f"Error: TwitchDownloaderCLI returned exit code {return_code}")
         return False
     
     if os.path.exists(temp_output):

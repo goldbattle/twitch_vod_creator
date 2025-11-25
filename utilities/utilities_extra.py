@@ -7,6 +7,8 @@ import fcntl
 import logging
 from typing import Dict, Any
 
+logger = logging.getLogger(__name__)
+
 # global variable which sets if we should terminate
 terminated_requested = False
 
@@ -14,7 +16,7 @@ terminated_requested = False
 def signal_handler(sig, frame):
     global terminated_requested
     terminated_requested = True
-    print('terminate requested!!!!!')
+    logger.warning('terminate requested!!!!!')
 
 
 def setup_signal_handle():
@@ -26,8 +28,7 @@ def send_pushover_message(auth, text):
         payload = {"message": text, "user": auth["pushover_user_key"], "token": auth["pushover_app_key"] }
         resp = requests.post('https://api.pushover.net/1/messages.json', data=payload, headers={'User-Agent': 'Python'})
         if not resp.ok:
-            print("[error]: bad response from pushover: ")
-            print(resp)
+            logger.error(f"bad response from pushover: {resp}")
 
 
 def update_history_file(history_file: str, video_id: str, entry: Dict[str, Any], logger: logging.Logger) -> None:
