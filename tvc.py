@@ -30,10 +30,11 @@ TASK_MODULE_MAP = {
     'download_videos': '0_main_videos',
     'download_single_video': '0_single_video',
     'generate_vtt': '0_main_vtt_generation',
-    'render_clip_comp': '1_render_clip_comp',
-    'render_4way': '1_render_4way',
-    'render_segments': '1_render_segments',
-    'upload_segments': '2_upload_segments',
+    'web': '1_editor_website',
+    'render_clip_comp': '2_render_clip_comp',
+    'render_4way': '2_render_4way',
+    'render_segments': '2_render_segments',
+    'upload_segments': '3_upload_segments',
 }
 
 # Command descriptions for help output
@@ -46,6 +47,7 @@ COMMAND_DESCRIPTIONS = {
     'render_4way': 'Render 4-way video composite into single video',
     'render_segments': 'Render video segments from created YAML editing file',
     'upload_segments': 'Upload video segments to YouTube via YouTube API',
+    'web': 'Host a web server for the video editor interface',
 }
 
 
@@ -111,6 +113,12 @@ def create_parser() -> argparse.ArgumentParser:
         description='Upload rendered video segments to YouTube'
     )
     
+    subparsers.add_parser(
+        'web',
+        help=COMMAND_DESCRIPTIONS['web'],
+        description='Host a web server for the video editor interface'
+    )
+    
     return parser
 
 
@@ -130,6 +138,9 @@ def main() -> None:
     if first_arg in ('--help', '-h'):
         parser.print_help()
         sys.exit(0)
+    
+    # Parse arguments to get the command
+    args = parser.parse_args(sys.argv[1:2])
     
     # If first argument is not a valid command, show error
     if first_arg not in TASK_MODULE_MAP:
@@ -151,9 +162,6 @@ def main() -> None:
                 print(f"  {cmd:<25} {desc}", file=sys.stderr)
             print(f"\nUse '{sys.argv[0]} --help' for more information.", file=sys.stderr)
             sys.exit(1)
-    
-    # Parse to get the command (we know it's valid now)
-    args = parser.parse_args(sys.argv[1:2])
     
     # This should always be set now, but double-check
     if not args.command:
