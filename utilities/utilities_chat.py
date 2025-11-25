@@ -70,6 +70,7 @@ def render_chat(config, chat_json_path, output_path,
         f' --update-rate {update_rate} --framerate {framerate} --font-size {font_size}'
         f' --bttv true --ffz true --stv true'
         f' --sub-messages true --badges true --sharpening true --dispersion true'
+        f' --collision Overwrite --banner false'
         f' --temp-path "{temp_path}"'
     )
     

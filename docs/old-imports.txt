@@ -1,0 +1,14 @@
+import twitch  # pip install python-twitch-client
+import yaml  # pip install PyYAML
+from webvtt import WebVTT, Caption  # pip install webvtt-py
+from vosk import Model, KaldiRecognizer, SetLogLevel  # pip install vosk
+
+import yaml  # pip install PyYAML
+# sudo pip install --upgrade google-api-python-client oauth2client progressbar2
+# pip install youtube-video-upload
+from youtube_video_upload import upload_from_options, upload_video
+
+
+
+
+

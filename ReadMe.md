@@ -48,15 +48,15 @@ Please take a look at the original [youtube-video-upload](https://github.com/rem
 
 If you are running this on a linux machine, you will need the ffmpeg binary for your system.
 Try to download from the official website as your machine repositories will be too far out of date.
-From there, ensure you have Python 3.6 installed, and that you have correct paths to the TwitchDownload CLI and ffmpeg.
-See the commented out examples in the top of each script file.
-Additionally, one can use the `crontab_script_launcher.sh` script to run script automatically on a cronjob.
+From there, ensure you have Python 3.8 installed, and that you have correct paths to the TwitchDownload CLI and ffmpeg.
+Additionally, one can use the `run_cron.sh` script to run commands automatically on a cronjob.
+The script will automatically source the `.venv` virtual environment and run commands via `tvc.py`.
 
 ```bash
 sudo crontab -e
-*/25 * * * * /path/to/repo/crontab_script_launcher.sh 0_main_videos.py
-*/15 * * * * /path/to/repo/crontab_script_launcher.sh 1_render_segments.py
-* */12 * * * /path/to/repo/crontab_script_launcher.sh 0_main_clips.py
+*/25 * * * * /path/to/repo/run_cron.sh download_videos
+* */12 * * * /path/to/repo/run_cron.sh download_clips
+*/15 * * * * /path/to/repo/run_cron.sh render_segments
 ```
 
 

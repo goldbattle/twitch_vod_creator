@@ -789,6 +789,7 @@
 
         text += "- video: " + document.querySelector('#datapath').value + lineending
         text += space + space + "title: \"" + segments[i]["title"] + "\"" + lineending
+
         text += space + space + "t_start: \""
         for (var j = 0; j < segments[i]["start"].length; j++) {
           text += toHHMMSS(segments[i]["start"][j]);
@@ -804,7 +805,39 @@
             text += ",";
           }
         }
-        text += "\"" + lineending + lineending
+        text += "\"" + lineending
+
+        // Always include description (default to empty string)
+        var descriptionValue = "";
+        if (segments[i]["description"] !== undefined && segments[i]["description"] !== null && segments[i]["description"] !== "") {
+          descriptionValue = segments[i]["description"].replace(/"/g, '\\"');
+        }
+        text += space + space + "description: \"" + descriptionValue + "\"" + lineending
+
+        // Optional: with_chat
+        if (segments[i]["with_chat"] !== undefined && segments[i]["with_chat"] !== null) {
+          text += space + space + "with_chat: " + (segments[i]["with_chat"] ? "true" : "false") + lineending
+        }
+
+        // Optional: t_chat_offset
+        if (segments[i]["t_chat_offset"] !== undefined && segments[i]["t_chat_offset"] !== null && segments[i]["t_chat_offset"] !== "") {
+          text += space + space + "t_chat_offset: \"" + segments[i]["t_chat_offset"] + "\"" + lineending
+        }
+
+        // Optional: t_youtube_mute
+        if (segments[i]["t_youtube_mute"] !== undefined && segments[i]["t_youtube_mute"] !== null && segments[i]["t_youtube_mute"] !== "") {
+          text += space + space + "t_youtube_mute: \"" + segments[i]["t_youtube_mute"] + "\"" + lineending
+        }
+
+        // Optional: tags
+        if (segments[i]["tags"] !== undefined && segments[i]["tags"] !== null && Array.isArray(segments[i]["tags"]) && segments[i]["tags"].length > 0) {
+          text += space + space + "tags:" + lineending
+          for (var j = 0; j < segments[i]["tags"].length; j++) {
+            text += space + space + space + space + "- \"" + segments[i]["tags"][j].replace(/"/g, '\\"') + "\"" + lineending
+          }
+        }
+
+        text += lineending
 
         // Close HTML tags only when generating HTML
         if (highlight) {
@@ -896,17 +929,54 @@
               video: videoMatch ? videoMatch[1].trim() : '',
               title: null,  // null means not found yet
               t_start: null,
-              t_end: null
+              t_end: null,
+              with_chat: null,
+              description: null,
+              t_chat_offset: null,
+              t_youtube_mute: null,
+              tags: null
             };
           } else if (line.match(/^title:\s*(.*)$/)) {
             if (currentSegment === null) throw new Error("Found 'title:' field before 'video:' field at line " + (i + 1));
             currentSegment.title = extractFieldValue(line, 'title');
+          } else if (line.match(/^with_chat:\s*(.*)$/)) {
+            if (currentSegment === null) throw new Error("Found 'with_chat:' field before 'video:' field at line " + (i + 1));
+            var value = line.match(/with_chat:\s*(.*)$/)[1].trim();
+            currentSegment.with_chat = value === "true" || value === true;
+          } else if (line.match(/^description:\s*(.*)$/)) {
+            if (currentSegment === null) throw new Error("Found 'description:' field before 'video:' field at line " + (i + 1));
+            currentSegment.description = extractFieldValue(line, 'description');
           } else if (line.match(/^t_start:\s*(.*)$/)) {
             if (currentSegment === null) throw new Error("Found 't_start:' field before 'video:' field at line " + (i + 1));
             currentSegment.t_start = extractFieldValue(line, 't_start');
           } else if (line.match(/^t_end:\s*(.*)$/)) {
             if (currentSegment === null) throw new Error("Found 't_end:' field before 'video:' field at line " + (i + 1));
             currentSegment.t_end = extractFieldValue(line, 't_end');
+          } else if (line.match(/^t_chat_offset:\s*(.*)$/)) {
+            if (currentSegment === null) throw new Error("Found 't_chat_offset:' field before 'video:' field at line " + (i + 1));
+            currentSegment.t_chat_offset = extractFieldValue(line, 't_chat_offset');
+          } else if (line.match(/^t_youtube_mute:\s*(.*)$/)) {
+            if (currentSegment === null) throw new Error("Found 't_youtube_mute:' field before 'video:' field at line " + (i + 1));
+            currentSegment.t_youtube_mute = extractFieldValue(line, 't_youtube_mute');
+          } else if (line.match(/^tags:\s*$/)) {
+            if (currentSegment === null) throw new Error("Found 'tags:' field before 'video:' field at line " + (i + 1));
+            // Initialize tags array if not already done
+            if (currentSegment.tags === null) {
+              currentSegment.tags = [];
+            }
+          } else if (line.match(/^\s+-\s+(.+)$/)) {
+            // This is a list item (for tags)
+            if (currentSegment !== null && currentSegment.tags !== null) {
+              var tagMatch = line.match(/^\s+-\s+(.+)$/);
+              if (tagMatch) {
+                var tagValue = tagMatch[1].trim();
+                // Remove quotes if present
+                if ((tagValue.startsWith('"') && tagValue.endsWith('"')) || (tagValue.startsWith("'") && tagValue.endsWith("'"))) {
+                  tagValue = tagValue.slice(1, -1);
+                }
+                currentSegment.tags.push(tagValue);
+              }
+            }
           }
         }
 
@@ -923,11 +993,30 @@
           var startTimes = tStartValue ? parseTimeString(tStartValue) : [];
           var endTimes = tEndValue ? parseTimeString(tEndValue) : [];
 
-          convertedSegments.push({
+          var convertedSegment = {
             start: startTimes.length > 0 ? startTimes : [0], // Default to 0 if empty
             end: endTimes,
             title: seg.title || '' // Allow empty title
-          });
+          };
+
+          // Add optional fields if they exist
+          if (seg.with_chat !== null && seg.with_chat !== undefined) {
+            convertedSegment.with_chat = seg.with_chat;
+          }
+          if (seg.description !== null && seg.description !== undefined && seg.description !== '') {
+            convertedSegment.description = seg.description;
+          }
+          if (seg.t_chat_offset !== null && seg.t_chat_offset !== undefined && seg.t_chat_offset !== '') {
+            convertedSegment.t_chat_offset = seg.t_chat_offset;
+          }
+          if (seg.t_youtube_mute !== null && seg.t_youtube_mute !== undefined && seg.t_youtube_mute !== '') {
+            convertedSegment.t_youtube_mute = seg.t_youtube_mute;
+          }
+          if (seg.tags !== null && seg.tags !== undefined && Array.isArray(seg.tags) && seg.tags.length > 0) {
+            convertedSegment.tags = seg.tags;
+          }
+
+          convertedSegments.push(convertedSegment);
         }
 
         // Preserve current segment selection
@@ -1252,7 +1341,16 @@
         //  $("#error-toast-body").html("<h2>Finish the current segment!</h2>");
         //  (new bootstrap.Toast(document.getElementById('error-toast'), {delay: 1000})).show();
         //} else {
-        segments.push({ start: [theVideo.currentTime], end: [], title: extraTitleStuff })
+        segments.push({
+          start: [theVideo.currentTime],
+          end: [],
+          title: extraTitleStuff,
+          with_chat: undefined,
+          description: undefined,
+          t_chat_offset: undefined,
+          t_youtube_mute: undefined,
+          tags: undefined
+        })
         segmentCurrent = -1;
         updateSegmentYaml();
       }
@@ -1261,7 +1359,16 @@
       if (event.keyCode == 83) {
         event.preventDefault();
         if (segments.length < 1) {
-          segments.push({ start: [theVideo.currentTime], end: [], title: "" })
+          segments.push({
+            start: [theVideo.currentTime],
+            end: [],
+            title: "",
+            with_chat: undefined,
+            description: undefined,
+            t_chat_offset: undefined,
+            t_youtube_mute: undefined,
+            tags: undefined
+          })
         } else {
           var found = false;
           var timestamp = theVideo.currentTime;
@@ -1286,7 +1393,16 @@
       if (event.keyCode == 68) {
         event.preventDefault();
         if (segments.length < 1) {
-          segments.push({ start: [theVideo.currentTime], end: [], title: "" })
+          segments.push({
+            start: [theVideo.currentTime],
+            end: [],
+            title: "",
+            with_chat: undefined,
+            description: undefined,
+            t_chat_offset: undefined,
+            t_youtube_mute: undefined,
+            tags: undefined
+          })
         } else {
           var found = false;
           var timestamp = theVideo.currentTime;
