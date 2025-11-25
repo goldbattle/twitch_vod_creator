@@ -62,6 +62,40 @@
     .segment-highlight {
       scroll-margin-top: 20px;
     }
+
+    .video-list-item {
+      padding: 0.5rem 0.75rem;
+    }
+
+    .video-list-item:hover {
+      text-decoration: underline;
+      color: #0d6efd;
+    }
+
+    .embed-responsive-16by9 {
+      position: relative;
+      display: block;
+      width: 100%;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .embed-responsive-16by9::before {
+      display: block;
+      content: "";
+      padding-top: 56.25%;
+      /* 16:9 aspect ratio */
+    }
+
+    .embed-responsive-16by9 video {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
   </style>
 
   <!-- javascript files -->
@@ -76,19 +110,28 @@
   <div class="resizable-container">
     <!-- main video panel -->
     <div class="resizable-panel" id="video-panel">
-      <h2 id="title"></h2>
-      <h3 id="date" class="text-muted"></h3>
-      <div class="input-group">
-        <span class="input-group-text" style="border-radius:0.2rem 0 0 0;">Current Video:</span>
-        <input class="form-control form-control-lg" id="datapath" onkeydown="readInputDataPath(this, event)"
-          style="border-radius:0 0.2rem 0 0;" />
-      </div>
-
       <div class="embed-responsive embed-responsive-16by9">
         <video width="100%" id="video-active" class="embed-responsive-item" preload="auto" controls>
           <!-- <source src="path_here.." type="video/mp4"> -->
           Your browser does not support the video tag.
         </video>
+      </div>
+
+      <!-- Video Info -->
+      <div style="margin-top: 1rem; padding: 0.75rem;">
+        <h4 id="title" style="margin: 0 0 0.25rem 0; font-size: 1.1rem;"></h4>
+        <div id="date" class="text-muted" style="font-size: 0.9rem; margin-bottom: 0.5rem;"></div>
+        <div class="input-group input-group-sm">
+          <span class="input-group-text">Current Video:</span>
+          <input class="form-control" id="datapath" onkeydown="readInputDataPath(this, event)" />
+        </div>
+      </div>
+
+      <!-- File Explorer -->
+      <div id="file-explorer" style="margin-top: 1rem; border-top: 2px solid #dee2e6; padding-top: 1rem;">
+        <div id="video-list-container" style="max-height: 300px; overflow-y: auto;">
+          <div class="text-muted" style="padding: 0.5rem 0.75rem;">Loading videos...</div>
+        </div>
       </div>
     </div>
 
@@ -439,8 +482,162 @@
         const vw = urlParams.get('vw') || '50.0';
         const sw = urlParams.get('sw') || '30.0';
         const tw = urlParams.get('tw') || '20.0';
-        location.href = "/?file=" + el.value + "&vw=" + vw + "&tw=" + tw + "&sw=" + sw;
+        var filePath = el.value;
+        // Ensure path starts with data/ or data_live/
+        if (!filePath.startsWith('data/') && !filePath.startsWith('data_live/')) {
+          filePath = 'data/' + filePath;
+        }
+        location.href = "/?file=" + filePath + "&vw=" + vw + "&tw=" + tw + "&sw=" + sw;
       }
+    }
+
+    function truncateTitle(title, maxLength) {
+      if (title.length <= maxLength) {
+        return title;
+      }
+      return title.substring(0, maxLength - 3) + '...';
+    }
+
+    function formatDate(dateStr) {
+      if (!dateStr || dateStr === '') {
+        return '';
+      }
+      try {
+        var date = new Date(dateStr);
+        return date.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
+      } catch (e) {
+        return '';
+      }
+    }
+
+    function getParentPath(filepath) {
+      // Get parent path by removing the last segment
+      if (!filepath) return '';
+      var parts = filepath.split('/').filter(function (p) { return p && p !== 'data' && p !== 'data_live'; });
+      if (parts.length === 0) return '';
+      parts.pop(); // Remove last segment
+      if (parts.length === 0) return '';
+      return 'data/' + parts.join('/');
+    }
+
+    function loadVideoList() {
+      // Get current file path
+      var currentPath = document.querySelector('#datapath').value || '';
+
+      // Pass filepath to API - server will determine what to return
+      var apiUrl = "/api/videos";
+      if (currentPath) {
+        apiUrl += "?filepath=" + encodeURIComponent(currentPath);
+      }
+
+      $.ajax({
+        url: apiUrl,
+        dataType: "json",
+        success: function (items) {
+          var container = $("#video-list-container");
+          container.empty();
+
+          // Add parent folder option if not at root
+          if (currentPath) {
+            var parentPath = getParentPath(currentPath);
+            var parentHtml = '<div class="video-list-item" style="cursor: pointer;" onclick="navigateToPath(\'' +
+              parentPath.replace(/'/g, "\\'") + '\');">.. parent folder</div>';
+            container.append(parentHtml);
+          }
+
+          if (items.length === 0) {
+            container.append('<div class="text-muted" style="padding: 0.5rem 0.75rem;">No items found</div>');
+            return;
+          }
+
+          // Normalize paths for comparison (remove data/ prefix if present, trim whitespace)
+          var normalizedCurrentPath = currentPath.replace(/^data\//, '').replace(/^data_live\//, '').trim();
+
+          items.forEach(function (item) {
+            // Normalize item path for comparison
+            var normalizedItemPath = item.path.replace(/^data\//, '').replace(/^data_live\//, '').trim();
+            // For folders, check if current path starts with the folder path
+            var isCurrent = false;
+            if (item.path.endsWith('/')) {
+              // This is a folder - check if current path starts with this folder
+              isCurrent = normalizedCurrentPath && normalizedCurrentPath.startsWith(normalizedItemPath);
+            } else {
+              // This is a video - exact match
+              isCurrent = normalizedCurrentPath && (normalizedItemPath === normalizedCurrentPath);
+            }
+
+            var dateStr = formatDate(item.recorded_at);
+            var durationStr = item.duration || '';
+            var titleStr = truncateTitle(item.title || 'Untitled', 60);
+
+            // Build single line: DATE - Duration - Title
+            var parts = [];
+            if (dateStr) {
+              parts.push(dateStr);
+            }
+            if (durationStr) {
+              parts.push(durationStr);
+            }
+            parts.push(titleStr);
+            var lineText = parts.join(' - ');
+
+            // Build file status tags for videos
+            var tagsHtml = '';
+            if (!item.path.endsWith('/')) {
+              // This is a video - show file status tags
+              var tags = [];
+              var hasVod = item.has_vod !== undefined ? item.has_vod : true; // Assume true if not provided
+              var hasChatJson = item.has_chat_json !== undefined ? item.has_chat_json : false;
+              var hasChatRender = item.has_chat_render !== undefined ? item.has_chat_render : false;
+              var hasVtt = item.has_vtt !== undefined ? item.has_vtt : false;
+
+              tags.push('<span class="badge badge-pill ' + (hasVod ? 'badge-success' : 'badge-secondary') + '" style="margin-left: 0.25rem;">vod</span>');
+              tags.push('<span class="badge badge-pill ' + (hasChatJson ? 'badge-success' : 'badge-secondary') + '" style="margin-left: 0.25rem;">chat-json</span>');
+              tags.push('<span class="badge badge-pill ' + (hasChatRender ? 'badge-success' : 'badge-secondary') + '" style="margin-left: 0.25rem;">chat-render</span>');
+              tags.push('<span class="badge badge-pill ' + (hasVtt ? 'badge-success' : 'badge-secondary') + '" style="margin-left: 0.25rem;">vtt</span>');
+              tagsHtml = '<span style="float: right;">' + tags.join('') + '</span>';
+            }
+
+            var itemHtml = '';
+            if (isCurrent) {
+              itemHtml = '<div class="video-list-item text-warning" style="font-weight: bold;">' + lineText + tagsHtml + '</div>';
+            } else {
+              // Check if this is a folder (ends with /) or a video
+              if (item.path.endsWith('/')) {
+                // Folder - navigate to that path
+                itemHtml = '<div class="video-list-item" style="cursor: pointer;" onclick="navigateToPath(\'' +
+                  item.path.replace(/'/g, "\\'") + '\');">' + lineText + '</div>';
+              } else {
+                // Video - load the video
+                itemHtml = '<div class="video-list-item" style="cursor: pointer;" onclick="loadVideo(\'' +
+                  item.path.replace(/'/g, "\\'") + '\');">' + lineText + tagsHtml + '</div>';
+              }
+            }
+
+            container.append(itemHtml);
+          });
+        },
+        error: function (xhr, status, error) {
+          $("#video-list-container").html('<div class="text-danger" style="padding: 0.5rem 0.75rem;">Error loading: ' + error + '</div>');
+        }
+      });
+    }
+
+    function navigateToPath(filepath) {
+      const urlParams = new URLSearchParams(window.location.search);
+      const vw = urlParams.get('vw') || '50.0';
+      const sw = urlParams.get('sw') || '30.0';
+      const tw = urlParams.get('tw') || '20.0';
+      location.href = "/?file=" + filepath + "&vw=" + vw + "&tw=" + tw + "&sw=" + sw;
+    }
+
+
+    function loadVideo(videoPath) {
+      const urlParams = new URLSearchParams(window.location.search);
+      const vw = urlParams.get('vw') || '50.0';
+      const sw = urlParams.get('sw') || '30.0';
+      const tw = urlParams.get('tw') || '20.0';
+      location.href = "/?file=" + videoPath + "&vw=" + vw + "&tw=" + tw + "&sw=" + sw;
     }
 
     // https://github.com/pavladan/subtitles-parser-vtt/blob/master/index.js#L67
@@ -741,80 +938,105 @@
       const urlParams = new URLSearchParams(window.location.search);
       const filepath = urlParams.get('file');
       if (filepath) {
-        document.querySelector('#video-active').setAttribute('src', filepath + ".mp4");
+        // Ensure path has /data/ or /data_live/ prefix for video src
+        var videoSrc = filepath;
+        if (!videoSrc.startsWith('/data/') && !videoSrc.startsWith('/data_live/')) {
+          videoSrc = '/' + videoSrc;
+        }
+        document.querySelector('#video-active').setAttribute('src', videoSrc + ".mp4");
         document.querySelector('#datapath').value = filepath;
       }
 
+      // Load video list
+      loadVideoList();
+
       // This will load our info json
-      $.ajax({
-        url: filepath + "_info.json",
-        dataType: "json",
-        success: function (data) {
+      if (filepath) {
+        // Ensure path has /data/ or /data_live/ prefix for API calls
+        var apiPath = filepath;
+        if (!apiPath.startsWith('/data/') && !apiPath.startsWith('/data_live/')) {
+          apiPath = '/' + apiPath;
+        }
 
-          // Display info
-          $("#title").text(data["title"]);
-          $("#date").text(data["recorded_at"] + " - " + data["duration"]);
-          for (var i = 0; i < data["moments"].length; i++) {
-            var game = data["moments"][i];
-            if (game["type"] == "GAME_CHANGE") {
-              playedGameItems.push({
-                startTime: game["offset"],
-                endTime: game["offset"] + game["duration"],
-                text: game["name"].trim()
-              });
+        $.ajax({
+          url: apiPath + "_info.json",
+          dataType: "json",
+          success: function (data) {
+
+            // Display info
+            $("#title").text(data["title"]);
+            var dateFormatted = formatDate(data["recorded_at"]);
+            var dateText = dateFormatted;
+            if (data["duration"]) {
+              dateText += " - " + data["duration"];
             }
-          }
-          var date = new Date(data["recorded_at"]);
-          var options = { year: 'numeric', month: 'long', day: 'numeric' };
-          extraTitleStuff = " w/ Chat - (" + data["user_name"] + ") - " + date.toLocaleDateString('en-US', options)
+            $("#date").text(dateText);
 
-          // This will load our subtitles
-          // https://github.com/pavladan/subtitles-parser-vtt/blob/master/index.js#L17
-          $.ajax({
-            url: filepath + ".vtt",
-            dataType: "text",
-            success: function (data) {
-              data = data.replace(/\r/g, "");
-              // Improved regex that handles multiline subtitles properly
-              // The key fix: use [\s\S]*? (non-greedy) instead of .*\n to capture multiline text
-              // Matches until we see a blank line, next timestamp pattern, or end of string
-              // Using RegExp constructor to avoid formatter breaking the regex literal
-              var regexPattern = "(?:^|\\n)(?:(\\d+)\\n)?(\\d{2}:\\d{2}:\\d{2}[,.]\\d{3})\\s*-->\\s*(\\d{2}:\\d{2}:\\d{2}[,.]\\d{3})\\n([\\s\\S]*?)(?=\\n\\n|\\n(?:\\d+\\n)?\\d{2}:\\d{2}:\\d{2}[,.]\\d{3}\\s*-->|$)";
-              var regex = new RegExp(regexPattern, "g");
-              var items = [];
-              var match;
-              while ((match = regex.exec(data)) !== null) {
-                var text = match[4] ? match[4].trim() : "";
-                if (text.length === 0) continue;
-                items.push({
-                  id: match[1] ? +match[1].trim() : items.length + 1,
-                  startTime: timeMs(match[2].trim()) / 1000.0,
-                  endTime: timeMs(match[3].trim()) / 1000.0,
-                  text: text,
-                  index: items.length,
+            // Refresh video list to highlight current video
+            loadVideoList();
+
+            for (var i = 0; i < data["moments"].length; i++) {
+              var game = data["moments"][i];
+              if (game["type"] == "GAME_CHANGE") {
+                playedGameItems.push({
+                  startTime: game["offset"],
+                  endTime: game["offset"] + game["duration"],
+                  text: game["name"].trim()
                 });
               }
-              transcriptItems = items;
-
-              // Initialize transcript window with first item (or time 0)
-              if (transcriptItems.length > 0) {
-                var initialTime = transcriptItems[0]["startTime"];
-                updateTranscriptWindow(initialTime);
-              }
-            },
-            error: function () {
-              for (var i = 0; i < playedGameItems.length; i++) {
-                var gameTime = playedGameItems[i]["startTime"];
-                $("#transcript").append("<h4 id=\"game_" + i + "\" style=\"margin-top:1rem;cursor:pointer;text-decoration:underline;\" class=\"fw-bold text-warning\" onclick=\"onGamePlayedSeekClick(" + gameTime + ",'game_" + i + "');\">" + createTimestampSpan(gameTime) + playedGameItems[i]["text"] + '</h4>');
-              }
-
             }
-          });
+            var date = new Date(data["recorded_at"]);
+            var options = { year: 'numeric', month: 'long', day: 'numeric' };
+            extraTitleStuff = " w/ Chat - (" + data["user_name"] + ") - " + date.toLocaleDateString('en-US', options)
+
+            // This will load our subtitles
+            // https://github.com/pavladan/subtitles-parser-vtt/blob/master/index.js#L17
+            $.ajax({
+              url: apiPath + ".vtt",
+              dataType: "text",
+              success: function (data) {
+                data = data.replace(/\r/g, "");
+                // Improved regex that handles multiline subtitles properly
+                // The key fix: use [\s\S]*? (non-greedy) instead of .*\n to capture multiline text
+                // Matches until we see a blank line, next timestamp pattern, or end of string
+                // Using RegExp constructor to avoid formatter breaking the regex literal
+                var regexPattern = "(?:^|\\n)(?:(\\d+)\\n)?(\\d{2}:\\d{2}:\\d{2}[,.]\\d{3})\\s*-->\\s*(\\d{2}:\\d{2}:\\d{2}[,.]\\d{3})\\n([\\s\\S]*?)(?=\\n\\n|\\n(?:\\d+\\n)?\\d{2}:\\d{2}:\\d{2}[,.]\\d{3}\\s*-->|$)";
+                var regex = new RegExp(regexPattern, "g");
+                var items = [];
+                var match;
+                while ((match = regex.exec(data)) !== null) {
+                  var text = match[4] ? match[4].trim() : "";
+                  if (text.length === 0) continue;
+                  items.push({
+                    id: match[1] ? +match[1].trim() : items.length + 1,
+                    startTime: timeMs(match[2].trim()) / 1000.0,
+                    endTime: timeMs(match[3].trim()) / 1000.0,
+                    text: text,
+                    index: items.length,
+                  });
+                }
+                transcriptItems = items;
+
+                // Initialize transcript window with first item (or time 0)
+                if (transcriptItems.length > 0) {
+                  var initialTime = transcriptItems[0]["startTime"];
+                  updateTranscriptWindow(initialTime);
+                }
+              },
+              error: function () {
+                for (var i = 0; i < playedGameItems.length; i++) {
+                  var gameTime = playedGameItems[i]["startTime"];
+                  $("#transcript").append("<h4 id=\"game_" + i + "\" style=\"margin-top:1rem;cursor:pointer;text-decoration:underline;\" class=\"fw-bold text-warning\" onclick=\"onGamePlayedSeekClick(" + gameTime + ",'game_" + i + "');\">" + createTimestampSpan(gameTime) + playedGameItems[i]["text"] + '</h4>');
+                }
+
+              }
+            });
 
 
 
-        }
-      });
+          }
+        });
+      }
 
 
     });
