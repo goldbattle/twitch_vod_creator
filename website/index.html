@@ -194,6 +194,10 @@
     <!-- rendered segments panel -->
     <div class="resizable-panel" id="segments-panel">
       <div style="display: flex; gap: 0.5rem; margin: 1rem;">
+        <a class="btn btn-success flex-fill" id="save-segments-button" style="cursor: pointer;"
+          onclick="saveSegments(); return false;">
+          <span style="margin-right: 0.25rem;">💾</span>Save
+        </a>
         <a class="btn btn-primary flex-fill" id="copy-segments-button" style="cursor: pointer;"
           onclick="copySegmentsText(); return false;">
           <span style="margin-right: 0.25rem;">📋</span>Copy
@@ -624,7 +628,7 @@
 
             var dateStr = formatDate(item.recorded_at);
             var durationStr = item.duration || '';
-            var titleStr = truncateTitle(item.title || 'Untitled', 60);
+            var titleStr = truncateTitle(item.title || 'Untitled', 40);
 
             // Build single line: DATE - Duration - Title
             var parts = [];
@@ -646,11 +650,13 @@
               var hasChatJson = item.has_chat_json !== undefined ? item.has_chat_json : false;
               var hasChatRender = item.has_chat_render !== undefined ? item.has_chat_render : false;
               var hasVtt = item.has_vtt !== undefined ? item.has_vtt : false;
+              var hasSegments = item.has_segments !== undefined ? item.has_segments : false;
 
               tags.push('<span class="badge badge-pill ' + (hasVod ? 'badge-success' : 'badge-secondary') + '" style="margin-left: 0.25rem;">vod</span>');
               tags.push('<span class="badge badge-pill ' + (hasChatJson ? 'badge-success' : 'badge-secondary') + '" style="margin-left: 0.25rem;">chat-json</span>');
               tags.push('<span class="badge badge-pill ' + (hasChatRender ? 'badge-success' : 'badge-secondary') + '" style="margin-left: 0.25rem;">chat-render</span>');
               tags.push('<span class="badge badge-pill ' + (hasVtt ? 'badge-success' : 'badge-secondary') + '" style="margin-left: 0.25rem;">vtt</span>');
+              tags.push('<span class="badge badge-pill ' + (hasSegments ? 'badge-success' : 'badge-secondary') + '" style="margin-left: 0.25rem;">segs</span>');
               tagsHtml = '<span style="float: right;">' + tags.join('') + '</span>';
             }
 
@@ -852,6 +858,14 @@
         text = text.replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&lt;/g, '<')
           .replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'");
 
+        // Handle empty or whitespace-only text - return empty segments array
+        if (!text || text.trim() === '') {
+          var oldSegmentCurrent = segmentCurrent;
+          segments = [];
+          segmentCurrent = -1;
+          return { success: true, error: null };
+        }
+
         var newSegments = [];
         var lines = text.split(/\r?\n/);
         var currentSegment = null;
@@ -898,10 +912,6 @@
 
         validateAndSaveSegment(); // Save the last segment
 
-        if (newSegments.length === 0) {
-          throw new Error("No segments found in text");
-        }
-
         // Convert to segments array format
         var convertedSegments = [];
         for (var j = 0; j < newSegments.length; j++) {
@@ -922,6 +932,8 @@
 
         // Preserve current segment selection
         var oldSegmentCurrent = segmentCurrent;
+
+        // Always update segments array, even if emp1010ty (allows deletion of all segments)
         segments = convertedSegments;
 
         // Keep same index if still valid, otherwise set to newest
@@ -950,10 +962,16 @@
       var yamlText = segmentsDiv.innerText || segmentsDiv.textContent || '';
       // Also handle cases where <br> might still be in the text
       yamlText = yamlText.replace(/<br\s*\/?>/gi, '\n');
+      // Replace non-breaking spaces (U+00A0) with regular spaces
+      yamlText = yamlText.replace(/\u00A0/g, ' ');
       yamlText = yamlText.trim();
 
       if (!yamlText || yamlText === "Add segments with \"A\"!") {
-        // Empty or placeholder - hide complete button
+        // Empty or placeholder - clear segments and hide complete button
+        segments = [];
+        segmentCurrent = -1;
+        hasParseError = false;
+        updateSegmentYaml();
         hideCompleteButton();
         return;
       }
@@ -1030,6 +1048,128 @@
         console.error('Fallback copy failed:', err);
       }
       document.body.removeChild(textArea);
+    }
+
+    function showSaveFeedback(success, message) {
+      var btn = document.getElementById('save-segments-button');
+      var originalHTML = btn.innerHTML;
+      if (success) {
+        btn.innerHTML = '<span style="margin-right: 0.25rem;">✓</span>Saved!';
+        btn.className = 'btn btn-success flex-fill';
+      } else {
+        btn.innerHTML = '<span style="margin-right: 0.25rem;">✗</span>Error';
+        btn.className = 'btn btn-danger flex-fill';
+        $("#error-toast-body").html("<h2>Save Error</h2><p>" + message + "</p>");
+        (new bootstrap.Toast(document.getElementById('error-toast'), { delay: 3000 })).show();
+      }
+      setTimeout(function () {
+        btn.innerHTML = originalHTML;
+        btn.className = 'btn btn-success flex-fill';
+      }, 2000);
+    }
+
+    function validateSegments() {
+      // First, parse the YAML to get the segments array
+      var segmentsDiv = document.getElementById('segments-editable');
+      var yamlText = segmentsDiv.innerText || segmentsDiv.textContent || '';
+      yamlText = yamlText.replace(/<br\s*\/?>/gi, '\n');
+      // Replace non-breaking spaces (U+00A0) with regular spaces
+      yamlText = yamlText.replace(/\u00A0/g, ' ');
+      yamlText = yamlText.trim();
+
+      // Allow empty segments (will delete the file)
+      if (!yamlText || yamlText === "Add segments with \"A\"!") {
+        return { valid: true, error: null };
+      }
+
+      // Parse the segments
+      var parseResult = parseSegmentsFromText(yamlText);
+      if (!parseResult.success) {
+        return { valid: false, error: "Invalid YAML format: " + parseResult.error };
+      }
+
+      // Now validate each segment
+      for (var i = 0; i < segments.length; i++) {
+        var seg = segments[i];
+
+        // Check for non-empty title
+        if (!seg.title || seg.title.trim() === '') {
+          return { valid: false, error: "Segment " + (i + 1) + " has an empty title" };
+        }
+
+        // Check for matching start and end timestamps
+        if (seg.start.length !== seg.end.length) {
+          return {
+            valid: false,
+            error: "Segment " + (i + 1) + " has " + seg.start.length + " start timestamp(s) but " + seg.end.length + " end timestamp(s). They must match."
+          };
+        }
+
+        // Check that we have at least one start/end pair
+        if (seg.start.length === 0) {
+          return { valid: false, error: "Segment " + (i + 1) + " has no timestamps" };
+        }
+      }
+
+      return { valid: true, error: null };
+    }
+
+    function saveSegments() {
+      var filepath = document.querySelector('#datapath').value;
+      if (!filepath) {
+        showSaveFeedback(false, "No video selected");
+        return;
+      }
+
+      // Validate segments before saving
+      var validation = validateSegments();
+      if (!validation.valid) {
+        showSaveFeedback(false, validation.error);
+        return;
+      }
+
+      var segmentsDiv = document.getElementById('segments-editable');
+      var yamlText = segmentsDiv.innerText || segmentsDiv.textContent || '';
+      yamlText = yamlText.replace(/<br\s*\/?>/gi, '\n');
+      // Replace non-breaking spaces (U+00A0) with regular spaces
+      yamlText = yamlText.replace(/\u00A0/g, ' ');
+      yamlText = yamlText.trim();
+
+      // Allow empty segments (will delete the file on server)
+      // If empty or placeholder, send empty string
+      if (!yamlText || yamlText === "Add segments with \"A\"!") {
+        yamlText = '';
+      }
+
+      // Prepare request data with path and yaml
+      var requestData = {
+        path: filepath,
+        yaml: yamlText
+      };
+
+      $.ajax({
+        url: '/api/upload',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(requestData),
+        success: function () {
+          showSaveFeedback(true, "");
+          // Refresh video list to update the segs badge
+          loadVideoList();
+        },
+        error: function (xhr, status, error) {
+          var errorMsg = error || "Unknown error";
+          if (xhr.responseText) {
+            try {
+              var errorData = JSON.parse(xhr.responseText);
+              errorMsg = errorData.error || errorMsg;
+            } catch (e) {
+              errorMsg = xhr.responseText || errorMsg;
+            }
+          }
+          showSaveFeedback(false, errorMsg);
+        }
+      });
     }
 
     //===========================================
@@ -1328,6 +1468,31 @@
 
             // Refresh video list to highlight current video
             loadVideoList();
+
+            // Try to auto-load segments YAML if it exists
+            $.ajax({
+              url: apiPath + "_segments.yaml",
+              dataType: "text",
+              success: function (yamlText) {
+                // Parse the YAML and update segments array
+                var result = parseSegmentsFromText(yamlText);
+                if (result.success) {
+                  // Successfully parsed - update the display
+                  updateSegmentYaml();
+                } else {
+                  // Parse error - show the raw text but don't update segments array
+                  var segmentsDiv = document.getElementById('segments-editable');
+                  segmentsDiv.textContent = yamlText;
+                  // Show error toast
+                  $("#error-toast-body").html("<h2>YAML Parse Error</h2><p>" + result.error + "</p>");
+                  (new bootstrap.Toast(document.getElementById('error-toast'), { delay: 5000 })).show();
+                }
+              },
+              error: function () {
+                // File doesn't exist or error loading - this is fine, just use default
+                // Don't show error for 404
+              }
+            });
 
             for (var i = 0; i < data["moments"].length; i++) {
               var game = data["moments"][i];

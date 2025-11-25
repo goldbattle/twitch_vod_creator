@@ -8,6 +8,7 @@ import os
 import argparse
 import logging
 from http.server import HTTPServer, SimpleHTTPRequestHandler
+from socketserver import ThreadingMixIn
 from urllib.parse import urlparse, unquote
 from typing import Optional, Dict, List
 import re
@@ -19,6 +20,11 @@ from tqdm import tqdm
 import coloredlogs
 
 
+class ThreadingHTTPServer(ThreadingMixIn, HTTPServer):
+    """Threaded HTTP server that can handle multiple concurrent requests."""
+    daemon_threads = True
+
+
 class CustomHTTPRequestHandler(SimpleHTTPRequestHandler):
     """Custom HTTP request handler that serves files from different directories."""
     
@@ -26,6 +32,25 @@ class CustomHTTPRequestHandler(SimpleHTTPRequestHandler):
     # Key: cache_key (e.g., "dir_username_month" or "videos_all"), Value: (data, timestamp)
     _list_cache: Dict[str, tuple] = {}
     _cache_ttl: float = 300.0  # Cache for 5 minutes
+    
+    def send_json_response(self, status_code: int, data):
+        """Send a JSON response with proper headers. Data can be dict or list."""
+        # Use indent=2 for lists (API responses), no indent for simple dicts
+        indent = 2 if isinstance(data, list) else None
+        response_data = json.dumps(data, indent=indent).encode('utf-8')
+        self.send_response(status_code)
+        self.send_header('Content-Type', 'application/json')
+        self.send_header('Content-Length', str(len(response_data)))
+        self.end_headers()
+        try:
+            self.wfile.write(response_data)
+            self.wfile.flush()
+        except (BrokenPipeError, ConnectionResetError, OSError):
+            pass
+    
+    def send_json_error(self, status_code: int, error_message: str):
+        """Send a JSON error response."""
+        self.send_json_response(status_code, {'error': error_message})
     
     def __init__(self, *args, website_root: str, data_path: str, data_live_path: Optional[str] = None, **kwargs):
         self.website_root = website_root
@@ -51,8 +76,28 @@ class CustomHTTPRequestHandler(SimpleHTTPRequestHandler):
             return 'text/vtt'
         elif path.endswith('.json'):
             return 'application/json'
+        elif path.endswith('.yaml') or path.endswith('.yml'):
+            return 'text/yaml'
         
         return content_type or 'application/octet-stream'
+    
+    def do_POST(self):
+        """Handle POST requests for saving segments YAML files."""
+        try:
+            parsed = urlparse(self.path)
+            path = unquote(parsed.path)
+            
+            # Check if this is a segments YAML save request
+            if path == '/api/upload':
+                self.handle_save_segments()
+                return
+            
+            # Unknown POST endpoint
+            self.send_json_error(404, 'POST endpoint not found')
+        except Exception as e:
+            logger = logging.getLogger(__name__)
+            logger.error(f"Error in do_POST: {e}", exc_info=True)
+            self.send_json_error(500, str(e))
     
     def do_GET(self):
         """Handle GET requests with proper error handling for unconfigured endpoints and range requests."""
@@ -230,23 +275,30 @@ class CustomHTTPRequestHandler(SimpleHTTPRequestHandler):
         parsed = urlparse(path)
         path = unquote(parsed.path)
         
-        # Handle /data/ endpoint
-        if path.startswith('/data/'):
-            relative_path = path[6:]  # Remove '/data/' prefix
+        # Normalize path - remove leading slash for easier matching
+        normalized = path.lstrip('/')
+        
+        # Handle data/ endpoint (with or without leading /)
+        if normalized.startswith('data/'):
+            relative_path = normalized[5:]  # Remove 'data/' prefix
             if not relative_path:
                 relative_path = ''
             full_path = os.path.join(self.data_path, relative_path)
             return os.path.normpath(full_path)
         
-        # Handle /data_live/ endpoint
-        if path.startswith('/data_live/'):
+        # Handle data_live/ endpoint (with or without leading /)
+        if normalized.startswith('data_live/'):
             # This should only be reached if data_live_path is configured
             # (do_GET handles the unconfigured case)
-            relative_path = path[11:]  # Remove '/data_live/' prefix
+            relative_path = normalized[10:]  # Remove 'data_live/' prefix
             if not relative_path:
                 relative_path = ''
             full_path = os.path.join(self.data_live_path, relative_path)
             return os.path.normpath(full_path)
+        
+        # Restore leading slash for other paths
+        if not path.startswith('/'):
+            path = '/' + path
         
         # Default: serve from website root
         # Remove leading slash
@@ -263,7 +315,7 @@ class CustomHTTPRequestHandler(SimpleHTTPRequestHandler):
     def end_headers(self):
         """Add CORS headers to allow cross-origin requests."""
         self.send_header('Access-Control-Allow-Origin', '*')
-        self.send_header('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS')
+        self.send_header('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS, POST')
         self.send_header('Access-Control-Allow-Headers', 'Content-Type, Range, Content-Range')
         super().end_headers()
     
@@ -271,7 +323,7 @@ class CustomHTTPRequestHandler(SimpleHTTPRequestHandler):
         """Handle OPTIONS requests for CORS preflight."""
         self.send_response(200)
         self.send_header('Access-Control-Allow-Origin', '*')
-        self.send_header('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS')
+        self.send_header('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS, POST')
         self.send_header('Access-Control-Allow-Headers', 'Content-Type, Range, Content-Range')
         self.send_header('Access-Control-Max-Age', '86400')
         self.end_headers()
@@ -419,6 +471,7 @@ class CustomHTTPRequestHandler(SimpleHTTPRequestHandler):
                         chat_json_file = info_file.parent / f"{base_name}_chat.json"
                         chat_mp4_file = info_file.parent / f"{base_name}_chat.mp4"
                         vtt_file = info_file.parent / f"{base_name}.vtt"
+                        segments_yaml_file = info_file.parent / f"{base_name}_segments.yaml"
                         
                         # Extract metadata
                         items.append({
@@ -432,6 +485,7 @@ class CustomHTTPRequestHandler(SimpleHTTPRequestHandler):
                             'has_chat_json': chat_json_file.exists(),
                             'has_chat_render': chat_mp4_file.exists(),
                             'has_vtt': vtt_file.exists(),
+                            'has_segments': segments_yaml_file.exists(),
                         })
                     except (json.JSONDecodeError, IOError, OSError):
                         continue
@@ -486,6 +540,110 @@ class CustomHTTPRequestHandler(SimpleHTTPRequestHandler):
         
         return items
     
+    def handle_save_segments(self):
+        """Handle POST request to save segments YAML file."""
+        logger = logging.getLogger(__name__)
+        try:
+            # Read the POST body
+            content_length = int(self.headers.get('Content-Length', 0))
+            if content_length == 0:
+                self.send_json_error(400, 'No content provided')
+                return
+            
+            # Read the POST body in chunks to handle large files
+            post_data = b''
+            remaining = content_length
+            chunk_size = 8192  # 8KB chunks
+            while remaining > 0:
+                chunk = self.rfile.read(min(chunk_size, remaining))
+                if not chunk:
+                    break
+                post_data += chunk
+                remaining -= len(chunk)
+            if len(post_data) != content_length:
+                self.send_json_error(400, f'Incomplete data: received {len(post_data)} bytes, expected {content_length}')
+                return
+            
+            # Parse JSON request body
+            try:
+                request_data = json.loads(post_data.decode('utf-8'))
+            except json.JSONDecodeError as e:
+                self.send_json_error(400, f'Invalid JSON: {str(e)}')
+                return
+            
+            # Extract path and yaml content
+            vod_path = request_data.get('path')
+            yaml_content = request_data.get('yaml')
+            if not vod_path:
+                self.send_json_error(400, "Missing 'path' in request body")
+                return
+            if yaml_content is None:
+                self.send_json_error(400, "Missing 'yaml' in request body")
+                return
+            
+            # Build the segments YAML file path
+            segments_path = vod_path + "_segments.yaml"
+            
+            # Get the translated absolute file path
+            # translate_path handles data/ vs data_live/ and uses correct base path
+            file_path = self.translate_path(segments_path)
+            
+            # If yaml_content is empty or just whitespace, delete the file
+            yaml_content_trimmed = yaml_content.strip()
+            if not yaml_content_trimmed:
+                # Delete the file if it exists
+                if os.path.exists(file_path):
+                    os.remove(file_path)
+                    self._update_cache_segments(vod_path, False)
+                self.send_json_response(200, {'success': True, 'message': 'Segment file deleted successfully'})
+            else:
+                # Ensure the directory exists
+                file_dir = os.path.dirname(file_path)
+                os.makedirs(file_dir, exist_ok=True)
+                
+                # Write the file using absolute path
+                with open(file_path, 'w', encoding='utf-8') as f:
+                    f.write(yaml_content)
+                
+                self._update_cache_segments(vod_path, True)
+            
+                # Send success response
+                self.send_json_response(200, {'success': True, 'message': 'Segments saved successfully'})
+        except Exception as e:
+            logger.error(f"Error in handle_save_segments: {e}", exc_info=True)
+            self.send_json_error(500, str(e))
+    
+    def _update_cache_segments(self, vod_path: str, has_segments: bool):
+        """Update the cache to mark a video as having or not having segments.
+        
+        Args:
+            vod_path: Path in format 'data/username/month/video_id' or 'data_live/username/month/video_id'
+            has_segments: Whether the video has segments file
+        """
+        logger = logging.getLogger(__name__)
+        # Normalize vod_path - remove leading/trailing slashes
+        normalized_vod_path = vod_path.strip('/')
+        
+        # Extract username and month from the path
+        # Format: data/username/month/video_id or data_live/username/month/video_id
+        path_parts = normalized_vod_path.split('/')
+        if len(path_parts) >= 3:
+            username = path_parts[1] if len(path_parts) > 1 else None
+            month = path_parts[2] if len(path_parts) > 2 else None
+            
+            if username and month:
+                cache_key = f"dir_{username}_{month}"
+                if cache_key in CustomHTTPRequestHandler._list_cache:
+                    cached_data, cache_timestamp = CustomHTTPRequestHandler._list_cache[cache_key]
+                    
+                    # Find and update the video in the cached data
+                    # Match by path (exact match, removing trailing slashes)
+                    for item in cached_data:
+                        item_path = item.get('path', '').rstrip('/')
+                        if item_path == normalized_vod_path.rstrip('/'):
+                            item['has_segments'] = has_segments
+                            return
+    
     def handle_videos_api(self, filepath: Optional[str] = None):
         """Handle /api/videos endpoint to return list of available videos, months, or user folders."""
         try:
@@ -512,23 +670,11 @@ class CustomHTTPRequestHandler(SimpleHTTPRequestHandler):
                 # No path or just data/ - return user directories
                 items = self.get_list_directory()
             
-            response_data = json.dumps(items, indent=2).encode('utf-8')
-            
-            self.send_response(200)
-            self.send_header('Content-Type', 'application/json')
-            self.send_header('Content-Length', str(len(response_data)))
-            self.end_headers()
-            self.wfile.write(response_data)
+            self.send_json_response(200, items)
         except Exception as e:
-            try:
-                error_msg = json.dumps({'error': str(e)}).encode('utf-8')
-                self.send_response(500)
-                self.send_header('Content-Type', 'application/json')
-                self.send_header('Content-Length', str(len(error_msg)))
-                self.end_headers()
-                self.wfile.write(error_msg)
-            except (BrokenPipeError, ConnectionResetError, OSError):
-                pass
+            logger = logging.getLogger(__name__)
+            logger.error(f"Error in handle_videos_api: {e}", exc_info=True)
+            self.send_json_error(500, str(e))
 
 
 def parse_args() -> argparse.Namespace:
@@ -602,8 +748,8 @@ def run_task(args: argparse.Namespace) -> None:
             **kwargs
         )
     
-    # Create and start server
-    server = HTTPServer((args.host, args.port), handler_factory)
+    # Create and start server with threading support
+    server = ThreadingHTTPServer((args.host, args.port), handler_factory)
     
     data_path_abs = os.path.abspath(args.data)
     
