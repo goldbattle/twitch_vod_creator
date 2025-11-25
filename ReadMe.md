@@ -10,7 +10,7 @@ Additionally, a transcript of the video can be generated using [vosk](https://gi
 Example channels with these video renders:
 * Sodapoppin Archives - https://www.youtube.com/channel/UCreuVIdBwFEhf1qFhzyJVKw
 * Sevadus Clips - https://www.youtube.com/channel/UCkWuSV5FukUzVLvFnhvPvKQ
-* Nmplol Clips - https://www.youtube.com/channel/UCf5sgK1NoQuac1P4P4olelg
+* ~~Nmplol Clips - https://www.youtube.com/channel/UCf5sgK1NoQuac1P4P4olelg~~
 
 
 ### Dependencies & Config
@@ -102,6 +102,7 @@ In the future this could be extended to use [spleeter](https://github.com/deezer
 ### Creating Segment Config Files
 
 See the below [website](./website/) directory for a small local interface for generating these files.
+You can launch the web sever via `python tvc.py web` which will host and enable saving / loading yaml files etc.
 Otherwise one can use VLC and [VLC Get Timestamp.ahk](./docs/VLC%20Get%20Timestamp.ahk) autohotkey script.
 
 ![](./docs/screenshot-2025-11-24_20-33-31.png)
