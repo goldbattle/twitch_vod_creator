@@ -92,7 +92,7 @@ def run_task(args: argparse.Namespace) -> None:
             vid_iter = twitch_api.get_clips(auth["client_id"], auth["client_secret"], user["id"], 
                                  started_at=date_start, ended_at=date_end, page_size=100)
             
-            # Collect all clips we need to process
+            # Collect all clips first (iterator will fetch all pages automatically)
             all_clips = []
             for video in vid_iter:
                 count_total_clips_checked += 1
@@ -102,15 +102,16 @@ def run_task(args: argparse.Namespace) -> None:
                     break
                 all_clips.append(video)
             
-            # Reverse to process older clips first, lets download them!
-            all_clips.reverse()
+            # Sort by created_at to process older clips first (oldest to newest)
+            all_clips.sort(key=lambda x: x['created_at'])
             for video in all_clips:
                 if extra.terminated_requested:
                     logger.info('terminate requested, not downloading any more..')
                     break
                 
+                clip_date = video['created_at'].strftime('%Y-%m-%d')
                 logger.info(f"processing {video['url']}")
-                logger.info(f"  - {video['view_count']} views")
+                logger.info(f"  - {clip_date} - {video['view_count']} views")
                 
                 # Setup paths
                 export_folder = file.get_date_folder(video['created_at'].strftime('%Y-%m-%dT%H:%M:%SZ'))

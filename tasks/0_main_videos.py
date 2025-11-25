@@ -110,10 +110,10 @@ def run_task(args: argparse.Namespace) -> None:
         
         logger.info(f"  - found {len(arr_archive)} archives, {len(arr_highlight)} highlights, {len(arr_upload)} uploads")
         
-        # Reverse arrays to process older videos first (newest last)
-        arr_archive.reverse()
-        arr_highlight.reverse()
-        arr_upload.reverse()
+        # Sort by created_at to process older videos first (oldest to newest)
+        arr_archive.sort(key=lambda x: x['helix']['created_at'])
+        arr_highlight.sort(key=lambda x: x['helix']['created_at'])
+        arr_upload.sort(key=lambda x: x['helix']['created_at'])
         
         # Process each archive video
         for video in arr_archive:
@@ -121,7 +121,9 @@ def run_task(args: argparse.Namespace) -> None:
                 logger.info('terminate requested, not downloading any more..')
                 break
             
+            video_date = video['helix']['created_at'].strftime('%Y-%m-%d')
             logger.info(f"processing video {video['helix']['id']}")
+            logger.info(f"  - {video_date} - {video['helix']['view_count']} views")
             t0_start = time.time()
             video_data = twitch_api.create_video_data(auth["client_id"], auth["client_secret"], video['helix'])
             
