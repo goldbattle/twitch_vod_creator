@@ -110,6 +110,11 @@ def run_task(args: argparse.Namespace) -> None:
         
         logger.info(f"  - found {len(arr_archive)} archives, {len(arr_highlight)} highlights, {len(arr_upload)} uploads")
         
+        # Reverse arrays to process older videos first (newest last)
+        arr_archive.reverse()
+        arr_highlight.reverse()
+        arr_upload.reverse()
+        
         # Process each archive video
         for video in arr_archive:
             if extra.terminated_requested:

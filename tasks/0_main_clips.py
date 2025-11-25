@@ -92,16 +92,21 @@ def run_task(args: argparse.Namespace) -> None:
             vid_iter = twitch_api.get_clips(auth["client_id"], auth["client_secret"], user["id"], 
                                  started_at=date_start, ended_at=date_end, page_size=100)
             
+            # Collect all clips we need to process
+            all_clips = []
             for video in vid_iter:
-                if extra.terminated_requested:
-                    logger.info('terminate requested, not downloading any more..')
-                    break
-                
                 count_total_clips_checked += 1
-                
                 # Stop if below view count threshold (clips are sorted by view count)
                 if video['view_count'] < min_view_counts[idx]:
                     logger.debug(f"Stopping at clip with {video['view_count']} views (threshold: {min_view_counts[idx]})")
+                    break
+                all_clips.append(video)
+            
+            # Reverse to process older clips first, lets download them!
+            all_clips.reverse()
+            for video in all_clips:
+                if extra.terminated_requested:
+                    logger.info('terminate requested, not downloading any more..')
                     break
                 
                 logger.info(f"processing {video['url']}")
