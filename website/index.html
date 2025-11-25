@@ -1089,6 +1089,7 @@
       }
 
       // Now validate each segment
+      var seenTitles = new Set();
       for (var i = 0; i < segments.length; i++) {
         var seg = segments[i];
 
@@ -1096,6 +1097,13 @@
         if (!seg.title || seg.title.trim() === '') {
           return { valid: false, error: "Segment " + (i + 1) + " has an empty title" };
         }
+
+        // Check for unique title
+        var titleKey = seg.title.trim().toLowerCase();
+        if (seenTitles.has(titleKey)) {
+          return { valid: false, error: "Duplicate title found: \"" + seg.title.trim() + "\". Each title must be unique." };
+        }
+        seenTitles.add(titleKey);
 
         // Check for matching start and end timestamps
         if (seg.start.length !== seg.end.length) {
@@ -1171,6 +1179,15 @@
         }
       });
     }
+
+    // Add Ctrl+S (or Cmd+S on Mac) keyboard shortcut to save segments
+    document.addEventListener('keydown', function (event) {
+      // Check for Ctrl+S (Windows/Linux) or Cmd+S (Mac)
+      if ((event.ctrlKey || event.metaKey) && event.key === 's') {
+        event.preventDefault(); // Prevent browser's default save dialog
+        saveSegments();
+      }
+    });
 
     //===========================================
     //===========================================

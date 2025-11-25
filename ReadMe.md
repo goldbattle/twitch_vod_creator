@@ -104,7 +104,7 @@ In the future this could be extended to use [spleeter](https://github.com/deezer
 See the below [website](./website/) directory for a small local interface for generating these files.
 Otherwise one can use VLC and [VLC Get Timestamp.ahk](./docs/VLC%20Get%20Timestamp.ahk) autohotkey script.
 
-![](./docs/example_website.png)
+![](./docs/screenshot-2025-11-24_20-33-31.png)
 
 
 

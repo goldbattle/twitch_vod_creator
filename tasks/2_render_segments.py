@@ -9,6 +9,7 @@ import json
 import shutil
 import logging
 import coloredlogs
+import glob
 from typing import List, Tuple, Dict, Any, Optional
 
 # Add parent directory to path so we can import utilities
@@ -17,10 +18,34 @@ from utilities import extra, config, video_editing, chat, file
 
 # ================================================================
 
+def find_segments_files(directory: str) -> List[str]:
+    """Recursively find all *_segments.yaml files in the given directory."""
+    pattern = os.path.join(directory, '**', '*_segments.yaml')
+    files = glob.glob(pattern, recursive=True)
+    return sorted(files)
+
+
+def load_all_segments(segments_files: List[str], logger: logging.Logger) -> List[Dict[str, Any]]:
+    """Load all segments from multiple YAML files and combine them into a single list."""
+    all_segments = []
+    for file_path in segments_files:
+        try:
+            with open(file_path) as f:
+                data = yaml.load(f, Loader=yaml.FullLoader)
+                if data:
+                    all_segments.extend(data)
+                    logger.debug(f"Loaded {len(data)} segments from {file_path}")
+        except Exception as e:
+            logger.error(f"Error loading segments from {file_path}: {e}")
+    return all_segments
+
+
 def parse_args() -> argparse.Namespace:
     """Parse command line arguments."""
     parser = argparse.ArgumentParser(description='Render video segments')
-    parser.add_argument('--file-segments', required=True, help='YAML file with all video segments (relative to config directory)')
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument('--file-segments', help='YAML file with all video segments (relative to config directory)')
+    group.add_argument('--segments-directory', help='Directory to recursively scan for *_segments.yaml files')
     parser.add_argument('--file-config', required=True, help='Config YAML file (relative to config directory)')
     parser.add_argument('--verbose', action='store_true', help='Show verbose output from operations')
     parser.add_argument('--temp-dir', default=config.get_temp_path("render_segments"), help='Temporary directory for downloads (default: /tmp/tvc_render_segments)')
@@ -37,7 +62,6 @@ def run_task(args: argparse.Namespace) -> None:
     config_dict = config.load_config()
     config_dict['temp_path'] = args.temp_dir
     
-    video_file_path = os.path.join(config_dict['base_path'], args.file_segments)
     config_file_path = os.path.join(config_dict['base_path'], args.file_config)
     
     # Load config
@@ -53,10 +77,32 @@ def run_task(args: argparse.Namespace) -> None:
     
     extra.setup_signal_handle()
     
-    # Load videos
-    with open(video_file_path) as f:
-        data = yaml.load(f, Loader=yaml.FullLoader)
-    logger.info(f"loaded {len(data)} videos to render")
+    # Load segments from either a single file or directory scan
+    if args.file_segments:
+        # Single file mode
+        video_file_path = os.path.join(config_dict['base_path'], args.file_segments)
+        with open(video_file_path) as f:
+            data = yaml.load(f, Loader=yaml.FullLoader)
+        logger.info(f"loaded {len(data)} videos to render from {args.file_segments}")
+    else:
+        # Directory scan mode
+        segments_dir = args.segments_directory
+        if not os.path.isabs(segments_dir):
+            segments_dir = os.path.join(config_dict['base_path'], segments_dir)
+        
+        # Find and load all segments files
+        segments_files = find_segments_files(segments_dir)
+        if not segments_files:
+            logger.warning(f"No *_segments.yaml files found in {segments_dir}")
+            return
+        
+        logger.info(f"Found {len(segments_files)} segments file(s):")
+        for file_path in segments_files:
+            logger.info(f"  - {file_path}")
+        
+        # Load all segments from all files
+        data = load_all_segments(segments_files, logger)
+        logger.info(f"Loaded {len(data)} total segments to render")
     
     # Setup paths
     path_root = os.path.dirname(config_dict['base_path'])
@@ -68,7 +114,17 @@ def run_task(args: argparse.Namespace) -> None:
             logger.info('terminate requested, not downloading any more..')
             break
         
-        logger.info(f"processing {video['video']}")
+        # Setup paths early to check for skip condition
+        clean_video_title = file.get_valid_filename(video["title"])
+        file_path_desc = os.path.join(path_render, f"{video['video']}_{clean_video_title}_desc.txt")
+        
+        logger.info(f"processing {video['video']} - '{video['title']}'")
+        
+        # Check if description file exists - if so, skip rendering
+        if os.path.exists(file_path_desc):
+            logger.info("  - description file exists, skipping rendering")
+            logger.debug(f"  - {file_path_desc}")
+            continue
         
         # Check video exists
         file_path_video = os.path.join(path_root, video["video"] + ".mp4")
@@ -78,11 +134,13 @@ def run_task(args: argparse.Namespace) -> None:
         
         # Load video info
         file_path_info = os.path.join(path_root, video["video"] + "_info.json")
-        with open(file_path_info) as f:
-            video_info = json.load(f)
+        try:
+            with open(file_path_info) as f:
+                video_info = json.load(f)
+        except Exception as e:
+            logger.error(f"could not load video info file: {file_path_info} - {e}")
+            continue
         
-        # Setup paths
-        clean_video_title = file.get_valid_filename(video["title"])
         path_temp_parts = os.path.join(config_dict['temp_path'], "parts", clean_video_title)
         if os.path.exists(path_temp_parts):
             shutil.rmtree(path_temp_parts)
@@ -93,7 +151,7 @@ def run_task(args: argparse.Namespace) -> None:
             file_path_composite = os.path.join(path_render, f"{video['video']}_{clean_video_title}.mp4")
             file_path_composite_tmp = os.path.join(config_dict['temp_path'], f"{clean_video_title}.tmp.mp4")
             
-            if not extra.terminated_requested and not os.path.exists(file_path_composite):
+            if not extra.terminated_requested:
                 should_render_chat = video.get("with_chat", True)
                 
                 # Render chat if needed
@@ -202,7 +260,6 @@ def run_task(args: argparse.Namespace) -> None:
                     os.remove(file_path_composite_tmp)
             
             # Description file
-            file_path_desc = os.path.join(path_render, f"{video['video']}_{clean_video_title}_desc.txt")
             if not extra.terminated_requested and not os.path.exists(file_path_desc):
                 tmp = str(template)
                 tmp = tmp.replace("$id", video_info["id"])
@@ -272,7 +329,9 @@ def run_task(args: argparse.Namespace) -> None:
                 logger.debug(f"  - {file_path_desc_muted}")
         
         except Exception as e:
-            logger.error(f"{e}")
+            logger.error(f"Error processing {video.get('video', 'unknown')} - '{video.get('title', 'unknown')}': {e}")
+            import traceback
+            logger.debug(traceback.format_exc())
         
         # Cleanup
         if os.path.exists(path_temp_parts):
