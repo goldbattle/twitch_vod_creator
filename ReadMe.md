@@ -10,21 +10,33 @@ Additionally, a transcript of the video can be generated using [vosk](https://gi
 Example channels with these video renders:
 * Sodapoppin Archives - https://www.youtube.com/channel/UCreuVIdBwFEhf1qFhzyJVKw
 * Sevadus Clips - https://www.youtube.com/channel/UCkWuSV5FukUzVLvFnhvPvKQ
-* Nmplol Clips - https://www.youtube.com/channel/UCf5sgK1NoQuac1P4P4olelg
+* ~~Nmplol Clips - https://www.youtube.com/channel/UCf5sgK1NoQuac1P4P4olelg~~
 
 
 ### Dependencies & Config
+
+First ensure you have git LFS installed and enabled.
+
+```bash
+git lfs install
+git clone git@github.com:goldbattle/twitch_vod_creator.git
+cd twitch_vod_creator/
+```
+
+Then you will need to ensure all the binaries we have can be executable on your system.
+
+```bash
+./run_fix_thirdparty.sh
+```
 
 We leverage [python-twitch-client](https://github.com/tsifrer/python-twitch-client) library which recently added oauth support.
 You will need at least version 0.7.1 installed to have the correct api support functions.
 
 ```bash
-pip install python-twitch-client
-pip install PyYAML
-pip install youtube-video-upload
-pip install drivedl
-pip install webvtt-py
-pip install vosk
+curl -LsSf https://astral.sh/uv/install.sh | sh
+uv venv --python 3.8
+source .venv/bin/activate
+uv sync
 ```
 
 You will need to make a copy of *[config/auth_example.yaml](config/auth_example.yaml)* and rename it to `config/auth.yaml`.
@@ -32,17 +44,19 @@ This should be fill out with a twitch app client information which can be genera
 For youtube uploads you will need to generate a oauth json file after you enable Youtube API V3 access in the Google developer console.
 Please take a look at the original [youtube-video-upload](https://github.com/remorses/youtube-video-upload) repository for those details if you want to try this.
 
+
+
 If you are running this on a linux machine, you will need the ffmpeg binary for your system.
 Try to download from the official website as your machine repositories will be too far out of date.
-From there, ensure you have Python 3.6 installed, and that you have correct paths to the TwitchDownload CLI and ffmpeg.
-See the commented out examples in the top of each script file.
-Additionally, one can use the `crontab_script_launcher.sh` script to run script automatically on a cronjob.
+From there, ensure you have Python 3.8 installed, and that you have correct paths to the TwitchDownload CLI and ffmpeg.
+Additionally, one can use the `run_cron.sh` script to run commands automatically on a cronjob.
+The script will automatically source the `.venv` virtual environment and run commands via `tvc.py`.
 
 ```bash
 sudo crontab -e
-*/25 * * * * /path/to/repo/crontab_script_launcher.sh 0_main_videos.py
-*/15 * * * * /path/to/repo/crontab_script_launcher.sh 1_render_segments.py
-* */12 * * * /path/to/repo/crontab_script_launcher.sh 0_main_clips.py
+*/25 * * * * /path/to/repo/run_cron.sh download_videos
+* */12 * * * /path/to/repo/run_cron.sh download_clips
+*/15 * * * * /path/to/repo/run_cron.sh render_segments
 ```
 
 
@@ -88,9 +102,10 @@ In the future this could be extended to use [spleeter](https://github.com/deezer
 ### Creating Segment Config Files
 
 See the below [website](./website/) directory for a small local interface for generating these files.
+You can launch the web sever via `python tvc.py web` which will host and enable saving / loading yaml files etc.
 Otherwise one can use VLC and [VLC Get Timestamp.ahk](./docs/VLC%20Get%20Timestamp.ahk) autohotkey script.
 
-![](./docs/example_website.png)
+![](./docs/screenshot-2025-11-24_20-33-31.png)
 
 
 

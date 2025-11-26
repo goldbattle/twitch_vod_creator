@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
   <!-- meta tags -->
@@ -11,59 +12,230 @@
   <link rel="stylesheet" href="css/bootstrap.min.css" />
   <link rel="stylesheet" href="css/bootstrap-nightfall.css" media="(prefers-color-scheme: dark)">
 
+  <style>
+    .resizable-container {
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .resizable-panel {
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .resizer {
+      background-color: #dee2e6;
+      cursor: col-resize;
+      width: 4px;
+      flex-shrink: 0;
+      user-select: none;
+    }
+
+    .resizer:hover {
+      background-color: #adb5bd;
+    }
+
+    .resizer.dragging {
+      background-color: #6c757d;
+    }
+
+    .resizer-horizontal {
+      background-color: #dee2e6;
+      cursor: row-resize;
+      height: 4px;
+      flex-shrink: 0;
+      user-select: none;
+    }
+
+    .resizer-horizontal:hover {
+      background-color: #adb5bd;
+    }
+
+    .resizer-horizontal.dragging {
+      background-color: #6c757d;
+    }
+
+    #video-panel {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    #transcript-panel {
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    #segments-panel {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    #segments {
+      flex: 1;
+      min-height: 0;
+    }
+
+    #segments-editable {
+      flex: 1;
+      min-height: 0;
+      padding: 1rem;
+      font-family: monospace;
+      font-size: 0.9em;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      overflow-x: hidden;
+      overflow-y: auto;
+      border: 1px solid #ced4da;
+      border-radius: 0.25rem;
+      outline: none;
+    }
+
+    #segments-editable:focus {
+      border-color: #86b7fe;
+      box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    }
+
+    .segment-highlight-line {
+      background-color: #fff3cd;
+      display: block;
+      margin: 0;
+      padding: 2px 0;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      #segments-editable {
+        border-color: #495057;
+      }
+
+      .segment-highlight-line {
+        background-color: #664d03;
+      }
+    }
+
+    .segment-highlight {
+      scroll-margin-top: 20px;
+    }
+
+    .video-list-item {
+      padding: 0.5rem 0.75rem;
+    }
+
+    .video-list-item:hover {
+      text-decoration: underline;
+      color: #0d6efd;
+    }
+
+    .embed-responsive-16by9 {
+      position: relative;
+      display: block;
+      width: 100%;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .embed-responsive-16by9::before {
+      display: block;
+      content: "";
+      padding-top: 56.25%;
+      /* 16:9 aspect ratio */
+    }
+
+    .embed-responsive-16by9 video {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+  </style>
+
   <!-- javascript files -->
   <script type="text/javascript" src="js/jquery.min.js"></script>
   <script type="text/javascript" src="js/bootstrap.bundle.min.js"></script>
   <script type="text/javascript" src="js/clipboard.min.js"></script>
   <script type="text/javascript" src="js/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
 
 </head>
 
 <body>
-<div class="container-fluid">
-<div class="row" style="height: 100vh;">
+  <div class="resizable-container">
+    <!-- main video panel -->
+    <div class="resizable-panel" id="video-panel">
+      <!-- Video Content (player + info) -->
+      <div id="video-content" style="flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden;">
+        <div class="embed-responsive embed-responsive-16by9">
+          <video width="100%" id="video-active" class="embed-responsive-item" preload="auto" controls>
+            <!-- <source src="path_here.." type="video/mp4"> -->
+            Your browser does not support the video tag.
+          </video>
+        </div>
 
-  <!-- main video -->
-  <div class="col-6" id="video" style="height:100%;overflow-y:hidden;">
+        <!-- Video Info -->
+        <div style="padding: 0.75rem;">
+          <h4 id="title" style="margin: 0 0 0.25rem 0; font-size: 1.1rem;"></h4>
+          <div id="date" class="text-muted" style="font-size: 0.9rem; margin-bottom: 0.5rem;"></div>
+          <div class="input-group input-group-sm">
+            <span class="input-group-text">Current Video:</span>
+            <input class="form-control" id="datapath" onkeydown="readInputDataPath(this, event)" />
+          </div>
+        </div>
+      </div>
 
-    <h2 id="title"></h2>
-    <h3 id="date" class="text-muted"></h3>
-    <div class="input-group">
-      <span class="input-group-text" style="border-radius:0.2rem 0 0 0;">Current Video:</span>
-      <input class="form-control form-control-lg" id="datapath" onkeydown="readInputDataPath(this, event)" style="border-radius:0 0.2rem 0 0;" />
+      <!-- horizontal resizer between video content and file explorer -->
+      <div class="resizer-horizontal" id="resizer-video-filelist"></div>
+
+      <!-- File Explorer -->
+      <div id="file-explorer" style="flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden;">
+        <div id="video-list-container" style="flex: 1; overflow-y: auto;">
+          <div class="text-muted" style="padding: 0.5rem 0.75rem;">Loading videos...</div>
+        </div>
+      </div>
     </div>
 
-    <div class="embed-responsive embed-responsive-16by9">
-      <video width="100%" id="video-active" class="embed-responsive-item" preload="auto" controls>
-        <!-- <source src="path_here.." type="video/mp4"> -->
-        Your browser does not support the video tag.
-      </video>
+    <!-- resizer between video and transcript -->
+    <div class="resizer" id="resizer-video-transcript"></div>
+
+    <!-- transcript text panel -->
+    <div class="resizable-panel" id="transcript-panel">
+      <div id="transcript" style="font-size: 0.8em;word-wrap: break-word;overflow-y: auto; flex: 1; padding: 1rem;">
+      </div>
     </div>
-    <!-- <div id="current">0:00</div>
-    <div id="duration">0:00</div>
-    <div id="text"></div> -->
 
-  </div>
+    <!-- resizer between transcript and segments -->
+    <div class="resizer" id="resizer-transcript-segments"></div>
 
-  <!-- transcript text -->
-  <div class="col-2" id="transcript-container" style="height:100%;overflow-y: scroll;">
-    <div id="transcript" style="font-size: 0.8em;word-wrap: break-word;overflow-y: auto;"></div>
-  </div>
+    <!-- rendered segments panel -->
+    <div class="resizable-panel" id="segments-panel">
+      <div style="display: flex; gap: 0.5rem; margin: 1rem;">
+        <a class="btn btn-success flex-fill" id="save-segments-button" style="cursor: pointer;"
+          onclick="saveSegments(); return false;">
+          <span style="margin-right: 0.25rem;">💾</span>Save
+        </a>
+        <a class="btn btn-primary flex-fill" id="copy-segments-button" style="cursor: pointer;"
+          onclick="copySegmentsText(); return false;">
+          <span style="margin-right: 0.25rem;">📋</span>Copy
+        </a>
+        <a class="btn btn-secondary flex-fill" id="complete-editing-button" style="cursor: not-allowed; opacity: 0.6;"
+          onclick="return false;">
+          <span style="margin-right: 0.25rem;">✓</span>Complete
+        </a>
+      </div>
+      <div id="segments-editable" contenteditable="true" spellcheck="false">Add segments with "A"!</div>
+    </div>
 
-  <!-- rendered segments -->
-  <div class="col-4" style="height:100%;overflow-y: scroll;">
-    <a class="btn btn-primary d-grid" id="copybutton">COPY TEXT</a>
-    <!-- <div class="card" style="border-radius:0 0 0 0;"> -->
-      <!-- <div class="card-body" style="line-height:0.8em;"> -->
-        <code id="segments" class="text-body">Add segments with "A"!</code>
-      <!-- </div> -->
-    <!-- </div> -->
-  </div>
-
-  <!-- error alert -->
-  <div class="col-12">
+    <!-- error alert -->
     <div class="position-fixed top-50 start-50 translate-middle p-3" style="z-index: 11">
-      <div id="error-toast" class="toast hide align-items-center text-white bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+      <div id="error-toast" class="toast hide align-items-center text-white bg-danger border-0" role="alert"
+        aria-live="assertive" aria-atomic="true">
         <div class="d-flex">
           <div class="toast-body text-center" id="error-toast-body">
           </div>
@@ -73,475 +245,1592 @@
     </div>
   </div>
 
-</div> <!-- row -->
-</div> <!-- container-fluid -->
 
 
 
+  <script>
 
-<script>
+    var transcriptScoll = true;
+    var lastScrollTime = new Date();
+    var transcriptLast = 0;
+    var transcriptItems = [];
+    var segments = [];
+    var segmentCurrent = 1;
+    var playedGameItems = [];
+    var extraTitleStuff = "";
+    var transcriptWindowStart = 0;  // Start index of visible window
+    var transcriptWindowEnd = 0;    // End index of visible window
+    var BUFFER_WINDOW_SECONDS = 15 * 60;  // 15 minutes in seconds
+    var GAP_THRESHOLD_SECONDS = 2.0;  // Gap threshold in seconds for grouping items
+    var isUpdatingSegments = false;  // Flag to prevent recursive updates when parsing YAML
+    var isEditingSegments = false;  // Flag to track if user is editing segments
+    var hasParseError = false;  // Flag to track if there's a YAML parse error
 
-var transcriptScoll = true;
-var lastScrollTime = new Date();
-var transcriptLast = 0;
-var transcriptItems = [];
-var segments = [];
-var segmentCurrent = 1;
-var playedGameItems = [];
-var extraTitleStuff = "";
+    // Default panel sizes (can be overridden by URL parameters)
+    var DEFAULT_VIDEO_WIDTH = '51.85';      // vw - video panel width percentage
+    var DEFAULT_TRANSCRIPT_WIDTH = '19.26';  // tw - transcript panel width percentage
+    var DEFAULT_SEGMENTS_WIDTH = '28.89';   // sw - segments panel width percentage
+    var DEFAULT_VIDEO_CONTENT_HEIGHT = '70.0'; // vch - video content height percentage
 
-function updateTranscript(index, force=false) {
+    // Panel resizing functionality
+    function initResizablePanels() {
+      const resizer1 = document.getElementById('resizer-video-transcript');
+      const resizer2 = document.getElementById('resizer-transcript-segments');
+      const resizerHorizontal = document.getElementById('resizer-video-filelist');
+      const videoPanel = document.getElementById('video-panel');
+      const transcriptPanel = document.getElementById('transcript-panel');
+      const segmentsPanel = document.getElementById('segments-panel');
+      const videoContent = document.getElementById('video-content');
+      const fileExplorer = document.getElementById('file-explorer');
 
-  if(transcriptLast != index || force) {
+      // Get initial widths from URL or use defaults
+      const urlParams = new URLSearchParams(window.location.search);
+      const videoWidth = urlParams.get('vw') || DEFAULT_VIDEO_WIDTH;
+      const segmentsWidth = urlParams.get('sw') || DEFAULT_SEGMENTS_WIDTH;
+      const transcriptWidth = urlParams.get('tw') || DEFAULT_TRANSCRIPT_WIDTH;
+      const videoContentHeight = urlParams.get('vch') || DEFAULT_VIDEO_CONTENT_HEIGHT;
 
-    // Remove old transcript if needed, add new highlight
-    if($("#item_"+transcriptLast).hasClass("text-info")) {
-      $("#item_"+transcriptLast).removeClass("text-info")
+      videoPanel.style.width = videoWidth + '%';
+      transcriptPanel.style.width = transcriptWidth + '%';
+      segmentsPanel.style.width = segmentsWidth + '%';
+      // Use flex-basis with percentages for height distribution
+      const vchPercent = parseFloat(videoContentHeight);
+      const felPercent = 100 - vchPercent;
+      videoContent.style.flex = '1 1 ' + vchPercent + '%';
+      fileExplorer.style.flex = '1 1 ' + felPercent + '%';
+
+      let activeResizer = null;
+      let isResizing = false;
+      let isHorizontalResizing = false;
+
+      function setupResizer(resizer, leftPanel, rightPanel, isFirstResizer) {
+        resizer.addEventListener('mousedown', (e) => {
+          isResizing = true;
+          activeResizer = resizer;
+          resizer.classList.add('dragging');
+          document.body.style.cursor = 'col-resize';
+          document.body.style.userSelect = 'none';
+        });
+      }
+
+      function setupHorizontalResizer(resizer, topPanel, bottomPanel) {
+        resizer.addEventListener('mousedown', (e) => {
+          isResizing = true;
+          isHorizontalResizing = true;
+          activeResizer = resizer;
+          resizer.classList.add('dragging');
+          document.body.style.cursor = 'row-resize';
+          document.body.style.userSelect = 'none';
+        });
+      }
+
+      setupResizer(resizer1, videoPanel, transcriptPanel, true);
+      setupResizer(resizer2, transcriptPanel, segmentsPanel, false);
+      setupHorizontalResizer(resizerHorizontal, videoContent, fileExplorer);
+
+      document.addEventListener('mousemove', (e) => {
+        if (!isResizing || !activeResizer) return;
+
+        if (isHorizontalResizing && activeResizer === resizerHorizontal) {
+          // Horizontal resizing between video content and file explorer
+          const videoPanelRect = videoPanel.getBoundingClientRect();
+          const mouseY = e.clientY;
+          const videoPanelTop = videoPanelRect.top;
+          const videoPanelHeight = videoPanelRect.height;
+
+          // Calculate mouse position relative to video panel
+          const relativeMouseY = mouseY - videoPanelTop;
+          const mouseYPercent = (relativeMouseY / videoPanelHeight) * 100;
+
+          // Limit heights (each section needs at least 10%)
+          if (mouseYPercent >= 10 && mouseYPercent <= 90) {
+            const felPercent = 100 - mouseYPercent;
+            videoContent.style.flex = '1 1 ' + mouseYPercent + '%';
+            fileExplorer.style.flex = '1 1 ' + felPercent + '%';
+
+            updateURLParameter('vch', mouseYPercent.toFixed(2));
+          }
+        } else {
+          // Vertical resizing (existing logic)
+          const containerWidth = document.querySelector('.resizable-container').offsetWidth;
+          const mouseX = e.clientX;
+          const mouseXPercent = (mouseX / containerWidth) * 100;
+
+          if (activeResizer === resizer1) {
+            // Resizing between video and transcript
+            const currentVideoWidth = parseFloat(videoPanel.style.width);
+            const currentTranscriptWidth = parseFloat(transcriptPanel.style.width);
+            const currentSegmentsWidth = parseFloat(segmentsPanel.style.width);
+
+            const newVideoWidth = mouseXPercent;
+            const remainingWidth = 100 - newVideoWidth;
+
+            // Limit video width (20% to 70%)
+            if (newVideoWidth >= 20 && newVideoWidth <= 70) {
+              // Maintain ratio between transcript and segments
+              const totalRightWidth = currentTranscriptWidth + currentSegmentsWidth;
+              const transcriptRatio = currentTranscriptWidth / totalRightWidth;
+              const segmentsRatio = currentSegmentsWidth / totalRightWidth;
+
+              videoPanel.style.width = newVideoWidth + '%';
+              transcriptPanel.style.width = (remainingWidth * transcriptRatio) + '%';
+              segmentsPanel.style.width = (remainingWidth * segmentsRatio) + '%';
+
+              updateURLParameter('vw', newVideoWidth.toFixed(2));
+              updateURLParameter('tw', (remainingWidth * transcriptRatio).toFixed(2));
+              updateURLParameter('sw', (remainingWidth * segmentsRatio).toFixed(2));
+            }
+          } else if (activeResizer === resizer2) {
+            // Resizing between transcript and segments
+            const currentVideoWidth = parseFloat(videoPanel.style.width);
+            const currentTranscriptWidth = parseFloat(transcriptPanel.style.width);
+            const currentSegmentsWidth = parseFloat(segmentsPanel.style.width);
+
+            // Calculate where the transcript panel starts
+            const transcriptStartPercent = currentVideoWidth;
+            const transcriptEndPercent = transcriptStartPercent + currentTranscriptWidth;
+
+            // Mouse position relative to transcript start
+            const relativeMouseX = mouseXPercent - transcriptStartPercent;
+            const totalRightWidth = 100 - currentVideoWidth;
+
+            // New transcript width based on mouse position
+            const newTranscriptWidth = relativeMouseX;
+            const newSegmentsWidth = totalRightWidth - newTranscriptWidth;
+
+            // Limit widths (each panel needs at least 5%)
+            if (newTranscriptWidth >= 5 && newSegmentsWidth >= 5) {
+              transcriptPanel.style.width = newTranscriptWidth + '%';
+              segmentsPanel.style.width = newSegmentsWidth + '%';
+
+              updateURLParameter('tw', newTranscriptWidth.toFixed(2));
+              updateURLParameter('sw', newSegmentsWidth.toFixed(2));
+            }
+          }
+        }
+      });
+
+      document.addEventListener('mouseup', () => {
+        if (isResizing) {
+          isResizing = false;
+          isHorizontalResizing = false;
+          if (activeResizer) {
+            activeResizer.classList.remove('dragging');
+          }
+          activeResizer = null;
+          document.body.style.cursor = '';
+          document.body.style.userSelect = '';
+        }
+      });
     }
-    $("#item_"+index).addClass("text-info")
 
-    // https://stackoverflow.com/q/40243455/7718197
-    //var codeElement = document.querySelector("#item_" + index);
-    //var scrollableContainer = document.querySelector("#transcript");
-    //var scrollableContainerHeight = scrollableContainer.clientHeight;
-    //var offsetTop = codeElement.offsetTop;
-    //var diff = offsetTop - scrollableContainerHeight;
-    //targetScrollTop = diff + (scrollableContainerHeight / 2);
-    // https://stackoverflow.com/a/62044232/7718197
-    if(transcriptScoll) {
-      lastScrollTime = new Date();
-      //$('#transcript').animate({scrollTop: targetScrollTop}, 100, 'swing');
-      document.getElementById("item_"+index).scrollIntoView({
+    function updateURLParameter(key, value) {
+      const url = new URL(window.location);
+      url.searchParams.set(key, value);
+      window.history.replaceState({}, '', url);
+    }
+
+    function createTimestampSpan(time) {
+      // Create a clickable timestamp span in gray text
+      return "<span onclick=\"document.querySelector('#video-active').currentTime = " + time + "; onTrackedVideoFrame(" + time + ", document.querySelector('#video-active').duration);\" style=\"color: #6c757d; cursor: pointer; margin-right: 0.5em;\" title=\"Seek to " + toHHMMSS(time) + "\">[" + toHHMMSS(time) + "]</span>";
+    }
+
+    function updateTranscriptWindow(currentTime) {
+      // Calculate window bounds: 15 minutes before and after current time
+      var windowStart = Math.max(0, currentTime - BUFFER_WINDOW_SECONDS);
+      var windowEnd = currentTime + BUFFER_WINDOW_SECONDS;
+
+      // Find the indices that fall within this window
+      var newStart = 0;
+      var newEnd = transcriptItems.length - 1;
+
+      // Find first item that ends at or after windowStart
+      for (var i = 0; i < transcriptItems.length; i++) {
+        if (transcriptItems[i]["endTime"] >= windowStart) {
+          newStart = i;
+          break;
+        }
+      }
+
+      // Find last item that starts before or at windowEnd
+      for (var i = transcriptItems.length - 1; i >= 0; i--) {
+        if (transcriptItems[i]["startTime"] <= windowEnd) {
+          newEnd = i;
+          break;
+        }
+      }
+
+      // Only update if the window has changed (we've moved outside current bounds)
+      var needsUpdate = false;
+
+      if (transcriptWindowStart === 0 && transcriptWindowEnd === 0) {
+        // Initial load - always update
+        needsUpdate = true;
+      } else if (newStart < transcriptWindowStart || newEnd > transcriptWindowEnd) {
+        // We've moved outside the current window - need to update
+        needsUpdate = true;
+      }
+
+      if (needsUpdate) {
+        // Clear existing transcript
+        $("#transcript").empty();
+
+        // Render items within the window
+        var currentPlayedGame = 0;
+        var last_timestamp = 0.0;
+        for (var i = newStart; i <= newEnd && i < transcriptItems.length; i++) {
+          // Add game headers that fall within or before this window
+          while (currentPlayedGame < playedGameItems.length &&
+            playedGameItems[currentPlayedGame]["startTime"] <= transcriptItems[i]["startTime"]) {
+            // Only add if it's within or just before the window (within 1 minute before)
+            if (playedGameItems[currentPlayedGame]["startTime"] >= windowStart - 60) {
+              var gameTime = playedGameItems[currentPlayedGame]["startTime"];
+              $("#transcript").append("<h4 id=\"game_" + currentPlayedGame + "\" style=\"margin-top:1rem;cursor:pointer;text-decoration:underline;\" class=\"fw-bold text-warning\" onclick=\"onGamePlayedSeekClick(" + gameTime + ",'game_" + currentPlayedGame + "');\">" + createTimestampSpan(gameTime) + playedGameItems[currentPlayedGame]["text"] + '</h4>');
+            }
+            currentPlayedGame = currentPlayedGame + 1;
+          }
+
+          // Check if this is the start of a new line grouping
+          var isNewGroup = (i == newStart) || (last_timestamp > 0.0 && transcriptItems[i]["startTime"] - last_timestamp > GAP_THRESHOLD_SECONDS);
+
+          // Add spacing if there's a gap
+          if (last_timestamp > 0.0 && transcriptItems[i]["startTime"] - last_timestamp > GAP_THRESHOLD_SECONDS) {
+            $("#transcript").append("<br/><br/>");
+          }
+
+          // Add the transcript item with timestamp only at the start of a new group
+          var timestampHtml = isNewGroup ? createTimestampSpan(transcriptItems[i]["startTime"]) : "";
+          $("#transcript").append(timestampHtml + "<span id=\"item_" + i + "\" onclick=\"onWordSeekClick(" + i + ");\" style=\"cursor:pointer;\">" + transcriptItems[i]["text"] + '</span> ');
+          last_timestamp = transcriptItems[i]["endTime"];
+        }
+
+        transcriptWindowStart = newStart;
+        transcriptWindowEnd = newEnd;
+      }
+    }
+
+    function updateTranscript(index, force = false) {
+      // Update the visible window if needed
+      if (transcriptItems.length > 0 && index < transcriptItems.length) {
+        var currentTime = transcriptItems[index]["startTime"];
+        updateTranscriptWindow(currentTime);
+      }
+
+      if (transcriptLast != index || force) {
+
+        // Remove old transcript if needed, add new highlight
+        if ($("#item_" + transcriptLast).length > 0 && $("#item_" + transcriptLast).hasClass("text-info")) {
+          $("#item_" + transcriptLast).removeClass("text-info")
+        }
+        if ($("#item_" + index).length > 0) {
+          $("#item_" + index).addClass("text-info")
+        }
+
+        // https://stackoverflow.com/q/40243455/7718197
+        //var codeElement = document.querySelector("#item_" + index);
+        //var scrollableContainer = document.querySelector("#transcript");
+        //var scrollableContainerHeight = scrollableContainer.clientHeight;
+        //var offsetTop = codeElement.offsetTop;
+        //var diff = offsetTop - scrollableContainerHeight;
+        //targetScrollTop = diff + (scrollableContainerHeight / 2);
+        // https://stackoverflow.com/a/62044232/7718197
+        if (transcriptScoll && $("#item_" + index).length > 0) {
+          lastScrollTime = new Date();
+          //$('#transcript').animate({scrollTop: targetScrollTop}, 100, 'swing');
+          document.getElementById("item_" + index).scrollIntoView({
+            behavior: 'auto',
+            block: 'center',
+            inline: 'center'
+          });
+        }
+
+      }
+      transcriptLast = index;
+
+    }
+
+    function toHHMMSS(secs) {
+      var sec_num = parseInt(secs, 10)
+      var hours = Math.floor(sec_num / 3600)
+      var minutes = Math.floor(sec_num / 60) % 60
+      var seconds = sec_num % 60
+      return String(hours).padStart(2, '0') + ":" +
+        String(minutes).padStart(2, '0') + ":" +
+        String(seconds).padStart(2, '0');
+    }
+
+    function onTrackedVideoFrame(currentTime, duration) {
+      //$("#current").text(currentTime);
+      //$("#duration").text(duration);
+      // for (var i = 0; i < transcriptItems.length; i++) {
+      //   if(currentTime >= transcriptItems[i]["startTime"] && currentTime < transcriptItems[i]["endTime"]) {
+      //     //$("#text").text(transcriptItems[i]["text"]);
+      //     updateTranscript(i);
+      //     console.log("found -> " + i)
+      //     break
+      //   }
+      // }
+      // https://stackoverflow.com/a/57411916/7718197
+      if (transcriptItems.length > 0) {
+        const getClosest = (data, target) =>
+          data.reduce((acc, obj) =>
+            Math.abs(target - obj["startTime"]) < Math.abs(target - acc["startTime"]) ? obj : acc
+          );
+        //console.log("new -> "+ getClosest(transcriptItems, currentTime)["index"]);
+        updateTranscript(getClosest(transcriptItems, currentTime)["index"]);
+      }
+
+    }
+
+    function onWordSeekClick(index) {
+      if (index >= transcriptItems.length || index < 0)
+        return false
+      updateTranscript(index);
+      document.querySelector('#video-active').currentTime = transcriptItems[index]["startTime"]
+      return false
+    }
+
+    function onGamePlayedSeekClick(time, id) {
+      document.querySelector('#video-active').currentTime = time
+      if (transcriptScoll) {
+        document.getElementById(id).scrollIntoView({
           behavior: 'auto',
           block: 'center',
           inline: 'center'
+        });
+      }
+      return false
+    }
+
+    function removeOnScrollButton() {
+      transcriptScoll = true;
+      $("#resume_scroll").remove();
+      updateTranscript(transcriptLast, true);
+      return false;
+    }
+
+    function readInputDataPath(el, e) {
+      if (e.keyCode == 13) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const vw = urlParams.get('vw') || DEFAULT_VIDEO_WIDTH;
+        const sw = urlParams.get('sw') || DEFAULT_SEGMENTS_WIDTH;
+        const tw = urlParams.get('tw') || DEFAULT_TRANSCRIPT_WIDTH;
+        const vch = urlParams.get('vch') || DEFAULT_VIDEO_CONTENT_HEIGHT;
+        var filePath = el.value;
+        // Ensure path starts with data/ or data_live/
+        if (!filePath.startsWith('data/') && !filePath.startsWith('data_live/')) {
+          filePath = 'data/' + filePath;
+        }
+        location.href = "/?file=" + filePath + "&vw=" + vw + "&tw=" + tw + "&sw=" + sw + "&vch=" + vch;
+      }
+    }
+
+    function truncateTitle(title, maxLength) {
+      if (title.length <= maxLength) {
+        return title;
+      }
+      return title.substring(0, maxLength - 3) + '...';
+    }
+
+    function formatDate(dateStr) {
+      if (!dateStr || dateStr === '') {
+        return '';
+      }
+      try {
+        var date = new Date(dateStr);
+        return date.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
+      } catch (e) {
+        return '';
+      }
+    }
+
+    function getParentPath(filepath) {
+      // Get parent path by removing the last segment
+      if (!filepath) return '';
+      var parts = filepath.split('/').filter(function (p) { return p && p !== 'data' && p !== 'data_live'; });
+      if (parts.length === 0) return '';
+      parts.pop(); // Remove last segment
+      if (parts.length === 0) return '';
+      return 'data/' + parts.join('/');
+    }
+
+    function loadVideoList() {
+      // Get current file path
+      var currentPath = document.querySelector('#datapath').value || '';
+
+      // Pass filepath to API - server will determine what to return
+      var apiUrl = "/api/videos";
+      if (currentPath) {
+        apiUrl += "?filepath=" + encodeURIComponent(currentPath);
+      }
+
+      $.ajax({
+        url: apiUrl,
+        dataType: "json",
+        success: function (items) {
+          var container = $("#video-list-container");
+          container.empty();
+
+          // Add parent folder option if not at root
+          if (currentPath) {
+            var parentPath = getParentPath(currentPath);
+            var parentHtml = '<div class="video-list-item" style="cursor: pointer;" onclick="navigateToPath(\'' +
+              parentPath.replace(/'/g, "\\'") + '\');">.. parent folder</div>';
+            container.append(parentHtml);
+          }
+
+          if (items.length === 0) {
+            container.append('<div class="text-muted" style="padding: 0.5rem 0.75rem;">No items found</div>');
+            return;
+          }
+
+          // Normalize paths for comparison (remove data/ prefix if present, trim whitespace)
+          var normalizedCurrentPath = currentPath.replace(/^data\//, '').replace(/^data_live\//, '').trim();
+
+          items.forEach(function (item) {
+            // Normalize item path for comparison
+            var normalizedItemPath = item.path.replace(/^data\//, '').replace(/^data_live\//, '').trim();
+            // For folders, check if current path starts with the folder path
+            var isCurrent = false;
+            if (item.path.endsWith('/')) {
+              // This is a folder - check if current path starts with this folder
+              isCurrent = normalizedCurrentPath && normalizedCurrentPath.startsWith(normalizedItemPath);
+            } else {
+              // This is a video - exact match
+              isCurrent = normalizedCurrentPath && (normalizedItemPath === normalizedCurrentPath);
+            }
+
+            var dateStr = formatDate(item.recorded_at);
+            var durationStr = item.duration || '';
+            var titleStr = truncateTitle(item.title || 'Untitled', 40);
+
+            // Build single line: DATE - Duration - Title
+            var parts = [];
+            if (dateStr) {
+              parts.push(dateStr);
+            }
+            if (durationStr) {
+              parts.push(durationStr);
+            }
+            parts.push(titleStr);
+            var lineText = parts.join(' - ');
+
+            // Build file status tags for videos
+            var tagsHtml = '';
+            if (!item.path.endsWith('/')) {
+              // This is a video - show file status tags
+              var tags = [];
+              var hasVod = item.has_vod !== undefined ? item.has_vod : true; // Assume true if not provided
+              var hasChatJson = item.has_chat_json !== undefined ? item.has_chat_json : false;
+              var hasChatRender = item.has_chat_render !== undefined ? item.has_chat_render : false;
+              var hasVtt = item.has_vtt !== undefined ? item.has_vtt : false;
+              var hasSegments = item.has_segments !== undefined ? item.has_segments : false;
+
+              tags.push('<span class="badge badge-pill ' + (hasVod ? 'badge-success' : 'badge-secondary') + '" style="margin-left: 0.25rem;">vod</span>');
+              tags.push('<span class="badge badge-pill ' + (hasChatJson ? 'badge-success' : 'badge-secondary') + '" style="margin-left: 0.25rem;">chat-json</span>');
+              tags.push('<span class="badge badge-pill ' + (hasChatRender ? 'badge-success' : 'badge-secondary') + '" style="margin-left: 0.25rem;">chat-render</span>');
+              tags.push('<span class="badge badge-pill ' + (hasVtt ? 'badge-success' : 'badge-secondary') + '" style="margin-left: 0.25rem;">vtt</span>');
+              tags.push('<span class="badge badge-pill ' + (hasSegments ? 'badge-success' : 'badge-secondary') + '" style="margin-left: 0.25rem;">segs</span>');
+              tagsHtml = '<span style="float: right;">' + tags.join('') + '</span>';
+            }
+
+            var itemHtml = '';
+            if (isCurrent) {
+              itemHtml = '<div class="video-list-item text-warning" style="font-weight: bold;">' + lineText + tagsHtml + '</div>';
+            } else {
+              // Check if this is a folder (ends with /) or a video
+              if (item.path.endsWith('/')) {
+                // Folder - navigate to that path
+                itemHtml = '<div class="video-list-item" style="cursor: pointer;" onclick="navigateToPath(\'' +
+                  item.path.replace(/'/g, "\\'") + '\');">' + lineText + '</div>';
+              } else {
+                // Video - load the video
+                itemHtml = '<div class="video-list-item" style="cursor: pointer;" onclick="loadVideo(\'' +
+                  item.path.replace(/'/g, "\\'") + '\');">' + lineText + tagsHtml + '</div>';
+              }
+            }
+
+            container.append(itemHtml);
+          });
+
+          // Scroll to highlighted video (if any) after items are rendered
+          setTimeout(function () {
+            var highlightedItem = container.find('.text-warning');
+            if (highlightedItem.length > 0) {
+              var containerElement = container[0];
+              var itemElement = highlightedItem[0];
+
+              // Calculate item position by summing heights of all previous siblings
+              var itemOffsetTop = 0;
+              var previousSibling = itemElement.previousElementSibling;
+              while (previousSibling) {
+                itemOffsetTop += previousSibling.offsetHeight;
+                previousSibling = previousSibling.previousElementSibling;
+              }
+
+              var itemHeight = itemElement.offsetHeight;
+              var containerHeight = containerElement.clientHeight;
+
+              // Center the item: scroll to position where item is in the middle
+              var scrollPosition = itemOffsetTop - (containerHeight / 2) + (itemHeight / 2);
+
+              containerElement.scrollTop = Math.max(0, scrollPosition);
+            }
+          }, 0);
+        },
+        error: function (xhr, status, error) {
+          $("#video-list-container").html('<div class="text-danger" style="padding: 0.5rem 0.75rem;">Error loading: ' + error + '</div>');
+        }
       });
     }
 
-  }
-  transcriptLast = index;
-
-}
-
-function toHHMMSS(secs) {
-    var sec_num = parseInt(secs, 10)
-    var hours   = Math.floor(sec_num / 3600)
-    var minutes = Math.floor(sec_num / 60) % 60
-    var seconds = sec_num % 60
-    return String(hours).padStart(2, '0')+":"+
-      String(minutes).padStart(2, '0')+":"+
-      String(seconds).padStart(2, '0');
-}
-
-function onTrackedVideoFrame(currentTime, duration) {
-  //$("#current").text(currentTime);
-  //$("#duration").text(duration);
-  // for (var i = 0; i < transcriptItems.length; i++) {
-  //   if(currentTime >= transcriptItems[i]["startTime"] && currentTime < transcriptItems[i]["endTime"]) {
-  //     //$("#text").text(transcriptItems[i]["text"]);
-  //     updateTranscript(i);
-  //     console.log("found -> " + i)
-  //     break
-  //   }
-  // }
-  // https://stackoverflow.com/a/57411916/7718197
-  const getClosest = (data, target) => 
-    data.reduce((acc, obj) =>
-      Math.abs(target - obj["startTime"]) < Math.abs(target - acc["startTime"]) ? obj : acc
-    );
-  //console.log("new -> "+ getClosest(transcriptItems, currentTime)["index"]);
-  updateTranscript(getClosest(transcriptItems, currentTime)["index"]);
-
-}
-
-function onWordSeekClick(index) {
-  if(index >= transcriptItems.length || index < 0)
-    return false
-  updateTranscript(index);
-  document.querySelector('#video-active').currentTime = transcriptItems[index]["startTime"]
-  return false
-}
-
-function onGamePlayedSeekClick(time, id) {
-  document.querySelector('#video-active').currentTime = time
-  if(transcriptScoll) {
-    document.getElementById(id).scrollIntoView({
-        behavior: 'auto',
-        block: 'center',
-        inline: 'center'
-    });
-  }
-  return false
-}
-
-function removeOnScrollButton() {
-  transcriptScoll = true;
-  $("#resume_scroll").remove();
-  updateTranscript(transcriptLast, true);
-  return false;
-}
-
-function readInputDataPath(el, e) {
-  if (e.keyCode == 13) {
-    location.href = "/?file="+el.value
-  }
-}
-
-// https://github.com/pavladan/subtitles-parser-vtt/blob/master/index.js#L67
-function timeMs(val) {
-  var regex = /(\d+):(\d{2}):(\d{2})[,.](\d{3})/;
-  var parts = regex.exec(val);
-  if (parts === null) {
-    return 0;
-  }
-  for (var i = 1; i < 5; i++) {
-    parts[i] = parseInt(parts[i], 10);
-    if (isNaN(parts[i])) parts[i] = 0;
-  }
-  // hours + minutes + seconds + ms
-  return parts[1] * 3600000 + parts[2] * 60000 + parts[3] * 1000 + parts[4];
-};
-
-
-function updateSegmentYaml() {
-  var text = updateSegmentYamlGenerate(false, "<br/>", "&nbsp;", true);
-  $("#segments").html(text);
-  var text2 = updateSegmentYamlGenerate(true, "\n", " ");
-  $('#copybutton').attr('data-clipboard-text', text2)
-}
-
-function updateSegmentYamlGenerate(reverse, lineending, space, highlight=false) {
-  var text = "";
-  if(reverse) {
-    segments.reverse();
-  }
-  for(var i=segments.length-1; i >= 0; i--) {
-    if(highlight && (i==segmentCurrent || (segmentCurrent == -1 && i==segments.length-1))) {
-      text += "<span class=\"text-warning\" style=\"font-weight: bold;\">"
+    function navigateToPath(filepath) {
+      const urlParams = new URLSearchParams(window.location.search);
+      const vw = urlParams.get('vw') || DEFAULT_VIDEO_WIDTH;
+      const sw = urlParams.get('sw') || DEFAULT_SEGMENTS_WIDTH;
+      const tw = urlParams.get('tw') || DEFAULT_TRANSCRIPT_WIDTH;
+      const vch = urlParams.get('vch') || DEFAULT_VIDEO_CONTENT_HEIGHT;
+      location.href = "/?file=" + filepath + "&vw=" + vw + "&tw=" + tw + "&sw=" + sw + "&vch=" + vch;
     }
-    text += "- video: "+document.querySelector('#datapath').value+lineending
-    text += space+space+"title: \""+segments[i]["title"]+"\""+lineending
-    text += space+space+"t_start: \""
-    for(var j=0; j<segments[i]["start"].length; j++) {
-      text += toHHMMSS(segments[i]["start"][j]);
-      if(j < segments[i]["start"].length - 1) {
-        text += ",";
+
+
+    function loadVideo(videoPath) {
+      const urlParams = new URLSearchParams(window.location.search);
+      const vw = urlParams.get('vw') || DEFAULT_VIDEO_WIDTH;
+      const sw = urlParams.get('sw') || DEFAULT_SEGMENTS_WIDTH;
+      const tw = urlParams.get('tw') || DEFAULT_TRANSCRIPT_WIDTH;
+      const vch = urlParams.get('vch') || DEFAULT_VIDEO_CONTENT_HEIGHT;
+      location.href = "/?file=" + videoPath + "&vw=" + vw + "&tw=" + tw + "&sw=" + sw + "&vch=" + vch;
+    }
+
+    // https://github.com/pavladan/subtitles-parser-vtt/blob/master/index.js#L67
+    function timeMs(val) {
+      var regex = /(\d+):(\d{2}):(\d{2})[,.](\d{3})/;
+      var parts = regex.exec(val);
+      if (parts === null) {
+        return 0;
       }
-    }
-    text += "\""+lineending
-    text += space+space+"t_end: \""
-    for(var j=0; j<segments[i]["end"].length; j++) {
-      text += toHHMMSS(segments[i]["end"][j]);
-      if(j < segments[i]["end"].length - 1) {
-        text += ",";
+      for (var i = 1; i < 5; i++) {
+        parts[i] = parseInt(parts[i], 10);
+        if (isNaN(parts[i])) parts[i] = 0;
       }
-    }
-    text += "\""+lineending+lineending
-    if(highlight && (i==segmentCurrent || (segmentCurrent == -1 && i==segments.length-1))) {
-      text += "</span>"
-    }
-  }
-  if(reverse) {
-    segments.reverse();
-  }
-  return text;
-}
-
-//===========================================
-//===========================================
-//===========================================
-
-// $(window).resize(function () {
-//   $('#transcript').height($('#video').height());
-// });
-
-$("#video-active").on(
-    "timeupdate", 
-    function(event) {
-      onTrackedVideoFrame(this.currentTime, this.duration);
-    }
-);
-
-// $("#transcript").scroll(function(e) {
-//   if(((new Date()) - lastScrollTime) / 1000.0 > 0.25 && !$('#resume_scroll').length) {
-//     $("#transcript-container").append("<a class=\"btn btn-primary btn-lg d-grid\" id=\"resume_scroll\" onclick=\"removeOnScrollButton();\" style=\"border-radius:0 0 0.2rem 0.2rem;\">Resume Scroll</a>")
-//     transcriptScoll = false;
-//   }
-// });
+      // hours + minutes + seconds + ms
+      return parts[1] * 3600000 + parts[2] * 60000 + parts[3] * 1000 + parts[4];
+    };
 
 
-// http://gcctech.org/csc/javascript/javascript_keycodes.htm
-var theVideo = document.querySelector('#video-active');
-document.onkeydown = function(event) {
+    function updateSegmentYaml() {
+      if (isUpdatingSegments) {
+        return; // Prevent recursive updates
+      }
+      isUpdatingSegments = true;
 
-  // Don't do key events if we are in a form input
-  if (document.activeElement.tagName === "INPUT") {
-    return
-  }
+      var segmentsDiv = document.getElementById('segments-editable');
+      var html = "";
+      if (segments.length === 0) {
+        html = "Add segments with \"A\"!";
+      } else {
+        html = updateSegmentYamlGenerate(true, "<br/>", "&nbsp;", true);
+      }
+      var currentScrollTop = segmentsDiv.scrollTop;
+      var hadFocus = (document.activeElement === segmentsDiv);
+      var selection = window.getSelection();
+      var range = null;
 
-  // T: ask user for the title
-  if (event.keyCode == 84) {
-    event.preventDefault();
-    if(segments.length > 0) {
-      var title = prompt("Current Segment Title", segments.at(segmentCurrent)["title"]);
-      segments.at(segmentCurrent)["title"] = title;
-      updateSegmentYaml();
-    }
-  }
-
-  // A: create new segment
-  if (event.keyCode == 65) {
-    event.preventDefault();
-    //if(segments.length > 0 && segments.at(segmentCurrent)["start"].length != segments.at(segmentCurrent)["end"].length) {
-    //  console.log("can't add new segment till last is finished")
-    //  $("#error-toast-body").html("<h2>Finish the current segment!</h2>");
-    //  (new bootstrap.Toast(document.getElementById('error-toast'), {delay: 1000})).show();
-    //} else {
-    segments.push({start: [theVideo.currentTime], end: [], title: extraTitleStuff})
-    segmentCurrent = -1;
-    updateSegmentYaml();
-  }
-
-  // S: append new start time
-  if (event.keyCode == 83) {
-    event.preventDefault();
-    if(segments.length < 1) {
-      segments.push({start: [theVideo.currentTime], end: [], title: ""})
-    } else {
-      var found = false;
-      var timestamp = theVideo.currentTime;
-      for(var i=0; i<segments.at(segmentCurrent)["start"].length; i++) {
-        if(segments.at(segmentCurrent)["start"].at(i) == timestamp) {
-          found = true;
-          break;
+      // Only save selection if the element has focus
+      if (hadFocus && selection.rangeCount > 0) {
+        try {
+          range = selection.getRangeAt(0).cloneRange();
+        } catch (e) {
+          // Failed to clone range, ignore
         }
       }
-      if(segments.at(segmentCurrent)["start"].length > segments.at(segmentCurrent)["end"].length) {
-        console.log("can't add another start before adding the previous end")
-        $("#error-toast-body").html("<h2>Add another END before starting!</h2>");
-        (new bootstrap.Toast(document.getElementById('error-toast'), {delay: 1000})).show();
-      } else if (!found) {
-        segments.at(segmentCurrent)["start"].push(timestamp)
-      }
-    }
-    updateSegmentYaml();
-  }
 
-  // D: append new end time
-  if (event.keyCode == 68) {
-    event.preventDefault();
-    if(segments.length < 1) {
-      segments.push({start: [theVideo.currentTime], end: [], title: ""})
-    } else {
-      var found = false;
-      var timestamp = theVideo.currentTime;
-      for(var i=0; i<segments.at(segmentCurrent)["end"].length; i++) {
-        if(segments.at(segmentCurrent)["end"].at(i) == timestamp) {
-          found = true;
-          break;
+      segmentsDiv.innerHTML = html;
+
+      // Restore scroll position
+      segmentsDiv.scrollTop = currentScrollTop;
+
+      // Only restore selection if the element still has focus (or had focus)
+      if (hadFocus && range) {
+        try {
+          // Check if element still has focus before restoring selection
+          if (document.activeElement === segmentsDiv || segmentsDiv.contains(document.activeElement)) {
+            selection.removeAllRanges();
+            selection.addRange(range);
+          }
+        } catch (e) {
+          // Selection restoration failed, ignore
         }
       }
-      if(segments.at(segmentCurrent)["end"].length >= segments.at(segmentCurrent)["start"].length) {
-        console.log("can't add another end before adding a new start")
-      $("#error-toast-body").html("<h2>Add another START before starting!</h2>");
-      (new bootstrap.Toast(document.getElementById('error-toast'), {delay: 1000})).show();
-      } else if (!found) {
-        segments.at(segmentCurrent)["end"].push(timestamp)
+
+      isUpdatingSegments = false;
+    }
+
+    function updateSegmentYamlGenerate(reverse, lineending, space, highlight = false) {
+      var text = "";
+      if (reverse) {
+        segments.reverse();
       }
-    }
-    updateSegmentYaml();
-  }
+      for (var i = segments.length - 1; i >= 0; i--) {
+        // Map display index to original array index (accounting for reverse)
+        var originalIndex = reverse ? (segments.length - 1 - i) : i;
+        var currentIndex = (segmentCurrent === -1) ? (segments.length - 1) : segmentCurrent;
+        var isCurrentSegment = highlight && (originalIndex === currentIndex);
 
-  // up arrow
-  if (event.keyCode == 38) {
-    event.preventDefault();
-    if(segmentCurrent != -1) {
-      segmentCurrent = segmentCurrent + 1;
-      if(segmentCurrent >= segments.length) {
-        segmentCurrent = -1;
-      }
-      updateSegmentYaml();
-    }
-  }
+        // Only add HTML tags when generating HTML (highlight mode)
+        if (highlight) {
+          var segmentId = 'segment_' + i;
+          var segmentClass = isCurrentSegment ? 'segment-highlight' : '';
+          text += "<div id=\"" + segmentId + "\" class=\"" + segmentClass + "\">";
+          if (isCurrentSegment) {
+            text += "<span class=\"text-warning\" style=\"font-weight: bold;\">"
+          }
+        }
 
-  // down arrow
-  if (event.keyCode == 40) {
-    event.preventDefault();
-    if(segmentCurrent != -1) {
-      segmentCurrent = segmentCurrent - 1;
-      if(segmentCurrent < 0) {
-        segmentCurrent = 0;
-      }
-    } else if(segments.length > 1) {
-      segmentCurrent = segments.length - 2
-    }
-    updateSegmentYaml();
-  }
+        text += "- video: " + document.querySelector('#datapath').value + lineending
+        text += space + space + "title: \"" + segments[i]["title"] + "\"" + lineending
 
+        text += space + space + "t_start: \""
+        for (var j = 0; j < segments[i]["start"].length; j++) {
+          text += toHHMMSS(segments[i]["start"][j]);
+          if (j < segments[i]["start"].length - 1) {
+            text += ",";
+          }
+        }
+        text += "\"" + lineending
+        text += space + space + "t_end: \""
+        for (var j = 0; j < segments[i]["end"].length; j++) {
+          text += toHHMMSS(segments[i]["end"][j]);
+          if (j < segments[i]["end"].length - 1) {
+            text += ",";
+          }
+        }
+        text += "\"" + lineending
 
-  // space bar
-  if (event.keyCode == 32) {
-    event.preventDefault();
-    if (theVideo.paused) {
-      theVideo.play();
-    } else {
-      theVideo.pause();
-    }
-  }
+        // Always include description (default to empty string)
+        var descriptionValue = "";
+        if (segments[i]["description"] !== undefined && segments[i]["description"] !== null && segments[i]["description"] !== "") {
+          descriptionValue = segments[i]["description"].replace(/"/g, '\\"');
+        }
+        text += space + space + "description: \"" + descriptionValue + "\"" + lineending
 
-  // left arrow
-  if (event.keyCode == 37 && !event.ctrlKey && !event.altKey) {
-    event.preventDefault();
-    theVideo.currentTime = theVideo.currentTime - 10;
-  }
+        // Optional: with_chat
+        if (segments[i]["with_chat"] !== undefined && segments[i]["with_chat"] !== null) {
+          text += space + space + "with_chat: " + (segments[i]["with_chat"] ? "true" : "false") + lineending
+        }
 
-  // right arrow
-  if (event.keyCode == 39 && !event.ctrlKey && !event.altKey) {
-    event.preventDefault();
-    theVideo.currentTime = theVideo.currentTime + 10;
-  }
+        // Optional: t_chat_offset
+        if (segments[i]["t_chat_offset"] !== undefined && segments[i]["t_chat_offset"] !== null && segments[i]["t_chat_offset"] !== "") {
+          text += space + space + "t_chat_offset: \"" + segments[i]["t_chat_offset"] + "\"" + lineending
+        }
 
-  // left arrow + cntrl
-  if (event.keyCode == 37 && event.ctrlKey) {
-    event.preventDefault();
-    theVideo.currentTime = theVideo.currentTime - 60;
-    onTrackedVideoFrame(theVideo.currentTime, theVideo.duration)
-  }
+        // Optional: t_youtube_mute
+        if (segments[i]["t_youtube_mute"] !== undefined && segments[i]["t_youtube_mute"] !== null && segments[i]["t_youtube_mute"] !== "") {
+          text += space + space + "t_youtube_mute: \"" + segments[i]["t_youtube_mute"] + "\"" + lineending
+        }
 
-  // right arrow + cntrl
-  if (event.keyCode == 39 && event.ctrlKey) {
-    event.preventDefault();
-    theVideo.currentTime = theVideo.currentTime + 60;
-    onTrackedVideoFrame(theVideo.currentTime, theVideo.duration)
-  }
+        // Optional: tags
+        if (segments[i]["tags"] !== undefined && segments[i]["tags"] !== null && Array.isArray(segments[i]["tags"]) && segments[i]["tags"].length > 0) {
+          text += space + space + "tags:" + lineending
+          for (var j = 0; j < segments[i]["tags"].length; j++) {
+            text += space + space + space + space + "- \"" + segments[i]["tags"][j].replace(/"/g, '\\"') + "\"" + lineending
+          }
+        }
 
-  // left arrow + alt
-  if (event.keyCode == 37 && event.altKey) {
-    event.preventDefault();
-    theVideo.currentTime = theVideo.currentTime - 300;
-    onTrackedVideoFrame(theVideo.currentTime, theVideo.duration)
-  }
+        text += lineending
 
-  // right arrow + alt
-  if (event.keyCode == 39 && event.altKey) {
-    event.preventDefault();
-    theVideo.currentTime = theVideo.currentTime + 300;
-    onTrackedVideoFrame(theVideo.currentTime, theVideo.duration)
-  }
-
-  // up arrow
-  // https://stackoverflow.com/a/3027957/7718197
-  //if (event.keyCode == 38) {
-  //  event.preventDefault();
-  //  theVideo.playbackRate = Math.min(5, theVideo.playbackRate + 1);
-  //}
-
-  // down arrow
-  // https://stackoverflow.com/a/3027957/7718197
-  //if (event.keyCode == 40) {
-  //  event.preventDefault();
-  //  theVideo.playbackRate = Math.max(1, theVideo.playbackRate - 1);
-  //}
-
-};
-
-
-//===========================================
-//===========================================
-//===========================================
-
-$( document ).ready(function() {
-
-// Create clipboard object
-// https://clipboardjs.com/
-var clipboard = new ClipboardJS('#copybutton');
-
-// Get what video we are currently loading!
-const urlParams = new URLSearchParams(window.location.search);
-const filepath = urlParams.get('file');
-if(filepath) {
-  document.querySelector('#video-active').setAttribute('src', filepath+".mp4");
-  document.querySelector('#datapath').value = filepath;
-}
-
-// This will load our info json
-$.ajax({
-    url : filepath+"_info.json",
-    dataType: "json", 
-    success : function(data) {
-
-      // Display info
-      $("#title").text(data["title"]);
-      $("#date").text(data["recorded_at"]+" - "+data["duration"]);
-      for(var i = 0; i < data["moments"].length; i++) {
-        var game = data["moments"][i];
-        if(game["type"] == "GAME_CHANGE") {
-          playedGameItems.push({
-            startTime: game["offset"],
-            endTime: game["offset"] + game["duration"],
-            text: game["name"].trim()
-          });
+        // Close HTML tags only when generating HTML
+        if (highlight) {
+          if (isCurrentSegment) {
+            text += "</span>"
+          }
+          text += "</div>";
         }
       }
-      var date = new Date(data["recorded_at"]);
-      var options = { year: 'numeric', month: 'long', day: 'numeric' };
-      extraTitleStuff = " w/ Chat - (" + data["user_name"] + ") - " + date.toLocaleDateString('en-US', options)
+      if (reverse) {
+        segments.reverse();
+      }
+      return text;
+    }
 
-      // This will load our subtitles
-      // https://github.com/pavladan/subtitles-parser-vtt/blob/master/index.js#L17
-      $.ajax({
-          url : filepath+".vtt",
-          dataType: "text", 
-          success : function(data) {
-            data = data.replace(/\r/g, "");
-            var regex = /(\d+)?\n?(\d{2}:\d{2}:\d{2}[,.]\d{3}) --> (\d{2}:\d{2}:\d{2}[,.]\d{3}).*\n/g;
-            data = data.split(regex);
-            data.shift();
-            var items = [];
-            for (var i = 0; i < data.length; i += 4) {
-              var text = data[i + 3];
-              if (text.trim().length === 0) continue;
-              items.push({
-                id: data[i] ? +data[i].trim() : items.length + 1,
-                startTime: timeMs(data[i + 1].trim()) / 1000.0,
-                endTime: timeMs(data[i + 2].trim()) / 1000.0,
-                text: text.trim(),
-                index: items.length,
-              });
+
+    // Parse time string (HH:MM:SS or comma-separated list) to seconds
+    function parseTimeString(timeStr) {
+      var parts = timeStr.split(',');
+      var times = [];
+      for (var i = 0; i < parts.length; i++) {
+        var timePart = parts[i].trim();
+        var timeParts = timePart.split(':');
+        if (timeParts.length === 3) {
+          var hours = parseInt(timeParts[0], 10);
+          var minutes = parseInt(timeParts[1], 10);
+          var seconds = parseInt(timeParts[2], 10);
+          if (!isNaN(hours) && !isNaN(minutes) && !isNaN(seconds)) {
+            times.push(hours * 3600 + minutes * 60 + seconds);
+          }
+        }
+      }
+      return times;
+    }
+
+    // Helper to extract and unquote field values
+    function extractFieldValue(line, fieldName) {
+      var match = line.match(new RegExp('^' + fieldName + ':\\s*(.*)$'));
+      if (!match) return '';
+      var value = match[1].trim();
+      if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
+        return value.slice(1, -1);
+      }
+      return value;
+    }
+
+    // Simple field-based parser that extracts segments by looking for field patterns
+    function parseSegmentsFromText(text) {
+      try {
+        // Clean up HTML entities
+        text = text.replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&lt;/g, '<')
+          .replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+
+        // Handle empty or whitespace-only text - return empty segments array
+        if (!text || text.trim() === '') {
+          var oldSegmentCurrent = segmentCurrent;
+          segments = [];
+          segmentCurrent = -1;
+          return { success: true, error: null };
+        }
+
+        var newSegments = [];
+        var lines = text.split(/\r?\n/);
+        var currentSegment = null;
+        var segmentIndex = 0;
+
+        function validateAndSaveSegment() {
+          if (currentSegment === null) return;
+          var missingFields = [];
+          // Check if fields were found (null means not found, empty string means found but empty)
+          if (currentSegment.title === null || currentSegment.title === undefined) missingFields.push('title');
+          if (currentSegment.t_start === null || currentSegment.t_start === undefined) missingFields.push('t_start');
+          if (currentSegment.t_end === null || currentSegment.t_end === undefined) missingFields.push('t_end');
+          if (missingFields.length > 0) {
+            throw new Error("Segment " + (segmentIndex + 1) + " is missing required fields: " + missingFields.join(', '));
+          }
+          newSegments.push(currentSegment);
+          segmentIndex++;
+        }
+
+        for (var i = 0; i < lines.length; i++) {
+          var line = lines[i].trim();
+          if (line === '') continue;
+
+          if (line.match(/^[-]?\s*video:\s*(.+)$/)) {
+            validateAndSaveSegment();
+            var videoMatch = line.match(/video:\s*(.+)$/);
+            currentSegment = {
+              video: videoMatch ? videoMatch[1].trim() : '',
+              title: null,  // null means not found yet
+              t_start: null,
+              t_end: null,
+              with_chat: null,
+              description: null,
+              t_chat_offset: null,
+              t_youtube_mute: null,
+              tags: null
+            };
+          } else if (line.match(/^title:\s*(.*)$/)) {
+            if (currentSegment === null) throw new Error("Found 'title:' field before 'video:' field at line " + (i + 1));
+            currentSegment.title = extractFieldValue(line, 'title');
+          } else if (line.match(/^with_chat:\s*(.*)$/)) {
+            if (currentSegment === null) throw new Error("Found 'with_chat:' field before 'video:' field at line " + (i + 1));
+            var value = line.match(/with_chat:\s*(.*)$/)[1].trim();
+            currentSegment.with_chat = value === "true" || value === true;
+          } else if (line.match(/^description:\s*(.*)$/)) {
+            if (currentSegment === null) throw new Error("Found 'description:' field before 'video:' field at line " + (i + 1));
+            currentSegment.description = extractFieldValue(line, 'description');
+          } else if (line.match(/^t_start:\s*(.*)$/)) {
+            if (currentSegment === null) throw new Error("Found 't_start:' field before 'video:' field at line " + (i + 1));
+            currentSegment.t_start = extractFieldValue(line, 't_start');
+          } else if (line.match(/^t_end:\s*(.*)$/)) {
+            if (currentSegment === null) throw new Error("Found 't_end:' field before 'video:' field at line " + (i + 1));
+            currentSegment.t_end = extractFieldValue(line, 't_end');
+          } else if (line.match(/^t_chat_offset:\s*(.*)$/)) {
+            if (currentSegment === null) throw new Error("Found 't_chat_offset:' field before 'video:' field at line " + (i + 1));
+            currentSegment.t_chat_offset = extractFieldValue(line, 't_chat_offset');
+          } else if (line.match(/^t_youtube_mute:\s*(.*)$/)) {
+            if (currentSegment === null) throw new Error("Found 't_youtube_mute:' field before 'video:' field at line " + (i + 1));
+            currentSegment.t_youtube_mute = extractFieldValue(line, 't_youtube_mute');
+          } else if (line.match(/^tags:\s*$/)) {
+            if (currentSegment === null) throw new Error("Found 'tags:' field before 'video:' field at line " + (i + 1));
+            // Initialize tags array if not already done
+            if (currentSegment.tags === null) {
+              currentSegment.tags = [];
             }
-            transcriptItems = items;
-
-            // insert into transcript
-            //$('#transcript').height($('#video').height());
-            var currentPlayedGame = 0;
-            var last_timestamp = 0.0;
-            for (var i = 0; i < transcriptItems.length; i++) {
-              if(currentPlayedGame < playedGameItems.length && playedGameItems[currentPlayedGame]["startTime"] <= last_timestamp) {
-                $("#transcript").append("<h4 id=\"game_"+currentPlayedGame+"\" style=\"margin-top:1rem;cursor:pointer;text-decoration:underline;\" class=\"fw-bold text-warning\" onclick=\"onGamePlayedSeekClick("+playedGameItems[currentPlayedGame]["startTime"]+",'game_"+currentPlayedGame+"');\">"+playedGameItems[currentPlayedGame]["text"]+'</h4>');
-                currentPlayedGame = currentPlayedGame + 1;
-              } else if(last_timestamp > 0.0 && transcriptItems[i]["startTime"] - last_timestamp > 2.0) {
-                $("#transcript").append("<br/><br/>");
+          } else if (line.match(/^\s+-\s+(.+)$/)) {
+            // This is a list item (for tags)
+            if (currentSegment !== null && currentSegment.tags !== null) {
+              var tagMatch = line.match(/^\s+-\s+(.+)$/);
+              if (tagMatch) {
+                var tagValue = tagMatch[1].trim();
+                // Remove quotes if present
+                if ((tagValue.startsWith('"') && tagValue.endsWith('"')) || (tagValue.startsWith("'") && tagValue.endsWith("'"))) {
+                  tagValue = tagValue.slice(1, -1);
+                }
+                currentSegment.tags.push(tagValue);
               }
-              $("#transcript").append("<span id=\"item_"+i+"\" onclick=\"onWordSeekClick("+i+");\" style=\"cursor:pointer;\">"+transcriptItems[i]["text"]+'</span> ');
-              last_timestamp = transcriptItems[i]["endTime"]
             }
-          },
-          error : function() {
-            for (var i = 0; i < playedGameItems.length; i++) {
-              $("#transcript").append("<h4 id=\"game_"+i+"\" style=\"margin-top:1rem;cursor:pointer;text-decoration:underline;\" class=\"fw-bold text-warning\" onclick=\"onGamePlayedSeekClick("+playedGameItems[i]["startTime"]+",'game_"+i+"');\">"+playedGameItems[i]["text"]+'</h4>');
+          }
+        }
+
+        validateAndSaveSegment(); // Save the last segment
+
+        // Convert to segments array format
+        var convertedSegments = [];
+        for (var j = 0; j < newSegments.length; j++) {
+          var seg = newSegments[j];
+          // Handle empty strings - empty t_start/t_end become empty arrays
+          var tStartValue = (seg.t_start === '') ? undefined : seg.t_start;
+          var tEndValue = (seg.t_end === '') ? undefined : seg.t_end;
+
+          var startTimes = tStartValue ? parseTimeString(tStartValue) : [];
+          var endTimes = tEndValue ? parseTimeString(tEndValue) : [];
+
+          var convertedSegment = {
+            start: startTimes.length > 0 ? startTimes : [0], // Default to 0 if empty
+            end: endTimes,
+            title: seg.title || '' // Allow empty title
+          };
+
+          // Add optional fields if they exist
+          if (seg.with_chat !== null && seg.with_chat !== undefined) {
+            convertedSegment.with_chat = seg.with_chat;
+          }
+          if (seg.description !== null && seg.description !== undefined && seg.description !== '') {
+            convertedSegment.description = seg.description;
+          }
+          if (seg.t_chat_offset !== null && seg.t_chat_offset !== undefined && seg.t_chat_offset !== '') {
+            convertedSegment.t_chat_offset = seg.t_chat_offset;
+          }
+          if (seg.t_youtube_mute !== null && seg.t_youtube_mute !== undefined && seg.t_youtube_mute !== '') {
+            convertedSegment.t_youtube_mute = seg.t_youtube_mute;
+          }
+          if (seg.tags !== null && seg.tags !== undefined && Array.isArray(seg.tags) && seg.tags.length > 0) {
+            convertedSegment.tags = seg.tags;
+          }
+
+          convertedSegments.push(convertedSegment);
+        }
+
+        // Preserve current segment selection
+        var oldSegmentCurrent = segmentCurrent;
+
+        // Always update segments array, even if emp1010ty (allows deletion of all segments)
+        segments = convertedSegments;
+
+        // Keep same index if still valid, otherwise set to newest
+        if (oldSegmentCurrent >= 0 && oldSegmentCurrent < segments.length) {
+          segmentCurrent = oldSegmentCurrent;
+        } else if (segments.length > 0) {
+          segmentCurrent = segments.length - 1;
+        } else {
+          segmentCurrent = -1;
+        }
+
+        return { success: true, error: null };
+      } catch (error) {
+        return { success: false, error: error.message || String(error) };
+      }
+    }
+
+    // Handle YAML editing and validation
+    function handleSegmentYamlEdit() {
+      if (isUpdatingSegments) {
+        return; // Don't validate while we're updating
+      }
+
+      var segmentsDiv = document.getElementById('segments-editable');
+      // Extract text and replace <br> tags with newlines
+      var yamlText = segmentsDiv.innerText || segmentsDiv.textContent || '';
+      // Also handle cases where <br> might still be in the text
+      yamlText = yamlText.replace(/<br\s*\/?>/gi, '\n');
+      // Replace non-breaking spaces (U+00A0) with regular spaces
+      yamlText = yamlText.replace(/\u00A0/g, ' ');
+      yamlText = yamlText.trim();
+
+      if (!yamlText || yamlText === "Add segments with \"A\"!") {
+        // Empty or placeholder - clear segments and hide complete button
+        segments = [];
+        segmentCurrent = -1;
+        hasParseError = false;
+        updateSegmentYaml();
+        hideCompleteButton();
+        return;
+      }
+
+      var result = parseSegmentsFromText(yamlText);
+
+      if (!result.success) {
+        // Show error but keep the user's text
+        hasParseError = true;
+        $("#error-toast-body").html("<h2>YAML Parse Error</h2><p>" + result.error + "</p>");
+        (new bootstrap.Toast(document.getElementById('error-toast'), { delay: 3000 })).show();
+        // Keep complete button visible
+        showCompleteButton();
+      } else {
+        // Successfully parsed - regenerate YAML with highlighting and update display
+        hasParseError = false;
+        updateSegmentYaml();
+        // Hide complete button
+        hideCompleteButton();
+      }
+    }
+
+    // Enable/disable complete editing button
+    function showCompleteButton() {
+      var btn = document.getElementById('complete-editing-button');
+      btn.className = 'btn btn-success flex-fill';
+      btn.style.cssText = 'cursor: pointer; opacity: 1;';
+      btn.setAttribute('onclick', 'handleSegmentYamlEdit(); return false;');
+      isEditingSegments = true;
+    }
+
+    function hideCompleteButton() {
+      var btn = document.getElementById('complete-editing-button');
+      btn.className = 'btn btn-secondary flex-fill';
+      btn.style.cssText = 'cursor: not-allowed; opacity: 0.6;';
+      btn.setAttribute('onclick', 'return false;');
+      isEditingSegments = false;
+    }
+
+    // Copy segments text to clipboard
+    function showCopyFeedback() {
+      var btn = document.getElementById('copy-segments-button');
+      var originalHTML = btn.innerHTML;
+      btn.innerHTML = '<span style="margin-right: 0.25rem;">✓</span>Copied!';
+      btn.className = 'btn btn-success flex-fill';
+      setTimeout(function () {
+        btn.innerHTML = originalHTML;
+        btn.className = 'btn btn-primary flex-fill';
+      }, 1000);
+    }
+
+    function copySegmentsText() {
+      var textForCopy = updateSegmentYamlGenerate(true, "\n", " ");
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(textForCopy).then(showCopyFeedback).catch(function (err) {
+          console.error('Failed to copy:', err);
+          fallbackCopyTextToClipboard(textForCopy);
+        });
+      } else {
+        fallbackCopyTextToClipboard(textForCopy);
+      }
+    }
+
+    function fallbackCopyTextToClipboard(text) {
+      var textArea = document.createElement("textarea");
+      textArea.value = text;
+      textArea.style.cssText = 'position: fixed; left: -999999px; top: -999999px;';
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      try {
+        if (document.execCommand('copy')) showCopyFeedback();
+      } catch (err) {
+        console.error('Fallback copy failed:', err);
+      }
+      document.body.removeChild(textArea);
+    }
+
+    function showSaveFeedback(success, message) {
+      var btn = document.getElementById('save-segments-button');
+      var originalHTML = btn.innerHTML;
+      if (success) {
+        btn.innerHTML = '<span style="margin-right: 0.25rem;">✓</span>Saved!';
+        btn.className = 'btn btn-success flex-fill';
+      } else {
+        btn.innerHTML = '<span style="margin-right: 0.25rem;">✗</span>Error';
+        btn.className = 'btn btn-danger flex-fill';
+        $("#error-toast-body").html("<h2>Save Error</h2><p>" + message + "</p>");
+        (new bootstrap.Toast(document.getElementById('error-toast'), { delay: 3000 })).show();
+      }
+      setTimeout(function () {
+        btn.innerHTML = originalHTML;
+        btn.className = 'btn btn-success flex-fill';
+      }, 2000);
+    }
+
+    function validateSegments() {
+      // First, parse the YAML to get the segments array
+      var segmentsDiv = document.getElementById('segments-editable');
+      var yamlText = segmentsDiv.innerText || segmentsDiv.textContent || '';
+      yamlText = yamlText.replace(/<br\s*\/?>/gi, '\n');
+      // Replace non-breaking spaces (U+00A0) with regular spaces
+      yamlText = yamlText.replace(/\u00A0/g, ' ');
+      yamlText = yamlText.trim();
+
+      // Allow empty segments (will delete the file)
+      if (!yamlText || yamlText === "Add segments with \"A\"!") {
+        return { valid: true, error: null };
+      }
+
+      // Parse the segments
+      var parseResult = parseSegmentsFromText(yamlText);
+      if (!parseResult.success) {
+        return { valid: false, error: "Invalid YAML format: " + parseResult.error };
+      }
+
+      // Now validate each segment
+      var seenTitles = new Set();
+      for (var i = 0; i < segments.length; i++) {
+        var seg = segments[i];
+
+        // Check for non-empty title
+        if (!seg.title || seg.title.trim() === '') {
+          return { valid: false, error: "Segment " + (i + 1) + " has an empty title" };
+        }
+
+        // Check for unique title
+        var titleKey = seg.title.trim().toLowerCase();
+        if (seenTitles.has(titleKey)) {
+          return { valid: false, error: "Duplicate title found: \"" + seg.title.trim() + "\". Each title must be unique." };
+        }
+        seenTitles.add(titleKey);
+
+        // Check for matching start and end timestamps
+        if (seg.start.length !== seg.end.length) {
+          return {
+            valid: false,
+            error: "Segment " + (i + 1) + " has " + seg.start.length + " start timestamp(s) but " + seg.end.length + " end timestamp(s). They must match."
+          };
+        }
+
+        // Check that we have at least one start/end pair
+        if (seg.start.length === 0) {
+          return { valid: false, error: "Segment " + (i + 1) + " has no timestamps" };
+        }
+      }
+
+      return { valid: true, error: null };
+    }
+
+    function saveSegments() {
+      var filepath = document.querySelector('#datapath').value;
+      if (!filepath) {
+        showSaveFeedback(false, "No video selected");
+        return;
+      }
+
+      // Validate segments before saving
+      var validation = validateSegments();
+      if (!validation.valid) {
+        showSaveFeedback(false, validation.error);
+        return;
+      }
+
+      var segmentsDiv = document.getElementById('segments-editable');
+      var yamlText = segmentsDiv.innerText || segmentsDiv.textContent || '';
+      yamlText = yamlText.replace(/<br\s*\/?>/gi, '\n');
+      // Replace non-breaking spaces (U+00A0) with regular spaces
+      yamlText = yamlText.replace(/\u00A0/g, ' ');
+      yamlText = yamlText.trim();
+
+      // Allow empty segments (will delete the file on server)
+      // If empty or placeholder, send empty string
+      if (!yamlText || yamlText === "Add segments with \"A\"!") {
+        yamlText = '';
+      }
+
+      // Prepare request data with path and yaml
+      var requestData = {
+        path: filepath,
+        yaml: yamlText
+      };
+
+      $.ajax({
+        url: '/api/upload',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(requestData),
+        success: function () {
+          showSaveFeedback(true, "");
+          // Refresh video list to update the segs badge
+          loadVideoList();
+        },
+        error: function (xhr, status, error) {
+          var errorMsg = error || "Unknown error";
+          if (xhr.responseText) {
+            try {
+              var errorData = JSON.parse(xhr.responseText);
+              errorMsg = errorData.error || errorMsg;
+            } catch (e) {
+              errorMsg = xhr.responseText || errorMsg;
             }
+          }
+          showSaveFeedback(false, errorMsg);
+        }
+      });
+    }
+
+    // Add Ctrl+S (or Cmd+S on Mac) keyboard shortcut to save segments
+    document.addEventListener('keydown', function (event) {
+      // Check for Ctrl+S (Windows/Linux) or Cmd+S (Mac)
+      if ((event.ctrlKey || event.metaKey) && event.key === 's') {
+        event.preventDefault(); // Prevent browser's default save dialog
+        saveSegments();
+      }
+    });
+
+    //===========================================
+    //===========================================
+    //===========================================
+
+    // $(window).resize(function () {
+    //   $('#transcript').height($('#video').height());
+    // });
+
+    $("#video-active").on(
+      "timeupdate",
+      function (event) {
+        onTrackedVideoFrame(this.currentTime, this.duration);
+      }
+    );
+
+    // $("#transcript").scroll(function(e) {
+    //   if(((new Date()) - lastScrollTime) / 1000.0 > 0.25 && !$('#resume_scroll').length) {
+    //     $("#transcript-container").append("<a class=\"btn btn-primary btn-lg d-grid\" id=\"resume_scroll\" onclick=\"removeOnScrollButton();\" style=\"border-radius:0 0 0.2rem 0.2rem;\">Resume Scroll</a>")
+    //     transcriptScoll = false;
+    //   }
+    // });
+
+
+    // http://gcctech.org/csc/javascript/javascript_keycodes.htm
+    var theVideo = document.querySelector('#video-active');
+    document.onkeydown = function (event) {
+
+      // Don't do key events if we are in a form input, textarea, or contenteditable div
+      var activeElement = document.activeElement;
+      if (activeElement.tagName === "INPUT" ||
+        activeElement.tagName === "TEXTAREA" ||
+        activeElement.id === "segments-editable" ||
+        activeElement.isContentEditable) {
+        return
+      }
+
+      // Don't do key events if there's a parse error (user must fix YAML first)
+      if (hasParseError) {
+        return
+      }
+
+      // T: ask user for the title
+      if (event.keyCode == 84) {
+        event.preventDefault();
+        if (segments.length > 0) {
+          // segmentCurrent = -1 means newest (last in array)
+          var currentIndex = segmentCurrent === -1 ? segments.length - 1 : segmentCurrent;
+          if (currentIndex >= 0 && currentIndex < segments.length) {
+            var title = prompt("Current Segment Title", segments[currentIndex]["title"]);
+            segments[currentIndex]["title"] = title;
+            updateSegmentYaml();
+          }
+        }
+      }
+
+      // A: create new segment
+      if (event.keyCode == 65) {
+        event.preventDefault();
+        //if(segments.length > 0 && segments.at(segmentCurrent)["start"].length != segments.at(segmentCurrent)["end"].length) {
+        //  console.log("can't add new segment till last is finished")
+        //  $("#error-toast-body").html("<h2>Finish the current segment!</h2>");
+        //  (new bootstrap.Toast(document.getElementById('error-toast'), {delay: 1000})).show();
+        //} else {
+        segments.push({
+          start: [theVideo.currentTime],
+          end: [],
+          title: extraTitleStuff,
+          with_chat: undefined,
+          description: undefined,
+          t_chat_offset: undefined,
+          t_youtube_mute: undefined,
+          tags: undefined
+        })
+        segmentCurrent = -1;
+        updateSegmentYaml();
+      }
+
+      // S: append new start time
+      if (event.keyCode == 83) {
+        event.preventDefault();
+        if (segments.length < 1) {
+          segments.push({
+            start: [theVideo.currentTime],
+            end: [],
+            title: "",
+            with_chat: undefined,
+            description: undefined,
+            t_chat_offset: undefined,
+            t_youtube_mute: undefined,
+            tags: undefined
+          })
+        } else {
+          var found = false;
+          var timestamp = theVideo.currentTime;
+          for (var i = 0; i < segments.at(segmentCurrent)["start"].length; i++) {
+            if (segments.at(segmentCurrent)["start"].at(i) == timestamp) {
+              found = true;
+              break;
+            }
+          }
+          if (segments.at(segmentCurrent)["start"].length > segments.at(segmentCurrent)["end"].length) {
+            console.log("can't add another start before adding the previous end")
+            $("#error-toast-body").html("<h2>Add another END before starting!</h2>");
+            (new bootstrap.Toast(document.getElementById('error-toast'), { delay: 1000 })).show();
+          } else if (!found) {
+            segments.at(segmentCurrent)["start"].push(timestamp)
+          }
+        }
+        updateSegmentYaml();
+      }
+
+      // D: append new end time
+      if (event.keyCode == 68) {
+        event.preventDefault();
+        if (segments.length < 1) {
+          segments.push({
+            start: [theVideo.currentTime],
+            end: [],
+            title: "",
+            with_chat: undefined,
+            description: undefined,
+            t_chat_offset: undefined,
+            t_youtube_mute: undefined,
+            tags: undefined
+          })
+        } else {
+          var found = false;
+          var timestamp = theVideo.currentTime;
+          for (var i = 0; i < segments.at(segmentCurrent)["end"].length; i++) {
+            if (segments.at(segmentCurrent)["end"].at(i) == timestamp) {
+              found = true;
+              break;
+            }
+          }
+          if (segments.at(segmentCurrent)["end"].length >= segments.at(segmentCurrent)["start"].length) {
+            console.log("can't add another end before adding a new start")
+            $("#error-toast-body").html("<h2>Add another START before starting!</h2>");
+            (new bootstrap.Toast(document.getElementById('error-toast'), { delay: 1000 })).show();
+          } else if (!found) {
+            segments.at(segmentCurrent)["end"].push(timestamp)
+          }
+        }
+        updateSegmentYaml();
+      }
+
+      // up arrow (moves down visually on page, which is to older segment in array - lower index)
+      if (event.keyCode == 38) {
+        event.preventDefault();
+        if (segmentCurrent === -1) {
+          // Currently at newest (top), move to second newest
+          if (segments.length > 1) {
+            segmentCurrent = segments.length - 2;
+          } else {
+            segmentCurrent = 0;
+          }
+        } else if (segmentCurrent > 0) {
+          // Move to older segment (lower index, appears below on page)
+          segmentCurrent = segmentCurrent - 1;
+        } else {
+          // Already at oldest (bottom), stay at 0
+          segmentCurrent = 0;
+        }
+        updateSegmentYaml();
+      }
+
+      // down arrow (moves up visually on page, which is to newer segment in array - higher index)
+      if (event.keyCode == 40) {
+        event.preventDefault();
+        if (segmentCurrent === -1) {
+          // Already at newest (top), stay at -1
+          segmentCurrent = -1;
+        } else if (segmentCurrent < segments.length - 1) {
+          // Move to newer segment (higher index, appears above on page)
+          segmentCurrent = segmentCurrent + 1;
+          // If we reached the newest, set to -1
+          if (segmentCurrent === segments.length - 1) {
+            segmentCurrent = -1;
+          }
+        } else {
+          // Shouldn't happen, but if at newest, set to -1
+          segmentCurrent = -1;
+        }
+        updateSegmentYaml();
+      }
+
+
+      // space bar
+      if (event.keyCode == 32) {
+        event.preventDefault();
+        if (theVideo.paused) {
+          theVideo.play();
+        } else {
+          theVideo.pause();
+        }
+      }
+
+      // left arrow
+      if (event.keyCode == 37 && !event.ctrlKey && !event.altKey) {
+        event.preventDefault();
+        theVideo.currentTime = theVideo.currentTime - 10;
+      }
+
+      // right arrow
+      if (event.keyCode == 39 && !event.ctrlKey && !event.altKey) {
+        event.preventDefault();
+        theVideo.currentTime = theVideo.currentTime + 10;
+      }
+
+      // left arrow + cntrl
+      if (event.keyCode == 37 && event.ctrlKey) {
+        event.preventDefault();
+        theVideo.currentTime = theVideo.currentTime - 60;
+        onTrackedVideoFrame(theVideo.currentTime, theVideo.duration)
+      }
+
+      // right arrow + cntrl
+      if (event.keyCode == 39 && event.ctrlKey) {
+        event.preventDefault();
+        theVideo.currentTime = theVideo.currentTime + 60;
+        onTrackedVideoFrame(theVideo.currentTime, theVideo.duration)
+      }
+
+      // left arrow + alt
+      if (event.keyCode == 37 && event.altKey) {
+        event.preventDefault();
+        theVideo.currentTime = theVideo.currentTime - 300;
+        onTrackedVideoFrame(theVideo.currentTime, theVideo.duration)
+      }
+
+      // right arrow + alt
+      if (event.keyCode == 39 && event.altKey) {
+        event.preventDefault();
+        theVideo.currentTime = theVideo.currentTime + 300;
+        onTrackedVideoFrame(theVideo.currentTime, theVideo.duration)
+      }
+
+      // up arrow
+      // https://stackoverflow.com/a/3027957/7718197
+      //if (event.keyCode == 38) {
+      //  event.preventDefault();
+      //  theVideo.playbackRate = Math.min(5, theVideo.playbackRate + 1);
+      //}
+
+      // down arrow
+      // https://stackoverflow.com/a/3027957/7718197
+      //if (event.keyCode == 40) {
+      //  event.preventDefault();
+      //  theVideo.playbackRate = Math.max(1, theVideo.playbackRate - 1);
+      //}
+
+    };
+
+
+    //===========================================
+    //===========================================
+    //===========================================
+
+    $(document).ready(function () {
+
+      // Initialize resizable panels
+      initResizablePanels();
+
+      // Set up YAML editor event handlers
+      var segmentsDiv = document.getElementById('segments-editable');
+
+      // When user clicks into the editor, enable COMPLETE button
+      segmentsDiv.addEventListener('focus', function () {
+        showCompleteButton();
+      });
+
+      // When user clicks out, try to parse YAML
+      // Use a small delay to ensure blur completes before parsing
+      segmentsDiv.addEventListener('blur', function (event) {
+        // Allow the blur to complete first
+        setTimeout(function () {
+          // Check if focus actually left (not just moved to a child element)
+          var activeElement = document.activeElement;
+          if (activeElement !== segmentsDiv && !segmentsDiv.contains(activeElement)) {
+            handleSegmentYamlEdit();
+          }
+        }, 10);
+      });
+
+      // Handle paste events - remove styling and newlines, preserve current style
+      segmentsDiv.addEventListener('paste', function (event) {
+        event.preventDefault();
+
+        // Get plain text from clipboard
+        var pastedText = '';
+        if (event.clipboardData && event.clipboardData.getData) {
+          pastedText = event.clipboardData.getData('text/plain');
+        } else if (window.clipboardData && window.clipboardData.getData) {
+          pastedText = window.clipboardData.getData('Text');
+        }
+
+        // Remove all newlines and normalize whitespace
+        pastedText = pastedText.replace(/\r?\n/g, ' ').replace(/\s+/g, ' ').trim();
+
+        // Get current selection
+        var selection = window.getSelection();
+        if (selection.rangeCount === 0) {
+          return;
+        }
+
+        var range = selection.getRangeAt(0);
+
+        // Delete selected content if any
+        range.deleteContents();
+
+        // Insert plain text (will inherit current styling)
+        var textNode = document.createTextNode(pastedText);
+        range.insertNode(textNode);
+
+        // Move cursor to end of inserted text
+        range.setStartAfter(textNode);
+        range.collapse(true);
+        selection.removeAllRanges();
+        selection.addRange(range);
+      });
+
+      // Get what video we are currently loading!
+      const urlParams = new URLSearchParams(window.location.search);
+      const filepath = urlParams.get('file');
+      if (filepath) {
+        // Ensure path has /data/ or /data_live/ prefix for video src
+        var videoSrc = filepath;
+        if (!videoSrc.startsWith('/data/') && !videoSrc.startsWith('/data_live/')) {
+          videoSrc = '/' + videoSrc;
+        }
+        document.querySelector('#video-active').setAttribute('src', videoSrc + ".mp4");
+        document.querySelector('#datapath').value = filepath;
+      }
+
+      // Load video list
+      loadVideoList();
+
+      // This will load our info json
+      if (filepath) {
+        // Ensure path has /data/ or /data_live/ prefix for API calls
+        var apiPath = filepath;
+        if (!apiPath.startsWith('/data/') && !apiPath.startsWith('/data_live/')) {
+          apiPath = '/' + apiPath;
+        }
+
+        $.ajax({
+          url: apiPath + "_info.json",
+          dataType: "json",
+          success: function (data) {
+
+            // Display info
+            $("#title").text(data["title"]);
+            var dateFormatted = formatDate(data["recorded_at"]);
+            var dateText = dateFormatted;
+            if (data["duration"]) {
+              dateText += " - " + data["duration"];
+            }
+            $("#date").text(dateText);
+
+            // Refresh video list to highlight current video
+            loadVideoList();
+
+            // Try to auto-load segments YAML if it exists
+            $.ajax({
+              url: apiPath + "_segments.yaml",
+              dataType: "text",
+              success: function (yamlText) {
+                // Parse the YAML and update segments array
+                var result = parseSegmentsFromText(yamlText);
+                if (result.success) {
+                  // Successfully parsed - update the display
+                  updateSegmentYaml();
+                } else {
+                  // Parse error - show the raw text but don't update segments array
+                  var segmentsDiv = document.getElementById('segments-editable');
+                  segmentsDiv.textContent = yamlText;
+                  // Show error toast
+                  $("#error-toast-body").html("<h2>YAML Parse Error</h2><p>" + result.error + "</p>");
+                  (new bootstrap.Toast(document.getElementById('error-toast'), { delay: 5000 })).show();
+                }
+              },
+              error: function () {
+                // File doesn't exist or error loading - this is fine, just use default
+                // Don't show error for 404
+              }
+            });
+
+            for (var i = 0; i < data["moments"].length; i++) {
+              var game = data["moments"][i];
+              if (game["type"] == "GAME_CHANGE") {
+                playedGameItems.push({
+                  startTime: game["offset"],
+                  endTime: game["offset"] + game["duration"],
+                  text: game["name"].trim()
+                });
+              }
+            }
+            var date = new Date(data["recorded_at"]);
+            var options = { year: 'numeric', month: 'long', day: 'numeric' };
+            extraTitleStuff = " w/ Chat - (" + data["user_name"] + ") - " + date.toLocaleDateString('en-US', options)
+
+            // This will load our subtitles
+            // https://github.com/pavladan/subtitles-parser-vtt/blob/master/index.js#L17
+            $.ajax({
+              url: apiPath + ".vtt",
+              dataType: "text",
+              success: function (data) {
+                data = data.replace(/\r/g, "");
+                // Improved regex that handles multiline subtitles properly
+                // The key fix: use [\s\S]*? (non-greedy) instead of .*\n to capture multiline text
+                // Matches until we see a blank line, next timestamp pattern, or end of string
+                // Using RegExp constructor to avoid formatter breaking the regex literal
+                var regexPattern = "(?:^|\\n)(?:(\\d+)\\n)?(\\d{2}:\\d{2}:\\d{2}[,.]\\d{3})\\s*-->\\s*(\\d{2}:\\d{2}:\\d{2}[,.]\\d{3})\\n([\\s\\S]*?)(?=\\n\\n|\\n(?:\\d+\\n)?\\d{2}:\\d{2}:\\d{2}[,.]\\d{3}\\s*-->|$)";
+                var regex = new RegExp(regexPattern, "g");
+                var items = [];
+                var match;
+                while ((match = regex.exec(data)) !== null) {
+                  var text = match[4] ? match[4].trim() : "";
+                  if (text.length === 0) continue;
+                  items.push({
+                    id: match[1] ? +match[1].trim() : items.length + 1,
+                    startTime: timeMs(match[2].trim()) / 1000.0,
+                    endTime: timeMs(match[3].trim()) / 1000.0,
+                    text: text,
+                    index: items.length,
+                  });
+                }
+                transcriptItems = items;
+
+                // Initialize transcript window with first item (or time 0)
+                if (transcriptItems.length > 0) {
+                  var initialTime = transcriptItems[0]["startTime"];
+                  updateTranscriptWindow(initialTime);
+                }
+              },
+              error: function () {
+                for (var i = 0; i < playedGameItems.length; i++) {
+                  var gameTime = playedGameItems[i]["startTime"];
+                  $("#transcript").append("<h4 id=\"game_" + i + "\" style=\"margin-top:1rem;cursor:pointer;text-decoration:underline;\" class=\"fw-bold text-warning\" onclick=\"onGamePlayedSeekClick(" + gameTime + ",'game_" + i + "');\">" + createTimestampSpan(gameTime) + playedGameItems[i]["text"] + '</h4>');
+                }
+
+              }
+            });
+
+
 
           }
-      });
+        });
+      }
 
 
-
-    }
-});
-
-
-});
-</script>
+    });
+  </script>
 
 
 

@@ -1,0 +1,22 @@
+[project]
+name = "twitch_vod_creator"
+version = "1.0.0"
+dependencies = [
+    "coloredlogs>=15.0.1",
+    "drivedl>=1.2",
+    "python-twitch-client>=0.7.1",
+    "pyyaml>=6.0.3",
+    "tqdm>=4.66.0",
+    "vosk>=0.3.45",
+    "webvtt-py>=0.5.1",
+    "youtube-video-upload>=0.2.0",
+    # Pin google-api-python-client to 2.7.0 for Python 3.8 compatibility:
+    # - Newer versions (>=2.50.0) require Python 3.10+ due to importlib.metadata.packages_distributions
+    "google-api-python-client==2.7.0; python_version < '3.10'",
+    # Pin oauth2client to <4.0.0 to support file_cache for credential storage:
+    # - Versions 4.0.0+ removed file_cache support, causing warnings
+    # - Required by youtube-video-upload for OAuth token management
+    "oauth2client<4.0.0",
+]
+
+

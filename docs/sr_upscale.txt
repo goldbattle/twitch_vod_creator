@@ -1,0 +1,60 @@
+Guide I am following:
+https://video.stackexchange.com/a/38059
+Make sure your ffmpeg is compiled with libtensorflow; use ffmpeg -buildconf to check if it is.
+Download the scripts https://github.com/XueweiMeng/sr/tree/sr_dnn_native
+pip install tensorflow numpy
+python3 generate_header_and_model.py --model=espcn --ckpt_path=checkpoints/espcn/
+
+
+Install libtensorflow?
+https://www.tensorflow.org/install/lang_c
+
+ARG VERSION_FFMPEG=4.4
+ARG VERSION_LIBTENSORFLOW=2.5.0
+
+
+# Install libtensorflow
+curl -fsSL https://storage.googleapis.com/tensorflow/libtensorflow/libtensorflow-gpu-linux-x86_64-"$1".tar.gz | tar -xzC /usr/local -f -
+
+# Build ffmpeg
+# https://github.com/MIR-MU/ffmpeg-tensorflow/blob/main/script/build
+curl -fsSL https://ffmpeg.org/releases/ffmpeg-"$2".tar.bz2 | tar --strip 1 -xjC "$TEMPDIR" -f -
+pushd "$TEMPDIR"
+./configure \
+ --pkg-config-flags='--static' \
+ --extra-libs='-lpthread -lm' \
+ --enable-gpl \
+ --enable-gnutls \
+ --enable-libass \
+ --enable-libfdk-aac \
+ --enable-libfreetype \
+ --enable-libmp3lame \
+ --enable-libopus \
+ --enable-libvorbis \
+ --enable-libvpx \
+ --enable-libx264 \
+ --enable-libx265 \
+ --enable-libtensorflow \
+ --enable-nonfree
+
+
+ # then make install it into local directory path (DO NOT INSTALL GLOBAL)
+
+
+
+https://github.com/XueweiMeng/sr/tree/sr_dnn_native
+
+git clone git@github.com:XueweiMeng/sr.git
+
+
+
+python tvc.py render_segments --dir-segments ~/Work/data/sodapoppin/2025-06/ --file-config config/soda_config_youtube.yaml --temp-dir ~/Work/data_tmp/ --verbose --do-4k
+
+
+
+
+https://github.com/k4yt3x/video2x
+
+./Video2X-x86_64.AppImage -i /home/patrick/Work/data/sodapoppin/2025-06/2478081190.mp4 -o test_00.mp4 -s 4 \
+    -p realesrgan --realesrgan-model realesrgan-plus \
+    -c libx264rgb -e crf=17 -e preset=veryslow -e tune=film
