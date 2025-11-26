@@ -41,10 +41,26 @@
       background-color: #6c757d;
     }
 
+    .resizer-horizontal {
+      background-color: #dee2e6;
+      cursor: row-resize;
+      height: 4px;
+      flex-shrink: 0;
+      user-select: none;
+    }
+
+    .resizer-horizontal:hover {
+      background-color: #adb5bd;
+    }
+
+    .resizer-horizontal.dragging {
+      background-color: #6c757d;
+    }
+
     #video-panel {
       display: flex;
       flex-direction: column;
-      overflow-y: auto;
+      overflow: hidden;
     }
 
     #transcript-panel {
@@ -154,26 +170,32 @@
   <div class="resizable-container">
     <!-- main video panel -->
     <div class="resizable-panel" id="video-panel">
-      <div class="embed-responsive embed-responsive-16by9">
-        <video width="100%" id="video-active" class="embed-responsive-item" preload="auto" controls>
-          <!-- <source src="path_here.." type="video/mp4"> -->
-          Your browser does not support the video tag.
-        </video>
-      </div>
+      <!-- Video Content (player + info) -->
+      <div id="video-content" style="flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden;">
+        <div class="embed-responsive embed-responsive-16by9">
+          <video width="100%" id="video-active" class="embed-responsive-item" preload="auto" controls>
+            <!-- <source src="path_here.." type="video/mp4"> -->
+            Your browser does not support the video tag.
+          </video>
+        </div>
 
-      <!-- Video Info -->
-      <div style="margin-top: 1rem; padding: 0.75rem;">
-        <h4 id="title" style="margin: 0 0 0.25rem 0; font-size: 1.1rem;"></h4>
-        <div id="date" class="text-muted" style="font-size: 0.9rem; margin-bottom: 0.5rem;"></div>
-        <div class="input-group input-group-sm">
-          <span class="input-group-text">Current Video:</span>
-          <input class="form-control" id="datapath" onkeydown="readInputDataPath(this, event)" />
+        <!-- Video Info -->
+        <div style="padding: 0.75rem;">
+          <h4 id="title" style="margin: 0 0 0.25rem 0; font-size: 1.1rem;"></h4>
+          <div id="date" class="text-muted" style="font-size: 0.9rem; margin-bottom: 0.5rem;"></div>
+          <div class="input-group input-group-sm">
+            <span class="input-group-text">Current Video:</span>
+            <input class="form-control" id="datapath" onkeydown="readInputDataPath(this, event)" />
+          </div>
         </div>
       </div>
 
+      <!-- horizontal resizer between video content and file explorer -->
+      <div class="resizer-horizontal" id="resizer-video-filelist"></div>
+
       <!-- File Explorer -->
-      <div id="file-explorer" style="margin-top: 1rem; border-top: 2px solid #dee2e6; padding-top: 1rem;">
-        <div id="video-list-container" style="max-height: 300px; overflow-y: auto;">
+      <div id="file-explorer" style="flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden;">
+        <div id="video-list-container" style="flex: 1; overflow-y: auto;">
           <div class="text-muted" style="padding: 0.5rem 0.75rem;">Loading videos...</div>
         </div>
       </div>
@@ -244,26 +266,42 @@
     var isEditingSegments = false;  // Flag to track if user is editing segments
     var hasParseError = false;  // Flag to track if there's a YAML parse error
 
+    // Default panel sizes (can be overridden by URL parameters)
+    var DEFAULT_VIDEO_WIDTH = '51.85';      // vw - video panel width percentage
+    var DEFAULT_TRANSCRIPT_WIDTH = '19.26';  // tw - transcript panel width percentage
+    var DEFAULT_SEGMENTS_WIDTH = '28.89';   // sw - segments panel width percentage
+    var DEFAULT_VIDEO_CONTENT_HEIGHT = '70.0'; // vch - video content height percentage
+
     // Panel resizing functionality
     function initResizablePanels() {
       const resizer1 = document.getElementById('resizer-video-transcript');
       const resizer2 = document.getElementById('resizer-transcript-segments');
+      const resizerHorizontal = document.getElementById('resizer-video-filelist');
       const videoPanel = document.getElementById('video-panel');
       const transcriptPanel = document.getElementById('transcript-panel');
       const segmentsPanel = document.getElementById('segments-panel');
+      const videoContent = document.getElementById('video-content');
+      const fileExplorer = document.getElementById('file-explorer');
 
       // Get initial widths from URL or use defaults
       const urlParams = new URLSearchParams(window.location.search);
-      const videoWidth = urlParams.get('vw') || '50.0'; // default 50%
-      const segmentsWidth = urlParams.get('sw') || '30.0'; // default 30%
-      const transcriptWidth = urlParams.get('tw') || '20.0'; // default 20% (100 - 50 - 30)
+      const videoWidth = urlParams.get('vw') || DEFAULT_VIDEO_WIDTH;
+      const segmentsWidth = urlParams.get('sw') || DEFAULT_SEGMENTS_WIDTH;
+      const transcriptWidth = urlParams.get('tw') || DEFAULT_TRANSCRIPT_WIDTH;
+      const videoContentHeight = urlParams.get('vch') || DEFAULT_VIDEO_CONTENT_HEIGHT;
 
       videoPanel.style.width = videoWidth + '%';
       transcriptPanel.style.width = transcriptWidth + '%';
       segmentsPanel.style.width = segmentsWidth + '%';
+      // Use flex-basis with percentages for height distribution
+      const vchPercent = parseFloat(videoContentHeight);
+      const felPercent = 100 - vchPercent;
+      videoContent.style.flex = '1 1 ' + vchPercent + '%';
+      fileExplorer.style.flex = '1 1 ' + felPercent + '%';
 
       let activeResizer = null;
       let isResizing = false;
+      let isHorizontalResizing = false;
 
       function setupResizer(resizer, leftPanel, rightPanel, isFirstResizer) {
         resizer.addEventListener('mousedown', (e) => {
@@ -275,65 +313,99 @@
         });
       }
 
+      function setupHorizontalResizer(resizer, topPanel, bottomPanel) {
+        resizer.addEventListener('mousedown', (e) => {
+          isResizing = true;
+          isHorizontalResizing = true;
+          activeResizer = resizer;
+          resizer.classList.add('dragging');
+          document.body.style.cursor = 'row-resize';
+          document.body.style.userSelect = 'none';
+        });
+      }
+
       setupResizer(resizer1, videoPanel, transcriptPanel, true);
       setupResizer(resizer2, transcriptPanel, segmentsPanel, false);
+      setupHorizontalResizer(resizerHorizontal, videoContent, fileExplorer);
 
       document.addEventListener('mousemove', (e) => {
         if (!isResizing || !activeResizer) return;
 
-        const containerWidth = document.querySelector('.resizable-container').offsetWidth;
-        const mouseX = e.clientX;
-        const mouseXPercent = (mouseX / containerWidth) * 100;
+        if (isHorizontalResizing && activeResizer === resizerHorizontal) {
+          // Horizontal resizing between video content and file explorer
+          const videoPanelRect = videoPanel.getBoundingClientRect();
+          const mouseY = e.clientY;
+          const videoPanelTop = videoPanelRect.top;
+          const videoPanelHeight = videoPanelRect.height;
 
-        if (activeResizer === resizer1) {
-          // Resizing between video and transcript
-          const currentVideoWidth = parseFloat(videoPanel.style.width);
-          const currentTranscriptWidth = parseFloat(transcriptPanel.style.width);
-          const currentSegmentsWidth = parseFloat(segmentsPanel.style.width);
+          // Calculate mouse position relative to video panel
+          const relativeMouseY = mouseY - videoPanelTop;
+          const mouseYPercent = (relativeMouseY / videoPanelHeight) * 100;
 
-          const newVideoWidth = mouseXPercent;
-          const remainingWidth = 100 - newVideoWidth;
+          // Limit heights (each section needs at least 10%)
+          if (mouseYPercent >= 10 && mouseYPercent <= 90) {
+            const felPercent = 100 - mouseYPercent;
+            videoContent.style.flex = '1 1 ' + mouseYPercent + '%';
+            fileExplorer.style.flex = '1 1 ' + felPercent + '%';
 
-          // Limit video width (20% to 70%)
-          if (newVideoWidth >= 20 && newVideoWidth <= 70) {
-            // Maintain ratio between transcript and segments
-            const totalRightWidth = currentTranscriptWidth + currentSegmentsWidth;
-            const transcriptRatio = currentTranscriptWidth / totalRightWidth;
-            const segmentsRatio = currentSegmentsWidth / totalRightWidth;
-
-            videoPanel.style.width = newVideoWidth + '%';
-            transcriptPanel.style.width = (remainingWidth * transcriptRatio) + '%';
-            segmentsPanel.style.width = (remainingWidth * segmentsRatio) + '%';
-
-            updateURLParameter('vw', newVideoWidth.toFixed(2));
-            updateURLParameter('tw', (remainingWidth * transcriptRatio).toFixed(2));
-            updateURLParameter('sw', (remainingWidth * segmentsRatio).toFixed(2));
+            updateURLParameter('vch', mouseYPercent.toFixed(2));
           }
-        } else if (activeResizer === resizer2) {
-          // Resizing between transcript and segments
-          const currentVideoWidth = parseFloat(videoPanel.style.width);
-          const currentTranscriptWidth = parseFloat(transcriptPanel.style.width);
-          const currentSegmentsWidth = parseFloat(segmentsPanel.style.width);
+        } else {
+          // Vertical resizing (existing logic)
+          const containerWidth = document.querySelector('.resizable-container').offsetWidth;
+          const mouseX = e.clientX;
+          const mouseXPercent = (mouseX / containerWidth) * 100;
 
-          // Calculate where the transcript panel starts
-          const transcriptStartPercent = currentVideoWidth;
-          const transcriptEndPercent = transcriptStartPercent + currentTranscriptWidth;
+          if (activeResizer === resizer1) {
+            // Resizing between video and transcript
+            const currentVideoWidth = parseFloat(videoPanel.style.width);
+            const currentTranscriptWidth = parseFloat(transcriptPanel.style.width);
+            const currentSegmentsWidth = parseFloat(segmentsPanel.style.width);
 
-          // Mouse position relative to transcript start
-          const relativeMouseX = mouseXPercent - transcriptStartPercent;
-          const totalRightWidth = 100 - currentVideoWidth;
+            const newVideoWidth = mouseXPercent;
+            const remainingWidth = 100 - newVideoWidth;
 
-          // New transcript width based on mouse position
-          const newTranscriptWidth = relativeMouseX;
-          const newSegmentsWidth = totalRightWidth - newTranscriptWidth;
+            // Limit video width (20% to 70%)
+            if (newVideoWidth >= 20 && newVideoWidth <= 70) {
+              // Maintain ratio between transcript and segments
+              const totalRightWidth = currentTranscriptWidth + currentSegmentsWidth;
+              const transcriptRatio = currentTranscriptWidth / totalRightWidth;
+              const segmentsRatio = currentSegmentsWidth / totalRightWidth;
 
-          // Limit widths (each panel needs at least 5%)
-          if (newTranscriptWidth >= 5 && newSegmentsWidth >= 5) {
-            transcriptPanel.style.width = newTranscriptWidth + '%';
-            segmentsPanel.style.width = newSegmentsWidth + '%';
+              videoPanel.style.width = newVideoWidth + '%';
+              transcriptPanel.style.width = (remainingWidth * transcriptRatio) + '%';
+              segmentsPanel.style.width = (remainingWidth * segmentsRatio) + '%';
 
-            updateURLParameter('tw', newTranscriptWidth.toFixed(2));
-            updateURLParameter('sw', newSegmentsWidth.toFixed(2));
+              updateURLParameter('vw', newVideoWidth.toFixed(2));
+              updateURLParameter('tw', (remainingWidth * transcriptRatio).toFixed(2));
+              updateURLParameter('sw', (remainingWidth * segmentsRatio).toFixed(2));
+            }
+          } else if (activeResizer === resizer2) {
+            // Resizing between transcript and segments
+            const currentVideoWidth = parseFloat(videoPanel.style.width);
+            const currentTranscriptWidth = parseFloat(transcriptPanel.style.width);
+            const currentSegmentsWidth = parseFloat(segmentsPanel.style.width);
+
+            // Calculate where the transcript panel starts
+            const transcriptStartPercent = currentVideoWidth;
+            const transcriptEndPercent = transcriptStartPercent + currentTranscriptWidth;
+
+            // Mouse position relative to transcript start
+            const relativeMouseX = mouseXPercent - transcriptStartPercent;
+            const totalRightWidth = 100 - currentVideoWidth;
+
+            // New transcript width based on mouse position
+            const newTranscriptWidth = relativeMouseX;
+            const newSegmentsWidth = totalRightWidth - newTranscriptWidth;
+
+            // Limit widths (each panel needs at least 5%)
+            if (newTranscriptWidth >= 5 && newSegmentsWidth >= 5) {
+              transcriptPanel.style.width = newTranscriptWidth + '%';
+              segmentsPanel.style.width = newSegmentsWidth + '%';
+
+              updateURLParameter('tw', newTranscriptWidth.toFixed(2));
+              updateURLParameter('sw', newSegmentsWidth.toFixed(2));
+            }
           }
         }
       });
@@ -341,6 +413,7 @@
       document.addEventListener('mouseup', () => {
         if (isResizing) {
           isResizing = false;
+          isHorizontalResizing = false;
           if (activeResizer) {
             activeResizer.classList.remove('dragging');
           }
@@ -539,15 +612,16 @@
     function readInputDataPath(el, e) {
       if (e.keyCode == 13) {
         const urlParams = new URLSearchParams(window.location.search);
-        const vw = urlParams.get('vw') || '50.0';
-        const sw = urlParams.get('sw') || '30.0';
-        const tw = urlParams.get('tw') || '20.0';
+        const vw = urlParams.get('vw') || DEFAULT_VIDEO_WIDTH;
+        const sw = urlParams.get('sw') || DEFAULT_SEGMENTS_WIDTH;
+        const tw = urlParams.get('tw') || DEFAULT_TRANSCRIPT_WIDTH;
+        const vch = urlParams.get('vch') || DEFAULT_VIDEO_CONTENT_HEIGHT;
         var filePath = el.value;
         // Ensure path starts with data/ or data_live/
         if (!filePath.startsWith('data/') && !filePath.startsWith('data_live/')) {
           filePath = 'data/' + filePath;
         }
-        location.href = "/?file=" + filePath + "&vw=" + vw + "&tw=" + tw + "&sw=" + sw;
+        location.href = "/?file=" + filePath + "&vw=" + vw + "&tw=" + tw + "&sw=" + sw + "&vch=" + vch;
       }
     }
 
@@ -678,6 +752,31 @@
 
             container.append(itemHtml);
           });
+
+          // Scroll to highlighted video (if any) after items are rendered
+          setTimeout(function () {
+            var highlightedItem = container.find('.text-warning');
+            if (highlightedItem.length > 0) {
+              var containerElement = container[0];
+              var itemElement = highlightedItem[0];
+
+              // Calculate item position by summing heights of all previous siblings
+              var itemOffsetTop = 0;
+              var previousSibling = itemElement.previousElementSibling;
+              while (previousSibling) {
+                itemOffsetTop += previousSibling.offsetHeight;
+                previousSibling = previousSibling.previousElementSibling;
+              }
+
+              var itemHeight = itemElement.offsetHeight;
+              var containerHeight = containerElement.clientHeight;
+
+              // Center the item: scroll to position where item is in the middle
+              var scrollPosition = itemOffsetTop - (containerHeight / 2) + (itemHeight / 2);
+
+              containerElement.scrollTop = Math.max(0, scrollPosition);
+            }
+          }, 0);
         },
         error: function (xhr, status, error) {
           $("#video-list-container").html('<div class="text-danger" style="padding: 0.5rem 0.75rem;">Error loading: ' + error + '</div>');
@@ -687,19 +786,21 @@
 
     function navigateToPath(filepath) {
       const urlParams = new URLSearchParams(window.location.search);
-      const vw = urlParams.get('vw') || '50.0';
-      const sw = urlParams.get('sw') || '30.0';
-      const tw = urlParams.get('tw') || '20.0';
-      location.href = "/?file=" + filepath + "&vw=" + vw + "&tw=" + tw + "&sw=" + sw;
+      const vw = urlParams.get('vw') || DEFAULT_VIDEO_WIDTH;
+      const sw = urlParams.get('sw') || DEFAULT_SEGMENTS_WIDTH;
+      const tw = urlParams.get('tw') || DEFAULT_TRANSCRIPT_WIDTH;
+      const vch = urlParams.get('vch') || DEFAULT_VIDEO_CONTENT_HEIGHT;
+      location.href = "/?file=" + filepath + "&vw=" + vw + "&tw=" + tw + "&sw=" + sw + "&vch=" + vch;
     }
 
 
     function loadVideo(videoPath) {
       const urlParams = new URLSearchParams(window.location.search);
-      const vw = urlParams.get('vw') || '50.0';
-      const sw = urlParams.get('sw') || '30.0';
-      const tw = urlParams.get('tw') || '20.0';
-      location.href = "/?file=" + videoPath + "&vw=" + vw + "&tw=" + tw + "&sw=" + sw;
+      const vw = urlParams.get('vw') || DEFAULT_VIDEO_WIDTH;
+      const sw = urlParams.get('sw') || DEFAULT_SEGMENTS_WIDTH;
+      const tw = urlParams.get('tw') || DEFAULT_TRANSCRIPT_WIDTH;
+      const vch = urlParams.get('vch') || DEFAULT_VIDEO_CONTENT_HEIGHT;
+      location.href = "/?file=" + videoPath + "&vw=" + vw + "&tw=" + tw + "&sw=" + sw + "&vch=" + vch;
     }
 
     // https://github.com/pavladan/subtitles-parser-vtt/blob/master/index.js#L67
@@ -1559,6 +1660,43 @@
             handleSegmentYamlEdit();
           }
         }, 10);
+      });
+
+      // Handle paste events - remove styling and newlines, preserve current style
+      segmentsDiv.addEventListener('paste', function (event) {
+        event.preventDefault();
+
+        // Get plain text from clipboard
+        var pastedText = '';
+        if (event.clipboardData && event.clipboardData.getData) {
+          pastedText = event.clipboardData.getData('text/plain');
+        } else if (window.clipboardData && window.clipboardData.getData) {
+          pastedText = window.clipboardData.getData('Text');
+        }
+
+        // Remove all newlines and normalize whitespace
+        pastedText = pastedText.replace(/\r?\n/g, ' ').replace(/\s+/g, ' ').trim();
+
+        // Get current selection
+        var selection = window.getSelection();
+        if (selection.rangeCount === 0) {
+          return;
+        }
+
+        var range = selection.getRangeAt(0);
+
+        // Delete selected content if any
+        range.deleteContents();
+
+        // Insert plain text (will inherit current styling)
+        var textNode = document.createTextNode(pastedText);
+        range.insertNode(textNode);
+
+        // Move cursor to end of inserted text
+        range.setStartAfter(textNode);
+        range.collapse(true);
+        selection.removeAllRanges();
+        selection.addRange(range);
       });
 
       // Get what video we are currently loading!
