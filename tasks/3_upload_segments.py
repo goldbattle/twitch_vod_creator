@@ -129,25 +129,27 @@ def run_task(args: argparse.Namespace) -> None:
                 logger.info('terminate requested, not downloading any more..')
                 break
 
-            # nice debug print
-            logger.info(f"processing {video['video']} - '{video['title']}'")
-            logger.info(f"  - Suffix: \"{suffix}\"")
-
             # check if the files are there
             clean_video_title = file.get_valid_filename(video["title"])
             file_path_composite = os.path.join(path_render, video["video"] + "_" + clean_video_title + suffix + ".mp4")
             file_path_desc = os.path.join(path_render, video["video"] + "_" + clean_video_title + suffix + "_desc.txt")
             if not os.path.exists(file_path_composite) or not os.path.exists(file_path_desc):
                 if display_missing:
-                    logger.warning("video has not been rendered yet...")
+                    logger.warning(f"processing {video['video']} - '{video['title']}'")
+                    logger.warning(f"  - suffix: \"{suffix}\"")
+                    logger.warning("   - video has not been rendered yet...")
                     logger.warning(f"{video['video']}_{clean_video_title}.mp4")
                     logger.warning(f"{video['video']}_{clean_video_title}_desc.txt")
                 continue
 
+            # nice debug print (only print when we're actually processing)
+            logger.info(f"processing {video['video']} - '{video['title']}'")
+            logger.info(f"  - suffix: \"{suffix}\"")
+
             # unique video id
             video_id = video["video"].replace(' ', '_') + "_" + video["title"].lower().replace(' ', '_') + suffix
             if video_id in hist_uploads:
-                logger.debug(f"skipping video, has already been uploaded: {hist_uploads[video_id]['link']}")
+                logger.info(f"  - skipping video, has already been uploaded: {hist_uploads[video_id]['link']}")
                 continue
 
             # load the description file
@@ -177,15 +179,21 @@ def run_task(args: argparse.Namespace) -> None:
             }
 
             # now upload the video!
-            logger.info("starting video upload...")
+            logger.info("  - starting video upload...")
             try:
                 t0 = time.time()
                 upload_video.MAX_RETRIES = 2
                 new_options = upload_from_options(options)
                 t1 = time.time()
-                logger.info("done performing video upload!")
-                logger.info(f"link: {new_options}")
-                logger.debug(f"upload time: {t1 - t0 + 1e-6}")
+                
+                # Check if upload was successful (returns a valid link/result)
+                if new_options is None:
+                    logger.error("  - upload failed: upload_from_options returned None")
+                    continue
+                
+                logger.info("  - done performing video upload!")
+                logger.info(f"  - link: {new_options}")
+                logger.debug(f"  - upload time: {t1 - t0 + 1e-6}")
                 entry = {
                     'title': video["title"],
                     'file': file_path_composite,
@@ -201,8 +209,8 @@ def run_task(args: argparse.Namespace) -> None:
                 hist_uploads[video_id].update(entry)
 
             except Exception as e:
-                logger.error("unable to complete the upload!")
-                logger.error(f"{e}")
+                logger.error("  - unable to complete the upload!")
+                logger.error(f"  - {e}")
                 break
 
 
