@@ -366,7 +366,8 @@ version = "1.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "colorama" },
-    { name = "google-api-python-client" },
+    { name = "google-api-python-client", version = "2.49.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.13'" },
+    { name = "google-api-python-client", version = "2.187.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.13'" },
     { name = "google-auth-httplib2" },
     { name = "google-auth-oauthlib" },
     { name = "tqdm" },
@@ -396,15 +397,38 @@ wheels = [
 
 [[package]]
 name = "google-api-python-client"
+version = "2.49.0"
+source = { registry = "https://pypi.org/simple" }
+resolution-markers = [
+    "python_full_version >= '3.9' and python_full_version < '3.13'",
+    "python_full_version < '3.9'",
+]
+dependencies = [
+    { name = "google-api-core", marker = "python_full_version < '3.13'" },
+    { name = "google-auth", marker = "python_full_version < '3.13'" },
+    { name = "google-auth-httplib2", marker = "python_full_version < '3.13'" },
+    { name = "httplib2", marker = "python_full_version < '3.13'" },
+    { name = "uritemplate", version = "4.1.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
+    { name = "uritemplate", version = "4.2.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.9' and python_full_version < '3.13'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/75/54/f8a7dfb11fb40aa020df48068e82b23a16f73502c9f5d513c01e7941db0a/google-api-python-client-2.49.0.tar.gz", hash = "sha256:629bbde991ce2d9697c6da37f2416f7aeb01ba01505b166066a415b3c3ce1dfc", size = 8093245, upload-time = "2022-05-25T22:42:52.602Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/77/32/e1dd7b5d695cd96a95521d948ea040daf87bab1b06ea2294d8edf0ae411d/google_api_python_client-2.49.0-py2.py3-none-any.whl", hash = "sha256:7e172b06abeff7170108596446f0c8e56a129a40ef29a802270a02c0b07e993d", size = 8502678, upload-time = "2022-05-25T22:42:49.814Z" },
+]
+
+[[package]]
+name = "google-api-python-client"
 version = "2.187.0"
 source = { registry = "https://pypi.org/simple" }
+resolution-markers = [
+    "python_full_version >= '3.13'",
+]
 dependencies = [
-    { name = "google-api-core" },
-    { name = "google-auth" },
-    { name = "google-auth-httplib2" },
-    { name = "httplib2" },
-    { name = "uritemplate", version = "4.1.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
-    { name = "uritemplate", version = "4.2.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.9'" },
+    { name = "google-api-core", marker = "python_full_version >= '3.13'" },
+    { name = "google-auth", marker = "python_full_version >= '3.13'" },
+    { name = "google-auth-httplib2", marker = "python_full_version >= '3.13'" },
+    { name = "httplib2", marker = "python_full_version >= '3.13'" },
+    { name = "uritemplate", version = "4.2.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.13'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/75/83/60cdacf139d768dd7f0fcbe8d95b418299810068093fdf8228c6af89bb70/google_api_python_client-2.187.0.tar.gz", hash = "sha256:e98e8e8f49e1b5048c2f8276473d6485febc76c9c47892a8b4d1afa2c9ec8278", size = 14068154, upload-time = "2025-11-06T01:48:53.274Z" }
 wheels = [
@@ -833,6 +857,7 @@ source = { virtual = "." }
 dependencies = [
     { name = "coloredlogs" },
     { name = "drivedl" },
+    { name = "google-api-python-client", version = "2.49.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
     { name = "python-twitch-client" },
     { name = "pyyaml" },
     { name = "tqdm" },
@@ -845,6 +870,7 @@ dependencies = [
 requires-dist = [
     { name = "coloredlogs", specifier = ">=15.0.1" },
     { name = "drivedl", specifier = ">=1.2" },
+    { name = "google-api-python-client", marker = "python_full_version < '3.10'", specifier = "<2.50.0" },
     { name = "python-twitch-client", specifier = ">=0.7.1" },
     { name = "pyyaml", specifier = ">=6.0.3" },
     { name = "tqdm", specifier = ">=4.66.0" },
@@ -1115,7 +1141,8 @@ version = "0.2.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "colorama" },
-    { name = "google-api-python-client" },
+    { name = "google-api-python-client", version = "2.49.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.13'" },
+    { name = "google-api-python-client", version = "2.187.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.13'" },
     { name = "google-auth" },
     { name = "google-auth-httplib2" },
     { name = "google-auth-oauthlib" },

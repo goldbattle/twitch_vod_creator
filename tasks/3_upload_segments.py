@@ -48,8 +48,8 @@ def parse_args() -> argparse.Namespace:
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument('--file-segments', help='YAML file with all video segments (relative to config directory)')
     group.add_argument('--dir-segments', help='Directory to recursively scan for *_segments.yaml files')
-    parser.add_argument('--history-file', required=True, help='History YAML file (relative to config directory)')
-    parser.add_argument('--file-config', required=True, help='Config YAML file (relative to config directory)')
+    parser.add_argument('--history-file', required=True, help='Full path to history YAML file')
+    parser.add_argument('--file-config', required=True, help='Full path to config YAML file')
     parser.add_argument('--display-missing', action='store_true', help='Display missing video files')
     parser.add_argument('--verbose', action='store_true', help='Show verbose output from operations')
     return parser.parse_args()
@@ -65,8 +65,8 @@ def run_task(args: argparse.Namespace) -> None:
     config_base = config.load_config()
     path_base = config_base['base_path']
     
-    history_file = os.path.join(path_base, "config", args.history_file)
-    config_file = os.path.join(path_base, "config", args.file_config)
+    history_file = args.history_file
+    config_file = args.file_config
     display_missing = args.display_missing
     
     # load the yaml from file
