@@ -104,9 +104,9 @@ def run_task(args: argparse.Namespace) -> None:
             logger.warning(f"No *_segments.yaml files found in {segments_dir}")
             return
         
-        logger.info(f"Found {len(segments_files)} segments file(s):")
+        logger.info(f"Found {len(segments_files)} segments yaml file(s)")
         for file_path in segments_files:
-            logger.info(f"  - {file_path}")
+            logger.debug(f"  - {file_path}")
         
         # Load all segments from all files
         data = load_all_segments(segments_files, logger)
@@ -191,9 +191,8 @@ def run_task(args: argparse.Namespace) -> None:
                     logger.error("  - upload failed: upload_from_options returned None")
                     continue
                 
-                logger.info("  - done performing video upload!")
+                logger.info(f"  - upload took {t1 - t0 + 1e-6:.2f} seconds!")
                 logger.info(f"  - link: {new_options}")
-                logger.debug(f"  - upload time: {t1 - t0 + 1e-6}")
                 entry = {
                     'title': video["title"],
                     'file': file_path_composite,
