@@ -121,7 +121,8 @@ def run_task(args: argparse.Namespace) -> None:
     # loop through each video and render each segment
     # we will want to first ensure chat is rendered
     # from there we will render the full segmented video
-    for suffix in ["", "_muted"]:
+    # For _4k, use the base description file (no suffix), otherwise use suffix
+    for suffix, suffix_desc in zip(["", "_muted", "_4k"], ["", "_muted", ""]):
         for video in data:
 
             # check if we should download any more
@@ -132,17 +133,17 @@ def run_task(args: argparse.Namespace) -> None:
             # check if the files are there
             clean_video_title = file.get_valid_filename(video["title"])
             file_path_composite = os.path.join(path_render, video["video"] + "_" + clean_video_title + suffix + ".mp4")
-            file_path_desc = os.path.join(path_render, video["video"] + "_" + clean_video_title + suffix + "_desc.txt")
+            file_path_desc = os.path.join(path_render, video["video"] + "_" + clean_video_title + suffix_desc + "_desc.txt")
             if not os.path.exists(file_path_composite) or not os.path.exists(file_path_desc):
                 if display_missing:
                     logger.warning(f"processing {video['video']} - '{video['title']}'")
                     logger.warning(f"  - suffix: \"{suffix}\"")
                     logger.warning("   - video has not been rendered yet...")
-                    logger.warning(f"{video['video']}_{clean_video_title}.mp4")
-                    logger.warning(f"{video['video']}_{clean_video_title}_desc.txt")
+                    logger.warning(f"  - {video['video']}_{clean_video_title}{suffix}.mp4")
+                    logger.warning(f"  - {video['video']}_{clean_video_title}{suffix_desc}_desc.txt")
                 continue
 
-            # nice debug print (only print when we're actually processing)
+            # nice print (only print when we're actually processing)
             logger.info(f"processing {video['video']} - '{video['title']}'")
             logger.info(f"  - suffix: \"{suffix}\"")
 
