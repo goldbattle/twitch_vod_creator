@@ -208,7 +208,7 @@ def run_parallel_tasks(tasks: List[Any], worker_func: Callable, description: str
 def parse_args() -> argparse.Namespace:
     """Parse command line arguments."""
     parser = argparse.ArgumentParser(description='Post-process videos: generate WebVTT transcriptions, render chat, and/or upscale to 4K')
-    parser.add_argument('--channel', required=True, help='Channel name to process')
+    parser.add_argument('--directory', required=True, help='Directory to search recursively for videos and chat files')
     parser.add_argument('--min-age', type=int, default=60, help='Minimum file age in seconds')
     parser.add_argument('--do-vtt', action='store_true', help='Generate WebVTT transcriptions for videos')
     parser.add_argument('--do-chat-render', action='store_true', help='Render chat JSON files to video')
@@ -228,14 +228,16 @@ def run_task(args: argparse.Namespace) -> None:
     
     config_dict = config.load_config()
     config_dict['temp_path'] = args.temp_dir
-    path_root = config_dict['data_root']
     
     extra.setup_signal_handle()
     
-    channel_path = os.path.join(path_root, args.channel)
-    
-    if not os.path.exists(channel_path):
-        logger.error(f"Channel directory not found: {channel_path}")
+    # Use the provided directory directly (can be absolute or relative)
+    search_directory = os.path.abspath(args.directory)
+    if not os.path.exists(search_directory):
+        logger.error(f"Directory not found: {search_directory}")
+        return
+    if not os.path.isdir(search_directory):
+        logger.error(f"Path is not a directory: {search_directory}")
         return
     
     # Find video files for VTT and 4K processing
@@ -243,8 +245,8 @@ def run_task(args: argparse.Namespace) -> None:
     # Find chat JSON files for chat rendering
     chats_to_process: List[Tuple[str, str]] = []  # (chat_json_path, chat_mp4_path)
     
-    logger.debug(f"Scanning channel directory: {channel_path}")
-    for subdir, dirs, files in os.walk(channel_path):
+    logger.debug(f"Scanning directory recursively: {search_directory}")
+    for subdir, dirs, files in os.walk(search_directory):
         if extra.terminated_requested:
             break
         for filename in files:
