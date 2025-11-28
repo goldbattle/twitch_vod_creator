@@ -20,8 +20,8 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description='Download and process Twitch VODs')
     parser.add_argument('--channels', required=True, nargs='+', help='List of channel names to download videos from')
     parser.add_argument('--max-videos', required=True, type=int, help='Maximum number of videos to download per type (archive/highlight/upload)')
-    parser.add_argument('--render-chat', required=True, nargs='+', help='Whether to render chat for each channel (true/false, must match number of channels)')
-    parser.add_argument('--render-webvtt', required=True, nargs='+', help='Whether to generate WebVTT transcriptions for each channel (true/false, must match number of channels)')
+    parser.add_argument('--render-chat', required=False, nargs='+', help='Whether to render chat for each channel (true/false, must match number of channels). Defaults to false for all channels if not specified.')
+    parser.add_argument('--render-webvtt', required=False, nargs='+', help='Whether to generate WebVTT transcriptions for each channel (true/false, must match number of channels). Defaults to false for all channels if not specified.')
     parser.add_argument('--verbose', action='store_true', help='Show verbose output from download operations')
     parser.add_argument('--temp-dir', default=config.get_temp_path("main_videos"), help='Temporary directory for downloads (default: /tmp/tvc_main_videos)')
     return parser.parse_args()
@@ -36,8 +36,16 @@ def run_task(args: argparse.Namespace) -> None:
     
     channels = args.channels
     max_videos = args.max_videos
-    render_chat_flags = [x.lower() in ('true', '1', 'yes') for x in args.render_chat]
-    render_webvtt = [x.lower() in ('true', '1', 'yes') for x in args.render_webvtt]
+    
+    # Default to False for all channels if not specified
+    if args.render_chat is None:
+        render_chat_flags = [False] * len(channels)
+    else:
+        render_chat_flags = [x.lower() in ('true', '1', 'yes') for x in args.render_chat]
+    if args.render_webvtt is None:
+        render_webvtt = [False] * len(channels)
+    else:
+        render_webvtt = [x.lower() in ('true', '1', 'yes') for x in args.render_webvtt]
     
     config_dict = config.load_config()
     config_dict['temp_path'] = args.temp_dir

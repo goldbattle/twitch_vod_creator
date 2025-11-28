@@ -331,8 +331,8 @@ def upscale_video_to_4k(config, video_path, output_path, verbose=False):
     if os.path.exists(output_path) or utilities_extra.terminated_requested:
         return False
     
-    # Create output directory if it doesn't exist
-    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    temp_path = config.get('temp_path', '/tmp')
+    temp_output = os.path.join(temp_path, os.path.basename(output_path))
     
     loglevel = "error" if verbose else "quiet"
     codec, encoder_params = get_video_encoder_params(config, preset="slow")
@@ -366,7 +366,7 @@ def upscale_video_to_4k(config, video_path, output_path, verbose=False):
         f' -c:a copy'
         f' -vcodec {codec} {encoder_params}'
         f' -avoid_negative_ts make_zero -vsync 2 -map_chapters -1'
-        f' {output_path}'
+        f' {temp_output}'
     )
     
     stdout = None if verbose else subprocess.DEVNULL
@@ -377,12 +377,18 @@ def upscale_video_to_4k(config, video_path, output_path, verbose=False):
     
     if return_code != 0:
         logger.error(f"Error: ffmpeg returned exit code {return_code}")
+        if os.path.exists(temp_output):
+            os.remove(temp_output)
         return False
     
-    return os.path.exists(output_path)
+    if os.path.exists(temp_output):
+        os.makedirs(os.path.dirname(output_path), exist_ok=True)
+        shutil.move(temp_output, output_path)
+        return True
+    return False
 
 
-def render_clip_with_title(config, video_path, chat_path, output_path, title_text, quiet=True):
+def render_clip_with_title(config, video_path, chat_path, output_path, title_text, quiet=True, is_4k=False):
     """Render a clip with title overlay and optional chat."""
     if os.path.exists(output_path) or utilities_extra.terminated_requested:
         return False
@@ -400,30 +406,63 @@ def render_clip_with_title(config, video_path, chat_path, output_path, title_tex
     stderr = subprocess.DEVNULL if quiet else None
     
     codec, encoder_params = get_video_encoder_params(config, preset="fast")
-    if chat_path and os.path.exists(chat_path):
-        cmd = (
-            f'{config["ffmpeg"]} -hide_banner -loglevel quiet -stats '
-            f' -i {video_path}'
-            f' -i {chat_path}'
-            f' -filter_complex "scale=1646x926,pad=1920:926:0:90:black [tmp0];'
-            f' [tmp0]drawtext=text=\'{title_clean}\':x=25:y=25:fontfile={config["font"]}:fontsize=85:fontcolor=white:bordercolor=black:borderw=5'
-            f':alpha=\'if(lt(t,0),0,if(lt(t,0),(t-0)/0,if(lt(t,4),1,if(lt(t,4.5),(0.5-(t-4))/0.5,0))))\'[tmp1]; '
-            f' [tmp1][1:v] overlay=shortest=0:x=1646:y=0:eof_action=endall" -shortest '
-            f' -c:a aac -ar 48k -ac 2 -vcodec {codec} {encoder_params.replace("-cq 15", "-cq 19").replace("-crf 15", "-crf 19")} '
-            f' -video_track_timescale 90000 -avoid_negative_ts make_zero -map_chapters -1 -fflags +genpts -framerate 60 '
-            f' {output_path}'
-        )
+    
+    # For 4K: scale video to 3292x2160, chat to 548x2160, total 3840x2160
+    # Scale title text proportionally: 85 * (2160/926) ≈ 198
+    # Scale position: 25 * (2160/926) ≈ 58
+    # Scale border: 5 * (2160/926) ≈ 12
+    if is_4k:
+        codec, encoder_params = get_video_encoder_params(config, preset="slow")
+        if chat_path and os.path.exists(chat_path):
+            cmd = (
+                f'{config["ffmpeg"]} -hide_banner -loglevel quiet -stats '
+                f' -i {video_path}'
+                f' -i {chat_path}'
+                f' -filter_complex "[0:v] scale=3292:2160 [tmp0];'
+                f' [tmp0]drawtext=text=\'{title_clean}\':x=58:y=58:fontfile={config["font"]}:fontsize=198:fontcolor=white:bordercolor=black:borderw=12'
+                f':alpha=\'if(lt(t,0),0,if(lt(t,0),(t-0)/0,if(lt(t,4),1,if(lt(t,4.5),(0.5-(t-4))/0.5,0))))\'[tmp1]; '
+                f' [1:v] scale=548:2160 [tmp2];'
+                f' [tmp1][tmp2] hstack=inputs=2:shortest=1" -shortest '
+                f' -c:a aac -ar 48k -ac 2 -vcodec {codec} {encoder_params.replace("-cq 15", "-cq 19").replace("-crf 15", "-crf 19")} '
+                f' -video_track_timescale 90000 -avoid_negative_ts make_zero -map_chapters -1 -fflags +genpts -framerate 60 '
+                f' {output_path}'
+            )
+        else:
+            cmd = (
+                f'{config["ffmpeg"]} -hide_banner -loglevel quiet -stats '
+                f' -i {video_path}'
+                f' -vf "scale=3292:2160,pad=3840:2160:0:0:black,'
+                f'drawtext=text=\'{title_clean}\':x=58:y=58:fontfile={config["font"]}:fontsize=198:fontcolor=white:bordercolor=black:borderw=12'
+                f':alpha=\'if(lt(t,0),0,if(lt(t,0),(t-0)/0,if(lt(t,4),1,if(lt(t,4.5),(0.5-(t-4))/0.5,0))))\' "'
+                f' -c:a aac -ar 48k -ac 2 -vcodec {codec} {encoder_params.replace("-cq 15", "-cq 19").replace("-crf 15", "-crf 19")} '
+                f' -video_track_timescale 90000 -avoid_negative_ts make_zero -map_chapters -1 -fflags +genpts -framerate 60 '
+                f' {output_path}'
+            )
     else:
-        cmd = (
-            f'{config["ffmpeg"]} -hide_banner -loglevel quiet -stats '
-            f' -i {video_path}'
-            f' -vf "scale=1646x926,pad=1920:926:0:90:black,'
-            f'drawtext=text=\'{title_clean}\':x=25:y=25:fontfile={config["font"]}:fontsize=85:fontcolor=white:bordercolor=black:borderw=5'
-            f':alpha=\'if(lt(t,0),0,if(lt(t,0),(t-0)/0,if(lt(t,4),1,if(lt(t,4.5),(0.5-(t-4))/0.5,0))))\' "'
-            f' -c:a aac -ar 48k -ac 2 -vcodec {codec} {encoder_params.replace("-cq 15", "-cq 19").replace("-crf 15", "-crf 19")} '
-            f' -video_track_timescale 90000 -avoid_negative_ts make_zero -map_chapters -1 -fflags +genpts -framerate 60 '
-            f' {output_path}'
-        )
+        if chat_path and os.path.exists(chat_path):
+            cmd = (
+                f'{config["ffmpeg"]} -hide_banner -loglevel quiet -stats '
+                f' -i {video_path}'
+                f' -i {chat_path}'
+                f' -filter_complex "scale=1646x926,pad=1920:926:0:90:black [tmp0];'
+                f' [tmp0]drawtext=text=\'{title_clean}\':x=25:y=25:fontfile={config["font"]}:fontsize=85:fontcolor=white:bordercolor=black:borderw=5'
+                f':alpha=\'if(lt(t,0),0,if(lt(t,0),(t-0)/0,if(lt(t,4),1,if(lt(t,4.5),(0.5-(t-4))/0.5,0))))\'[tmp1]; '
+                f' [tmp1][1:v] overlay=shortest=0:x=1646:y=0:eof_action=endall" -shortest '
+                f' -c:a aac -ar 48k -ac 2 -vcodec {codec} {encoder_params.replace("-cq 15", "-cq 19").replace("-crf 15", "-crf 19")} '
+                f' -video_track_timescale 90000 -avoid_negative_ts make_zero -map_chapters -1 -fflags +genpts -framerate 60 '
+                f' {output_path}'
+            )
+        else:
+            cmd = (
+                f'{config["ffmpeg"]} -hide_banner -loglevel quiet -stats '
+                f' -i {video_path}'
+                f' -vf "scale=1646x926,pad=1920:926:0:90:black,'
+                f'drawtext=text=\'{title_clean}\':x=25:y=25:fontfile={config["font"]}:fontsize=85:fontcolor=white:bordercolor=black:borderw=5'
+                f':alpha=\'if(lt(t,0),0,if(lt(t,0),(t-0)/0,if(lt(t,4),1,if(lt(t,4.5),(0.5-(t-4))/0.5,0))))\' "'
+                f' -c:a aac -ar 48k -ac 2 -vcodec {codec} {encoder_params.replace("-cq 15", "-cq 19").replace("-crf 15", "-crf 19")} '
+                f' -video_track_timescale 90000 -avoid_negative_ts make_zero -map_chapters -1 -fflags +genpts -framerate 60 '
+                f' {output_path}'
+            )
     
     subprocess.Popen(cmd, shell=True, stdout=stdout, stderr=stderr).wait()
     return os.path.exists(output_path)

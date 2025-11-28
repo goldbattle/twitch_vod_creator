@@ -185,17 +185,12 @@ def run_task(args: argparse.Namespace) -> None:
                     if args.do_4k and os.path.exists(file_path_chat):
                         file_path_chat_mp4_4k = os.path.join(path_root, video["video"] + "_chat_4k.mp4")
                         if not os.path.exists(file_path_chat_mp4_4k):
-                            # Render to temp first, then copy to data directory
-                            file_path_chat_mp4_4k_temp = os.path.join(config_dict['temp_path'], video["video"] + "_chat_4k_temp.mp4")
                             logger.info("  - starting rendering chat at 4K...")
                             logger.debug(f"  - {file_path_chat_mp4_4k}")
                             t0 = time.time()
-                            chat.render_chat(config_dict, file_path_chat, file_path_chat_mp4_4k_temp, verbose=args.verbose, is_4k=True)
+                            success = chat.render_chat(config_dict, file_path_chat, file_path_chat_mp4_4k, verbose=args.verbose, is_4k=True)
                             dur_min = (time.time() - t0) / 60.0
-                            if os.path.exists(file_path_chat_mp4_4k_temp):
-                                # Copy to data directory
-                                shutil.copy2(file_path_chat_mp4_4k_temp, file_path_chat_mp4_4k)
-                                os.remove(file_path_chat_mp4_4k_temp)
+                            if success:
                                 logger.info(f"  - rendering chat at 4K took {dur_min:.2f} min")
                             else:
                                 logger.error("  - ERROR: Failed to render chat at 4K!")
@@ -213,24 +208,17 @@ def run_task(args: argparse.Namespace) -> None:
                 if args.do_4k:
                     file_path_video_4k = os.path.join(path_root, video["video"] + "_4k.mp4")
                     if not os.path.exists(file_path_video_4k):
-                        # Upscale to temp first, then copy to data directory
-                        file_path_video_4k_temp = os.path.join(config_dict['temp_path'], video["video"] + "_4k_temp.mp4")
                         logger.info("  - starting upscaling video to 4K...")
                         logger.debug(f"  - {file_path_video_4k}")
                         t0 = time.time()
-                        success = video_editing.upscale_video_to_4k(config_dict, file_path_video, file_path_video_4k_temp, verbose=args.verbose)
+                        success = video_editing.upscale_video_to_4k(config_dict, file_path_video, file_path_video_4k, verbose=args.verbose)
                         dur_min = (time.time() - t0) / 60.0
-                        if success and os.path.exists(file_path_video_4k_temp):
-                            # Copy to data directory
-                            shutil.copy2(file_path_video_4k_temp, file_path_video_4k)
-                            os.remove(file_path_video_4k_temp)
+                        if success:
                             logger.info(f"  - upscaling video to 4K took {dur_min:.2f} min")
                             file_path_video = file_path_video_4k
                         else:
                             logger.error("  - ERROR: Failed to upscale video to 4K! Skipping this video.")
                             logger.error("  - Check if input file exists and run with --verbose for details.")
-                            if os.path.exists(file_path_video_4k_temp):
-                                os.remove(file_path_video_4k_temp)
                             continue  # Skip this video entirely
                     else:
                         file_path_video = file_path_video_4k

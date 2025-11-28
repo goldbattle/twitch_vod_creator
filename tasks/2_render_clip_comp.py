@@ -8,6 +8,7 @@ import json
 import time
 import datetime
 import subprocess
+import shutil
 import logging
 import coloredlogs
 from typing import Dict, List, Any
@@ -31,6 +32,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument('--no-remove', action='store_true', help='Keep rendered files')
     parser.add_argument('--verbose', action='store_true', help='Show verbose output from download operations')
     parser.add_argument('--temp-dir', default=config.get_temp_path("render_clip_comp"), help='Temporary directory for downloads (default: /tmp/tvc_render_clip_comp)')
+    parser.add_argument('--do-4k', action='store_true', help='Upscale videos to 4K (3840x2160) with 25Mbps bitrate and re-render chat at 4K')
     return parser.parse_args()
 
 
@@ -87,6 +89,13 @@ def run_task(args: argparse.Namespace) -> None:
     
     extra.setup_signal_handle()
     
+    # Check if final composite already exists (either MP4 or description file)
+    file_path_composite = os.path.join(path_render, "CLIPS", f"{args.channel}_{args.date_start[:10]}_{args.date_end[:10]}.mp4")
+    file_path_desc = os.path.join(path_render, "CLIPS", f"{args.channel}_{args.date_start[:10]}_{args.date_end[:10]}_desc.txt")
+    if os.path.exists(file_path_composite) or os.path.exists(file_path_desc):
+        logger.error("Final composite video or description file already exists. Skipping individual clip rendering. Delete the existing files to re-render.")
+        exit(-1)
+    
     path_data = os.path.join(path_root, args.channel)
     os.makedirs(path_data, exist_ok=True)
     os.makedirs(config_dict['temp_path'], exist_ok=True)
@@ -120,57 +129,11 @@ def run_task(args: argparse.Namespace) -> None:
                 # Setup paths
                 export_folder = file.get_date_folder(video['created_at'].strftime('%Y-%m-%dT%H:%M:%SZ'))
                 path_data_folder = os.path.join(path_data, export_folder)
-                os.makedirs(path_data_folder, exist_ok=True)
                 
-                file_path_info = os.path.join(path_data_folder, f"{video['id']}_info.json")
-                file_path = os.path.join(path_data_folder, f"{video['id']}.mp4")
-                file_path_chat = os.path.join(path_data_folder, f"{video['id']}_chat.json")
-                
-                # Save/update clip info
-                if not extra.terminated_requested:
-                    if not os.path.exists(file_path_info):
-                        clip_data = twitch_api.create_clip_data(auth["client_id"], auth["client_secret"], video, game_cache)
-                        with open(file_path_info, 'w', encoding="utf-8") as f:
-                            json.dump(clip_data, f, indent=4)
-                        logger.info(f"  - saved clip info: {video['id']}")
-                        logger.debug(f"  - {file_path_info}")
-                    else:
-                        with open(file_path_info) as f:
-                            video_info = json.load(f)
-                        video_info["view_count"] = video['view_count']
-                        if video_info.get("video_offset") == -1:
-                            clip_data = twitch_api.get_clip_data(video['id'])
-                            if clip_data['offset'] != -1:
-                                video_info["video_offset"] = clip_data['offset']
-                                video_info["duration"] = clip_data['duration']
-                        with open(file_path_info, 'w', encoding="utf-8") as f:
-                            json.dump(video_info, f, indent=4)
-                        logger.info("  - updated clip info")
-                        logger.debug(f"  - {file_path_info}")
-                
-                # Download clip
-                if not extra.terminated_requested and not os.path.exists(file_path):
-                    logger.info("  - starting download clip...")
-                    logger.debug(f"  - {file_path}")
-                    t0 = time.time()
-                    video_download.download_clip(config_dict, video['id'], file_path, verbose=args.verbose)
-                    if not os.path.exists(file_path):
-                        logger.error("  - VIDEO DOWNLOAD FAILED!!!!")
-                    else:
-                        dur_min = (time.time() - t0) / 60.0
-                        logger.info(f"  - download clip took {dur_min:.2f} min")
-                
-                # Download chat
-                try:
-                    if not extra.terminated_requested and not os.path.exists(file_path_chat):
-                        logger.info("  - starting download chat...")
-                        logger.debug(f"  - {file_path_chat}")
-                        t0 = time.time()
-                        chat.download_chat(config_dict, video['id'], file_path_chat, is_clip=True, verbose=args.verbose)
-                        dur_min = (time.time() - t0) / 60.0
-                        logger.info(f"  - download chat took {dur_min:.2f} min")
-                except Exception as e:
-                    logger.warning(f"  - not able to download any chat... {e}")
+                # Download complete clip (info, video, chat)
+                video_download.download_complete_clip(
+                    config_dict, video, path_data_folder, game_cache, logger, verbose=args.verbose
+                )
         
         except Exception as e:
             logger.error("twitch api failure.... stopping querying....")
@@ -277,7 +240,21 @@ def run_task(args: argparse.Namespace) -> None:
         file_path_chat = os.path.join(path_data, export_folder, f"{video['id']}_chat.json")
         file_path_chat_mp4 = os.path.join(path_data, export_folder, f"{video['id']}_chat.mp4")
         
-        if not extra.terminated_requested and os.path.exists(file_path_chat) and not os.path.exists(file_path_chat_mp4):
+        # For 4K mode, we need to re-render chat at 4K resolution
+        if args.do_4k and os.path.exists(file_path_chat):
+            file_path_chat_mp4_4k = os.path.join(path_data, export_folder, f"{video['id']}_chat_4k.mp4")
+            if not os.path.exists(file_path_chat_mp4_4k):
+                logger.info("  - starting rendering chat at 4K...")
+                logger.debug(f"  - {file_path_chat_mp4_4k}")
+                t0 = time.time()
+                success = chat.render_chat(config_dict, file_path_chat, file_path_chat_mp4_4k, verbose=args.verbose, is_4k=True)
+                dur_min = (time.time() - t0) / 60.0
+                if success:
+                    logger.info(f"  - rendering chat at 4K took {dur_min:.2f} min")
+                else:
+                    logger.error("  - ERROR: Failed to render chat at 4K!")
+            file_path_chat_mp4 = file_path_chat_mp4_4k
+        elif os.path.exists(file_path_chat) and not os.path.exists(file_path_chat_mp4):
             logger.info("  - starting rendering chat...")
             logger.debug(f"  - {file_path_chat_mp4}")
             t0 = time.time()
@@ -286,6 +263,26 @@ def run_task(args: argparse.Namespace) -> None:
             logger.info(f"  - rendering chat took {dur_min:.2f} min")
         
         file_path = os.path.join(path_data, export_folder, f"{video['id']}.mp4")
+        
+        # Upscale video to 4K if enabled
+        if args.do_4k:
+            file_path_4k = os.path.join(path_data, export_folder, f"{video['id']}_4k.mp4")
+            if not os.path.exists(file_path_4k):
+                logger.info("  - starting upscaling video to 4K...")
+                logger.debug(f"  - {file_path_4k}")
+                t0 = time.time()
+                success = video_editing.upscale_video_to_4k(config_dict, file_path, file_path_4k, verbose=args.verbose)
+                dur_min = (time.time() - t0) / 60.0
+                if success:
+                    logger.info(f"  - upscaling video to 4K took {dur_min:.2f} min")
+                    file_path = file_path_4k
+                else:
+                    logger.error("  - ERROR: Failed to upscale video to 4K! Skipping this clip.")
+                    logger.error("  - Check if input file exists and run with --verbose for details.")
+                    continue  # Skip this clip entirely
+            else:
+                file_path = file_path_4k
+        
         file_path_composite = os.path.join(path_data, export_folder, f"{video['id']}_rendered.mp4")
         
         if not extra.terminated_requested and not os.path.exists(file_path_composite):
@@ -295,7 +292,7 @@ def run_task(args: argparse.Namespace) -> None:
             logger.debug(f"  - {file_path_composite}")
             t0 = time.time()
             video_editing.render_clip_with_title(config_dict, file_path, file_path_chat_mp4 if os.path.exists(file_path_chat_mp4) else None,
-                                  file_path_composite, video["title"])
+                                  file_path_composite, video["title"], is_4k=args.do_4k)
             
             dur_min = (time.time() - t0) / 60.0
             logger.info(f"  - rendering composite took {dur_min:.2f} min")
@@ -303,7 +300,7 @@ def run_task(args: argparse.Namespace) -> None:
     # Combine all clips
     text_file_temp_videos = os.path.join(path_render, "CLIPS", f"{args.channel}_{args.date_start[:10]}_{args.date_end[:10]}.txt")
     file_path_composite = os.path.join(path_render, "CLIPS", f"{args.channel}_{args.date_start[:10]}_{args.date_end[:10]}.mp4")
-    
+
     logger.info("starting to render the composite video (will take a while)...")
     if not extra.terminated_requested and not os.path.exists(file_path_composite):
         os.makedirs(os.path.dirname(file_path_composite), exist_ok=True)
@@ -328,15 +325,25 @@ def run_task(args: argparse.Namespace) -> None:
             for line in f:
                 if line.startswith("file "):
                     video_paths.append(line.split("'")[1])
-        video_editing.combine_videos(config_dict, video_paths, file_path_composite)
-        os.remove(text_file_temp_videos)
         
-        dur_min = (time.time() - t0_big) / 60.0
-        logger.info(f"  - merging videos took {dur_min:.2f} min")
+        if not video_paths:
+            logger.error("  - ERROR: No video files found to combine!")
+            os.remove(text_file_temp_videos)
+        else:
+            logger.debug(f"  - combining {len(video_paths)} video files")
+            success = video_editing.combine_videos(config_dict, video_paths, file_path_composite, quiet=not args.verbose)
+            os.remove(text_file_temp_videos)
+            
+            dur_min = (time.time() - t0_big) / 60.0
+            if success and os.path.exists(file_path_composite):
+                logger.info(f"  - merging videos took {dur_min:.2f} min")
+            else:
+                logger.error(f"  - ERROR: Failed to create composite video after {dur_min:.2f} min")
+                logger.error(f"  - Output file does not exist: {file_path_composite}")
     
-    # Create description file
+    # Create description file (only if composite video was successfully created)
     file_path_desc = os.path.join(path_render, "CLIPS", f"{args.channel}_{args.date_start[:10]}_{args.date_end[:10]}_desc.txt")
-    if not extra.terminated_requested and not os.path.exists(file_path_desc):
+    if not extra.terminated_requested and not os.path.exists(file_path_desc) and os.path.exists(file_path_composite):
         tmp = f"Top {args.max_clips} Between {args.date_start[:10]} to {args.date_end[:10]}\n\n"
         
         num_second_into_video = 0
@@ -377,11 +384,23 @@ def run_task(args: argparse.Namespace) -> None:
     # Remove rendered files if requested
     if not extra.terminated_requested and not args.no_remove and remove_rendered:
         for video in arr_clips:
+            logger.debug(f"{video['id']}")
             datetime_created = datetime.datetime.strptime(video['created_at'], "%Y-%m-%d %H:%M:%SZ")
             export_folder = f"{datetime_created.year:02d}-{datetime_created.month:02d}/"
             tmp_output_file = os.path.join(path_data, export_folder, f"{video['id']}_rendered.mp4")
             if os.path.exists(tmp_output_file):
                 os.remove(tmp_output_file)
+                logger.debug(f"  - removed composite: {tmp_output_file}")
+            if args.do_4k:
+                file_path_4k = os.path.join(path_data, export_folder, f"{video['id']}_4k.mp4")
+                if os.path.exists(file_path_4k):
+                    os.remove(file_path_4k)
+                    logger.debug(f"  - removed 4K upscaled video: {file_path_4k}")
+                
+                file_path_chat_4k = os.path.join(path_data, export_folder, f"{video['id']}_chat_4k.mp4")
+                if os.path.exists(file_path_chat_4k):
+                    os.remove(file_path_chat_4k)
+                    logger.debug(f"  - removed 4K chat render: {file_path_chat_4k}")
 
 
 def main() -> None:
