@@ -29,7 +29,7 @@ TASK_MODULE_MAP = {
     'download_clips': '0_main_clips',
     'download_videos': '0_main_videos',
     'download_videos_single': '0_single_video',
-    'generate_vtt': '0_main_vtt_generation',
+    'videos_post': '0_main_videos_post',
     'web': '1_editor_website',
     'render_clip_comp': '2_render_clip_comp',
     'render_4way': '2_render_4way',
@@ -42,7 +42,7 @@ COMMAND_DESCRIPTIONS = {
     'download_clips': 'Download Twitch clips (video+chat)from a given set of channels',
     'download_videos': 'Download Twitch VODs (video+chat) for a given set of channels, optionally rendering chat and WebVTT transcriptions',
     'download_videos_single': 'Download a single Twitch VOD (video+chat) by ID',
-    'generate_vtt': 'Generate any missing WebVTT transcriptions for videos for a given channel',
+    'videos_post': 'Post-process videos: generate WebVTT transcriptions, render chat, and/or upscale to 4K',
     'render_clip_comp': 'Download and render clip compilation into single video',
     'render_4way': 'Render 4-way video composite into single video',
     'render_segments': 'Render video segments from created YAML editing file',
@@ -84,9 +84,9 @@ def create_parser() -> argparse.ArgumentParser:
     )
     
     subparsers.add_parser(
-        'generate_vtt',
-        help=COMMAND_DESCRIPTIONS['generate_vtt'],
-        description='Generate WebVTT transcriptions for videos in a channel'
+        'videos_post',
+        help=COMMAND_DESCRIPTIONS['videos_post'],
+        description='Post-process videos: generate WebVTT transcriptions, render chat, and/or upscale to 4K'
     )
     
     subparsers.add_parser(
