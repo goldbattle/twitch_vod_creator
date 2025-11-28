@@ -9,6 +9,8 @@ import os
 import json
 import subprocess
 import logging
+import shutil
+import hashlib
 from webvtt import WebVTT, Caption
 from vosk import Model, KaldiRecognizer, SetLogLevel
 from . import utilities_extra
@@ -57,6 +59,17 @@ def transcribe_video(config, video_path, output_path, quiet=True):
     if not os.path.exists(video_path):
         return False
     
+    # Use temp file to avoid partial files if interrupted
+    temp_path = config.get('temp_path', '/tmp')
+    # Use hash of full output path to ensure unique temp files for parallel processing
+    output_hash = hashlib.md5(output_path.encode()).hexdigest()[:12]
+    temp_basename = f"{output_hash}_{os.path.basename(output_path)}"
+    temp_output = os.path.join(temp_path, temp_basename)
+    
+    # Clean up any existing temp file
+    if os.path.exists(temp_output):
+        os.remove(temp_output)
+    
     rec = _load_model(config["vosk_model"])
     
     # Extract audio stream using ffmpeg
@@ -70,14 +83,28 @@ def transcribe_video(config, video_path, output_path, quiet=True):
     process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=stderr)
     
     results = []
-    while True:
-        data = process.stdout.read(4000)
-        if len(data) == 0:
-            break
-        if rec.AcceptWaveform(data):
-            text = rec.Result()
-            results.append(text)
-    results.append(rec.FinalResult())
+    try:
+        while True:
+            if utilities_extra.terminated_requested:
+                process.terminate()
+                if os.path.exists(temp_output):
+                    os.remove(temp_output)
+                return False
+            
+            data = process.stdout.read(4000)
+            if len(data) == 0:
+                break
+            if rec.AcceptWaveform(data):
+                text = rec.Result()
+                results.append(text)
+        results.append(rec.FinalResult())
+    except Exception as e:
+        logger.error(f"Error during transcription: {e}")
+        if os.path.exists(temp_output):
+            os.remove(temp_output)
+        return False
+    finally:
+        process.wait()
     
     # Convert to WebVTT format
     vtt = WebVTT()
@@ -131,7 +158,18 @@ def transcribe_video(config, video_path, output_path, quiet=True):
     if skipped_count > 0:
         logger.warning(f"Skipped {skipped_count} invalid word entries during transcription")
     
-    os.makedirs(os.path.dirname(output_path), exist_ok=True)
-    vtt.save(output_path)
-    return os.path.exists(output_path)
+    # Save to temp file first
+    os.makedirs(os.path.dirname(temp_output), exist_ok=True)
+    vtt.save(temp_output)
+    
+    # Only move to final location if transcription completed successfully
+    if os.path.exists(temp_output) and not utilities_extra.terminated_requested:
+        os.makedirs(os.path.dirname(output_path), exist_ok=True)
+        shutil.move(temp_output, output_path)
+        return os.path.exists(output_path)
+    else:
+        # Clean up temp file if we didn't complete successfully
+        if os.path.exists(temp_output):
+            os.remove(temp_output)
+        return False
 

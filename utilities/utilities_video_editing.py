@@ -9,6 +9,7 @@ import logging
 import os
 import subprocess
 import shutil
+import hashlib
 from . import utilities_extra
 
 logger = logging.getLogger(__name__)
@@ -93,10 +94,10 @@ def get_video_encoder_params(config, preset="slow", use_gpu=None):
         nvenc_preset = nvenc_presets.get(preset, 'p4')
         # NVENC uses -cq for constant quality (similar to CRF)
         # -rc vbr for variable bitrate, -cq sets the quality level
-        return 'h264_nvenc', f'-rc vbr -cq 15 -qmin 15 -qmax 15 -preset {nvenc_preset}'
+        return 'h264_nvenc', f'-rc vbr -cq 10 -qmin 10 -qmax 10 -preset {nvenc_preset}'
     else:
         logger.debug(f"GPU support: Using software encoding (libx264) with preset {preset}")
-        return 'libx264', f'-crf 15 -preset {preset}'
+        return 'libx264', f'-crf 10 -preset {preset}'
 
 
 def time_string_to_seconds(time_str):
@@ -251,9 +252,12 @@ def mute_audio_segments(config, video_path, output_path, mute_segments, quiet=Tr
         return False
     
     temp_path = config.get('temp_path', '/tmp')
-    temp_audio = os.path.join(temp_path, "audio.aac")
-    temp_audio_muted = os.path.join(temp_path, "audio_muted.aac")
-    temp_output = os.path.join(temp_path, os.path.basename(output_path))
+    # Use hash of full output path to ensure unique temp files for parallel processing
+    output_hash = hashlib.md5(output_path.encode()).hexdigest()[:12]
+    temp_audio = os.path.join(temp_path, f"{output_hash}_audio.aac")
+    temp_audio_muted = os.path.join(temp_path, f"{output_hash}_audio_muted.aac")
+    temp_basename = f"{output_hash}_{os.path.basename(output_path)}"
+    temp_output = os.path.join(temp_path, temp_basename)
     
     # Clean up temp files
     for f in [temp_audio, temp_audio_muted]:
@@ -332,7 +336,10 @@ def upscale_video_to_4k(config, video_path, output_path, verbose=False):
         return False
     
     temp_path = config.get('temp_path', '/tmp')
-    temp_output = os.path.join(temp_path, os.path.basename(output_path))
+    # Use hash of full output path to ensure unique temp files for parallel processing
+    output_hash = hashlib.md5(output_path.encode()).hexdigest()[:12]
+    temp_basename = f"{output_hash}_{os.path.basename(output_path)}"
+    temp_output = os.path.join(temp_path, temp_basename)
     
     loglevel = "error" if verbose else "quiet"
     codec, encoder_params = get_video_encoder_params(config, preset="slow")
@@ -405,7 +412,7 @@ def render_clip_with_title(config, video_path, chat_path, output_path, title_tex
     stdout = subprocess.DEVNULL if quiet else None
     stderr = subprocess.DEVNULL if quiet else None
     
-    codec, encoder_params = get_video_encoder_params(config, preset="fast")
+    codec, encoder_params = get_video_encoder_params(config, preset="slow")
     
     # For 4K: scale video to 3292x2160, chat to 548x2160, total 3840x2160
     # Scale title text proportionally: 85 * (2160/926) ≈ 198
@@ -423,7 +430,7 @@ def render_clip_with_title(config, video_path, chat_path, output_path, title_tex
                 f':alpha=\'if(lt(t,0),0,if(lt(t,0),(t-0)/0,if(lt(t,4),1,if(lt(t,4.5),(0.5-(t-4))/0.5,0))))\'[tmp1]; '
                 f' [1:v] scale=548:2160 [tmp2];'
                 f' [tmp1][tmp2] hstack=inputs=2:shortest=1" -shortest '
-                f' -c:a aac -ar 48k -ac 2 -vcodec {codec} {encoder_params.replace("-cq 15", "-cq 19").replace("-crf 15", "-crf 19")} '
+                f' -c:a aac -ar 48k -ac 2 -vcodec {codec} {encoder_params} '
                 f' -video_track_timescale 90000 -avoid_negative_ts make_zero -map_chapters -1 -fflags +genpts -framerate 60 '
                 f' {output_path}'
             )
@@ -434,7 +441,7 @@ def render_clip_with_title(config, video_path, chat_path, output_path, title_tex
                 f' -vf "scale=3292:2160,pad=3840:2160:0:0:black,'
                 f'drawtext=text=\'{title_clean}\':x=58:y=58:fontfile={config["font"]}:fontsize=198:fontcolor=white:bordercolor=black:borderw=12'
                 f':alpha=\'if(lt(t,0),0,if(lt(t,0),(t-0)/0,if(lt(t,4),1,if(lt(t,4.5),(0.5-(t-4))/0.5,0))))\' "'
-                f' -c:a aac -ar 48k -ac 2 -vcodec {codec} {encoder_params.replace("-cq 15", "-cq 19").replace("-crf 15", "-crf 19")} '
+                f' -c:a aac -ar 48k -ac 2 -vcodec {codec} {encoder_params} '
                 f' -video_track_timescale 90000 -avoid_negative_ts make_zero -map_chapters -1 -fflags +genpts -framerate 60 '
                 f' {output_path}'
             )
@@ -448,7 +455,7 @@ def render_clip_with_title(config, video_path, chat_path, output_path, title_tex
                 f' [tmp0]drawtext=text=\'{title_clean}\':x=25:y=25:fontfile={config["font"]}:fontsize=85:fontcolor=white:bordercolor=black:borderw=5'
                 f':alpha=\'if(lt(t,0),0,if(lt(t,0),(t-0)/0,if(lt(t,4),1,if(lt(t,4.5),(0.5-(t-4))/0.5,0))))\'[tmp1]; '
                 f' [tmp1][1:v] overlay=shortest=0:x=1646:y=0:eof_action=endall" -shortest '
-                f' -c:a aac -ar 48k -ac 2 -vcodec {codec} {encoder_params.replace("-cq 15", "-cq 19").replace("-crf 15", "-crf 19")} '
+                f' -c:a aac -ar 48k -ac 2 -vcodec {codec} {encoder_params} '
                 f' -video_track_timescale 90000 -avoid_negative_ts make_zero -map_chapters -1 -fflags +genpts -framerate 60 '
                 f' {output_path}'
             )
@@ -459,7 +466,7 @@ def render_clip_with_title(config, video_path, chat_path, output_path, title_tex
                 f' -vf "scale=1646x926,pad=1920:926:0:90:black,'
                 f'drawtext=text=\'{title_clean}\':x=25:y=25:fontfile={config["font"]}:fontsize=85:fontcolor=white:bordercolor=black:borderw=5'
                 f':alpha=\'if(lt(t,0),0,if(lt(t,0),(t-0)/0,if(lt(t,4),1,if(lt(t,4.5),(0.5-(t-4))/0.5,0))))\' "'
-                f' -c:a aac -ar 48k -ac 2 -vcodec {codec} {encoder_params.replace("-cq 15", "-cq 19").replace("-crf 15", "-crf 19")} '
+                f' -c:a aac -ar 48k -ac 2 -vcodec {codec} {encoder_params} '
                 f' -video_track_timescale 90000 -avoid_negative_ts make_zero -map_chapters -1 -fflags +genpts -framerate 60 '
                 f' {output_path}'
             )

@@ -9,6 +9,7 @@ import logging
 import os
 import subprocess
 import shutil
+import hashlib
 from . import utilities_extra
 
 logger = logging.getLogger(__name__)
@@ -23,7 +24,10 @@ def download_chat(config, content_id, output_path, is_clip=False, verbose=False)
         return False
     
     temp_path = config.get('temp_path', '/tmp')
-    temp_output = os.path.join(temp_path, os.path.basename(output_path))
+    # Use hash of full output path to ensure unique temp files for parallel processing
+    output_hash = hashlib.md5(output_path.encode()).hexdigest()[:12]
+    temp_basename = f"{output_hash}_{os.path.basename(output_path)}"
+    temp_output = os.path.join(temp_path, temp_basename)
     
     cmd = (
         f'{config["twitch_cli"]} chatdownload'
@@ -69,7 +73,10 @@ def render_chat(config, chat_json_path, output_path,
         font_size = int(font_size * (2160 / 926))
     
     temp_path = config.get('temp_path', '/tmp')
-    temp_output = os.path.join(temp_path, os.path.basename(output_path))
+    # Use hash of full output path to ensure unique temp files for parallel processing
+    output_hash = hashlib.md5(output_path.encode()).hexdigest()[:12]
+    temp_basename = f"{output_hash}_{os.path.basename(output_path)}"
+    temp_output = os.path.join(temp_path, temp_basename)
     
     cmd = (
         f'{config["twitch_cli"]} chatrender'

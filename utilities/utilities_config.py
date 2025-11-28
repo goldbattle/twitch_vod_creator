@@ -37,6 +37,8 @@ def load_config(base_path=None):
         'twitch_cli': os.path.join(base_path, "thirdparty", "Twitch_Downloader_1.56.2", "TwitchDownloaderCLI"),
         'ffmpeg': os.path.join(base_path, "thirdparty", "ffmpeg-4.3.1-amd64-static", "ffmpeg"),
         'ffprobe': os.path.join(base_path, "thirdparty", "ffmpeg-4.3.1-amd64-static", "ffprobe"),
+        # 'ffmpeg': os.path.join(base_path, "thirdparty", "ffmpeg-arch", "ffmpeg"),
+        # 'ffprobe': os.path.join(base_path, "thirdparty", "ffmpeg-arch", "ffprobe"),
         # 'ffmpeg': os.path.join(base_path, "thirdparty", "ffmpeg-sr", "bin", "ffmpeg.wrapper"),
         # 'ffprobe': os.path.join(base_path, "thirdparty", "ffmpeg-sr", "bin", "ffprobe.wrapper"),
         # 'superres_model': os.path.join(base_path, "thirdparty", "ffmpeg-sr", "sr", "espcn.pb"),
