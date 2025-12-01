@@ -20,6 +20,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument('vod_id', type=int, help='VOD ID to download')
     parser.add_argument('--no-chat', action='store_true', help='Skip chat rendering')
     parser.add_argument('--no-transcribe', action='store_true', help='Skip audio transcription')
+    parser.add_argument('--disable-4k', action='store_true', help='Disable rendering chat at 4K resolution')
     parser.add_argument('--verbose', action='store_true', help='Show verbose output from download operations')
     parser.add_argument('--temp-dir', default=config.get_temp_path("single_video"), help='Temporary directory for downloads (default: /tmp/tvc_single_video)')
     return parser.parse_args()
@@ -66,7 +67,11 @@ def run_task(args: argparse.Namespace) -> None:
     file_path_info = os.path.join(path_data_folder, f"{vod_id}_info.json")
     file_path = os.path.join(path_data_folder, f"{vod_id}.mp4")
     file_path_chat = os.path.join(path_data_folder, f"{vod_id}_chat.json")
-    file_path_chat_mp4 = os.path.join(path_data_folder, f"{vod_id}_chat.mp4")
+    # Use _chat_4k.mp4 if 4K is enabled (default), otherwise _chat.mp4
+    if not args.disable_4k:
+        file_path_chat_mp4 = os.path.join(path_data_folder, f"{vod_id}_chat_4k.mp4")
+    else:
+        file_path_chat_mp4 = os.path.join(path_data_folder, f"{vod_id}_chat.mp4")
     file_path_webvtt = os.path.join(path_data_folder, f"{vod_id}.vtt")
     
     # Save video info
@@ -110,7 +115,7 @@ def run_task(args: argparse.Namespace) -> None:
             logger.info("starting rendering chat...")
             logger.debug(f"  - {file_path_chat_mp4}")
             t0 = time.time()
-            chat.render_chat(config_dict, file_path_chat, file_path_chat_mp4, verbose=args.verbose)
+            chat.render_chat(config_dict, file_path_chat, file_path_chat_mp4, verbose=args.verbose, is_4k=not args.disable_4k)
             if not os.path.exists(file_path_chat_mp4):
                 logger.warning("Warning: Render file was not created, render may have failed")
             else:

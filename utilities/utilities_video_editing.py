@@ -94,10 +94,10 @@ def get_video_encoder_params(config, preset="slow", use_gpu=None):
         nvenc_preset = nvenc_presets.get(preset, 'p4')
         # NVENC uses -cq for constant quality (similar to CRF)
         # -rc vbr for variable bitrate, -cq sets the quality level
-        return 'h264_nvenc', f'-rc vbr -cq 10 -qmin 10 -qmax 10 -preset {nvenc_preset}'
+        return 'h264_nvenc', f'-rc vbr -cq 23 -preset {nvenc_preset}'
     else:
         logger.debug(f"GPU support: Using software encoding (libx264) with preset {preset}")
-        return 'libx264', f'-crf 10 -preset {preset}'
+        return 'libx264', f'-crf 23 -preset {preset}'
 
 
 def time_string_to_seconds(time_str):
@@ -122,7 +122,7 @@ def render_segment_with_chat(config, video_path, chat_path, output_path,
     
     # Get encoder parameters (NVENC if GPU available, otherwise libx264)
     if is_4k:
-        codec, encoder_params = get_video_encoder_params(config, preset="slow")
+        codec, encoder_params = get_video_encoder_params(config, preset="fast")
         # For 4K: video 3292x2160, chat 548x2160, total 3840x2160
         cmd = (
             f'{config["ffmpeg"]} '
@@ -138,7 +138,7 @@ def render_segment_with_chat(config, video_path, chat_path, output_path,
             f' {output_path}'
         )
     else:
-        codec, encoder_params = get_video_encoder_params(config, preset="slow")
+        codec, encoder_params = get_video_encoder_params(config, preset="fast")
         cmd = (
             f'{config["ffmpeg"]} '
             f' -ss {start_time} -i {video_path} -to {end_time}'
@@ -183,7 +183,7 @@ def render_segment_without_chat(config, video_path, output_path,
     loglevel = "error" if verbose else "quiet"
     if is_4k:
         # For 4K: 3840x2160 with CRF 15
-        codec, encoder_params = get_video_encoder_params(config, preset="slow")
+        codec, encoder_params = get_video_encoder_params(config, preset="fast")
         cmd = (
             f'{config["ffmpeg"]} -hide_banner -loglevel {loglevel} -stats'
             f' -ss {start_time} -i {video_path} -t {seg_length}'
@@ -193,7 +193,7 @@ def render_segment_without_chat(config, video_path, output_path,
             f' {output_path}'
         )
     else:
-        codec, encoder_params = get_video_encoder_params(config, preset="slow")
+        codec, encoder_params = get_video_encoder_params(config, preset="fast")
         cmd = (
             f'{config["ffmpeg"]} -hide_banner -loglevel {loglevel} -stats'
             f' -ss {start_time} -i {video_path} -t {seg_length}'
@@ -342,7 +342,7 @@ def upscale_video_to_4k(config, video_path, output_path, verbose=False):
     temp_output = os.path.join(temp_path, temp_basename)
     
     loglevel = "error" if verbose else "quiet"
-    codec, encoder_params = get_video_encoder_params(config, preset="slow")
+    codec, encoder_params = get_video_encoder_params(config, preset="fast")
     
     # Build video filter chain
     # https://ffmpeg.org/ffmpeg-filters.html#sr-1
@@ -412,14 +412,14 @@ def render_clip_with_title(config, video_path, chat_path, output_path, title_tex
     stdout = subprocess.DEVNULL if quiet else None
     stderr = subprocess.DEVNULL if quiet else None
     
-    codec, encoder_params = get_video_encoder_params(config, preset="slow")
+    codec, encoder_params = get_video_encoder_params(config, preset="fast")
     
     # For 4K: scale video to 3292x2160, chat to 548x2160, total 3840x2160
     # Scale title text proportionally: 85 * (2160/926) ≈ 198
     # Scale position: 25 * (2160/926) ≈ 58
     # Scale border: 5 * (2160/926) ≈ 12
     if is_4k:
-        codec, encoder_params = get_video_encoder_params(config, preset="slow")
+        codec, encoder_params = get_video_encoder_params(config, preset="fast")
         if chat_path and os.path.exists(chat_path):
             cmd = (
                 f'{config["ffmpeg"]} -hide_banner -loglevel quiet -stats '

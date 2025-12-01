@@ -50,7 +50,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument('--file-history', help='History YAML file (relative to config directory)')
     parser.add_argument('--verbose', action='store_true', help='Show verbose output from operations')
     parser.add_argument('--temp-dir', default=config.get_temp_path("render_segments"), help='Temporary directory for downloads (default: /tmp/tvc_render_segments)')
-    parser.add_argument('--do-4k', action='store_true', help='Upscale videos to 4K (3840x2160) with 25Mbps bitrate and re-render chat at 4K')
+    parser.add_argument('--disable-4k', action='store_true', help='Disable upscaling videos to 4K (3840x2160) with 25Mbps bitrate and re-render chat at 4K')
     return parser.parse_args()
 
 
@@ -182,7 +182,7 @@ def run_task(args: argparse.Namespace) -> None:
                     file_path_chat_mp4 = os.path.join(path_root, video["video"] + "_chat.mp4")
                     
                     # For 4K mode, we need to re-render chat at 4K resolution
-                    if args.do_4k and os.path.exists(file_path_chat):
+                    if not args.disable_4k and os.path.exists(file_path_chat):
                         file_path_chat_mp4_4k = os.path.join(path_root, video["video"] + "_chat_4k.mp4")
                         if not os.path.exists(file_path_chat_mp4_4k):
                             logger.info("  - starting rendering chat at 4K...")
@@ -205,7 +205,7 @@ def run_task(args: argparse.Namespace) -> None:
                         logger.info(f"  - rendering chat took {dur_min:.2f} min")
                 
                 # Upscale video to 4K if enabled
-                if args.do_4k:
+                if not args.disable_4k:
                     file_path_video_4k = os.path.join(path_root, video["video"] + "_4k.mp4")
                     if not os.path.exists(file_path_video_4k):
                         logger.info("  - starting upscaling video to 4K...")
@@ -259,7 +259,7 @@ def run_task(args: argparse.Namespace) -> None:
                             logger.debug(f"  - chat offset: {chat_offset} seconds")
                         success = video_editing.render_segment_with_chat(
                             config_dict, file_path_video, file_path_chat_mp4, tmp_output_file,
-                            seg_start[idx], seg_end[idx], chat_offset, verbose=args.verbose, is_4k=args.do_4k
+                            seg_start[idx], seg_end[idx], chat_offset, verbose=args.verbose, is_4k=not args.disable_4k
                         )
                         if not success:
                             logger.error("  - ERROR: Failed to render segment! Check if input files exist and run with --verbose for details.")
@@ -269,7 +269,7 @@ def run_task(args: argparse.Namespace) -> None:
                         logger.debug(f"  - {tmp_output_file}")
                         success = video_editing.render_segment_without_chat(
                             config_dict, file_path_video, tmp_output_file,
-                            seg_start[idx], seg_end[idx], verbose=args.verbose, is_4k=args.do_4k
+                            seg_start[idx], seg_end[idx], verbose=args.verbose, is_4k=not args.disable_4k
                         )
                         if not success:
                             logger.error("  - ERROR: Failed to render segment! Check if input files exist and run with --verbose for details.")

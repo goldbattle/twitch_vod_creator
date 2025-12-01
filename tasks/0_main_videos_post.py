@@ -61,7 +61,7 @@ def process_chat(chat_json_path: str, chat_mp4_path: str, config_dict: Dict[str,
         logger.info(f"[{worker_id}] starting rendering chat {os.path.basename(chat_json_path)}...")
         logger.debug(f"[{worker_id}]   - {chat_mp4_path}")
         t0 = time.time()
-        success = chat.render_chat(config_dict, chat_json_path, chat_mp4_path, verbose=args.verbose, is_4k=args.do_4k)
+        success = chat.render_chat(config_dict, chat_json_path, chat_mp4_path, verbose=args.verbose, is_4k=not args.disable_4k)
         dur_min = (time.time() - t0) / 60.0
         if success:
             logger.info(f"[{worker_id}] rendering chat {os.path.basename(chat_json_path)} took {dur_min:.2f} min")
@@ -128,7 +128,7 @@ def process_video_batch(video_path: Optional[str], vtt_path: Optional[str], vide
         results['chat'] = {'success': success, 'duration': dur_min}
     
     # Process 4K if requested and we have a video
-    if args.do_4k and video_path is not None and video_4k_path is not None:
+    if not args.disable_4k and video_path is not None and video_4k_path is not None:
         success, dur_min = process_4k(video_path, video_4k_path, config_dict, args, logger)
         results['4k'] = {'success': success, 'duration': dur_min}
     
@@ -212,7 +212,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument('--min-age', type=int, default=60, help='Minimum file age in seconds')
     parser.add_argument('--do-vtt', action='store_true', help='Generate WebVTT transcriptions for videos')
     parser.add_argument('--do-chat-render', action='store_true', help='Render chat JSON files to video')
-    parser.add_argument('--do-4k', action='store_true', help='Upscale videos to 4K')
+    parser.add_argument('--disable-4k', action='store_true', help='Disable upscaling videos to 4K')
     parser.add_argument('--parallel', type=int, default=6, help='Number of parallel tasks to run (default: 6)')
     parser.add_argument('--verbose', action='store_true', help='Show verbose output from operations')
     parser.add_argument('--temp-dir', default=config.get_temp_path("videos_post"), help='Temporary directory for operations (default: /tmp/tvc_videos_post)')
@@ -254,20 +254,20 @@ def run_task(args: argparse.Namespace) -> None:
                 break
             
             # Find video files (mp4 without underscore) for VTT and 4K
-            if args.do_vtt or args.do_4k:
+            if args.do_vtt or not args.disable_4k:
                 ext = filename.split(os.extsep)
                 if len(ext) == 2 and ext[1] == "mp4" and "_" not in filename:
                     video_path = os.path.join(subdir, filename)
                     vtt_path = os.path.join(subdir, ext[0] + ".vtt") if args.do_vtt else None
-                    video_4k_path = os.path.join(subdir, ext[0] + "_4k.mp4") if args.do_4k else None
+                    video_4k_path = os.path.join(subdir, ext[0] + "_4k.mp4") if not args.disable_4k else None
                     videos_to_process.append((video_path, vtt_path, video_4k_path))
             
             # Find chat JSON files for chat rendering
             if args.do_chat_render:
                 if filename.endswith("_chat.json"):
                     chat_json_path = os.path.join(subdir, filename)
-                    # Use _chat_4k.mp4 if --do-4k is specified, otherwise _chat.mp4
-                    if args.do_4k:
+                    # Use _chat_4k.mp4 if 4K is enabled (default), otherwise _chat.mp4
+                    if not args.disable_4k:
                         chat_mp4_path = chat_json_path.replace("_chat.json", "_chat_4k.mp4")
                     else:
                         chat_mp4_path = chat_json_path.replace("_chat.json", "_chat.mp4")
@@ -330,7 +330,7 @@ def run_task(args: argparse.Namespace) -> None:
     chat_total = sum(1 for _, _, _, chat_json_path, chat_mp4_path in batches 
                     if args.do_chat_render and chat_json_path is not None and chat_mp4_path is not None)
     upscale_total = sum(1 for video_path, _, video_4k_path, _, _ in batches 
-                        if args.do_4k and video_path is not None and video_4k_path is not None)
+                        if not args.disable_4k and video_path is not None and video_4k_path is not None)
     
     def batch_result_handler(future, task_args):
         video_path, vtt_path, video_4k_path, chat_json_path, chat_mp4_path = task_args
@@ -360,7 +360,7 @@ def run_task(args: argparse.Namespace) -> None:
                 stats['vtt_failed'] += 1
             if args.do_chat_render and chat_json_path is not None:
                 stats['chat_failed'] += 1
-            if args.do_4k and video_4k_path is not None:
+            if not args.disable_4k and video_4k_path is not None:
                 stats['upscale_failed'] += 1
     
     completed = run_parallel_tasks(batches, process_video_batch, "video batches",
@@ -371,7 +371,7 @@ def run_task(args: argparse.Namespace) -> None:
         logger.info(f"  - VTT: {stats['vtt_completed']}/{vtt_total} completed ({stats['vtt_failed']} failed)")
     if args.do_chat_render:
         logger.info(f"  - Chat: {stats['chat_completed']}/{chat_total} completed ({stats['chat_failed']} failed)")
-    if args.do_4k:
+    if not args.disable_4k:
         logger.info(f"  - 4K: {stats['upscale_completed']}/{upscale_total} completed ({stats['upscale_failed']} failed)")
 
 

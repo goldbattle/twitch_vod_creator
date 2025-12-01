@@ -56,7 +56,7 @@ def download_chat(config, content_id, output_path, is_clip=False, verbose=False)
 
 
 def render_chat(config, chat_json_path, output_path, 
-                height=926, width=274, update_rate=0.1, framerate=60,
+                height=926, width=274, update_rate=0.2, framerate=30,
                 font_size=15, verbose=False, is_4k=False):
     """Render chat JSON to video."""
     if os.path.exists(output_path):
@@ -96,13 +96,21 @@ def render_chat(config, chat_json_path, output_path,
     process = subprocess.Popen(cmd, shell=True, stdout=stdout, stderr=stderr)
     return_code = process.wait()
     
-    if return_code != 0:
-        logger.error(f"Error: TwitchDownloaderCLI chatrender returned exit code {return_code}")
-        return False
-    
-    if os.path.exists(temp_output):
+    # Check if file was created even if return code is non-zero
+    # (process might crash after writing the file, e.g. exit code -11 segfault)
+    if os.path.exists(temp_output) and os.path.getsize(temp_output) > 0:
+        if return_code != 0:
+            logger.warning(f"TwitchDownloaderCLI chatrender returned exit code {return_code}, but output file exists and appears valid. Proceeding...")
         os.makedirs(os.path.dirname(output_path), exist_ok=True)
         shutil.move(temp_output, output_path)
         return True
+    
+    # File doesn't exist or is invalid, check return code for error details
+    if return_code != 0:
+        logger.error(f"Error: TwitchDownloaderCLI chatrender returned exit code {return_code} and output file was not created")
+        return False
+    
+    # Return code is 0 but file doesn't exist - unexpected
+    logger.error(f"Error: TwitchDownloaderCLI chatrender returned exit code 0 but output file was not created")
     return False
 

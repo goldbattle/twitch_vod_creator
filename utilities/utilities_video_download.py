@@ -18,7 +18,7 @@ from . import utilities_chat as chat
 logger = logging.getLogger(__name__)
 
 
-def download_vod(config, vod_id, output_path, quality="1080p60", verbose=False):
+def download_vod(config, vod_id, output_path, quality="best", verbose=False):
     """Download a VOD video."""
     if os.path.exists(output_path):
         return True
