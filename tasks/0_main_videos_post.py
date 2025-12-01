@@ -314,6 +314,16 @@ def run_task(args: argparse.Namespace) -> None:
             if video_id not in processed_chat_ids:
                 batches.append((None, None, None, chat_json_path, chat_mp4_path))
     
+    # Sort batches in numerical/alphabetical order by video ID or chat ID
+    def get_batch_sort_key(batch):
+        video_path, _, _, chat_json_path, _ = batch
+        if video_path:
+            return os.path.basename(video_path)
+        elif chat_json_path:
+            return os.path.basename(chat_json_path)
+        return ""
+    batches.sort(key=get_batch_sort_key)
+    
     # Track statistics for processing
     stats = {
         'vtt_completed': 0,
