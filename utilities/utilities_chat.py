@@ -78,6 +78,8 @@ def render_chat(config, chat_json_path, output_path,
     temp_basename = f"{output_hash}_{os.path.basename(output_path)}"
     temp_output = os.path.join(temp_path, temp_basename)
     
+    #  --sharpening true has 10% compute overhead?
+    # https://github.com/lay295/TwitchDownloader/issues/949#issuecomment-1899822738
     cmd = (
         f'{config["twitch_cli"]} chatrender'
         f' -i {chat_json_path} -o {temp_output}'
@@ -85,7 +87,7 @@ def render_chat(config, chat_json_path, output_path,
         f' -h {height} -w {width}'
         f' --update-rate {update_rate} --framerate {framerate} --font-size {font_size}'
         f' --bttv true --ffz true --stv true'
-        f' --sub-messages true --badges true --sharpening true --dispersion true'
+        f' --sub-messages true --badges true --dispersion true'
         f' --collision Overwrite --banner false'
         f' --temp-path "{temp_path}"'
     )
@@ -98,12 +100,15 @@ def render_chat(config, chat_json_path, output_path,
     
     # Check if file was created even if return code is non-zero
     # (process might crash after writing the file, e.g. exit code -11 segfault)
+    # TODO: root cause why -11 data/sodapoppin/2025-01/2341488283_chat.json
     if os.path.exists(temp_output) and os.path.getsize(temp_output) > 0:
-        if return_code != 0:
-            logger.warning(f"TwitchDownloaderCLI chatrender returned exit code {return_code}, but output file exists and appears valid. Proceeding...")
-        os.makedirs(os.path.dirname(output_path), exist_ok=True)
-        shutil.move(temp_output, output_path)
-        return True
+        if return_code == 0 or return_code == -11:
+            os.makedirs(os.path.dirname(output_path), exist_ok=True)
+            shutil.move(temp_output, output_path)
+            return True
+        else:
+            logger.error(f"Error: TwitchDownloaderCLI chatrender returned exit code {return_code} but output file was created")
+            return False
     
     # File doesn't exist or is invalid, check return code for error details
     if return_code != 0:

@@ -264,25 +264,6 @@ def run_task(args: argparse.Namespace) -> None:
         
         file_path = os.path.join(path_data, export_folder, f"{video['id']}.mp4")
         
-        # Upscale video to 4K if enabled
-        if not args.disable_4k:
-            file_path_4k = os.path.join(path_data, export_folder, f"{video['id']}_4k.mp4")
-            if not os.path.exists(file_path_4k):
-                logger.info("  - starting upscaling video to 4K...")
-                logger.debug(f"  - {file_path_4k}")
-                t0 = time.time()
-                success = video_editing.upscale_video_to_4k(config_dict, file_path, file_path_4k, verbose=args.verbose)
-                dur_min = (time.time() - t0) / 60.0
-                if success:
-                    logger.info(f"  - upscaling video to 4K took {dur_min:.2f} min")
-                    file_path = file_path_4k
-                else:
-                    logger.error("  - ERROR: Failed to upscale video to 4K! Skipping this clip.")
-                    logger.error("  - Check if input file exists and run with --verbose for details.")
-                    continue  # Skip this clip entirely
-            else:
-                file_path = file_path_4k
-        
         file_path_composite = os.path.join(path_data, export_folder, f"{video['id']}_rendered.mp4")
         
         if not extra.terminated_requested and not os.path.exists(file_path_composite):
@@ -392,11 +373,6 @@ def run_task(args: argparse.Namespace) -> None:
                 os.remove(tmp_output_file)
                 logger.debug(f"  - removed composite: {tmp_output_file}")
             if not args.disable_4k:
-                file_path_4k = os.path.join(path_data, export_folder, f"{video['id']}_4k.mp4")
-                if os.path.exists(file_path_4k):
-                    os.remove(file_path_4k)
-                    logger.debug(f"  - removed 4K upscaled video: {file_path_4k}")
-                
                 file_path_chat_4k = os.path.join(path_data, export_folder, f"{video['id']}_chat_4k.mp4")
                 if os.path.exists(file_path_chat_4k):
                     os.remove(file_path_chat_4k)

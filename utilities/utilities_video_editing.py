@@ -124,11 +124,12 @@ def render_segment_with_chat(config, video_path, chat_path, output_path,
     if is_4k:
         codec, encoder_params = get_video_encoder_params(config, preset="fast")
         # For 4K: video 3292x2160, chat 548x2160, total 3840x2160
+        # Apply upscaling with noise reduction: hqdn3d + lanczos scaling
         cmd = (
             f'{config["ffmpeg"]} '
             f' -ss {start_time} -i {video_path} -to {end_time}'
             f' -ss {seg_start_chat} -i {chat_path}'
-            f' -filter_complex "[0:v] scale=3292:2160 [tmp1];'
+            f' -filter_complex "[0:v] hqdn3d=luma_spatial=2,scale=3292:2160:flags=lanczos+accurate_rnd+full_chroma_int [tmp1];'
             f' [1:v] scale=548:2160 [tmp2];'
             f' [tmp1][tmp2]hstack=inputs=2:shortest=1[stack]"'
             f' -shortest -map "[stack]" -map 0:a'
@@ -182,12 +183,12 @@ def render_segment_without_chat(config, video_path, output_path,
     
     loglevel = "error" if verbose else "quiet"
     if is_4k:
-        # For 4K: 3840x2160 with CRF 15
+        # For 4K: 3840x2160 with upscaling (hqdn3d + lanczos scaling)
         codec, encoder_params = get_video_encoder_params(config, preset="fast")
         cmd = (
             f'{config["ffmpeg"]} -hide_banner -loglevel {loglevel} -stats'
             f' -ss {start_time} -i {video_path} -t {seg_length}'
-            f' -vf scale=3840:2160'
+            f' -vf hqdn3d=luma_spatial=2,scale=3840:2160:flags=lanczos+accurate_rnd+full_chroma_int'
             f' -c:a aac -vcodec {codec} {encoder_params}'
             f' -avoid_negative_ts make_zero -vsync 2 -map_chapters -1'
             f' {output_path}'
@@ -425,7 +426,7 @@ def render_clip_with_title(config, video_path, chat_path, output_path, title_tex
                 f'{config["ffmpeg"]} -hide_banner -loglevel quiet -stats '
                 f' -i {video_path}'
                 f' -i {chat_path}'
-                f' -filter_complex "[0:v] scale=3292:2160 [tmp0];'
+                f' -filter_complex "[0:v] hqdn3d=luma_spatial=2,scale=3292:2160:flags=lanczos+accurate_rnd+full_chroma_int [tmp0];'
                 f' [tmp0]drawtext=text=\'{title_clean}\':x=58:y=58:fontfile={config["font"]}:fontsize=198:fontcolor=white:bordercolor=black:borderw=12'
                 f':alpha=\'if(lt(t,0),0,if(lt(t,0),(t-0)/0,if(lt(t,4),1,if(lt(t,4.5),(0.5-(t-4))/0.5,0))))\'[tmp1]; '
                 f' [1:v] scale=548:2160 [tmp2];'
@@ -438,7 +439,7 @@ def render_clip_with_title(config, video_path, chat_path, output_path, title_tex
             cmd = (
                 f'{config["ffmpeg"]} -hide_banner -loglevel quiet -stats '
                 f' -i {video_path}'
-                f' -vf "scale=3292:2160,pad=3840:2160:0:0:black,'
+                f' -vf "hqdn3d=luma_spatial=2,scale=3292:2160:flags=lanczos+accurate_rnd+full_chroma_int,pad=3840:2160:0:0:black,'
                 f'drawtext=text=\'{title_clean}\':x=58:y=58:fontfile={config["font"]}:fontsize=198:fontcolor=white:bordercolor=black:borderw=12'
                 f':alpha=\'if(lt(t,0),0,if(lt(t,0),(t-0)/0,if(lt(t,4),1,if(lt(t,4.5),(0.5-(t-4))/0.5,0))))\' "'
                 f' -c:a aac -ar 48k -ac 2 -vcodec {codec} {encoder_params} '

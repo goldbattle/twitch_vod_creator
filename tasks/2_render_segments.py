@@ -204,28 +204,8 @@ def run_task(args: argparse.Namespace) -> None:
                         dur_min = (time.time() - t0) / 60.0
                         logger.info(f"  - rendering chat took {dur_min:.2f} min")
                 
-                # Upscale video to 4K if enabled
-                if not args.disable_4k:
-                    file_path_video_4k = os.path.join(path_root, video["video"] + "_4k.mp4")
-                    if not os.path.exists(file_path_video_4k):
-                        logger.info("  - starting upscaling video to 4K...")
-                        logger.debug(f"  - {file_path_video_4k}")
-                        t0 = time.time()
-                        success = video_editing.upscale_video_to_4k(config_dict, file_path_video, file_path_video_4k, verbose=args.verbose)
-                        dur_min = (time.time() - t0) / 60.0
-                        if success:
-                            logger.info(f"  - upscaling video to 4K took {dur_min:.2f} min")
-                            file_path_video = file_path_video_4k
-                        else:
-                            logger.error("  - ERROR: Failed to upscale video to 4K! Skipping this video.")
-                            logger.error("  - Check if input file exists and run with --verbose for details.")
-                            continue  # Skip this video entirely
-                    else:
-                        file_path_video = file_path_video_4k
-                
                 # Render composite
                 os.makedirs(os.path.dirname(file_path_composite), exist_ok=True)
-                
                 if os.path.exists(file_path_composite_tmp):
                     logger.debug(f"  - deleting temp file: {file_path_composite_tmp}")
                     os.remove(file_path_composite_tmp)
