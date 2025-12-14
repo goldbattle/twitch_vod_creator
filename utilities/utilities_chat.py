@@ -70,7 +70,8 @@ def render_chat(config, chat_json_path, output_path,
         height = 2160
         width = 548
         # Scale font size proportionally: 15 * (2160/926) ≈ 35
-        font_size = int(font_size * (2160 / 926))
+        # I found the font looked a bit large, so I'm scaling it down by 25%
+        font_size = int(font_size * (2160 / 926) * 0.75)
     
     temp_path = config.get('temp_path', '/tmp')
     # Use hash of full output path to ensure unique temp files for parallel processing

@@ -22,9 +22,16 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument('--max-videos', required=True, type=int, help='Maximum number of videos to download per type (archive/highlight/upload)')
     parser.add_argument('--render-chat', required=False, nargs='+', help='Whether to render chat for each channel (true/false, must match number of channels). Defaults to false for all channels if not specified.')
     parser.add_argument('--render-webvtt', required=False, nargs='+', help='Whether to generate WebVTT transcriptions for each channel (true/false, must match number of channels). Defaults to false for all channels if not specified.')
-    parser.add_argument('--disable-4k', action='store_true', help='Disable rendering chat at 4K resolution')
+    parser.add_argument('--do-4k', action='store_true', help='Enable rendering chat at 4K resolution')
     parser.add_argument('--verbose', action='store_true', help='Show verbose output from download operations')
-    parser.add_argument('--temp-dir', default=config.get_temp_path("main_videos"), help='Temporary directory for downloads (default: /tmp/tvc_main_videos)')
+    
+    # Get base_path for default values
+    config_dict = config.load_config()
+    default_data_dir = os.path.join(os.path.dirname(config_dict['base_path']), "data")
+    
+    # Directory arguments
+    parser.add_argument('--dir-temp', default=config.get_temp_path("main_videos"), help='Temporary directory for downloads (default: /tmp/tvc_main_videos)')
+    parser.add_argument('--dir-data', default=default_data_dir, help=f'Data directory (default: {default_data_dir})')
     return parser.parse_args()
 
 
@@ -49,9 +56,9 @@ def run_task(args: argparse.Namespace) -> None:
         render_webvtt = [x.lower() in ('true', '1', 'yes') for x in args.render_webvtt]
     
     config_dict = config.load_config()
-    config_dict['temp_path'] = args.temp_dir
+    config_dict['temp_path'] = args.dir_temp
     auth = config_dict['auth']
-    path_root = config_dict['data_root']
+    path_root = args.dir_data
     
     extra.setup_signal_handle()
     
@@ -144,8 +151,8 @@ def run_task(args: argparse.Namespace) -> None:
             file_path_info = os.path.join(path_data_folder, f"{video['helix']['id']}_info.json")
             file_path = os.path.join(path_data_folder, f"{video['helix']['id']}.mp4")
             file_path_chat = os.path.join(path_data_folder, f"{video['helix']['id']}_chat.json")
-            # Use _chat_4k.mp4 if 4K is enabled (default), otherwise _chat.mp4
-            if not args.disable_4k:
+            # Use _chat_4k.mp4 if 4K is enabled, otherwise _chat.mp4
+            if args.do_4k:
                 file_path_chat_mp4 = os.path.join(path_data_folder, f"{video['helix']['id']}_chat_4k.mp4")
             else:
                 file_path_chat_mp4 = os.path.join(path_data_folder, f"{video['helix']['id']}_chat.mp4")
@@ -204,13 +211,13 @@ def run_task(args: argparse.Namespace) -> None:
             # Render chat
             if render_chat_flags_filtered[idx] and not extra.terminated_requested:
                 if os.path.exists(file_path_chat) and not os.path.exists(file_path_chat_mp4):
-                    if not args.disable_4k:
+                    if args.do_4k:
                         logger.info("  - starting rendering chat at 4K...")
                     else:
                         logger.info("  - starting rendering chat...")
                     logger.debug(f"  - {file_path_chat_mp4}")
                     t0 = time.time()
-                    chat.render_chat(config_dict, file_path_chat, file_path_chat_mp4, verbose=args.verbose, is_4k=not args.disable_4k)
+                    chat.render_chat(config_dict, file_path_chat, file_path_chat_mp4, verbose=args.verbose, is_4k=args.do_4k)
                     dur_min = (time.time() - t0) / 60.0
                     logger.info(f"  - rendering chat took {dur_min:.2f} min")
                     

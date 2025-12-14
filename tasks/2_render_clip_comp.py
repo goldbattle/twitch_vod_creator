@@ -31,8 +31,15 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument('--no-download', action='store_true', help='Skip downloading from Twitch')
     parser.add_argument('--no-remove', action='store_true', help='Keep rendered files')
     parser.add_argument('--verbose', action='store_true', help='Show verbose output from download operations')
-    parser.add_argument('--temp-dir', default=config.get_temp_path("render_clip_comp"), help='Temporary directory for downloads (default: /tmp/tvc_render_clip_comp)')
-    parser.add_argument('--disable-4k', action='store_true', help='Disable upscaling videos to 4K (3840x2160) with 25Mbps bitrate and re-render chat at 4K')
+    parser.add_argument('--do-4k', action='store_true', help='Enable upscaling videos to 4K (3840x2160) with 25Mbps bitrate and re-render chat at 4K')
+    
+    # Get base_path for default values
+    config_dict = config.load_config()
+    default_data_root = os.path.dirname(config_dict['base_path'])
+    
+    # Directory arguments
+    parser.add_argument('--dir-temp', default=config.get_temp_path("render_clip_comp"), help='Temporary directory for downloads (default: /tmp/tvc_render_clip_comp)')
+    parser.add_argument('--dir-data-root', default=default_data_root, help=f'Root directory containing data_clips_new and data_rendered folders (should contain folders like "data_clips_new" and "data_rendered") (default: {default_data_root})')
     return parser.parse_args()
 
 
@@ -82,10 +89,12 @@ def run_task(args: argparse.Namespace) -> None:
         exit(1)
     
     config_dict = config.load_config()
-    config_dict['temp_path'] = args.temp_dir
+    config_dict['temp_path'] = args.dir_temp
     auth = config_dict['auth']
-    path_root = config_dict['clips_root']
-    path_render = config_dict['render_root']
+    
+    # Setup paths - dir_data_root is the parent directory
+    path_root = os.path.join(args.dir_data_root, "data_clips_new")
+    path_render = os.path.join(args.dir_data_root, "data_rendered")
     
     extra.setup_signal_handle()
     
@@ -241,7 +250,7 @@ def run_task(args: argparse.Namespace) -> None:
         file_path_chat_mp4 = os.path.join(path_data, export_folder, f"{video['id']}_chat.mp4")
         
         # For 4K mode, we need to re-render chat at 4K resolution
-        if not args.disable_4k and os.path.exists(file_path_chat):
+        if args.do_4k and os.path.exists(file_path_chat):
             file_path_chat_mp4_4k = os.path.join(path_data, export_folder, f"{video['id']}_chat_4k.mp4")
             if not os.path.exists(file_path_chat_mp4_4k):
                 logger.info("  - starting rendering chat at 4K...")
@@ -273,7 +282,7 @@ def run_task(args: argparse.Namespace) -> None:
             logger.debug(f"  - {file_path_composite}")
             t0 = time.time()
             video_editing.render_clip_with_title(config_dict, file_path, file_path_chat_mp4 if os.path.exists(file_path_chat_mp4) else None,
-                                  file_path_composite, video["title"], is_4k=not args.disable_4k)
+                                  file_path_composite, video["title"], is_4k=args.do_4k)
             
             dur_min = (time.time() - t0) / 60.0
             logger.info(f"  - rendering composite took {dur_min:.2f} min")
@@ -372,7 +381,7 @@ def run_task(args: argparse.Namespace) -> None:
             if os.path.exists(tmp_output_file):
                 os.remove(tmp_output_file)
                 logger.debug(f"  - removed composite: {tmp_output_file}")
-            if not args.disable_4k:
+            if args.do_4k:
                 file_path_chat_4k = os.path.join(path_data, export_folder, f"{video['id']}_chat_4k.mp4")
                 if os.path.exists(file_path_chat_4k):
                     os.remove(file_path_chat_4k)

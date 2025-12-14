@@ -33,20 +33,23 @@ def load_config(base_path=None):
     
     return {
         'base_path': base_path,
+        'vosk_model': os.path.join(base_path, "thirdparty", "vosk-model-small-en-us-0.15"),
+        'font': font_path_escaped,
         'auth': auth,
         'twitch_cli': os.path.join(base_path, "thirdparty", "Twitch_Downloader_1.56.2", "TwitchDownloaderCLI"),
-        # 'ffmpeg': os.path.join(base_path, "thirdparty", "ffmpeg-4.3.1-amd64-static", "ffmpeg"),
-        # 'ffprobe': os.path.join(base_path, "thirdparty", "ffmpeg-4.3.1-amd64-static", "ffprobe"),
-        'ffmpeg': os.path.join(base_path, "thirdparty", "ffmpeg-arch", "ffmpeg"),
-        'ffprobe': os.path.join(base_path, "thirdparty", "ffmpeg-arch", "ffprobe"),
+
+        # == FOR SERVER ==
+        'ffmpeg': os.path.join(base_path, "thirdparty", "ffmpeg-4.3.1-amd64-static", "ffmpeg"),
+        'ffprobe': os.path.join(base_path, "thirdparty", "ffmpeg-4.3.1-amd64-static", "ffprobe"),
+
+        # == FFMPEG ON MY ARCH MACHINE ==
+        # 'ffmpeg': os.path.join(base_path, "thirdparty", "ffmpeg-arch", "ffmpeg"),
+        # 'ffprobe': os.path.join(base_path, "thirdparty", "ffmpeg-arch", "ffprobe"),
+        
+        # == FFMPEG WITH SUPER RESOLUTION ==
         # 'ffmpeg': os.path.join(base_path, "thirdparty", "ffmpeg-sr", "bin", "ffmpeg.wrapper"),
         # 'ffprobe': os.path.join(base_path, "thirdparty", "ffmpeg-sr", "bin", "ffprobe.wrapper"),
         # 'superres_model': os.path.join(base_path, "thirdparty", "ffmpeg-sr", "sr", "espcn.pb"),
-        'vosk_model': os.path.join(base_path, "thirdparty", "vosk-model-small-en-us-0.15"),
-        'font': font_path_escaped,
-        'data_root': os.path.join(os.path.dirname(base_path), "data"),
-        'clips_root': os.path.join(os.path.dirname(base_path), "data_clips_new"),
-        'render_root': os.path.join(os.path.dirname(base_path), "data_rendered"),
     }
 
 

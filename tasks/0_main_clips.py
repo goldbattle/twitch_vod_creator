@@ -23,7 +23,14 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument('--min-view-counts', required=True, type=int, nargs='+', help='Minimum view counts for each channel (must match number of channels)')
     parser.add_argument('--num-days', required=True, type=int, help='Number of days to query back from today')
     parser.add_argument('--verbose', action='store_true', help='Show verbose output from download operations')
-    parser.add_argument('--temp-dir', default=config.get_temp_path("main_clips"), help='Temporary directory for downloads (default: /tmp/tvc_main_clips)')
+    
+    # Get base_path for default values
+    config_dict = config.load_config()
+    default_clips_dir = os.path.join(os.path.dirname(config_dict['base_path']), "data_clips_new")
+    
+    # Directory arguments
+    parser.add_argument('--dir-temp', default=config.get_temp_path("main_clips"), help='Temporary directory for downloads (default: /tmp/tvc_main_clips)')
+    parser.add_argument('--dir-clips', default=default_clips_dir, help=f'Clips directory (default: {default_clips_dir})')
     return parser.parse_args()
 
 
@@ -43,9 +50,9 @@ def run_task(args: argparse.Namespace) -> None:
         exit(1)
     
     config_dict = config.load_config()
-    config_dict['temp_path'] = args.temp_dir
+    config_dict['temp_path'] = args.dir_temp
     auth = config_dict['auth']
-    path_root = config_dict['clips_root']
+    path_root = args.dir_clips
     
     date_start = (datetime.datetime.now() - datetime.timedelta(days=num_days_to_query)).strftime('%Y-%m-%dT%H:%M:%SZ')
     date_end = datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ')

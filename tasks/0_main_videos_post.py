@@ -18,50 +18,77 @@ from utilities import extra, config, audio_transcription, chat, video_editing
 # Worker Functions
 # ================================================================
 
-def process_vtt(video_path: str, vtt_path: str, config_dict: Dict[str, Any], args: argparse.Namespace, logger: logging.Logger) -> Tuple[bool, float]:
-    """Process a single VTT transcription."""
+def process_vtt(video_path: str, vtt_path: str, config_dict: Dict[str, Any], args: argparse.Namespace, logger: logging.Logger) -> Tuple[Optional[bool], float]:
+    """
+    Process a single VTT transcription.
+    
+    Returns:
+        (True, duration) if successful
+        (False, duration) if failed
+        (None, 0.0) if skipped (already exists, too new, or terminated)
+    """
     worker_id = threading.current_thread().name
     if extra.terminated_requested:
-        return (False, 0.0)
+        return (None, 0.0)
+    
+    # Check if video exists
+    if not os.path.exists(video_path):
+        logger.debug(f"[{worker_id}] skipping VTT for {os.path.basename(video_path)}: video file does not exist")
+        return (None, 0.0)
     
     # Check if old enough to process
     oldness = time.time() - os.path.getmtime(video_path)
     if oldness < args.min_age:
-        return (False, 0.0)
+        logger.debug(f"[{worker_id}] skipping VTT for {os.path.basename(video_path)}: file is too new ({oldness:.0f}s < {args.min_age}s)")
+        return (None, 0.0)
     
-    # Transcribe if not exists
-    if os.path.exists(video_path) and not os.path.exists(vtt_path):
-        logger.info(f"[{worker_id}] starting transcribing {os.path.basename(video_path)}...")
-        logger.debug(f"[{worker_id}]   - {vtt_path}")
-        t0 = time.time()
-        success = audio_transcription.transcribe_video(config_dict, video_path, vtt_path, quiet=not args.verbose)
-        dur_min = (time.time() - t0) / 60.0
-        if success:
-            logger.info(f"[{worker_id}] transcribing {os.path.basename(video_path)} took {dur_min:.2f} min")
-            return (True, dur_min)
-        else:
-            logger.error(f"[{worker_id}] ERROR: Failed to transcribe {video_path}")
-            return (False, dur_min)
-    return (False, 0.0)
+    # Skip if VTT already exists
+    if os.path.exists(vtt_path):
+        logger.debug(f"[{worker_id}] skipping VTT for {os.path.basename(video_path)}: VTT file already exists")
+        return (None, 0.0)
+    
+    # Transcribe
+    logger.info(f"[{worker_id}] starting transcribing {os.path.basename(video_path)}...")
+    logger.debug(f"[{worker_id}]   - {vtt_path}")
+    t0 = time.time()
+    success = audio_transcription.transcribe_video(config_dict, video_path, vtt_path, quiet=not args.verbose)
+    dur_min = (time.time() - t0) / 60.0
+    if success:
+        logger.info(f"[{worker_id}] transcribing {os.path.basename(video_path)} took {dur_min:.2f} min")
+        return (True, dur_min)
+    else:
+        logger.error(f"[{worker_id}] ERROR: Failed to transcribe {video_path}")
+        return (False, dur_min)
 
 
-def process_chat(chat_json_path: str, chat_mp4_path: str, config_dict: Dict[str, Any], args: argparse.Namespace, logger: logging.Logger) -> Tuple[bool, float]:
-    """Process a single chat render."""
+def process_chat(chat_json_path: str, chat_mp4_path: str, config_dict: Dict[str, Any], args: argparse.Namespace, logger: logging.Logger) -> Tuple[Optional[bool], float]:
+    """
+    Process a single chat render.
+    
+    Returns:
+        (True, duration) if successful
+        (False, duration) if failed
+        (None, 0.0) if skipped (already exists, too new, or terminated)
+    """
     worker_id = threading.current_thread().name
     if extra.terminated_requested:
-        return (False, 0.0)
+        return (None, 0.0)
     
     # Check if old enough to process
     oldness = time.time() - os.path.getmtime(chat_json_path)
     if oldness < args.min_age:
-        return (False, 0.0)
+        return (None, 0.0)
     
-    # Render chat if not exists
-    if os.path.exists(chat_json_path) and not os.path.exists(chat_mp4_path):
+    # Skip if chat MP4 already exists
+    if os.path.exists(chat_mp4_path):
+        return (None, 0.0)
+    
+    # Render chat if JSON exists
+    if os.path.exists(chat_json_path):
         logger.info(f"[{worker_id}] starting rendering chat {os.path.basename(chat_json_path)}...")
         logger.debug(f"[{worker_id}]   - {chat_mp4_path}")
         t0 = time.time()
-        success = chat.render_chat(config_dict, chat_json_path, chat_mp4_path, verbose=args.verbose, is_4k=not args.disable_4k)
+        success = chat.render_chat(config_dict, chat_json_path, chat_mp4_path, verbose=args.verbose, is_4k=args.do_4k)
         dur_min = (time.time() - t0) / 60.0
         if success:
             logger.info(f"[{worker_id}] rendering chat {os.path.basename(chat_json_path)} took {dur_min:.2f} min")
@@ -69,7 +96,7 @@ def process_chat(chat_json_path: str, chat_mp4_path: str, config_dict: Dict[str,
         else:
             logger.error(f"[{worker_id}] ERROR: Failed to render chat {chat_json_path}")
             return (False, dur_min)
-    return (False, 0.0)
+    return (None, 0.0)
 
 
 def process_video_batch(video_path: Optional[str], vtt_path: Optional[str],
@@ -92,12 +119,22 @@ def process_video_batch(video_path: Optional[str], vtt_path: Optional[str],
     # Process VTT if requested and we have a video
     if args.do_vtt and video_path is not None and vtt_path is not None:
         success, dur_min = process_vtt(video_path, vtt_path, config_dict, args, logger)
-        results['vtt'] = {'success': success, 'duration': dur_min}
+        if success is not None:
+            # Success or failure
+            results['vtt'] = {'success': success, 'duration': dur_min}
+        else:
+            # Skipped
+            results['vtt'] = {'skipped': True}
     
     # Process chat if requested
     if args.do_chat_render and chat_json_path is not None and chat_mp4_path is not None:
         success, dur_min = process_chat(chat_json_path, chat_mp4_path, config_dict, args, logger)
-        results['chat'] = {'success': success, 'duration': dur_min}
+        if success is not None:
+            # Success or failure
+            results['chat'] = {'success': success, 'duration': dur_min}
+        else:
+            # Skipped
+            results['chat'] = {'skipped': True}
     
     return results
 
@@ -175,14 +212,16 @@ def run_parallel_tasks(tasks: List[Any], worker_func: Callable, description: str
 def parse_args() -> argparse.Namespace:
     """Parse command line arguments."""
     parser = argparse.ArgumentParser(description='Post-process videos: generate WebVTT transcriptions, render chat, and/or upscale to 4K')
-    parser.add_argument('--directory', required=True, help='Directory to search recursively for videos and chat files')
     parser.add_argument('--min-age', type=int, default=60, help='Minimum file age in seconds')
     parser.add_argument('--do-vtt', action='store_true', help='Generate WebVTT transcriptions for videos')
     parser.add_argument('--do-chat-render', action='store_true', help='Render chat JSON files to video')
-    parser.add_argument('--disable-4k', action='store_true', help='Disable upscaling videos to 4K')
+    parser.add_argument('--do-4k', action='store_true', help='Enable upscaling videos to 4K')
     parser.add_argument('--parallel', type=int, default=6, help='Number of parallel tasks to run (default: 6)')
     parser.add_argument('--verbose', action='store_true', help='Show verbose output from operations')
-    parser.add_argument('--temp-dir', default=config.get_temp_path("videos_post"), help='Temporary directory for operations (default: /tmp/tvc_videos_post)')
+    
+    # Directory arguments
+    parser.add_argument('--dir-videos', required=True, help='Directory to search recursively for videos and chat files')
+    parser.add_argument('--dir-temp', default=config.get_temp_path("videos_post"), help='Temporary directory for operations (default: /tmp/tvc_videos_post)')
     return parser.parse_args()
 
 
@@ -194,12 +233,12 @@ def run_task(args: argparse.Namespace) -> None:
     logger = logging.getLogger(__name__)
     
     config_dict = config.load_config()
-    config_dict['temp_path'] = args.temp_dir
+    config_dict['temp_path'] = args.dir_temp
     
     extra.setup_signal_handle()
     
     # Use the provided directory directly (can be absolute or relative)
-    search_directory = os.path.abspath(args.directory)
+    search_directory = os.path.abspath(args.dir_videos)
     if not os.path.exists(search_directory):
         logger.error(f"Directory not found: {search_directory}")
         return
@@ -232,8 +271,8 @@ def run_task(args: argparse.Namespace) -> None:
             if args.do_chat_render:
                 if filename.endswith("_chat.json"):
                     chat_json_path = os.path.join(subdir, filename)
-                    # Use _chat_4k.mp4 if 4K is enabled (default), otherwise _chat.mp4
-                    if not args.disable_4k:
+                    # Use _chat_4k.mp4 if 4K is enabled, otherwise _chat.mp4
+                    if args.do_4k:
                         chat_mp4_path = chat_json_path.replace("_chat.json", "_chat_4k.mp4")
                     else:
                         chat_mp4_path = chat_json_path.replace("_chat.json", "_chat.mp4")
@@ -294,11 +333,14 @@ def run_task(args: argparse.Namespace) -> None:
     stats = {
         'vtt_completed': 0,
         'vtt_failed': 0,
+        'vtt_skipped': 0,
         'chat_completed': 0,
-        'chat_failed': 0
+        'chat_failed': 0,
+        'chat_skipped': 0
     }
     
-    # Count total tasks that will be attempted
+    # Count total tasks that will be attempted (only those that will actually be processed, not skipped)
+    # We can't know for sure until we process them, so we count all that could potentially be processed
     vtt_total = sum(1 for video_path, vtt_path, _, _ in batches 
                     if args.do_vtt and video_path is not None and vtt_path is not None)
     chat_total = sum(1 for _, _, chat_json_path, chat_mp4_path in batches 
@@ -310,12 +352,16 @@ def run_task(args: argparse.Namespace) -> None:
             results = future.result()
             
             if results['vtt'] is not None:
-                if results['vtt']['success']:
+                if results['vtt'].get('skipped', False):
+                    stats['vtt_skipped'] += 1
+                elif results['vtt']['success']:
                     stats['vtt_completed'] += 1
                 else:
                     stats['vtt_failed'] += 1
             if results['chat'] is not None:
-                if results['chat']['success']:
+                if results['chat'].get('skipped', False):
+                    stats['chat_skipped'] += 1
+                elif results['chat']['success']:
                     stats['chat_completed'] += 1
                 else:
                     stats['chat_failed'] += 1
@@ -333,9 +379,11 @@ def run_task(args: argparse.Namespace) -> None:
     
     # Log detailed statistics with uniform format
     if args.do_vtt:
-        logger.info(f"  - VTT: {stats['vtt_completed']}/{vtt_total} completed ({stats['vtt_failed']} failed)")
+        skipped_str = f", {stats['vtt_skipped']} skipped" if stats['vtt_skipped'] > 0 else ""
+        logger.info(f"  - VTT: {stats['vtt_completed']}/{vtt_total} completed ({stats['vtt_failed']} failed{skipped_str})")
     if args.do_chat_render:
-        logger.info(f"  - Chat: {stats['chat_completed']}/{chat_total} completed ({stats['chat_failed']} failed)")
+        skipped_str = f", {stats['chat_skipped']} skipped" if stats['chat_skipped'] > 0 else ""
+        logger.info(f"  - Chat: {stats['chat_completed']}/{chat_total} completed ({stats['chat_failed']} failed{skipped_str})")
 
 
 def main() -> None:
