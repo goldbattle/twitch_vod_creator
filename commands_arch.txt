@@ -1,0 +1,104 @@
+python tvc.py videos_post \
+    --directory /mnt/twitchvods/data/sodapoppin/ \
+    --do-vtt --do-chat-render --temp-dir ~/Work/data_tmp_mara/ \
+    --parallel 4
+
+python tvc.py web --data /mnt/twitchvods/data/
+
+python tvc.py render_clip_comp \
+    --temp-dir ~/Work/data_tmp_mara_clips/ \
+    --channel sodapoppin --max-clips 50 \
+    --date-start 2025-01-01T00:00:00Z --date-end 2025-12-31T00:00:00Z 
+
+    --no-remove --do-4k
+
+
+
+##==========================================================
+## rendering on desktop using smb
+##==========================================================
+
+
+
+python tvc.py videos_post \
+    --do-vtt --do-chat-render \
+    --dir-temp ~/Work/twitch_vod_creator_testing/data_tmp_smb/ \
+    --dir-videos /mnt/twitchvods/data/sodapoppin/2025-02/
+
+
+python tvc.py render_segments \
+    --file-config config/soda_config_youtube.yaml \
+    --file-history /mnt/twitchvods/twitch_vod_creator/config/history_2025_sodapoppin_render.yaml \
+    --dir-segments /mnt/twitchvods/data/sodapoppin/2025-03/ \
+    --dir-temp ~/Work/twitch_vod_creator_testing/data_tmp_smb/ \
+    --dir-data-root /mnt/twitchvods/
+
+python tvc.py upload_segments \
+    --file-config config/soda_config_youtube.yaml \
+    --file-history /mnt/twitchvods/twitch_vod_creator/config/history_2025_sodapoppin_upload.yaml \
+    --dir-segments /mnt/twitchvods/data/sodapoppin/2025-01/ \
+    --dir-data-root /mnt/twitchvods/
+
+
+python tvc.py render_clip_comp \
+    --channel sodapoppin --max-clips 30 \
+    --date-start 2025-01-01T00:00:00Z --date-end 2025-01-31T00:00:00Z \
+    --dir-temp ~/Work/twitch_vod_creator_testing/data_tmp_smb/ \
+    --dir-data-root /mnt/twitchvods/
+
+
+data/sodapoppin/2020-07/
+https://twitcharchive.com/channel/sodapoppin
+
+
+##==========================================================
+## new directory CLI testing
+##==========================================================
+
+python tvc.py download_videos \
+    --channel sodapoppin --max-videos 1 \
+    --dir-temp ~/Work/twitch_vod_creator_testing/data_tmp/ \
+    --dir-data ~/Work/twitch_vod_creator_testing/data/
+
+
+
+python tvc.py videos_post \
+    --do-vtt --do-chat-render \
+    --dir-temp ~/Work/twitch_vod_creator_testing/data_tmp/ \
+    --dir-videos ~/Work/twitch_vod_creator_testing/data/
+
+python tvc.py web --data ~/Work/twitch_vod_creator_testing/data/
+
+
+python tvc.py render_segments \
+    --file-config config/soda_config_youtube.yaml \
+    --file-history ~/Work/twitch_vod_creator_testing/history_soda_render.yaml \
+    --dir-segments ~/Work/twitch_vod_creator_testing/data/ \
+    --dir-temp ~/Work/twitch_vod_creator_testing/data_tmp/ \
+    --dir-data-root ~/Work/twitch_vod_creator_testing/
+
+
+
+
+##==========================================================
+## 4k rendering
+##==========================================================
+
+4K resolution on desktop
+processing data/sodapoppin/2025-12/2635250215 - 'Test 00 - December 4, 2025'
+  - starting rendering segment 00:47:11 to 00:59:19...
+  - rendering segment 00:47:11 to 00:59:19 took 28.97 min
+
+1080p render segment on desktop
+processing data/sodapoppin/2025-12/2635250215 - 'Test 00 - December 4, 2025'
+  - starting rendering segment 00:47:11 to 00:59:19...
+  - rendering segment 00:47:11 to 00:59:19 took 11.60 min
+
+
+
+
+
+
+
+
+
