@@ -1,0 +1,10 @@
+
+
+python3 tvc.py render_segments --dir-segments /mnt/twitchvods/data/ --file-config ./config/soda_config_youtube.yaml --file-history ./config/soda_history.yaml --do-4k
+
+/mnt/twitchvods/twitch_vod_creator/run_cron.sh download_videos --channels sodapoppin moonmoon clintstevens sevadus jerma985 heydoubleu vei squeex goldbattle j_blow mindcrack --max-videos 2000 --render-chat true false false false false false false false false false false --render-webvtt true true true false true false false false true false false
+
+
+/mnt/twitchvods/twitch_vod_creator/run_cron.sh render_segments --dir-segments /mnt/twitchvods/data/sodapoppin/ --file-config ./config/soda_config_youtube.yaml --file-history ./config/soda_history.yaml
+
+/mnt/twitchvods/twitch_vod_creator/run_cron.sh upload_segments --dir-segments ../data/sodapoppin/ --file-config ./config/soda_config_youtube.yaml --history-file ./config/soda_history_upload.yaml

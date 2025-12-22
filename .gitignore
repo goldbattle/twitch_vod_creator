@@ -4,6 +4,7 @@ config/auth.yaml
 
 # jetbrains
 .idea
+*.swp
 
 # log folder
 logs
