@@ -39,13 +39,20 @@ def download_vod(config, vod_id, output_path, quality="best", verbose=False):
     )
     
     stdout = None if verbose else subprocess.DEVNULL
-    stderr = None if verbose else subprocess.DEVNULL
+    stderr = subprocess.PIPE if not verbose else None
     
     process = subprocess.Popen(cmd, shell=True, stdout=stdout, stderr=stderr)
-    return_code = process.wait()
+    if stderr == subprocess.PIPE:
+        _, stderr_out = process.communicate()
+    else:
+        stderr_out = None
+        process.wait()
+    return_code = process.returncode
     
     if return_code != 0:
         logger.error(f"Error: TwitchDownloaderCLI returned exit code {return_code}")
+        if stderr_out:
+            logger.error(f"  stderr: {stderr_out.decode(errors='replace').strip()}")
         return False
     
     if os.path.exists(temp_output):
@@ -74,13 +81,20 @@ def download_clip(config, clip_id, output_path, verbose=False):
     )
     
     stdout = None if verbose else subprocess.DEVNULL
-    stderr = None if verbose else subprocess.DEVNULL
+    stderr = subprocess.PIPE if not verbose else None
     
     process = subprocess.Popen(cmd, shell=True, stdout=stdout, stderr=stderr)
-    return_code = process.wait()
+    if stderr == subprocess.PIPE:
+        _, stderr_out = process.communicate()
+    else:
+        stderr_out = None
+        process.wait()
+    return_code = process.returncode
     
     if return_code != 0:
         logger.error(f"Error: TwitchDownloaderCLI returned exit code {return_code}")
+        if stderr_out:
+            logger.error(f"  stderr: {stderr_out.decode(errors='replace').strip()}")
         return False
     
     if os.path.exists(temp_output):

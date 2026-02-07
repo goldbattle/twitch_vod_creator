@@ -485,7 +485,10 @@
             // Only add if it's within or just before the window (within 1 minute before)
             if (playedGameItems[currentPlayedGame]["startTime"] >= windowStart - 60) {
               var gameTime = playedGameItems[currentPlayedGame]["startTime"];
-              $("#transcript").append("<h4 id=\"game_" + currentPlayedGame + "\" style=\"margin-top:1rem;cursor:pointer;text-decoration:underline;\" class=\"fw-bold text-warning\" onclick=\"onGamePlayedSeekClick(" + gameTime + ",'game_" + currentPlayedGame + "');\">" + createTimestampSpan(gameTime) + playedGameItems[currentPlayedGame]["text"] + '</h4>');
+              var gameTitle = playedGameItems[currentPlayedGame]["text"];
+              var gameId = "game_" + currentPlayedGame;
+              var copyBtn = '<button type="button" class="btn btn-sm btn-outline-secondary" style="margin-left:0.5rem;vertical-align:middle;" onclick="event.stopPropagation(); copyGameTitleToClipboard(' + currentPlayedGame + ', this); return false;" title="Copy game title">Copy</button>';
+              $("#transcript").append("<h4 id=\"" + gameId + "\" style=\"margin-top:0.5rem;margin-bottom:0.25rem;\" class=\"fw-bold text-warning\"><span style=\"cursor:pointer;text-decoration:underline;\" onclick=\"onGamePlayedSeekClick(" + gameTime + ",'" + gameId + "');\">" + createTimestampSpan(gameTime) + gameTitle + "</span> " + copyBtn + "</h4>");
             }
             currentPlayedGame = currentPlayedGame + 1;
           }
@@ -602,6 +605,35 @@
       return false
     }
 
+    function copyGameTitleToClipboard(gameIndex, buttonEl) {
+      if (gameIndex < 0 || gameIndex >= playedGameItems.length) return false;
+      var text = playedGameItems[gameIndex]["text"];
+      var showFeedback = function () {
+        if (buttonEl) {
+          var orig = buttonEl.textContent;
+          buttonEl.textContent = 'Copied!';
+          buttonEl.classList.add('btn-success');
+          buttonEl.classList.remove('btn-outline-secondary');
+          setTimeout(function () {
+            buttonEl.textContent = orig;
+            buttonEl.classList.remove('btn-success');
+            buttonEl.classList.add('btn-outline-secondary');
+          }, 1500);
+        }
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(showFeedback).catch(function (err) {
+          console.error('Failed to copy game title:', err);
+          fallbackCopyTextToClipboard(text);
+          showFeedback();
+        });
+      } else {
+        fallbackCopyTextToClipboard(text);
+        showFeedback();
+      }
+      return false;
+    }
+
     function removeOnScrollButton() {
       transcriptScoll = true;
       $("#resume_scroll").remove();
@@ -644,12 +676,18 @@
       }
     }
 
-    function getParentPath(filepath) {
-      // Get parent path by removing the last segment
+    function getParentPath(filepath, viewingFile) {
+      // Get parent path. When viewing a file (a MOV), go up two levels so we change directory
+      // instead of just deselecting the MOV. Otherwise go up one level.
       if (!filepath) return '';
       var parts = filepath.split('/').filter(function (p) { return p && p !== 'data' && p !== 'data_live'; });
       if (parts.length === 0) return '';
-      parts.pop(); // Remove last segment
+      if (viewingFile && parts.length >= 2) {
+        parts.pop();
+        parts.pop();
+      } else {
+        parts.pop();
+      }
       if (parts.length === 0) return '';
       return 'data/' + parts.join('/');
     }
@@ -673,7 +711,11 @@
 
           // Add parent folder option if not at root
           if (currentPath) {
-            var parentPath = getParentPath(currentPath);
+            var normalizedCurrent = currentPath.replace(/^data\//, '').replace(/^data_live\//, '').trim().replace(/\/+$/, '');
+            var viewingFile = items.some(function (item) {
+              return !item.path.endsWith('/') && item.path.replace(/^data\//, '').replace(/^data_live\//, '').trim().replace(/\/+$/, '') === normalizedCurrent;
+            });
+            var parentPath = getParentPath(currentPath, viewingFile);
             var parentHtml = '<div class="video-list-item" style="cursor: pointer;" onclick="navigateToPath(\'' +
               parentPath.replace(/'/g, "\\'") + '\');">.. parent folder</div>';
             container.append(parentHtml);
