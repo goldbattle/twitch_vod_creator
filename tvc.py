@@ -35,6 +35,7 @@ TASK_MODULE_MAP = {
     'render_4way': '2_render_4way',
     'render_segments': '2_render_segments',
     'upload_segments': '3_upload_segments',
+    'admin_twitchdownloader_update': '9_admin_twitchdownloader_update',
 }
 
 # Command descriptions for help output
@@ -48,6 +49,7 @@ COMMAND_DESCRIPTIONS = {
     'render_segments': 'Render video segments from created YAML editing file',
     'upload_segments': 'Upload video segments to YouTube via YouTube API',
     'web': 'Host a web server for the video editor interface',
+    'admin_twitchdownloader_update': 'Check GitHub for TwitchDownloaderCLI updates and install Linux x64 build',
 }
 
 
@@ -117,6 +119,12 @@ def create_parser() -> argparse.ArgumentParser:
         'web',
         help=COMMAND_DESCRIPTIONS['web'],
         description='Host a web server for the video editor interface'
+    )
+
+    subparsers.add_parser(
+        'admin_twitchdownloader_update',
+        help=COMMAND_DESCRIPTIONS['admin_twitchdownloader_update'],
+        description='Check GitHub for TwitchDownloaderCLI updates and install Linux x64 build'
     )
     
     return parser

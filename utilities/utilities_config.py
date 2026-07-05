@@ -36,7 +36,7 @@ def load_config(base_path=None):
         'vosk_model': os.path.join(base_path, "thirdparty", "vosk-model-small-en-us-0.15"),
         'font': font_path_escaped,
         'auth': auth,
-        'twitch_cli': os.path.join(base_path, "thirdparty", "Twitch_Downloader_1.56.2", "TwitchDownloaderCLI"),
+        'twitch_cli': os.path.join(base_path, "thirdparty", "Twitch_Downloader_1.56.4", "TwitchDownloaderCLI"),
 
         # == FOR SERVER ==
         'ffmpeg': os.path.join(base_path, "thirdparty", "ffmpeg-4.3.1-amd64-static", "ffmpeg"),

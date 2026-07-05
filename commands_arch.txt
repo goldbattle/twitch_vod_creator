@@ -51,6 +51,14 @@ data/sodapoppin/2020-07/
 https://twitcharchive.com/channel/sodapoppin
 
 
+python tvc.py download_clips \
+  --channels xqc moonmoon sodapoppin clintstevens pokelawls forsen nmplol jerma985 vei \
+  --min-view-counts 6000 1000 300 100 1000 5000 100 500 500 \
+  --num-days 240 \
+  --dir-temp ~/Work/twitch_vod_creator_testing/data_tmp_smb/ \
+  --dir-clips /mnt/twitchvods/data_clips_new/
+
+
 ##==========================================================
 ## new directory CLI testing
 ##==========================================================
@@ -60,15 +68,12 @@ python tvc.py download_videos \
     --dir-temp ~/Work/twitch_vod_creator_testing/data_tmp/ \
     --dir-data ~/Work/twitch_vod_creator_testing/data/
 
-
-
 python tvc.py videos_post \
     --do-vtt --do-chat-render \
     --dir-temp ~/Work/twitch_vod_creator_testing/data_tmp/ \
     --dir-videos ~/Work/twitch_vod_creator_testing/data/
 
 python tvc.py web --data ~/Work/twitch_vod_creator_testing/data/
-
 
 python tvc.py render_segments \
     --file-config config/soda_config_youtube.yaml \

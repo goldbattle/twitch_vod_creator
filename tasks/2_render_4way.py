@@ -163,8 +163,8 @@ def run_task(args: argparse.Namespace) -> None:
           + ' [tmp2][tmp3]hstack=inputs=2:shortest=1[bottom]; ' \
           + ' [top][bottom]vstack=inputs=2:shortest=1[main]; ' \
           + ' [main][4:v]hstack=inputs=2:shortest=1[stack]" -shortest -map "[stack]" -map 0:a ' \
-          + ' -vcodec libx264 -crf 18 -preset veryfast -avoid_negative_ts make_zero -map_chapters -1 -framerate 60 ' \
-          + ' -c:a aac ' \
+          + ' -vcodec libx264 -crf 18 -preset veryfast -avoid_negative_ts make_zero -map_chapters -1 -r 60 ' \
+          + ' -c:a copy ' \
           + file_path_composite_tmp
     logger.debug(f"  - ffmpeg command: {cmd}")
     t0 = time.time()

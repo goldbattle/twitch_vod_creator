@@ -39,13 +39,20 @@ def download_vod(config, vod_id, output_path, quality="best", verbose=False):
     )
     
     stdout = None if verbose else subprocess.DEVNULL
-    stderr = None if verbose else subprocess.DEVNULL
+    stderr = subprocess.PIPE if not verbose else None
     
     process = subprocess.Popen(cmd, shell=True, stdout=stdout, stderr=stderr)
-    return_code = process.wait()
+    if stderr == subprocess.PIPE:
+        _, stderr_out = process.communicate()
+    else:
+        stderr_out = None
+        process.wait()
+    return_code = process.returncode
     
     if return_code != 0:
         logger.error(f"Error: TwitchDownloaderCLI returned exit code {return_code}")
+        if stderr_out:
+            logger.error(f"  stderr: {stderr_out.decode(errors='replace').strip()}")
         return False
     
     if os.path.exists(temp_output):
@@ -74,13 +81,20 @@ def download_clip(config, clip_id, output_path, verbose=False):
     )
     
     stdout = None if verbose else subprocess.DEVNULL
-    stderr = None if verbose else subprocess.DEVNULL
+    stderr = subprocess.PIPE if not verbose else None
     
     process = subprocess.Popen(cmd, shell=True, stdout=stdout, stderr=stderr)
-    return_code = process.wait()
+    if stderr == subprocess.PIPE:
+        _, stderr_out = process.communicate()
+    else:
+        stderr_out = None
+        process.wait()
+    return_code = process.returncode
     
     if return_code != 0:
         logger.error(f"Error: TwitchDownloaderCLI returned exit code {return_code}")
+        if stderr_out:
+            logger.error(f"  stderr: {stderr_out.decode(errors='replace').strip()}")
         return False
     
     if os.path.exists(temp_output):
@@ -126,6 +140,7 @@ def download_complete_clip(config, video, path_data_folder, game_cache, logger, 
         'info_path': file_path_info,
     }
     
+    video_offset = None
     # Save/update clip info
     if not utilities_extra.terminated_requested:
         if not os.path.exists(file_path_info):
@@ -135,6 +150,7 @@ def download_complete_clip(config, video, path_data_folder, game_cache, logger, 
                 video, 
                 game_cache
             )
+            video_offset = clip_data['video_offset']
             with open(file_path_info, 'w', encoding="utf-8") as f:
                 json.dump(clip_data, f, indent=4)
             logger.info(f"  - saved clip info: {video['id']}")
@@ -144,11 +160,13 @@ def download_complete_clip(config, video, path_data_folder, game_cache, logger, 
             with open(file_path_info) as f:
                 video_info = json.load(f)
             video_info["view_count"] = video['view_count']
-            if video_info.get("video_offset") == -1:
+            video_offset = video_info.get("video_offset")
+            if video_offset == -1:
                 clip_data = twitch_api.get_clip_data(video['id'])
                 if clip_data['offset'] != -1:
                     video_info["video_offset"] = clip_data['offset']
                     video_info["duration"] = clip_data['duration']
+                    video_offset = clip_data['offset']
             with open(file_path_info, 'w', encoding="utf-8") as f:
                 json.dump(video_info, f, indent=4)
             logger.info("  - updated clip info")
@@ -167,9 +185,11 @@ def download_complete_clip(config, video, path_data_folder, game_cache, logger, 
         else:
             logger.error("  - VIDEO DOWNLOAD FAILED!!!!")
     
-    # Download chat
+    # Download chat (requires source VOD; clip chat is unavailable after VOD expiry)
     try:
-        if not utilities_extra.terminated_requested and not os.path.exists(file_path_chat):
+        if video_offset == -1:
+            logger.info(f'{utilities_extra.INFO_NOTE}  - no chat, source VOD was deleted{utilities_extra.INFO_RESET}')
+        elif not utilities_extra.terminated_requested and not os.path.exists(file_path_chat):
             logger.info("  - starting download chat...")
             logger.debug(f"  - {file_path_chat}")
             t0 = time.time()
