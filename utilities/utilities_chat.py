@@ -38,14 +38,21 @@ def download_chat(config, content_id, output_path, is_clip=False, verbose=False)
         f' -o {temp_output}'
     )
     
-    stdout = None if verbose else subprocess.DEVNULL
-    stderr = None if verbose else subprocess.DEVNULL
-    
-    process = subprocess.Popen(cmd, shell=True, stdout=stdout, stderr=stderr)
-    return_code = process.wait()
-    
+    stdout_dest = None if verbose else subprocess.DEVNULL
+    stderr_dest = None if verbose else subprocess.PIPE
+
+    process = subprocess.Popen(cmd, shell=True, stdout=stdout_dest, stderr=stderr_dest)
+    _, stderr_bytes = process.communicate()
+    return_code = process.returncode
+    stderr_text = (stderr_bytes or b'').decode(errors='replace')
+
     if return_code != 0:
-        logger.error(f"Error: TwitchDownloaderCLI chatdownload returned exit code {return_code}")
+        if 'deleted/expired VOD possibly?' in stderr_text:
+            logger.info(f'{utilities_extra.INFO_NOTE}  - no chat, source VOD was deleted{utilities_extra.INFO_RESET}')
+        else:
+            logger.error(f"  - TwitchDownloaderCLI chatdownload returned exit code {return_code}")
+        if os.path.exists(temp_output):
+            os.remove(temp_output)
         return False
     
     if os.path.exists(temp_output):
