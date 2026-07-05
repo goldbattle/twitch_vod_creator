@@ -83,6 +83,9 @@ def get_video_encoder_params(config, preset="slow", use_gpu=None):
     if use_gpu is None:
         use_gpu = has_nvenc_support(config)
     
+    # Quality defaults tuned for YouTube uploads with text-heavy overlays:
+    # - Lower cq/crf than previous default (23) to preserve chat readability.
+    # - Keep preset fast to avoid slowing render pipelines too much.
     if use_gpu:
         logger.debug(f"GPU support: Using NVENC (h264_nvenc) with preset {preset}")
         # NVENC preset mapping: slow -> p7 (best quality), fast -> p4, veryfast -> p1
@@ -92,12 +95,13 @@ def get_video_encoder_params(config, preset="slow", use_gpu=None):
             'veryfast': 'p1'
         }
         nvenc_preset = nvenc_presets.get(preset, 'p4')
-        # NVENC uses -cq for constant quality (similar to CRF)
-        # -rc vbr for variable bitrate, -cq sets the quality level
-        return 'h264_nvenc', f'-rc vbr -cq 23 -preset {nvenc_preset}'
+        # NVENC uses -cq for constant quality (similar to CRF).
+        # vbr_hq generally preserves quality better than strict CBR for YouTube uploads.
+        return 'h264_nvenc', f'-rc vbr_hq -cq 19 -maxrate 20M -bufsize 40M -preset {nvenc_preset}'
     else:
         logger.debug(f"GPU support: Using software encoding (libx264) with preset {preset}")
-        return 'libx264', f'-crf 23 -preset {preset}'
+        # CRF 19 is a better quality/speed tradeoff than CRF 23 for small text details.
+        return 'libx264', f'-crf 19 -preset {preset}'
 
 
 def time_string_to_seconds(time_str):
@@ -134,8 +138,8 @@ def render_segment_with_chat(config, video_path, chat_path, output_path,
             f' [tmp1][tmp2]hstack=inputs=2:shortest=1[stack]"'
             f' -shortest -map "[stack]" -map 0:a'
             f' -vcodec {codec} {encoder_params}'
-            f' -avoid_negative_ts make_zero -framerate 60 -vsync 2'
-            f' -map_chapters -1 -c:a aac'
+            f' -avoid_negative_ts make_zero -r 60 -vsync 2'
+            f' -map_chapters -1 -c:a copy'
             f' {output_path}'
         )
     else:
@@ -148,8 +152,8 @@ def render_segment_with_chat(config, video_path, chat_path, output_path,
             f' [tmp1][1:v]hstack=inputs=2:shortest=1[stack]"'
             f' -shortest -map "[stack]" -map 0:a'
             f' -vcodec {codec} {encoder_params}'
-            f' -avoid_negative_ts make_zero -framerate 60 -vsync 2'
-            f' -map_chapters -1 -c:a aac'
+            f' -avoid_negative_ts make_zero -r 60 -vsync 2'
+            f' -map_chapters -1 -c:a copy'
             f' {output_path}'
         )
     
@@ -189,7 +193,7 @@ def render_segment_without_chat(config, video_path, output_path,
             f'{config["ffmpeg"]} -hide_banner -loglevel {loglevel} -stats'
             f' -ss {start_time} -i {video_path} -t {seg_length}'
             f' -vf hqdn3d=luma_spatial=2,scale=3840:2160:flags=lanczos+accurate_rnd+full_chroma_int'
-            f' -c:a aac -vcodec {codec} {encoder_params}'
+            f' -c:a copy -vcodec {codec} {encoder_params}'
             f' -avoid_negative_ts make_zero -vsync 2 -map_chapters -1'
             f' {output_path}'
         )
@@ -199,7 +203,7 @@ def render_segment_without_chat(config, video_path, output_path,
             f'{config["ffmpeg"]} -hide_banner -loglevel {loglevel} -stats'
             f' -ss {start_time} -i {video_path} -t {seg_length}'
             f' -vf scale=w={scale.split(":")[0]}:h={scale.split(":")[1]}'
-            f' -c:a aac -vcodec {codec} {encoder_params}'
+            f' -c:a copy -vcodec {codec} {encoder_params}'
             f' -avoid_negative_ts make_zero -vsync 2 -map_chapters -1'
             f' {output_path}'
         )
@@ -294,7 +298,7 @@ def mute_audio_segments(config, video_path, output_path, mute_segments, quiet=Tr
     cmd = (
         f'{config["ffmpeg"]} -hide_banner -loglevel quiet -stats'
         f' -i {video_path} -i {temp_audio_muted}'
-        f' -c:v copy -c:a aac -map 0:v:0 -map 1:a:0'
+        f' -c:v copy -c:a copy -map 0:v:0 -map 1:a:0'
         f' {temp_output}'
     )
     subprocess.Popen(cmd, shell=True, stdout=stdout, stderr=stderr).wait()
@@ -431,8 +435,8 @@ def render_clip_with_title(config, video_path, chat_path, output_path, title_tex
                 f':alpha=\'if(lt(t,0),0,if(lt(t,0),(t-0)/0,if(lt(t,4),1,if(lt(t,4.5),(0.5-(t-4))/0.5,0))))\'[tmp1]; '
                 f' [1:v] scale=548:2160 [tmp2];'
                 f' [tmp1][tmp2] hstack=inputs=2:shortest=1" -shortest '
-                f' -c:a aac -ar 48k -ac 2 -vcodec {codec} {encoder_params} '
-                f' -video_track_timescale 90000 -avoid_negative_ts make_zero -map_chapters -1 -fflags +genpts -framerate 60 '
+                f' -c:a copy -vcodec {codec} {encoder_params} '
+                f' -video_track_timescale 90000 -avoid_negative_ts make_zero -map_chapters -1 -fflags +genpts -r 60 '
                 f' {output_path}'
             )
         else:
@@ -442,8 +446,8 @@ def render_clip_with_title(config, video_path, chat_path, output_path, title_tex
                 f' -vf "hqdn3d=luma_spatial=2,scale=3292:2160:flags=lanczos+accurate_rnd+full_chroma_int,pad=3840:2160:0:0:black,'
                 f'drawtext=text=\'{title_clean}\':x=58:y=58:fontfile={config["font"]}:fontsize=198:fontcolor=white:bordercolor=black:borderw=12'
                 f':alpha=\'if(lt(t,0),0,if(lt(t,0),(t-0)/0,if(lt(t,4),1,if(lt(t,4.5),(0.5-(t-4))/0.5,0))))\' "'
-                f' -c:a aac -ar 48k -ac 2 -vcodec {codec} {encoder_params} '
-                f' -video_track_timescale 90000 -avoid_negative_ts make_zero -map_chapters -1 -fflags +genpts -framerate 60 '
+                f' -c:a copy -vcodec {codec} {encoder_params} '
+                f' -video_track_timescale 90000 -avoid_negative_ts make_zero -map_chapters -1 -fflags +genpts -r 60 '
                 f' {output_path}'
             )
     else:
@@ -456,8 +460,8 @@ def render_clip_with_title(config, video_path, chat_path, output_path, title_tex
                 f' [tmp0]drawtext=text=\'{title_clean}\':x=25:y=25:fontfile={config["font"]}:fontsize=85:fontcolor=white:bordercolor=black:borderw=5'
                 f':alpha=\'if(lt(t,0),0,if(lt(t,0),(t-0)/0,if(lt(t,4),1,if(lt(t,4.5),(0.5-(t-4))/0.5,0))))\'[tmp1]; '
                 f' [tmp1][1:v] overlay=shortest=0:x=1646:y=0:eof_action=endall" -shortest '
-                f' -c:a aac -ar 48k -ac 2 -vcodec {codec} {encoder_params} '
-                f' -video_track_timescale 90000 -avoid_negative_ts make_zero -map_chapters -1 -fflags +genpts -framerate 60 '
+                f' -c:a copy -vcodec {codec} {encoder_params} '
+                f' -video_track_timescale 90000 -avoid_negative_ts make_zero -map_chapters -1 -fflags +genpts -r 60 '
                 f' {output_path}'
             )
         else:
@@ -467,8 +471,8 @@ def render_clip_with_title(config, video_path, chat_path, output_path, title_tex
                 f' -vf "scale=1646x926,pad=1920:926:0:90:black,'
                 f'drawtext=text=\'{title_clean}\':x=25:y=25:fontfile={config["font"]}:fontsize=85:fontcolor=white:bordercolor=black:borderw=5'
                 f':alpha=\'if(lt(t,0),0,if(lt(t,0),(t-0)/0,if(lt(t,4),1,if(lt(t,4.5),(0.5-(t-4))/0.5,0))))\' "'
-                f' -c:a aac -ar 48k -ac 2 -vcodec {codec} {encoder_params} '
-                f' -video_track_timescale 90000 -avoid_negative_ts make_zero -map_chapters -1 -fflags +genpts -framerate 60 '
+                f' -c:a copy -vcodec {codec} {encoder_params} '
+                f' -video_track_timescale 90000 -avoid_negative_ts make_zero -map_chapters -1 -fflags +genpts -r 60 '
                 f' {output_path}'
             )
     
