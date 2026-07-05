@@ -9,6 +9,10 @@ from typing import Dict, Any
 
 logger = logging.getLogger(__name__)
 
+# ponytail: yellow INFO for expected skips; coloredlogs INFO alone is plain white
+INFO_NOTE = '\033[33m'
+INFO_RESET = '\033[0m'
+
 # global variable which sets if we should terminate
 terminated_requested = False
 

@@ -45,13 +45,20 @@ def load_all_segments(segments_files: List[str], logger: logging.Logger) -> List
 def parse_args() -> argparse.Namespace:
     """Parse command line arguments."""
     parser = argparse.ArgumentParser(description='Upload video segments to YouTube')
+    parser.add_argument('--file-config', required=True, help='Config YAML file (relative to config directory)')
+    parser.add_argument('--file-history', required=True, help='History YAML file (relative to config directory)')
+    parser.add_argument('--display-missing', action='store_true', help='Display missing video files')
+    parser.add_argument('--verbose', action='store_true', help='Show verbose output from operations')
+    
+    # Get base_path for default values
+    config_base = config.load_config()
+    default_data_root = os.path.dirname(config_base['base_path'])
+    
+    # Directory and segment file arguments
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument('--file-segments', help='YAML file with all video segments (relative to config directory)')
     group.add_argument('--dir-segments', help='Directory to recursively scan for *_segments.yaml files')
-    parser.add_argument('--history-file', required=True, help='Full path to history YAML file')
-    parser.add_argument('--file-config', required=True, help='Full path to config YAML file')
-    parser.add_argument('--display-missing', action='store_true', help='Display missing video files')
-    parser.add_argument('--verbose', action='store_true', help='Show verbose output from operations')
+    parser.add_argument('--dir-data-root', default=default_data_root, help=f'Root directory containing data and data_rendered folders (should contain folders like "data" and "data_rendered") (default: {default_data_root})')
     return parser.parse_args()
 
 
@@ -65,22 +72,25 @@ def run_task(args: argparse.Namespace) -> None:
     config_base = config.load_config()
     path_base = config_base['base_path']
     
-    history_file = args.history_file
-    config_file = args.file_config
+    config_file_path = os.path.join(config_base['base_path'], args.file_config)
     display_missing = args.display_missing
     
     # load the yaml from file
-    with open(config_file) as f:
+    with open(config_file_path) as f:
         yaml_config = yaml.load(f, Loader=yaml.FullLoader)
-    logger.debug(f"loaded config file: {config_file}")
+    logger.debug(f"loaded config file: {config_file_path}")
     
-    # paths of the cli and data
-    path_root = config_base['data_root']
-    path_render = config_base['render_root']
+    # Load history file
+    history_file = os.path.join(config_base['base_path'], args.file_history)
+    logger.debug(f"history file: {history_file}")
+    
+    # Setup paths - dir_data_root is the parent directory, YAMLs include data/ or data_live/ prefix
+    path_root = args.dir_data_root
+    path_render = os.path.join(args.dir_data_root, "data_rendered")
     
     # youtube credential location
-    path_yt_creds = os.path.join(os.path.dirname(path_base), "profiles", yaml_config["yt_creds"])
-    path_yt_secrets = os.path.join(os.path.dirname(path_base), "profiles", yaml_config["yt_secrets"])
+    path_yt_creds = os.path.join(path_root, "profiles", yaml_config["yt_creds"])
+    path_yt_secrets = os.path.join(path_root, "profiles", yaml_config["yt_secrets"])
     
     # setup control+c handler
     extra.setup_signal_handle()
@@ -117,32 +127,40 @@ def run_task(args: argparse.Namespace) -> None:
     if os.path.exists(history_file):
         with open(history_file) as f:
             hist_uploads = yaml.load(f, Loader=yaml.FullLoader)
+        logger.debug(f"loaded history file: {history_file}")
+    else:
+        logger.debug(f"history file does not exist, will create: {history_file}")
 
     # loop through each video and render each segment
     # we will want to first ensure chat is rendered
     # from there we will render the full segmented video
-    for suffix in ["", "_muted"]:
+    # For _4k, use the base description file (no suffix), otherwise use suffix
+    for suffix, suffix_desc in zip(["", "_muted", "_4k"], ["", "_muted", ""]):
+        if extra.terminated_requested:
+            logger.info('terminate requested, not uploading any more..')
+            break
+        
         for video in data:
 
             # check if we should download any more
             if extra.terminated_requested:
-                logger.info('terminate requested, not downloading any more..')
+                logger.info('terminate requested, not uploading any more..')
                 break
 
             # check if the files are there
             clean_video_title = file.get_valid_filename(video["title"])
             file_path_composite = os.path.join(path_render, video["video"] + "_" + clean_video_title + suffix + ".mp4")
-            file_path_desc = os.path.join(path_render, video["video"] + "_" + clean_video_title + suffix + "_desc.txt")
+            file_path_desc = os.path.join(path_render, video["video"] + "_" + clean_video_title + suffix_desc + "_desc.txt")
             if not os.path.exists(file_path_composite) or not os.path.exists(file_path_desc):
                 if display_missing:
                     logger.warning(f"processing {video['video']} - '{video['title']}'")
                     logger.warning(f"  - suffix: \"{suffix}\"")
                     logger.warning("   - video has not been rendered yet...")
-                    logger.warning(f"{video['video']}_{clean_video_title}.mp4")
-                    logger.warning(f"{video['video']}_{clean_video_title}_desc.txt")
+                    logger.warning(f"  - {video['video']}_{clean_video_title}{suffix}.mp4")
+                    logger.warning(f"  - {video['video']}_{clean_video_title}{suffix_desc}_desc.txt")
                 continue
 
-            # nice debug print (only print when we're actually processing)
+            # nice print (only print when we're actually processing)
             logger.info(f"processing {video['video']} - '{video['title']}'")
             logger.info(f"  - suffix: \"{suffix}\"")
 
@@ -177,7 +195,7 @@ def run_task(args: argparse.Namespace) -> None:
                 'secrets_path': path_yt_secrets,
                 'credentials_path': path_yt_creds
             }
-
+            
             # now upload the video!
             logger.info("  - starting video upload...")
             try:
@@ -207,7 +225,14 @@ def run_task(args: argparse.Namespace) -> None:
                     hist_uploads[video_id] = {}
                 hist_uploads[video_id].update(entry)
 
+            except KeyboardInterrupt:
+                logger.info('terminate requested (KeyboardInterrupt), stopping uploads...')
+                extra.terminated_requested = True
+                break
             except Exception as e:
+                if extra.terminated_requested:
+                    logger.info('terminate requested, stopping uploads...')
+                    break
                 logger.error("  - unable to complete the upload!")
                 logger.error(f"  - {e}")
                 break

@@ -1,0 +1,39 @@
+
+python3 tvc.py web --data /mnt/twitchvods/data --port 1337 --host 0.0.0.0
+
+python3 tvc.py render_segments \
+    --file-config config/soda_config_youtube.yaml \
+    --file-history /mnt/twitchvods/twitch_vod_creator/config/history_2025_sodapoppin_render.yaml \
+    --dir-segments /mnt/twitchvods/data/sodapoppin/2025-03/ \
+    --dir-data-root /mnt/twitchvods/
+
+python3 tvc.py download_videos \
+    --channels sodapoppin skippypopin moonmoon clintstevens sevadus jerma985 heydoubleu vei squeex goldbattle j_blow mindcrack \
+    --max-videos 100 \
+    --render-chat true true false false false false false false false false false false \
+    --render-webvtt true true false false false false false false false false false false
+
+python3 tvc.py download_clips \
+    --channels xqc moonmoon sodapoppin clintstevens pokelawls forsen nmplol jerma985 vei \
+    --min-view-counts 6000 1000 300 100 1000 5000 100 500 500 \
+    --num-days 120
+
+python3 tvc.py upload_segments \
+    --file-config config/soda_config_youtube.yaml \
+    --file-history /mnt/twitchvods/twitch_vod_creator/config/history_2025_sodapoppin_upload.yaml \
+    --dir-segments /mnt/twitchvods/data/sodapoppin/2025-03/ \
+    --dir-data-root /mnt/twitchvods/
+
+# ================================
+# OLD COMMANDS
+# ================================
+
+python3 tvc.py render_segments --dir-segments /mnt/twitchvods/data/ --file-config ./config/soda_config_youtube.yaml --file-history ./config/soda_history.yaml --do-4k
+
+/mnt/twitchvods/twitch_vod_creator/run_cron.sh download_videos \
+--channels sodapoppin moonmoon clintstevens sevadus jerma985 heydoubleu vei squeex goldbattle j_blow mindcrack --max-videos 2000 \
+--render-chat true false false false false false false false false false false \
+--render-webvtt true true true false true false false false true false false
+
+/mnt/twitchvods/twitch_vod_creator/run_cron.sh render_segments --dir-segments /mnt/twitchvods/data/sodapoppin/ --file-config ./config/soda_config_youtube.yaml --file-history ./config/soda_history.yaml
+/mnt/twitchvods/twitch_vod_creator/run_cron.sh upload_segments --dir-segments ../data/sodapoppin/ --file-config ./config/soda_config_youtube.yaml --history-file ./config/soda_history_upload.yaml

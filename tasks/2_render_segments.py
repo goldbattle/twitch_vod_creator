@@ -43,14 +43,21 @@ def load_all_segments(segments_files: List[str], logger: logging.Logger) -> List
 def parse_args() -> argparse.Namespace:
     """Parse command line arguments."""
     parser = argparse.ArgumentParser(description='Render video segments')
-    group = parser.add_mutually_exclusive_group(required=True)
-    group.add_argument('--file-segments', help='YAML file with all video segments (relative to config directory)')
-    group.add_argument('--dir-segments', help='Directory to recursively scan for *_segments.yaml files')
     parser.add_argument('--file-config', required=True, help='Config YAML file (relative to config directory)')
     parser.add_argument('--file-history', help='History YAML file (relative to config directory)')
     parser.add_argument('--verbose', action='store_true', help='Show verbose output from operations')
-    parser.add_argument('--temp-dir', default=config.get_temp_path("render_segments"), help='Temporary directory for downloads (default: /tmp/tvc_render_segments)')
-    parser.add_argument('--do-4k', action='store_true', help='Upscale videos to 4K (3840x2160) with 25Mbps bitrate and re-render chat at 4K')
+    parser.add_argument('--do-4k', action='store_true', help='Enable upscaling videos to 4K (3840x2160) with 25Mbps bitrate and re-render chat at 4K')
+    
+    # Get base_path for default values
+    config_dict = config.load_config()
+    default_data_root = os.path.dirname(config_dict['base_path'])
+    
+    # Directory and segment file arguments
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument('--file-segments', help='YAML file with all video segments (relative to config directory)')
+    group.add_argument('--dir-segments', help='Directory to recursively scan for *_segments.yaml files')
+    parser.add_argument('--dir-temp', default=config.get_temp_path("render_segments"), help='Temporary directory for downloads (default: /tmp/tvc_render_segments)')
+    parser.add_argument('--dir-data-root', default=default_data_root, help=f'Root directory containing data and data_rendered folders (should contain folders like "data" and "data_rendered") (default: {default_data_root})')
     return parser.parse_args()
 
 
@@ -62,7 +69,7 @@ def run_task(args: argparse.Namespace) -> None:
     logger = logging.getLogger(__name__)
     
     config_dict = config.load_config()
-    config_dict['temp_path'] = args.temp_dir
+    config_dict['temp_path'] = args.dir_temp
     
     config_file_path = os.path.join(config_dict['base_path'], args.file_config)
     
@@ -117,9 +124,9 @@ def run_task(args: argparse.Namespace) -> None:
         data = load_all_segments(segments_files, logger)
         logger.info(f"Loaded {len(data)} total segments to render")
     
-    # Setup paths
-    path_root = os.path.dirname(config_dict['base_path'])
-    path_render = os.path.join(path_root, "data_rendered")
+    # Setup paths - dir_data_root is the parent directory, YAMLs include data/ or data_live/ prefix
+    path_root = args.dir_data_root
+    path_render = os.path.join(args.dir_data_root, "data_rendered")
     
     # Process each video
     for video in data:
@@ -130,23 +137,50 @@ def run_task(args: argparse.Namespace) -> None:
         # Setup paths early to check for skip condition
         clean_video_title = file.get_valid_filename(video["title"])
         file_path_desc = os.path.join(path_render, f"{video['video']}_{clean_video_title}_desc.txt")
+        file_path_composite = os.path.join(path_render, f"{video['video']}_{clean_video_title}.mp4")
+        file_path_composite_muted = os.path.join(path_render, f"{video['video']}_{clean_video_title}_muted.mp4")
         
         logger.info(f"processing {video['video']} - '{video['title']}'")
         
-        # Check if video is in history file - if so, skip rendering
+        # Check if we need to create a muted version
+        needs_muted_version = False
+        if "t_youtube_mute" in video and video["t_youtube_mute"]:
+            if not os.path.exists(file_path_composite_muted):
+                needs_muted_version = True
+                if os.path.exists(file_path_composite):
+                    logger.info("  - muted version needed but doesn't exist, will create it (base composite exists)")
+                else:
+                    logger.info("  - muted version needed but doesn't exist, will render base then create muted version")
+        
+        # Check if video is in history file - if so, skip rendering (unless we need muted version)
         # Only skip if it has "rendered_at" field (added by this script, not other scripts)
         if args.file_history:
             video_id = video["video"].replace(' ', '_') + "_" + video["title"].lower().replace(' ', '_')
+            video_id_muted = video_id + "_muted"
+            
+            # Check base version
             if video_id in hist_renders and "rendered_at" in hist_renders[video_id]:
-                logger.info(f"  - video already in history file, was rendered at: {hist_renders[video_id]['rendered_at']}")
-                logger.debug(f"  - video_id: {video_id}")
+                if not needs_muted_version:
+                    logger.info(f"  - video already in history file, was rendered at: {hist_renders[video_id]['rendered_at']}")
+                    logger.debug(f"  - video_id: {video_id}")
+                    continue
+                else:
+                    logger.info(f"  - video already in history file, but muted version needed")
+            
+            # Check muted version
+            if needs_muted_version and video_id_muted in hist_renders and "rendered_at" in hist_renders[video_id_muted]:
+                logger.info(f"  - muted version already in history file, was rendered at: {hist_renders[video_id_muted]['rendered_at']}")
+                logger.debug(f"  - video_id: {video_id_muted}")
                 continue
         
-        # Check if description file exists - if so, skip rendering
+        # Check if description file exists - if so, skip rendering (unless we need muted version)
         if os.path.exists(file_path_desc):
-            logger.info("  - description file exists, skipping rendering")
-            logger.debug(f"  - {file_path_desc}")
-            continue
+            if not needs_muted_version:
+                logger.info("  - description file exists, skipping rendering")
+                logger.debug(f"  - {file_path_desc}")
+                continue
+            else:
+                logger.info("  - description file exists, but muted version needed")
         
         # Check video exists
         file_path_video = os.path.join(path_root, video["video"] + ".mp4")
@@ -170,11 +204,15 @@ def run_task(args: argparse.Namespace) -> None:
         
         try:
             # Composite video - use 4K temp folder if enabled
-            file_path_composite = os.path.join(path_render, f"{video['video']}_{clean_video_title}.mp4")
             file_path_composite_tmp = os.path.join(config_dict['temp_path'], f"{clean_video_title}.tmp.mp4")
             
+            # Skip base composite rendering if it already exists and we only need muted version
+            should_render_base = not os.path.exists(file_path_composite) or not needs_muted_version
+            if needs_muted_version and os.path.exists(file_path_composite):
+                logger.info("  - base composite already exists, skipping base rendering (will create muted version)")
+            
             should_render_chat = video.get("with_chat", True)
-            if not extra.terminated_requested:
+            if not extra.terminated_requested and should_render_base:
                 # Render chat if needed (only if with_chat is True)
                 file_path_chat_mp4 = None
                 if should_render_chat:
@@ -185,17 +223,12 @@ def run_task(args: argparse.Namespace) -> None:
                     if args.do_4k and os.path.exists(file_path_chat):
                         file_path_chat_mp4_4k = os.path.join(path_root, video["video"] + "_chat_4k.mp4")
                         if not os.path.exists(file_path_chat_mp4_4k):
-                            # Render to temp first, then copy to data directory
-                            file_path_chat_mp4_4k_temp = os.path.join(config_dict['temp_path'], video["video"] + "_chat_4k_temp.mp4")
                             logger.info("  - starting rendering chat at 4K...")
                             logger.debug(f"  - {file_path_chat_mp4_4k}")
                             t0 = time.time()
-                            chat.render_chat(config_dict, file_path_chat, file_path_chat_mp4_4k_temp, verbose=args.verbose, is_4k=True)
+                            success = chat.render_chat(config_dict, file_path_chat, file_path_chat_mp4_4k, verbose=args.verbose, is_4k=True)
                             dur_min = (time.time() - t0) / 60.0
-                            if os.path.exists(file_path_chat_mp4_4k_temp):
-                                # Copy to data directory
-                                shutil.copy2(file_path_chat_mp4_4k_temp, file_path_chat_mp4_4k)
-                                os.remove(file_path_chat_mp4_4k_temp)
+                            if success:
                                 logger.info(f"  - rendering chat at 4K took {dur_min:.2f} min")
                             else:
                                 logger.error("  - ERROR: Failed to render chat at 4K!")
@@ -209,35 +242,8 @@ def run_task(args: argparse.Namespace) -> None:
                         dur_min = (time.time() - t0) / 60.0
                         logger.info(f"  - rendering chat took {dur_min:.2f} min")
                 
-                # Upscale video to 4K if enabled
-                if args.do_4k:
-                    file_path_video_4k = os.path.join(path_root, video["video"] + "_4k.mp4")
-                    if not os.path.exists(file_path_video_4k):
-                        # Upscale to temp first, then copy to data directory
-                        file_path_video_4k_temp = os.path.join(config_dict['temp_path'], video["video"] + "_4k_temp.mp4")
-                        logger.info("  - starting upscaling video to 4K...")
-                        logger.debug(f"  - {file_path_video_4k}")
-                        t0 = time.time()
-                        success = video_editing.upscale_video_to_4k(config_dict, file_path_video, file_path_video_4k_temp, verbose=args.verbose)
-                        dur_min = (time.time() - t0) / 60.0
-                        if success and os.path.exists(file_path_video_4k_temp):
-                            # Copy to data directory
-                            shutil.copy2(file_path_video_4k_temp, file_path_video_4k)
-                            os.remove(file_path_video_4k_temp)
-                            logger.info(f"  - upscaling video to 4K took {dur_min:.2f} min")
-                            file_path_video = file_path_video_4k
-                        else:
-                            logger.error("  - ERROR: Failed to upscale video to 4K! Skipping this video.")
-                            logger.error("  - Check if input file exists and run with --verbose for details.")
-                            if os.path.exists(file_path_video_4k_temp):
-                                os.remove(file_path_video_4k_temp)
-                            continue  # Skip this video entirely
-                    else:
-                        file_path_video = file_path_video_4k
-                
                 # Render composite
                 os.makedirs(os.path.dirname(file_path_composite), exist_ok=True)
-                
                 if os.path.exists(file_path_composite_tmp):
                     logger.debug(f"  - deleting temp file: {file_path_composite_tmp}")
                     os.remove(file_path_composite_tmp)
@@ -368,7 +374,6 @@ def run_task(args: argparse.Namespace) -> None:
             seg_to_cut: Optional[List[str]] = None
             if "t_youtube_mute" in video:
                 seg_to_cut = video["t_youtube_mute"].split(",")
-            
             if (not extra.terminated_requested and not os.path.exists(file_path_composite_muted) and
                 os.path.exists(file_path_composite) and seg_to_cut is not None):
                 
@@ -387,6 +392,23 @@ def run_task(args: argparse.Namespace) -> None:
                 video_editing.mute_audio_segments(config_dict, file_path_composite, file_path_composite_muted, mute_segments)
                 dur_min = (time.time() - t0) / 60.0
                 logger.info(f"  - muting audio segments took {dur_min:.2f} min")
+                
+                # Update history file for muted version if provided
+                if args.file_history and os.path.exists(file_path_composite_muted):
+                    history_file = os.path.join(config_dict['base_path'], args.file_history)
+                    video_id = video["video"].replace(' ', '_') + "_" + video["title"].lower().replace(' ', '_')
+                    video_id_muted = video_id + "_muted"
+                    entry = {
+                        'title': video["title"],
+                        'file': file_path_composite_muted,
+                        'rendered_at': time.strftime('%Y-%m-%d %H:%M:%S')
+                    }
+                    extra.update_history_file(history_file, video_id_muted, entry, logger)
+                    # Update in-memory copy as well (merge with existing if any)
+                    if video_id_muted not in hist_renders:
+                        hist_renders[video_id_muted] = {}
+                    hist_renders[video_id_muted].update(entry)
+                    logger.debug(f"  - updated history file for muted version: {history_file}")
             
             # Muted description file
             file_path_desc_muted = os.path.join(path_render, f"{video['video']}_{clean_video_title}_muted_desc.txt")

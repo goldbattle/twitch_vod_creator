@@ -31,7 +31,16 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument('--video3', required=True, help='Path to fourth video (relative to data root, without .mp4)')
     parser.add_argument('--starttime3', required=True, help='Start time for video3 (HH:MM:SS)')
     parser.add_argument('--verbose', action='store_true', help='Show verbose output from operations')
-    parser.add_argument('--temp-dir', default=config.get_temp_path("render_4way"), help='Temporary directory for downloads (default: /tmp/tvc_render_4way)')
+    
+    # Get base_path for default values
+    config_dict = config.load_config()
+    default_data_dir = os.path.join(os.path.dirname(config_dict['base_path']), "data")
+    default_render_dir = os.path.join(os.path.dirname(config_dict['base_path']), "data_rendered")
+    
+    # Directory arguments
+    parser.add_argument('--dir-temp', default=config.get_temp_path("render_4way"), help='Temporary directory for downloads (default: /tmp/tvc_render_4way)')
+    parser.add_argument('--dir-data', default=default_data_dir, help=f'Data directory (default: {default_data_dir})')
+    parser.add_argument('--dir-render', default=default_render_dir, help=f'Render directory (default: {default_render_dir})')
     return parser.parse_args()
 
 
@@ -43,9 +52,9 @@ def run_task(args: argparse.Namespace) -> None:
     logger = logging.getLogger(__name__)
     
     config_dict = config.load_config()
-    config_dict['temp_path'] = args.temp_dir
-    path_root = config_dict['data_root']
-    path_render = config_dict['render_root']
+    config_dict['temp_path'] = args.dir_temp
+    path_root = args.dir_data
+    path_render = args.dir_render
     path_temp = config_dict['temp_path']
     
     title = args.title
@@ -154,8 +163,8 @@ def run_task(args: argparse.Namespace) -> None:
           + ' [tmp2][tmp3]hstack=inputs=2:shortest=1[bottom]; ' \
           + ' [top][bottom]vstack=inputs=2:shortest=1[main]; ' \
           + ' [main][4:v]hstack=inputs=2:shortest=1[stack]" -shortest -map "[stack]" -map 0:a ' \
-          + ' -vcodec libx264 -crf 18 -preset veryfast -avoid_negative_ts make_zero -map_chapters -1 -framerate 60 ' \
-          + ' -c:a aac ' \
+          + ' -vcodec libx264 -crf 18 -preset veryfast -avoid_negative_ts make_zero -map_chapters -1 -r 60 ' \
+          + ' -c:a copy ' \
           + file_path_composite_tmp
     logger.debug(f"  - ffmpeg command: {cmd}")
     t0 = time.time()

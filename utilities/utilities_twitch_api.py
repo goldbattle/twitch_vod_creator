@@ -9,6 +9,7 @@ import json
 import logging
 import requests
 import twitch
+from . import utilities_extra
 
 logger = logging.getLogger(__name__)
 
@@ -197,7 +198,7 @@ def get_clip_data(clip_id):
         gql_response = _get_clip_graphql_info(clip_id)
         gql_obj = json.loads(gql_response)
         if gql_obj["data"]["clip"]["videoOffsetSeconds"] == None:
-            logger.warning("clip's VOD was deleted, unable to find offset...")
+            logger.info(f'{utilities_extra.INFO_NOTE}  - source VOD was deleted, unable to find offset{utilities_extra.INFO_RESET}')
             return {
                 "vod_id": -1,
                 "offset": -1,

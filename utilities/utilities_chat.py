@@ -9,6 +9,7 @@ import logging
 import os
 import subprocess
 import shutil
+import hashlib
 from . import utilities_extra
 
 logger = logging.getLogger(__name__)
@@ -23,7 +24,10 @@ def download_chat(config, content_id, output_path, is_clip=False, verbose=False)
         return False
     
     temp_path = config.get('temp_path', '/tmp')
-    temp_output = os.path.join(temp_path, os.path.basename(output_path))
+    # Use hash of full output path to ensure unique temp files for parallel processing
+    output_hash = hashlib.md5(output_path.encode()).hexdigest()[:12]
+    temp_basename = f"{output_hash}_{os.path.basename(output_path)}"
+    temp_output = os.path.join(temp_path, temp_basename)
     
     cmd = (
         f'{config["twitch_cli"]} chatdownload'
@@ -34,14 +38,21 @@ def download_chat(config, content_id, output_path, is_clip=False, verbose=False)
         f' -o {temp_output}'
     )
     
-    stdout = None if verbose else subprocess.DEVNULL
-    stderr = None if verbose else subprocess.DEVNULL
-    
-    process = subprocess.Popen(cmd, shell=True, stdout=stdout, stderr=stderr)
-    return_code = process.wait()
-    
+    stdout_dest = None if verbose else subprocess.DEVNULL
+    stderr_dest = None if verbose else subprocess.PIPE
+
+    process = subprocess.Popen(cmd, shell=True, stdout=stdout_dest, stderr=stderr_dest)
+    _, stderr_bytes = process.communicate()
+    return_code = process.returncode
+    stderr_text = (stderr_bytes or b'').decode(errors='replace')
+
     if return_code != 0:
-        logger.error(f"Error: TwitchDownloaderCLI chatdownload returned exit code {return_code}")
+        if 'deleted/expired VOD possibly?' in stderr_text:
+            logger.info(f'{utilities_extra.INFO_NOTE}  - no chat, source VOD was deleted{utilities_extra.INFO_RESET}')
+        else:
+            logger.error(f"  - TwitchDownloaderCLI chatdownload returned exit code {return_code}")
+        if os.path.exists(temp_output):
+            os.remove(temp_output)
         return False
     
     if os.path.exists(temp_output):
@@ -52,7 +63,7 @@ def download_chat(config, content_id, output_path, is_clip=False, verbose=False)
 
 
 def render_chat(config, chat_json_path, output_path, 
-                height=926, width=274, update_rate=0.1, framerate=60,
+                height=926, width=274, update_rate=0.2, framerate=30,
                 font_size=15, verbose=False, is_4k=False):
     """Render chat JSON to video."""
     if os.path.exists(output_path):
@@ -66,11 +77,17 @@ def render_chat(config, chat_json_path, output_path,
         height = 2160
         width = 548
         # Scale font size proportionally: 15 * (2160/926) ≈ 35
-        font_size = int(font_size * (2160 / 926))
+        # I found the font looked a bit large, so I'm scaling it down by 25%
+        font_size = int(font_size * (2160 / 926) * 0.75)
     
     temp_path = config.get('temp_path', '/tmp')
-    temp_output = os.path.join(temp_path, os.path.basename(output_path))
+    # Use hash of full output path to ensure unique temp files for parallel processing
+    output_hash = hashlib.md5(output_path.encode()).hexdigest()[:12]
+    temp_basename = f"{output_hash}_{os.path.basename(output_path)}"
+    temp_output = os.path.join(temp_path, temp_basename)
     
+    #  --sharpening true has 10% compute overhead?
+    # https://github.com/lay295/TwitchDownloader/issues/949#issuecomment-1899822738
     cmd = (
         f'{config["twitch_cli"]} chatrender'
         f' -i {chat_json_path} -o {temp_output}'
@@ -78,7 +95,7 @@ def render_chat(config, chat_json_path, output_path,
         f' -h {height} -w {width}'
         f' --update-rate {update_rate} --framerate {framerate} --font-size {font_size}'
         f' --bttv true --ffz true --stv true'
-        f' --sub-messages true --badges true --sharpening true --dispersion true'
+        f' --sub-messages true --badges true --dispersion true'
         f' --collision Overwrite --banner false'
         f' --temp-path "{temp_path}"'
     )
@@ -89,13 +106,24 @@ def render_chat(config, chat_json_path, output_path,
     process = subprocess.Popen(cmd, shell=True, stdout=stdout, stderr=stderr)
     return_code = process.wait()
     
+    # Check if file was created even if return code is non-zero
+    # (process might crash after writing the file, e.g. exit code -11 segfault)
+    # TODO: root cause why -11 data/sodapoppin/2025-01/2341488283_chat.json
+    if os.path.exists(temp_output) and os.path.getsize(temp_output) > 0:
+        if return_code == 0 or return_code == -11:
+            os.makedirs(os.path.dirname(output_path), exist_ok=True)
+            shutil.move(temp_output, output_path)
+            return True
+        else:
+            logger.error(f"Error: TwitchDownloaderCLI chatrender returned exit code {return_code} but output file was created")
+            return False
+    
+    # File doesn't exist or is invalid, check return code for error details
     if return_code != 0:
-        logger.error(f"Error: TwitchDownloaderCLI chatrender returned exit code {return_code}")
+        logger.error(f"Error: TwitchDownloaderCLI chatrender returned exit code {return_code} and output file was not created")
         return False
     
-    if os.path.exists(temp_output):
-        os.makedirs(os.path.dirname(output_path), exist_ok=True)
-        shutil.move(temp_output, output_path)
-        return True
+    # Return code is 0 but file doesn't exist - unexpected
+    logger.error(f"Error: TwitchDownloaderCLI chatrender returned exit code 0 but output file was not created")
     return False
 

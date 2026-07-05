@@ -42,8 +42,19 @@ uv sync
 You will need to make a copy of *[config/auth_example.yaml](config/auth_example.yaml)* and rename it to `config/auth.yaml`.
 This should be fill out with a twitch app client information which can be generated from the twitch [developer center](https://dev.twitch.tv/console/apps).
 For youtube uploads you will need to generate a oauth json file after you enable Youtube API V3 access in the Google developer console.
-Please take a look at the original [youtube-video-upload](https://github.com/remorses/youtube-video-upload) repository for those details if you want to try this.
 
+
+Please take a look at the original [youtube-video-upload](https://github.com/remorses/youtube-video-upload) repository for those details if you want to try this. The basic logic is the following
+
+1. Create an account on the [Google Developers Console](https://console.developers.google.com/)
+2. Register a new app there
+3. Enable the Youtube API (APIs & Auth -> APIs)
+4. Create Client ID (APIs & Auth -> Credentials), create oauth creds
+5. Download the secrets file clicking on the download icon
+6. Add to the "Data Access" page the `youtube.upload` scope (will be sensitive scope)
+7. On "Audience" put your app into "testing mode" and then ensure your email is one of the users
+8. Now run `python tvc.py upload_segments ..` with the `yt_secrets` file (you will not have credential json yet)
+9. Via browser (will auto-launch) you should allow access to the specific channel.
 
 
 If you are running this on a linux machine, you will need the ffmpeg binary for your system.

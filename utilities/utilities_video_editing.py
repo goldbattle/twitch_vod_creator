@@ -9,6 +9,7 @@ import logging
 import os
 import subprocess
 import shutil
+import hashlib
 from . import utilities_extra
 
 logger = logging.getLogger(__name__)
@@ -82,6 +83,9 @@ def get_video_encoder_params(config, preset="slow", use_gpu=None):
     if use_gpu is None:
         use_gpu = has_nvenc_support(config)
     
+    # Quality defaults tuned for YouTube uploads with text-heavy overlays:
+    # - Lower cq/crf than previous default (23) to preserve chat readability.
+    # - Keep preset fast to avoid slowing render pipelines too much.
     if use_gpu:
         logger.debug(f"GPU support: Using NVENC (h264_nvenc) with preset {preset}")
         # NVENC preset mapping: slow -> p7 (best quality), fast -> p4, veryfast -> p1
@@ -91,12 +95,13 @@ def get_video_encoder_params(config, preset="slow", use_gpu=None):
             'veryfast': 'p1'
         }
         nvenc_preset = nvenc_presets.get(preset, 'p4')
-        # NVENC uses -cq for constant quality (similar to CRF)
-        # -rc vbr for variable bitrate, -cq sets the quality level
-        return 'h264_nvenc', f'-rc vbr -cq 15 -qmin 15 -qmax 15 -preset {nvenc_preset}'
+        # NVENC uses -cq for constant quality (similar to CRF).
+        # vbr_hq generally preserves quality better than strict CBR for YouTube uploads.
+        return 'h264_nvenc', f'-rc vbr_hq -cq 19 -maxrate 20M -bufsize 40M -preset {nvenc_preset}'
     else:
         logger.debug(f"GPU support: Using software encoding (libx264) with preset {preset}")
-        return 'libx264', f'-crf 15 -preset {preset}'
+        # CRF 19 is a better quality/speed tradeoff than CRF 23 for small text details.
+        return 'libx264', f'-crf 19 -preset {preset}'
 
 
 def time_string_to_seconds(time_str):
@@ -121,23 +126,24 @@ def render_segment_with_chat(config, video_path, chat_path, output_path,
     
     # Get encoder parameters (NVENC if GPU available, otherwise libx264)
     if is_4k:
-        codec, encoder_params = get_video_encoder_params(config, preset="slow")
+        codec, encoder_params = get_video_encoder_params(config, preset="fast")
         # For 4K: video 3292x2160, chat 548x2160, total 3840x2160
+        # Apply upscaling with noise reduction: hqdn3d + lanczos scaling
         cmd = (
             f'{config["ffmpeg"]} '
             f' -ss {start_time} -i {video_path} -to {end_time}'
             f' -ss {seg_start_chat} -i {chat_path}'
-            f' -filter_complex "[0:v] scale=3292:2160 [tmp1];'
+            f' -filter_complex "[0:v] hqdn3d=luma_spatial=2,scale=3292:2160:flags=lanczos+accurate_rnd+full_chroma_int [tmp1];'
             f' [1:v] scale=548:2160 [tmp2];'
             f' [tmp1][tmp2]hstack=inputs=2:shortest=1[stack]"'
             f' -shortest -map "[stack]" -map 0:a'
             f' -vcodec {codec} {encoder_params}'
-            f' -avoid_negative_ts make_zero -framerate 60 -vsync 2'
-            f' -map_chapters -1 -c:a aac'
+            f' -avoid_negative_ts make_zero -r 60 -vsync 2'
+            f' -map_chapters -1 -c:a copy'
             f' {output_path}'
         )
     else:
-        codec, encoder_params = get_video_encoder_params(config, preset="slow")
+        codec, encoder_params = get_video_encoder_params(config, preset="fast")
         cmd = (
             f'{config["ffmpeg"]} '
             f' -ss {start_time} -i {video_path} -to {end_time}'
@@ -146,8 +152,8 @@ def render_segment_with_chat(config, video_path, chat_path, output_path,
             f' [tmp1][1:v]hstack=inputs=2:shortest=1[stack]"'
             f' -shortest -map "[stack]" -map 0:a'
             f' -vcodec {codec} {encoder_params}'
-            f' -avoid_negative_ts make_zero -framerate 60 -vsync 2'
-            f' -map_chapters -1 -c:a aac'
+            f' -avoid_negative_ts make_zero -r 60 -vsync 2'
+            f' -map_chapters -1 -c:a copy'
             f' {output_path}'
         )
     
@@ -181,23 +187,23 @@ def render_segment_without_chat(config, video_path, output_path,
     
     loglevel = "error" if verbose else "quiet"
     if is_4k:
-        # For 4K: 3840x2160 with CRF 15
-        codec, encoder_params = get_video_encoder_params(config, preset="slow")
+        # For 4K: 3840x2160 with upscaling (hqdn3d + lanczos scaling)
+        codec, encoder_params = get_video_encoder_params(config, preset="fast")
         cmd = (
             f'{config["ffmpeg"]} -hide_banner -loglevel {loglevel} -stats'
             f' -ss {start_time} -i {video_path} -t {seg_length}'
-            f' -vf scale=3840:2160'
-            f' -c:a aac -vcodec {codec} {encoder_params}'
+            f' -vf hqdn3d=luma_spatial=2,scale=3840:2160:flags=lanczos+accurate_rnd+full_chroma_int'
+            f' -c:a copy -vcodec {codec} {encoder_params}'
             f' -avoid_negative_ts make_zero -vsync 2 -map_chapters -1'
             f' {output_path}'
         )
     else:
-        codec, encoder_params = get_video_encoder_params(config, preset="slow")
+        codec, encoder_params = get_video_encoder_params(config, preset="fast")
         cmd = (
             f'{config["ffmpeg"]} -hide_banner -loglevel {loglevel} -stats'
             f' -ss {start_time} -i {video_path} -t {seg_length}'
             f' -vf scale=w={scale.split(":")[0]}:h={scale.split(":")[1]}'
-            f' -c:a aac -vcodec {codec} {encoder_params}'
+            f' -c:a copy -vcodec {codec} {encoder_params}'
             f' -avoid_negative_ts make_zero -vsync 2 -map_chapters -1'
             f' {output_path}'
         )
@@ -251,9 +257,12 @@ def mute_audio_segments(config, video_path, output_path, mute_segments, quiet=Tr
         return False
     
     temp_path = config.get('temp_path', '/tmp')
-    temp_audio = os.path.join(temp_path, "audio.aac")
-    temp_audio_muted = os.path.join(temp_path, "audio_muted.aac")
-    temp_output = os.path.join(temp_path, os.path.basename(output_path))
+    # Use hash of full output path to ensure unique temp files for parallel processing
+    output_hash = hashlib.md5(output_path.encode()).hexdigest()[:12]
+    temp_audio = os.path.join(temp_path, f"{output_hash}_audio.aac")
+    temp_audio_muted = os.path.join(temp_path, f"{output_hash}_audio_muted.aac")
+    temp_basename = f"{output_hash}_{os.path.basename(output_path)}"
+    temp_output = os.path.join(temp_path, temp_basename)
     
     # Clean up temp files
     for f in [temp_audio, temp_audio_muted]:
@@ -289,7 +298,7 @@ def mute_audio_segments(config, video_path, output_path, mute_segments, quiet=Tr
     cmd = (
         f'{config["ffmpeg"]} -hide_banner -loglevel quiet -stats'
         f' -i {video_path} -i {temp_audio_muted}'
-        f' -c:v copy -c:a aac -map 0:v:0 -map 1:a:0'
+        f' -c:v copy -c:a copy -map 0:v:0 -map 1:a:0'
         f' {temp_output}'
     )
     subprocess.Popen(cmd, shell=True, stdout=stdout, stderr=stderr).wait()
@@ -331,11 +340,14 @@ def upscale_video_to_4k(config, video_path, output_path, verbose=False):
     if os.path.exists(output_path) or utilities_extra.terminated_requested:
         return False
     
-    # Create output directory if it doesn't exist
-    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    temp_path = config.get('temp_path', '/tmp')
+    # Use hash of full output path to ensure unique temp files for parallel processing
+    output_hash = hashlib.md5(output_path.encode()).hexdigest()[:12]
+    temp_basename = f"{output_hash}_{os.path.basename(output_path)}"
+    temp_output = os.path.join(temp_path, temp_basename)
     
     loglevel = "error" if verbose else "quiet"
-    codec, encoder_params = get_video_encoder_params(config, preset="slow")
+    codec, encoder_params = get_video_encoder_params(config, preset="fast")
     
     # Build video filter chain
     # https://ffmpeg.org/ffmpeg-filters.html#sr-1
@@ -366,7 +378,7 @@ def upscale_video_to_4k(config, video_path, output_path, verbose=False):
         f' -c:a copy'
         f' -vcodec {codec} {encoder_params}'
         f' -avoid_negative_ts make_zero -vsync 2 -map_chapters -1'
-        f' {output_path}'
+        f' {temp_output}'
     )
     
     stdout = None if verbose else subprocess.DEVNULL
@@ -377,12 +389,18 @@ def upscale_video_to_4k(config, video_path, output_path, verbose=False):
     
     if return_code != 0:
         logger.error(f"Error: ffmpeg returned exit code {return_code}")
+        if os.path.exists(temp_output):
+            os.remove(temp_output)
         return False
     
-    return os.path.exists(output_path)
+    if os.path.exists(temp_output):
+        os.makedirs(os.path.dirname(output_path), exist_ok=True)
+        shutil.move(temp_output, output_path)
+        return True
+    return False
 
 
-def render_clip_with_title(config, video_path, chat_path, output_path, title_text, quiet=True):
+def render_clip_with_title(config, video_path, chat_path, output_path, title_text, quiet=True, is_4k=False):
     """Render a clip with title overlay and optional chat."""
     if os.path.exists(output_path) or utilities_extra.terminated_requested:
         return False
@@ -400,30 +418,63 @@ def render_clip_with_title(config, video_path, chat_path, output_path, title_tex
     stderr = subprocess.DEVNULL if quiet else None
     
     codec, encoder_params = get_video_encoder_params(config, preset="fast")
-    if chat_path and os.path.exists(chat_path):
-        cmd = (
-            f'{config["ffmpeg"]} -hide_banner -loglevel quiet -stats '
-            f' -i {video_path}'
-            f' -i {chat_path}'
-            f' -filter_complex "scale=1646x926,pad=1920:926:0:90:black [tmp0];'
-            f' [tmp0]drawtext=text=\'{title_clean}\':x=25:y=25:fontfile={config["font"]}:fontsize=85:fontcolor=white:bordercolor=black:borderw=5'
-            f':alpha=\'if(lt(t,0),0,if(lt(t,0),(t-0)/0,if(lt(t,4),1,if(lt(t,4.5),(0.5-(t-4))/0.5,0))))\'[tmp1]; '
-            f' [tmp1][1:v] overlay=shortest=0:x=1646:y=0:eof_action=endall" -shortest '
-            f' -c:a aac -ar 48k -ac 2 -vcodec {codec} {encoder_params.replace("-cq 15", "-cq 19").replace("-crf 15", "-crf 19")} '
-            f' -video_track_timescale 90000 -avoid_negative_ts make_zero -map_chapters -1 -fflags +genpts -framerate 60 '
-            f' {output_path}'
-        )
+    
+    # For 4K: scale video to 3292x2160, chat to 548x2160, total 3840x2160
+    # Scale title text proportionally: 85 * (2160/926) ≈ 198
+    # Scale position: 25 * (2160/926) ≈ 58
+    # Scale border: 5 * (2160/926) ≈ 12
+    if is_4k:
+        codec, encoder_params = get_video_encoder_params(config, preset="fast")
+        if chat_path and os.path.exists(chat_path):
+            cmd = (
+                f'{config["ffmpeg"]} -hide_banner -loglevel quiet -stats '
+                f' -i {video_path}'
+                f' -i {chat_path}'
+                f' -filter_complex "[0:v] hqdn3d=luma_spatial=2,scale=3292:2160:flags=lanczos+accurate_rnd+full_chroma_int [tmp0];'
+                f' [tmp0]drawtext=text=\'{title_clean}\':x=58:y=58:fontfile={config["font"]}:fontsize=198:fontcolor=white:bordercolor=black:borderw=12'
+                f':alpha=\'if(lt(t,0),0,if(lt(t,0),(t-0)/0,if(lt(t,4),1,if(lt(t,4.5),(0.5-(t-4))/0.5,0))))\'[tmp1]; '
+                f' [1:v] scale=548:2160 [tmp2];'
+                f' [tmp1][tmp2] hstack=inputs=2:shortest=1" -shortest '
+                f' -c:a copy -vcodec {codec} {encoder_params} '
+                f' -video_track_timescale 90000 -avoid_negative_ts make_zero -map_chapters -1 -fflags +genpts -r 60 '
+                f' {output_path}'
+            )
+        else:
+            cmd = (
+                f'{config["ffmpeg"]} -hide_banner -loglevel quiet -stats '
+                f' -i {video_path}'
+                f' -vf "hqdn3d=luma_spatial=2,scale=3292:2160:flags=lanczos+accurate_rnd+full_chroma_int,pad=3840:2160:0:0:black,'
+                f'drawtext=text=\'{title_clean}\':x=58:y=58:fontfile={config["font"]}:fontsize=198:fontcolor=white:bordercolor=black:borderw=12'
+                f':alpha=\'if(lt(t,0),0,if(lt(t,0),(t-0)/0,if(lt(t,4),1,if(lt(t,4.5),(0.5-(t-4))/0.5,0))))\' "'
+                f' -c:a copy -vcodec {codec} {encoder_params} '
+                f' -video_track_timescale 90000 -avoid_negative_ts make_zero -map_chapters -1 -fflags +genpts -r 60 '
+                f' {output_path}'
+            )
     else:
-        cmd = (
-            f'{config["ffmpeg"]} -hide_banner -loglevel quiet -stats '
-            f' -i {video_path}'
-            f' -vf "scale=1646x926,pad=1920:926:0:90:black,'
-            f'drawtext=text=\'{title_clean}\':x=25:y=25:fontfile={config["font"]}:fontsize=85:fontcolor=white:bordercolor=black:borderw=5'
-            f':alpha=\'if(lt(t,0),0,if(lt(t,0),(t-0)/0,if(lt(t,4),1,if(lt(t,4.5),(0.5-(t-4))/0.5,0))))\' "'
-            f' -c:a aac -ar 48k -ac 2 -vcodec {codec} {encoder_params.replace("-cq 15", "-cq 19").replace("-crf 15", "-crf 19")} '
-            f' -video_track_timescale 90000 -avoid_negative_ts make_zero -map_chapters -1 -fflags +genpts -framerate 60 '
-            f' {output_path}'
-        )
+        if chat_path and os.path.exists(chat_path):
+            cmd = (
+                f'{config["ffmpeg"]} -hide_banner -loglevel quiet -stats '
+                f' -i {video_path}'
+                f' -i {chat_path}'
+                f' -filter_complex "scale=1646x926,pad=1920:926:0:90:black [tmp0];'
+                f' [tmp0]drawtext=text=\'{title_clean}\':x=25:y=25:fontfile={config["font"]}:fontsize=85:fontcolor=white:bordercolor=black:borderw=5'
+                f':alpha=\'if(lt(t,0),0,if(lt(t,0),(t-0)/0,if(lt(t,4),1,if(lt(t,4.5),(0.5-(t-4))/0.5,0))))\'[tmp1]; '
+                f' [tmp1][1:v] overlay=shortest=0:x=1646:y=0:eof_action=endall" -shortest '
+                f' -c:a copy -vcodec {codec} {encoder_params} '
+                f' -video_track_timescale 90000 -avoid_negative_ts make_zero -map_chapters -1 -fflags +genpts -r 60 '
+                f' {output_path}'
+            )
+        else:
+            cmd = (
+                f'{config["ffmpeg"]} -hide_banner -loglevel quiet -stats '
+                f' -i {video_path}'
+                f' -vf "scale=1646x926,pad=1920:926:0:90:black,'
+                f'drawtext=text=\'{title_clean}\':x=25:y=25:fontfile={config["font"]}:fontsize=85:fontcolor=white:bordercolor=black:borderw=5'
+                f':alpha=\'if(lt(t,0),0,if(lt(t,0),(t-0)/0,if(lt(t,4),1,if(lt(t,4.5),(0.5-(t-4))/0.5,0))))\' "'
+                f' -c:a copy -vcodec {codec} {encoder_params} '
+                f' -video_track_timescale 90000 -avoid_negative_ts make_zero -map_chapters -1 -fflags +genpts -r 60 '
+                f' {output_path}'
+            )
     
     subprocess.Popen(cmd, shell=True, stdout=stdout, stderr=stderr).wait()
     return os.path.exists(output_path)
