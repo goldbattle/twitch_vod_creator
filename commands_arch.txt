@@ -59,8 +59,6 @@ python tvc.py download_clips \
   --dir-clips /mnt/twitchvods/data_clips_new/
 
 
-
-
 ##==========================================================
 ## new directory CLI testing
 ##==========================================================
@@ -70,15 +68,12 @@ python tvc.py download_videos \
     --dir-temp ~/Work/twitch_vod_creator_testing/data_tmp/ \
     --dir-data ~/Work/twitch_vod_creator_testing/data/
 
-
-
 python tvc.py videos_post \
     --do-vtt --do-chat-render \
     --dir-temp ~/Work/twitch_vod_creator_testing/data_tmp/ \
     --dir-videos ~/Work/twitch_vod_creator_testing/data/
 
 python tvc.py web --data ~/Work/twitch_vod_creator_testing/data/
-
 
 python tvc.py render_segments \
     --file-config config/soda_config_youtube.yaml \
